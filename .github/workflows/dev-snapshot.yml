@@ -1,0 +1,47 @@
+name: Dev SNAPSHOT Version
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: write
+
+jobs:
+  ensure-snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Check and ensure SNAPSHOT version
+        run: |
+          CURRENT_VERSION=$(poetry version -s)
+          
+          # If version doesn't end with -SNAPSHOT, add it
+          if [[ ! "$CURRENT_VERSION" =~ -SNAPSHOT$ ]]; then
+            NEW_VERSION="${CURRENT_VERSION}-SNAPSHOT"
+            poetry version $NEW_VERSION
+            
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add pyproject.toml
+            git commit -m "[aerkn1/patent-iq#1] - chore: ensure SNAPSHOT version on dev [skip ci]"
+            git push origin dev
+          else
+            echo "Version already has SNAPSHOT suffix: $CURRENT_VERSION"
+          fi
