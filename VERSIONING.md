@@ -2,15 +2,25 @@
 
 This project uses **Semantic Versioning** with automated version management via GitHub Actions.
 
+## Version Format
+
+This project follows [PEP 440](https://peps.python.org/pep-0440/) - Python's versioning standard:
+
+- **Release versions**: `1.2.3`
+- **Development versions**: `1.2.3.dev0`
+
+The `.dev0` suffix indicates a pre-release development version that sorts before the actual release:
+- `1.2.3.dev0` < `1.2.3` < `1.3.0.dev0`
+
 ## Branch Structure
 
 ### `dev` Branch (Test Environment)
-- Version format: `X.Y.Z-SNAPSHOT`
+- Version format: `X.Y.Z.dev0`
 - Purpose: Development and testing
 - Workflow:
   - Feature branches merge here when ready for testing
-  - Always maintains `-SNAPSHOT` suffix
-  - Automatically updated after releases
+  - Always maintains `.dev0` suffix (PEP 440 compliant)
+  - Automatically updated to next version after releases
 
 ### `master` Branch (Stable/Pre-Production)
 - Version format: `X.Y.Z`
@@ -59,11 +69,11 @@ BREAKING CHANGE: API endpoints have been restructured"
 - Generates/updates `CHANGELOG.md`
 - Creates git tag
 - Creates GitHub release
-- Auto-updates `dev` branch to next SNAPSHOT version
+- Auto-updates `dev` branch to next version with `.dev0` suffix
 
-### Dev SNAPSHOT (dev)
+### Dev Version Check (dev)
 - Runs on push to `dev` branch
-- Ensures version always has `-SNAPSHOT` suffix
+- Ensures version always has `.dev0` suffix (PEP 440 compliant)
 - Maintains development version consistency
 
 ## Development Workflow
@@ -94,7 +104,7 @@ BREAKING CHANGE: API endpoints have been restructured"
    git merge dev
    git push origin master
    # Semantic versioning runs automatically
-   # dev branch is auto-updated to next SNAPSHOT
+   # dev branch is auto-updated to next X.Y.Z.dev0
    ```
 
 5. **Deploy to production**:
