@@ -76,6 +76,16 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
 
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Sync master to dev
+        run: |
+          git fetch origin master
+          git merge origin/master --no-edit -m "chore: sync master to dev [skip ci]"
+
       - name: Get latest tag
         id: get_tag
         run: |
@@ -100,8 +110,6 @@ jobs:
 
       - name: Commit dev version
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add pyproject.toml
-          git commit -m "[aerkn1/patent-iq#1] - chore: bump dev version to next iteration [skip ci]"
+          git commit -m "chore: bump dev version to next iteration [skip ci]"
           git push origin dev
