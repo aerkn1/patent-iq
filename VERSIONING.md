@@ -93,25 +93,23 @@ BREAKING CHANGE: API endpoints have been restructured"
 
 3. **Merge to dev** for testing:
    ```bash
-   git checkout dev
-   git merge feature/my-feature
-   git push origin dev
+   git push origin feature/my-feature
+   # Create PR to dev branch via GitHub UI or:
+   gh pr create --base dev --head feature/my-feature --title "feat: my feature"
    ```
 
 4. **Release to master** when ready:
    ```bash
-   git checkout master
-   git merge dev
-   git push origin master
-   # Semantic versioning runs automatically
+   # Create PR from dev to master (only dev branch allowed)
+   gh pr create --base master --head dev --title "Release: vX.Y.Z"
+   # After PR is merged, semantic versioning runs automatically
    # dev branch is auto-updated to next X.Y.Z.dev0
    ```
 
 5. **Deploy to production**:
    ```bash
-   git checkout prod
-   git merge master
-   git push origin prod
+   # Create PR from master to prod (only master branch allowed)
+   gh pr create --base prod --head master --title "Deploy: vX.Y.Z to production"
    ```
 
 ## Version History
@@ -127,3 +125,19 @@ All three branches (`dev`, `master`, `prod`) are protected:
 - Cannot be deleted without owner permission
 - Force pushes disabled
 - Deletion disabled
+
+### Pull Request Requirements
+
+**`master` branch:**
+- ✅ Only accepts PRs from `dev` branch
+- ❌ Direct pushes blocked
+- ❌ PRs from other branches will fail validation
+
+**`prod` branch:**
+- ✅ Only accepts PRs from `master` branch
+- ❌ Direct pushes blocked
+- ❌ PRs from other branches will fail validation
+
+**`dev` branch:**
+- ✅ Accepts PRs from feature branches
+- ✅ Direct pushes allowed for authorized users

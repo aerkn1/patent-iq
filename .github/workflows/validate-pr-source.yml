@@ -1,0 +1,34 @@
+name: Validate PR Source Branch
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+      - prod
+
+jobs:
+  validate-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR source branch for master
+        if: github.base_ref == 'master'
+        run: |
+          SOURCE_BRANCH="${{ github.head_ref }}"
+          if [[ "$SOURCE_BRANCH" != "dev" ]]; then
+            echo "❌ Error: Pull requests to 'master' branch must come from 'dev' branch only."
+            echo "Current source branch: $SOURCE_BRANCH"
+            exit 1
+          fi
+          echo "✅ Valid: PR source is 'dev' branch"
+
+      - name: Check PR source branch for prod
+        if: github.base_ref == 'prod'
+        run: |
+          SOURCE_BRANCH="${{ github.head_ref }}"
+          if [[ "$SOURCE_BRANCH" != "master" ]]; then
+            echo "❌ Error: Pull requests to 'prod' branch must come from 'master' branch only."
+            echo "Current source branch: $SOURCE_BRANCH"
+            exit 1
+          fi
+          echo "✅ Valid: PR source is 'master' branch"
