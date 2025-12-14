@@ -1,4 +1,4 @@
-name: Dev SNAPSHOT Version
+name: Dev Version Check
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  ensure-snapshot:
+  ensure-dev-version:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -28,20 +28,20 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
 
-      - name: Check and ensure SNAPSHOT version
+      - name: Check and ensure dev version
         run: |
           CURRENT_VERSION=$(poetry version -s)
           
-          # If version doesn't end with -SNAPSHOT, add it
-          if [[ ! "$CURRENT_VERSION" =~ -SNAPSHOT$ ]]; then
-            NEW_VERSION="${CURRENT_VERSION}-SNAPSHOT"
+          # If version doesn't end with .dev0, add it
+          if [[ ! "$CURRENT_VERSION" =~ \.dev0$ ]]; then
+            NEW_VERSION="${CURRENT_VERSION}.dev0"
             poetry version $NEW_VERSION
             
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add pyproject.toml
-            git commit -m "[aerkn1/patent-iq#1] - chore: ensure SNAPSHOT version on dev [skip ci]"
+            git commit -m "[aerkn1/patent-iq#1] - chore: ensure dev version suffix [skip ci]"
             git push origin dev
           else
-            echo "Version already has SNAPSHOT suffix: $CURRENT_VERSION"
+            echo "Version already has .dev0 suffix: $CURRENT_VERSION"
           fi
