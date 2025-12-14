@@ -7,6 +7,8 @@ ML-based IP Evaluation Platform
 Patent IQ is an intelligent patent analysis system that leverages machine learning
 to evaluate and analyze intellectual property.
 
+This project uses automated semantic versioning and follows conventional commit standards.
+
 ## Features
 
 - Semantic versioning with PEP 440 compliance
