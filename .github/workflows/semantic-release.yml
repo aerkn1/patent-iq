@@ -1,0 +1,104 @@
+name: Semantic Release
+
+on:
+  push:
+    branches:
+      - master
+      - prod
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install semantic-release
+        run: |
+          npm install -g \
+            semantic-release@23 \
+            @semantic-release/git@10 \
+            @semantic-release/changelog@6 \
+            @semantic-release/exec@6
+
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+  update-dev-version:
+    runs-on: ubuntu-latest
+    needs: release
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/prod'
+    steps:
+      - name: Checkout dev branch
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Bump dev version
+        run: |
+          LATEST_TAG=${{ steps.get_tag.outputs.latest_tag }}
+          VERSION=${LATEST_TAG#v}
+          
+          # Parse version
+          IFS='.' read -r major minor patch <<< "$VERSION"
+          
+          # Bump minor version for next iteration
+          minor=$((minor + 1))
+          NEW_VERSION="$major.$minor.0-SNAPSHOT"
+          
+          # Update pyproject.toml
+          poetry version $NEW_VERSION
+
+      - name: Commit dev version
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml
+          git commit -m "[aerkn1/patent-iq#1] - chore: bump dev version to $(poetry version -s) [skip ci]"
+          git push origin dev
