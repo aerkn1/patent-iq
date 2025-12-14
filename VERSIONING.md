@@ -48,13 +48,13 @@ Version bumps are determined by commit messages following [Conventional Commits]
 ### Examples
 
 ```bash
-git commit -m "fix: resolve null pointer exception in parser"
+git commit -m "fix: resolve null pointer exception in parser [aerkn1/patent-iq#1]"
 # Results in: 1.2.3 → 1.2.4
 
-git commit -m "feat: add CSV export functionality"
+git commit -m "feat: add CSV export functionality [aerkn1/patent-iq#2]"
 # Results in: 1.2.4 → 1.3.0
 
-git commit -m "feat!: redesign API endpoints
+git commit -m "feat!: redesign API endpoints [aerkn1/patent-iq#3]
 
 BREAKING CHANGE: API endpoints have been restructured"
 # Results in: 1.3.0 → 2.0.0
@@ -87,9 +87,13 @@ BREAKING CHANGE: API endpoints have been restructured"
 
 2. **Develop with conventional commits**:
    ```bash
-   git commit -m "feat: add new feature"
-   git commit -m "fix: resolve bug"
+   git commit -m "feat: add new feature [aerkn1/patent-iq#1]"
+   git commit -m "fix: resolve bug [aerkn1/patent-iq#2]"
    ```
+   
+   **Format:** `<type>: <description> [aerkn1/patent-iq#<issue>]`
+   - The type (`feat:`, `fix:`, etc.) **must come first**
+   - Issue reference is optional but recommended at the end
 
 3. **Merge to dev** for testing:
    ```bash
