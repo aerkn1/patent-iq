@@ -1,0 +1,8 @@
+# 1.0.0 (2025-12-14)
+
+
+### Features
+
+* add comprehensive README documentation ([#9](https://github.com/aerkn1/patent-iq/issues/9)) ([0f58391](https://github.com/aerkn1/patent-iq/commit/0f58391f3094a3f45508e4faa6d291b1ace6dbca)), closes [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1)
+* add gitignore for Python project ([#11](https://github.com/aerkn1/patent-iq/issues/11)) ([7fb6b8d](https://github.com/aerkn1/patent-iq/commit/7fb6b8df84d1b57facc000149d6733098576a799)), closes [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1)
+* add MIT license and documentation updates ([#10](https://github.com/aerkn1/patent-iq/issues/10)) ([edb839b](https://github.com/aerkn1/patent-iq/commit/edb839ba890e8f20a8881dd7106bd9b5691e34d6)), closes [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1) [aerkn1/patent-iq#1](https://github.com/aerkn1/patent-iq/issues/1)

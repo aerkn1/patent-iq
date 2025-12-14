@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "patent-iq"
-version = "0.1.0.dev0"
+version = "1.0.0"
 description = "Patent IQ - Intelligent Patent Analysis System"
 authors = ["aerkn1 <your-email@example.com>"]
 readme = "README.md"
