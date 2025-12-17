@@ -1059,31 +1059,88 @@ graph TB
 ### 5.4 Processing Steps
 
 **Step 1: File Upload**
-```python
-# User uploads via Streamlit
-uploaded_file = st.file_uploader("Upload patent list (CSV)", type=['csv'])
+```typescript
+// User uploads via React UI
+import { useForm } from 'react-hook-form';
 
-if uploaded_file:
-    content = uploaded_file.read().decode('utf-8')
-    validation = validate_csv_upload(content)
+function PortfolioUploadForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [validation, setValidation] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const onSubmit = async (data: { file: FileList }) => {
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', data.file[0]);
+    
+    try {
+      const response = await fetch('/api/v1/upload', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const validationResult = await response.json();
+      setValidation(validationResult);
+    } catch (error) {
+      console.error('Upload failed:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input
+        type="file"
+        accept=".csv"
+        {...register('file', { required: 'Please select a CSV file' })}
+      />
+      {errors.file && <span className="error">{errors.file.message}</span>}
+      <button type="submit" disabled={isUploading}>
+        {isUploading ? 'Uploading...' : 'Upload CSV'}
+      </button>
+    </form>
+  );
+}
 ```
 
 **Step 2: Validation Feedback**
-```python
-if not validation.valid:
-    st.error("CSV validation failed:")
-    for error in validation.errors:
-        st.write(f"❌ {error}")
-else:
-    if validation.warnings:
-        st.warning("Warnings:")
-        for warning in validation.warnings:
-            st.write(f"⚠️ {warning}")
-    
-    st.success(f"✅ {validation.stats['existing_patents']} patents ready for analysis")
-    
-    if st.button("Analyze Portfolio"):
-        analyze_uploaded_portfolio(patents)
+```typescript
+function ValidationFeedback({ validation }) {
+  if (!validation) return null;
+
+  if (!validation.valid) {
+    return (
+      <div className="error-message">
+        <h3>CSV validation failed:</h3>
+        {validation.errors.map((error, index) => (
+          <div key={index}>❌ {error}</div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {validation.warnings && validation.warnings.length > 0 && (
+        <div className="warning-message">
+          <h3>Warnings:</h3>
+          {validation.warnings.map((warning, index) => (
+            <div key={index}>⚠️ {warning}</div>
+          ))}
+        </div>
+      )}
+      
+      <div className="success-message">
+        ✅ {validation.stats.existing_patents} patents ready for analysis
+      </div>
+      
+      <button onClick={() => analyzeUploadedPortfolio(validation.patents)}>
+        Analyze Portfolio
+      </button>
+    </div>
+  );
+}
 ```
 
 **Step 3: Analysis**
@@ -1842,4 +1899,1390 @@ def simulate_optimization_scenario(portfolio: List[Patent], actions: List[dict])
 
 ---
 
-Let me continue with the final three use cases (UC-06, UC-07, UC-08):
+## 8. UC-06: Hidden Gems Discovery
+
+### 8.1 Overview
+
+**Use Case ID:** UC-06  
+**Name:** Hidden Gems Discovery  
+**Primary Actor:** Business Development Manager  
+**Goal:** Find undervalued patents with monetization potential  
+**Success Criteria:** Identify 10+ hidden gem patents with licensing or sale opportunities
+
+### 8.2 Input Specification
+
+```json
+{
+  "portfolio_id": "company_han_id_12345",
+  "discovery_criteria": {
+    "min_legal_score": 75,
+    "max_influence_score": 50,
+    "min_financial_efficiency": 70
+  },
+  "search_scope": "FULL_PORTFOLIO"
+}
+```
+
+### 8.3 Hidden Gem Detection Logic
+
+```python
+def identify_hidden_gems(portfolio: List[Patent]) -> List[dict]:
+    """
+    Find patents that are:
+    - Low visibility (low citations)
+    - High quality (strong legal position)
+    - Cost-efficient (good financial score)
+    - Monetization potential (licensing candidates)
+    """
+    
+    hidden_gems = []
+    
+    for patent in portfolio:
+        # Core criteria: LOW influence but HIGH legal/financial
+        is_low_influence = patent.influence_score < 50
+        is_high_legal = patent.legal_score > 75
+        is_cost_efficient = patent.financial_score > 70
+        
+        if not (is_low_influence and is_high_legal and is_cost_efficient):
+            continue
+        
+        # Calculate "hidden gem score" (0-100)
+        gem_score = calculate_gem_score(patent)
+        
+        # Must meet minimum threshold
+        if gem_score < 60:
+            continue
+        
+        # Assess monetization potential
+        monetization = assess_monetization_potential(patent)
+        
+        hidden_gems.append({
+            'patent': patent,
+            'gem_score': gem_score,
+            'monetization_potential': monetization,
+            'rationale': generate_gem_rationale(patent, gem_score)
+        })
+    
+    # Sort by monetization potential
+    return sorted(hidden_gems, key=lambda x: x['monetization_potential']['score'], reverse=True)
+
+def calculate_gem_score(patent: Patent) -> float:
+    """Calculate how 'hidden' and valuable the patent is"""
+    
+    # Component 1: Legal strength (40 points)
+    legal_component = (patent.legal_score / 100) * 40
+    
+    # Component 2: Cost efficiency (30 points)
+    financial_component = (patent.financial_score / 100) * 30
+    
+    # Component 3: Future potential (20 points)
+    future_component = (patent.future_score / 100) * 20
+    
+    # Component 4: Undervaluation (10 points)
+    # How much better is legal/financial vs influence?
+    quality_gap = ((patent.legal_score + patent.financial_score) / 2) - patent.influence_score
+    undervaluation = min((quality_gap / 50) * 10, 10)
+    
+    gem_score = legal_component + financial_component + future_component + undervaluation
+    
+    return min(gem_score, 100)
+
+def assess_monetization_potential(patent: Patent) -> dict:
+    """Assess how easily this can be monetized"""
+    
+    # Factor 1: Technology marketability
+    market_size = get_market_size(patent.cpc_main)
+    market_score = min((market_size / 50) * 30, 30)  # Max 30 points
+    
+    # Factor 2: Patent scope (broader = more valuable)
+    claim_breadth = assess_claim_breadth(patent.claims)
+    scope_score = (claim_breadth / 100) * 25  # Max 25 points
+    
+    # Factor 3: Freedom to operate
+    # Patents with fewer blocking patents are easier to license
+    blocking_patents = count_blocking_patents(patent)
+    fto_score = max(20 - (blocking_patents * 2), 5)  # Max 20 points
+    
+    # Factor 4: Industry adoption
+    # Is this technology area growing?
+    adoption_trend = get_technology_trend(patent.cpc_main)
+    adoption_score = 25 if adoption_trend == "GROWING" else 15 if adoption_trend == "STABLE" else 5
+    
+    total_score = market_score + scope_score + fto_score + adoption_score
+    
+    return {
+        'score': total_score,
+        'market_size': market_size,
+        'claim_breadth': claim_breadth,
+        'blocking_patents': blocking_patents,
+        'technology_trend': adoption_trend,
+        'assessment': get_monetization_tier(total_score)
+    }
+
+def get_monetization_tier(score: float) -> str:
+    if score >= 75:
+        return "HIGH"
+    elif score >= 50:
+        return "MODERATE"
+    else:
+        return "LOW"
+```
+
+### 8.4 Monetization Strategy Generation
+
+```python
+def generate_monetization_strategy(patent: Patent, monetization: dict) -> dict:
+    """Generate specific monetization recommendations"""
+    
+    strategies = []
+    
+    # Strategy 1: Licensing
+    if monetization['score'] >= 60:
+        licensing_targets = find_licensing_targets(patent, max_results=10)
+        estimated_value = estimate_licensing_value_range(patent, licensing_targets)
+        
+        strategies.append({
+            'type': 'LICENSING',
+            'priority': 'HIGH',
+            'potential_targets': len(licensing_targets),
+            'estimated_value': estimated_value,
+            'timeline': '6-12 months',
+            'effort': 'MODERATE',
+            'actions': [
+                'Prepare licensing package (patent analysis, claim charts)',
+                f'Reach out to top {min(5, len(licensing_targets))} targets',
+                'Negotiate non-exclusive licensing terms'
+            ]
+        })
+    
+    # Strategy 2: Patent sale
+    if patent.age > 8 and monetization['blocking_patents'] < 5:
+        sale_value = estimate_sale_value(patent)
+        
+        strategies.append({
+            'type': 'OUTRIGHT_SALE',
+            'priority': 'MEDIUM',
+            'estimated_value': sale_value,
+            'timeline': '3-6 months',
+            'effort': 'LOW',
+            'actions': [
+                'List on patent marketplace',
+                'Approach patent aggregators',
+                'Consider auction platforms'
+            ]
+        })
+    
+    # Strategy 3: Donation (tax benefit)
+    if patent.age > 10 and monetization['score'] < 40:
+        tax_benefit = estimate_donation_tax_benefit(patent)
+        
+        strategies.append({
+            'type': 'CHARITABLE_DONATION',
+            'priority': 'LOW',
+            'estimated_value': tax_benefit,
+            'timeline': '1-2 months',
+            'effort': 'LOW',
+            'actions': [
+                'Obtain independent valuation',
+                'Identify suitable charitable organizations',
+                'Complete donation paperwork for tax deduction'
+            ]
+        })
+    
+    # Strategy 4: Defensive publication (if abandoning)
+    strategies.append({
+        'type': 'DEFENSIVE_PUBLICATION',
+        'priority': 'LOW',
+        'estimated_value': {'cost_avoidance': patent.annual_maintenance * 5},
+        'timeline': '1 month',
+        'effort': 'VERY_LOW',
+        'actions': [
+            'Publish patent details in defensive publication database',
+            'Abandon patent to save maintenance fees',
+            'Maintain prior art reference for defensive purposes'
+        ]
+    })
+    
+    return {
+        'recommended_strategies': sorted(strategies, key=lambda x: priority_order(x['priority'])),
+        'optimal_strategy': strategies[0] if strategies else None
+    }
+
+def priority_order(priority: str) -> int:
+    return {'HIGH': 1, 'MEDIUM': 2, 'LOW': 3, 'VERY_LOW': 4}[priority]
+```
+
+### 8.5 Output Specification
+
+```json
+{
+  "portfolio_id": "company_12345",
+  "hidden_gems_discovered": {
+    "total_count": 67,
+    "high_potential": 12,
+    "moderate_potential": 35,
+    "low_potential": 20
+  },
+  
+  "top_hidden_gems": [
+    {
+      "rank": 1,
+      "patent_id": "EP1234567B1",
+      "patent_title": "Method for database optimization",
+      
+      "gem_score": 82,
+      "gem_rationale": "Excellent legal strength (98) and cost efficiency (91) but low visibility (48 citations)",
+      
+      "dimension_scores": {
+        "influence": 48,
+        "legal": 98,
+        "financial": 91,
+        "future": 76
+      },
+      
+      "monetization_potential": {
+        "score": 78,
+        "assessment": "HIGH",
+        "market_size": 15800000000,
+        "claim_breadth": 82,
+        "blocking_patents": 2,
+        "technology_trend": "GROWING"
+      },
+      
+      "recommended_strategy": {
+        "type": "LICENSING",
+        "priority": "HIGH",
+        "estimated_value": {
+          "low": 150000,
+          "high": 400000,
+          "currency": "EUR"
+        },
+        "potential_targets": 10,
+        "timeline": "6-12 months",
+        "actions": [
+          "Prepare licensing package",
+          "Reach out to top 5 targets: Acme Tech, Beta Corp, ...",
+          "Negotiate non-exclusive terms"
+        ]
+      },
+      
+      "key_strengths": [
+        "Survived opposition (proven validity)",
+        "100% renewal rate (consistent maintenance)",
+        "4-country family with strategic coverage",
+        "Growing technology area (+18% market CAGR)",
+        "Low blocking patent risk"
+      ],
+      
+      "action_items": [
+        {
+          "action": "Conduct FTO analysis",
+          "timeline": "2 weeks",
+          "owner": "Legal Team"
+        },
+        {
+          "action": "Prepare licensing materials",
+          "timeline": "4 weeks",
+          "owner": "Business Development"
+        },
+        {
+          "action": "Identify and contact targets",
+          "timeline": "8 weeks",
+          "owner": "Technology Transfer Office"
+        }
+      ]
+    }
+    // ... 11 more hidden gems
+  ],
+  
+  "aggregate_opportunity": {
+    "total_estimated_value": {
+      "low": 2100000,
+      "high": 5800000,
+      "currency": "EUR"
+    },
+    "recommended_focus": [
+      "Prioritize 12 high-potential gems for active licensing",
+      "Consider patent sale for 8 aging assets",
+      "Monitor 35 moderate-potential patents for market changes"
+    ]
+  }
+}
+```
+
+### 8.6 UI Display
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 💎 HIDDEN GEMS DISCOVERY - 67 IDENTIFIED                   │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│ POTENTIAL VALUE: €2.1M - €5.8M                             │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ #1 EP1234567B1 - Database Optimization        Score: 82│ │
+│ ├─────────────────────────────────────────────────────────┤ │
+│ │                                                         │ │
+│ │ 💡 WHY IT'S HIDDEN:                                     │ │
+│ │ Low citations (48) but exceptional legal (98) and      │ │
+│ │ financial (91) scores. Market isn't aware of value.    │ │
+│ │                                                         │ │
+│ │ 💰 MONETIZATION: HIGH POTENTIAL (Score: 78)            │ │
+│ │ Estimated licensing value: €150K - €400K               │ │
+│ │                                                         │ │
+│ │ 📊 KEY STRENGTHS:                                       │ │
+│ │ ✓ Survived opposition (proven validity)                │ │
+│ │ ✓ Growing market (+18% CAGR)                           │ │
+│ │ ✓ Low blocking patent risk (only 2)                    │ │
+│ │ ✓ Broad claim scope (82/100)                           │ │
+│ │                                                         │ │
+│ │ 🎯 RECOMMENDED STRATEGY: Licensing                      │ │
+│ │ • 10 potential targets identified                      │ │
+│ │ • Timeline: 6-12 months                                │ │
+│ │ • Next step: Prepare licensing package                 │ │
+│ │                                                         │ │
+│ │ [View Full Analysis] [See Licensing Targets]           │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│ [Show Next 11 Hidden Gems] [Export Full Report]            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 8.7 Performance Requirements
+
+- Hidden gem detection (500 patents): <30 seconds
+- Monetization assessment per patent: <2 seconds
+- Strategy generation: <5 seconds
+
+---
+
+## 9. UC-07: Market Intelligence
+
+### 9.1 Overview
+
+**Use Case ID:** UC-07  
+**Name:** Market Intelligence & Competitive Analysis  
+**Primary Actor:** IP Strategy Director  
+**Goal:** Understand competitive landscape and technology trends  
+**Success Criteria:** Comprehensive market analysis with competitor positioning
+
+### 9.2 Input Specification
+
+```json
+{
+  "technology_area": "G06F",
+  "competitors": ["Siemens AG", "Bosch", "ABB"],
+  "time_period": {
+    "start_year": 2019,
+    "end_year": 2024
+  },
+  "analysis_depth": "DETAILED"
+}
+```
+
+### 9.3 Competitive Patent Landscape
+
+```python
+def analyze_competitive_landscape(
+    technology_area: str,
+    competitors: List[str],
+    time_period: dict
+) -> dict:
+    """Analyze patent landscape for technology area"""
+    
+    # Get all patents in technology area
+    all_patents = get_patents_by_cpc(
+        cpc_class=technology_area,
+        year_min=time_period['start_year'],
+        year_max=time_period['end_year']
+    )
+    
+    # Competitor analysis
+    competitor_portfolios = {}
+    for company_name in competitors:
+        company_patents = [p for p in all_patents if p.assignee == company_name]
+        
+        competitor_portfolios[company_name] = {
+            'patent_count': len(company_patents),
+            'avg_influence': np.mean([p.influence_score for p in company_patents]),
+            'avg_legal': np.mean([p.legal_score for p in company_patents]),
+            'total_citations': sum([p.forward_citations for p in company_patents]),
+            'filing_trend': calculate_filing_trend(company_patents),
+            'top_patents': get_top_patents(company_patents, n=10),
+            'technology_focus': analyze_technology_focus(company_patents)
+        }
+    
+    # Market concentration
+    total_patents = len(all_patents)
+    competitor_share = sum([p['patent_count'] for p in competitor_portfolios.values()])
+    market_concentration = (competitor_share / total_patents) * 100
+    
+    # Identify technology gaps
+    gaps = identify_technology_gaps(all_patents, competitor_portfolios)
+    
+    # Trend analysis
+    trends = analyze_technology_trends(all_patents, time_period)
+    
+    return {
+        'technology_area': technology_area,
+        'total_patents': total_patents,
+        'time_period': time_period,
+        'competitor_portfolios': competitor_portfolios,
+        'market_concentration': market_concentration,
+        'technology_gaps': gaps,
+        'trends': trends,
+        'recommendations': generate_strategic_recommendations(
+            competitor_portfolios, gaps, trends
+        )
+    }
+
+def calculate_filing_trend(patents: List[Patent]) -> dict:
+    """Calculate filing trend over time"""
+    
+    # Group by year
+    filings_by_year = {}
+    for patent in patents:
+        year = patent.filing_date.year
+        filings_by_year[year] = filings_by_year.get(year, 0) + 1
+    
+    # Calculate trend (linear regression)
+    years = list(filings_by_year.keys())
+    counts = list(filings_by_year.values())
+    
+    if len(years) < 2:
+        return {'trend': 'INSUFFICIENT_DATA'}
+    
+    slope, intercept = np.polyfit(years, counts, 1)
+    
+    # Classify trend
+    if slope > 5:
+        trend_direction = "STRONG_GROWTH"
+    elif slope > 2:
+        trend_direction = "MODERATE_GROWTH"
+    elif slope > -2:
+        trend_direction = "STABLE"
+    elif slope > -5:
+        trend_direction = "MODERATE_DECLINE"
+    else:
+        trend_direction = "STRONG_DECLINE"
+    
+    return {
+        'trend': trend_direction,
+        'slope': slope,
+        'filings_by_year': filings_by_year,
+        'latest_year': max(years),
+        'latest_count': counts[-1]
+    }
+
+def identify_technology_gaps(
+    all_patents: List[Patent],
+    competitor_portfolios: dict
+) -> List[dict]:
+    """Find technology areas with low competitor coverage"""
+    
+    # Get all CPC subclasses in the area
+    all_subclasses = set()
+    for patent in all_patents:
+        all_subclasses.update(patent.cpc_codes)
+    
+    gaps = []
+    
+    for subclass in all_subclasses:
+        # Count patents per competitor in this subclass
+        competitor_coverage = {}
+        for company, portfolio in competitor_portfolios.items():
+            count = sum(1 for p in portfolio.get('patents', []) 
+                       if subclass in p.cpc_codes)
+            competitor_coverage[company] = count
+        
+        # Total competitor patents
+        total_competitor = sum(competitor_coverage.values())
+        
+        # Total market patents
+        total_market = sum(1 for p in all_patents if subclass in p.cpc_codes)
+        
+        # Gap if competitors have <20% market share
+        competitor_share = (total_competitor / total_market * 100) if total_market > 0 else 0
+        
+        if competitor_share < 20 and total_market > 10:
+            gaps.append({
+                'subclass': subclass,
+                'subclass_description': get_cpc_description(subclass),
+                'total_market_patents': total_market,
+                'competitor_patents': total_competitor,
+                'competitor_share': competitor_share,
+                'opportunity_size': 'HIGH' if total_market > 50 else 'MODERATE'
+            })
+    
+    return sorted(gaps, key=lambda x: x['total_market_patents'], reverse=True)
+```
+
+### 9.4 Technology Trend Analysis
+
+```python
+def analyze_technology_trends(
+    patents: List[Patent],
+    time_period: dict
+) -> dict:
+    """Analyze technology evolution and trends"""
+    
+    # Emerging technologies (rapid growth)
+    emerging = identify_emerging_technologies(patents, time_period)
+    
+    # Declining technologies (decreasing filings)
+    declining = identify_declining_technologies(patents, time_period)
+    
+    # Hot topics (high citation velocity)
+    hot_topics = identify_hot_topics(patents)
+    
+    # Citation network analysis
+    network = analyze_citation_network(patents)
+    
+    return {
+        'emerging_technologies': emerging,
+        'declining_technologies': declining,
+        'hot_topics': hot_topics,
+        'citation_network': network,
+        'overall_market_health': assess_market_health(patents, time_period)
+    }
+
+def identify_emerging_technologies(
+    patents: List[Patent],
+    time_period: dict
+) -> List[dict]:
+    """Find rapidly growing technology areas"""
+    
+    # Group patents by CPC subclass and year
+    subclass_timeline = {}
+    
+    for patent in patents:
+        year = patent.filing_date.year
+        for cpc in patent.cpc_codes:
+            if cpc not in subclass_timeline:
+                subclass_timeline[cpc] = {}
+            subclass_timeline[cpc][year] = subclass_timeline[cpc].get(year, 0) + 1
+    
+    emerging = []
+    
+    for subclass, timeline in subclass_timeline.items():
+        if len(timeline) < 3:  # Need at least 3 years of data
+            continue
+        
+        years = sorted(timeline.keys())
+        recent_years = years[-3:]
+        earlier_years = years[:-3] if len(years) > 3 else years[:1]
+        
+        recent_avg = np.mean([timeline[y] for y in recent_years])
+        earlier_avg = np.mean([timeline[y] for y in earlier_years])
+        
+        if earlier_avg == 0:
+            continue
+        
+        growth_rate = ((recent_avg - earlier_avg) / earlier_avg) * 100
+        
+        # Emerging if >50% growth
+        if growth_rate > 50:
+            emerging.append({
+                'technology': subclass,
+                'description': get_cpc_description(subclass),
+                'growth_rate': growth_rate,
+                'recent_filings': int(recent_avg),
+                'early_filings': int(earlier_avg),
+                'timeline': timeline
+            })
+    
+    return sorted(emerging, key=lambda x: x['growth_rate'], reverse=True)
+
+def identify_hot_topics(patents: List[Patent]) -> List[dict]:
+    """Find technologies with high citation velocity"""
+    
+    # Group by CPC, calculate average citation velocity
+    subclass_metrics = {}
+    
+    for patent in patents:
+        velocity = patent.forward_citations / max(patent.age, 1)
+        
+        for cpc in patent.cpc_codes:
+            if cpc not in subclass_metrics:
+                subclass_metrics[cpc] = {'velocities': [], 'count': 0}
+            
+            subclass_metrics[cpc]['velocities'].append(velocity)
+            subclass_metrics[cpc]['count'] += 1
+    
+    hot_topics = []
+    
+    for subclass, metrics in subclass_metrics.items():
+        if metrics['count'] < 10:  # Need sufficient sample size
+            continue
+        
+        avg_velocity = np.mean(metrics['velocities'])
+        
+        # Hot if average velocity > 3 citations/year
+        if avg_velocity > 3:
+            hot_topics.append({
+                'technology': subclass,
+                'description': get_cpc_description(subclass),
+                'avg_citation_velocity': avg_velocity,
+                'patent_count': metrics['count'],
+                'impact_level': 'HIGH' if avg_velocity > 5 else 'MODERATE'
+            })
+    
+    return sorted(hot_topics, key=lambda x: x['avg_citation_velocity'], reverse=True)
+```
+
+### 9.5 Strategic Recommendations
+
+```python
+def generate_strategic_recommendations(
+    competitor_portfolios: dict,
+    gaps: List[dict],
+    trends: dict
+) -> List[dict]:
+    """Generate actionable strategic recommendations"""
+    
+    recommendations = []
+    
+    # Recommendation 1: Target technology gaps
+    if gaps:
+        top_gaps = gaps[:3]
+        recommendations.append({
+            'type': 'FILL_TECHNOLOGY_GAP',
+            'priority': 'HIGH',
+            'rationale': f"Identified {len(gaps)} technology areas with low competitor presence",
+            'specific_targets': [g['subclass_description'] for g in top_gaps],
+            'actions': [
+                f"Accelerate R&D in {top_gaps[0]['subclass_description']}",
+                "File patents in underserved areas",
+                "Consider acquisitions to fill gaps quickly"
+            ],
+            'expected_benefit': "Establish leadership in emerging areas before competitors"
+        })
+    
+    # Recommendation 2: Respond to competitor growth
+    growing_competitors = [
+        name for name, portfolio in competitor_portfolios.items()
+        if portfolio['filing_trend']['trend'] in ['STRONG_GROWTH', 'MODERATE_GROWTH']
+    ]
+    
+    if growing_competitors:
+        recommendations.append({
+            'type': 'COMPETITIVE_RESPONSE',
+            'priority': 'HIGH',
+            'rationale': f"{len(growing_competitors)} competitors showing strong growth",
+            'competitors': growing_competitors,
+            'actions': [
+                "Monitor competitor patent applications closely",
+                "File blocking patents in key areas",
+                "Consider cross-licensing opportunities"
+            ],
+            'expected_benefit': "Maintain competitive position"
+        })
+    
+    # Recommendation 3: Invest in emerging technologies
+    if trends['emerging_technologies']:
+        top_emerging = trends['emerging_technologies'][:2]
+        recommendations.append({
+            'type': 'INVEST_IN_EMERGING',
+            'priority': 'MEDIUM',
+            'rationale': f"Identified {len(trends['emerging_technologies'])} rapidly growing areas",
+            'technologies': [t['description'] for t in top_emerging],
+            'growth_rates': [f"+{t['growth_rate']:.0f}%" for t in top_emerging],
+            'actions': [
+                "Allocate R&D budget to emerging areas",
+                "Hire expertise in growing fields",
+                "File early patents to establish position"
+            ],
+            'expected_benefit': "Early mover advantage in future markets"
+        })
+    
+    # Recommendation 4: Divest from declining areas
+    if trends['declining_technologies']:
+        declining = trends['declining_technologies'][:2]
+        recommendations.append({
+            'type': 'DIVEST_DECLINING',
+            'priority': 'LOW',
+            'rationale': "Some technology areas showing sustained decline",
+            'technologies': [t['description'] for t in declining],
+            'actions': [
+                "Review patents in declining areas for abandonment",
+                "Consider selling or licensing out",
+                "Redirect resources to growth areas"
+            ],
+            'expected_benefit': "Cost optimization and focus on strategic areas"
+        })
+    
+    return recommendations
+```
+
+### 9.6 Output Specification
+
+```json
+{
+  "technology_area": "G06F (Data Processing)",
+  "analysis_period": {
+    "start": 2019,
+    "end": 2024,
+    "total_years": 6
+  },
+  
+  "market_overview": {
+    "total_patents": 15847,
+    "avg_annual_filings": 2641,
+    "market_trend": "MODERATE_GROWTH",
+    "market_health": "HEALTHY"
+  },
+  
+  "competitor_analysis": {
+    "companies_analyzed": 3,
+    "your_position": "SIEMENS AG",
+    
+    "comparative_metrics": [
+      {
+        "company": "Siemens AG",
+        "patents": 2847,
+        "market_share": 18.0,
+        "avg_influence": 52.3,
+        "avg_legal": 76.8,
+        "total_citations": 8945,
+        "filing_trend": "STABLE",
+        "rank": 1
+      },
+      {
+        "company": "Bosch",
+        "patents": 2134,
+        "market_share": 13.5,
+        "avg_influence": 48.1,
+        "avg_legal": 72.4,
+        "total_citations": 6234,
+        "filing_trend": "MODERATE_GROWTH",
+        "rank": 2
+      },
+      {
+        "company": "ABB",
+        "patents": 1456,
+        "market_share": 9.2,
+        "avg_influence": 54.2,
+        "avg_legal": 78.1,
+        "total_citations": 5123,
+        "filing_trend": "STRONG_GROWTH",
+        "rank": 3
+      }
+    ],
+    
+    "key_insights": [
+      "Siemens leads in patent count and market share",
+      "ABB showing strongest growth trajectory (+45% over period)",
+      "Bosch has lower citation impact despite significant portfolio"
+    ]
+  },
+  
+  "technology_gaps": [
+    {
+      "subclass": "G06F16/90",
+      "description": "Database indexing and query optimization",
+      "opportunity_size": "HIGH",
+      "total_market_patents": 847,
+      "competitor_patents": 67,
+      "competitor_share": 7.9,
+      "recommendation": "Strategic opportunity - low competitor presence in growing area"
+    },
+    {
+      "subclass": "G06F21/60",
+      "description": "Data privacy and protection",
+      "opportunity_size": "MODERATE",
+      "total_market_patents": 423,
+      "competitor_patents": 34,
+      "competitor_share": 8.0
+    }
+  ],
+  
+  "technology_trends": {
+    "emerging": [
+      {
+        "technology": "G06F16/90",
+        "description": "Database query optimization",
+        "growth_rate": 127.3,
+        "recent_filings": 234,
+        "impact": "Growing market demand for data analytics"
+      }
+    ],
+    "hot_topics": [
+      {
+        "technology": "G06F9/50",
+        "description": "Resource allocation and scheduling",
+        "avg_citation_velocity": 5.7,
+        "impact_level": "HIGH"
+      }
+    ],
+    "declining": [
+      {
+        "technology": "G06F3/12",
+        "description": "Traditional printing systems",
+        "decline_rate": -34.2,
+        "recommendation": "Consider divestment"
+      }
+    ]
+  },
+  
+  "strategic_recommendations": [
+    {
+      "type": "FILL_TECHNOLOGY_GAP",
+      "priority": "HIGH",
+      "target": "Database indexing (G06F16/90)",
+      "rationale": "High growth area with minimal competitor presence",
+      "actions": [
+        "Accelerate R&D in database optimization",
+        "File patents in query processing",
+        "Consider acquisition of startup in this space"
+      ],
+      "expected_roi": "HIGH",
+      "timeline": "12-18 months"
+    },
+    {
+      "type": "COMPETITIVE_RESPONSE",
+      "priority": "HIGH",
+      "competitors": ["ABB"],
+      "rationale": "ABB showing aggressive growth (+45%)",
+      "actions": [
+        "Monitor ABB filings weekly",
+        "File blocking patents in key areas",
+        "Explore cross-licensing"
+      ]
+    },
+    {
+      "type": "PORTFOLIO_OPTIMIZATION",
+      "priority": "MEDIUM",
+      "rationale": "12% of portfolio in declining areas",
+      "actions": [
+        "Review 340 patents in traditional printing for abandonment",
+        "Redirect budget to emerging areas"
+      ],
+      "annual_savings": 567000
+    }
+  ]
+}
+```
+
+### 9.7 Performance Requirements
+
+- Competitor analysis (3 companies): <45 seconds
+- Technology trend detection: <30 seconds
+- Gap identification: <20 seconds
+- Total analysis time: <2 minutes
+
+---
+
+## 10. UC-08: ML-Powered Future Prediction
+
+### 10.1 Overview
+
+**Use Case ID:** UC-08  
+**Name:** ML-Powered Citation and Value Prediction  
+**Primary Actor:** IP Analytics Manager  
+**Goal:** Predict future performance of patents and portfolio  
+**Success Criteria:** 3-year predictions with 80%+ accuracy and confidence intervals
+
+### 10.2 Input Specification
+
+```json
+{
+  "patent_id": "EP1234567B1",
+  "prediction_horizon": {
+    "years": 3,
+    "metrics": ["citations", "maintenance_probability", "licensing_potential"]
+  },
+  "include_explanations": true
+}
+```
+
+### 10.3 Citation Prediction Model
+
+```python
+def predict_future_citations(
+    patent: Patent,
+    horizon_years: int = 3
+) -> dict:
+    """
+    Predict future citation count using LightGBM model
+    Trained on historical patent data with 42 features
+    """
+    
+    # Extract features (see [[PRD-ML-Guidelines]] for full list)
+    features = extract_prediction_features(patent)
+    
+    # Load trained model
+    model = load_model('citation_predictor_v1.2.pkl')
+    
+    # Generate prediction
+    predicted_citations = model.predict([features])[0]
+    
+    # Get prediction confidence interval (using quantile regression)
+    lower_bound, upper_bound = model.predict_interval([features], alpha=0.1)[0]
+    
+    # Calculate confidence based on interval width
+    interval_width = upper_bound - lower_bound
+    if interval_width < 10:
+        confidence = "HIGH"
+    elif interval_width < 20:
+        confidence = "MEDIUM"
+    else:
+        confidence = "LOW"
+    
+    # Generate SHAP explanations
+    explanations = explain_prediction(model, features) if include_explanations else None
+    
+    return {
+        'predicted_citations': int(predicted_citations),
+        'confidence_interval': {
+            'lower': int(lower_bound),
+            'upper': int(upper_bound)
+        },
+        'confidence_level': confidence,
+        'prediction_horizon_years': horizon_years,
+        'current_citations': patent.forward_citations,
+        'predicted_growth': int(predicted_citations - patent.forward_citations),
+        'explanations': explanations
+    }
+
+def extract_prediction_features(patent: Patent) -> np.ndarray:
+    """Extract 42 features for ML prediction"""
+    
+    features = [
+        # Historical citation features (10)
+        patent.forward_citations,
+        patent.backward_citations,
+        patent.citation_velocity,
+        patent.citations_year_1,
+        patent.citations_year_2,
+        patent.citations_year_3,
+        patent.self_citation_rate,
+        patent.h_index,
+        patent.field_normalized_impact,
+        patent.citation_diversity,
+        
+        # Legal features (8)
+        patent.legal_score,
+        1 if patent.has_opposition else 0,
+        1 if patent.opposition_outcome == "MAINTAINED" else 0,
+        patent.claim_count,
+        patent.family_size,
+        patent.renewal_count,
+        patent.forward_family_size,
+        1 if patent.is_granted else 0,
+        
+        # Financial features (6)
+        patent.financial_score,
+        patent.total_cost_to_date,
+        patent.cost_per_citation,
+        patent.geographic_diversity,
+        patent.annual_maintenance_cost,
+        patent.roi_ratio,
+        
+        # Technology features (8)
+        encode_cpc_section(patent.cpc_main),
+        get_technology_maturity(patent.cpc_main),
+        get_market_size(patent.cpc_main),
+        get_competitive_density(patent.cpc_main),
+        patent.claim_scope_score,
+        patent.technical_complexity,
+        count_blocking_patents(patent),
+        get_technology_trend_score(patent.cpc_main),
+        
+        # Company features (5)
+        patent.assignee_size_category,
+        patent.assignee_patent_count,
+        patent.assignee_avg_quality,
+        patent.assignee_filing_velocity,
+        patent.assignee_citation_performance,
+        
+        # Temporal features (5)
+        patent.age,
+        patent.months_since_grant,
+        patent.filing_year - 2000,  # Normalized
+        get_year_seasonality(patent.filing_date.month),
+        get_economic_indicator(patent.filing_year),
+    ]
+    
+    return np.array(features)
+
+def explain_prediction(model, features: np.ndarray) -> dict:
+    """Generate SHAP explanations for prediction"""
+    
+    import shap
+    
+    # Create SHAP explainer
+    explainer = shap.TreeExplainer(model)
+    shap_values = explainer.shap_values(features)
+    
+    # Get feature names
+    feature_names = get_feature_names()
+    
+    # Create impact analysis
+    feature_impacts = []
+    for i, (name, shap_val) in enumerate(zip(feature_names, shap_values[0])):
+        feature_impacts.append({
+            'feature': name,
+            'value': float(features[i]),
+            'impact': float(shap_val),
+            'impact_direction': 'POSITIVE' if shap_val > 0 else 'NEGATIVE'
+        })
+    
+    # Sort by absolute impact
+    feature_impacts.sort(key=lambda x: abs(x['impact']), reverse=True)
+    
+    # Get top 10 drivers
+    top_drivers = feature_impacts[:10]
+    
+    # Generate natural language explanation
+    explanation_text = generate_explanation_text(top_drivers)
+    
+    return {
+        'top_drivers': top_drivers,
+        'explanation': explanation_text,
+        'methodology': 'SHAP (SHapley Additive exPlanations)'
+    }
+
+def generate_explanation_text(drivers: List[dict]) -> str:
+    """Convert SHAP values to natural language"""
+    
+    positive_drivers = [d for d in drivers if d['impact_direction'] == 'POSITIVE']
+    negative_drivers = [d for d in drivers if d['impact_direction'] == 'NEGATIVE']
+    
+    text_parts = []
+    
+    if positive_drivers:
+        top_positive = positive_drivers[0]
+        text_parts.append(
+            f"The prediction is primarily driven by {top_positive['feature']} "
+            f"({top_positive['value']:.1f}), which contributes "
+            f"+{top_positive['impact']:.1f} citations to the forecast."
+        )
+    
+    if len(positive_drivers) > 1:
+        other_positive = positive_drivers[1:3]
+        features_list = ', '.join([d['feature'] for d in other_positive])
+        text_parts.append(f"Also supporting growth: {features_list}.")
+    
+    if negative_drivers:
+        top_negative = negative_drivers[0]
+        text_parts.append(
+            f"However, {top_negative['feature']} "
+            f"({top_negative['value']:.1f}) has a dampening effect "
+            f"({top_negative['impact']:.1f} citations)."
+        )
+    
+    return ' '.join(text_parts)
+```
+
+### 10.4 Maintenance Probability Prediction
+
+```python
+def predict_maintenance_probability(patent: Patent, years_ahead: int = 3) -> dict:
+    """Predict probability patent will be maintained"""
+    
+    # Calculate abandonment risk factors
+    risk_factors = {
+        'low_citations': patent.forward_citations < 5,
+        'high_cost': patent.annual_maintenance_cost > 5000,
+        'old_age': patent.age > 15,
+        'no_recent_citations': patent.citations_last_2yrs == 0,
+        'declining_technology': get_technology_trend(patent.cpc_main) == 'DECLINING',
+        'narrow_family': patent.family_size < 2
+    }
+    
+    # Calculate risk score (0-100)
+    risk_score = sum([
+        30 if risk_factors['low_citations'] else 0,
+        25 if risk_factors['high_cost'] else 0,
+        20 if risk_factors['old_age'] else 0,
+        15 if risk_factors['no_recent_citations'] else 0,
+        10 if risk_factors['declining_technology'] else 0,
+        10 if risk_factors['narrow_family'] else 0
+    ])
+    
+    # Convert to maintenance probability
+    maintenance_prob = max(0, 100 - risk_score)
+    
+    # Classify into categories
+    if maintenance_prob >= 80:
+        likelihood = "VERY_LIKELY"
+    elif maintenance_prob >= 60:
+        likelihood = "LIKELY"
+    elif maintenance_prob >= 40:
+        likelihood = "UNCERTAIN"
+    else:
+        likelihood = "AT_RISK"
+    
+    return {
+        'maintenance_probability': maintenance_prob,
+        'abandonment_risk': risk_score,
+        'likelihood': likelihood,
+        'risk_factors': {k: v for k, v in risk_factors.items() if v},
+        'recommendation': get_maintenance_recommendation(likelihood, patent)
+    }
+
+def get_maintenance_recommendation(likelihood: str, patent: Patent) -> str:
+    if likelihood == "AT_RISK":
+        return f"High abandonment risk. Consider abandoning to save €{patent.annual_maintenance_cost}/year."
+    elif likelihood == "UNCERTAIN":
+        return "Monitor closely. Evaluate renewal decision annually."
+    elif likelihood == "LIKELY":
+        return "Maintain as planned. Patent shows stable value."
+    else:
+        return "Continue maintaining. Patent is valuable asset."
+```
+
+### 10.5 Portfolio-Level Predictions
+
+```python
+def predict_portfolio_future(
+    portfolio: List[Patent],
+    horizon_years: int = 3
+) -> dict:
+    """Predict aggregate portfolio metrics"""
+    
+    # Individual patent predictions
+    patent_predictions = []
+    for patent in portfolio:
+        pred = predict_future_citations(patent, horizon_years)
+        maint = predict_maintenance_probability(patent, horizon_years)
+        
+        patent_predictions.append({
+            'patent_id': patent.id,
+            'current_citations': patent.forward_citations,
+            'predicted_citations': pred['predicted_citations'],
+            'maintenance_probability': maint['maintenance_probability']
+        })
+    
+    # Aggregate predictions
+    total_current_citations = sum([p['current_citations'] for p in patent_predictions])
+    total_predicted_citations = sum([p['predicted_citations'] for p in patent_predictions])
+    
+    expected_maintained = sum([
+        1 for p in patent_predictions 
+        if p['maintenance_probability'] >= 50
+    ])
+    
+    expected_abandoned = len(portfolio) - expected_maintained
+    
+    # Cost projection
+    current_annual_cost = sum([p.annual_maintenance_cost for p in portfolio])
+    
+    # Assume abandoned patents save their maintenance cost
+    abandoned_patents = [
+        p for p in patent_predictions 
+        if p['maintenance_probability'] < 50
+    ]
+    abandoned_cost = sum([
+        get_patent(p['patent_id']).annual_maintenance_cost 
+        for p in abandoned_patents
+    ])
+    
+    projected_annual_cost = current_annual_cost - abandoned_cost
+    
+    return {
+        'portfolio_size': {
+            'current': len(portfolio),
+            'projected': expected_maintained
+        },
+        'total_citations': {
+            'current': total_current_citations,
+            'projected': total_predicted_citations,
+            'growth': total_predicted_citations - total_current_citations,
+            'growth_percent': ((total_predicted_citations / total_current_citations) - 1) * 100
+        },
+        'maintenance': {
+            'expected_maintained': expected_maintained,
+            'expected_abandoned': expected_abandoned,
+            'abandonment_rate': (expected_abandoned / len(portfolio)) * 100
+        },
+        'costs': {
+            'current_annual': current_annual_cost,
+            'projected_annual': projected_annual_cost,
+            'projected_savings': abandoned_cost
+        },
+        'quality_trend': assess_portfolio_quality_trend(patent_predictions)
+    }
+
+def assess_portfolio_quality_trend(predictions: List[dict]) -> str:
+    """Determine if portfolio quality is improving or declining"""
+    
+    # Calculate average citation growth
+    growth_rates = []
+    for p in predictions:
+        if p['current_citations'] > 0:
+            growth = (p['predicted_citations'] - p['current_citations']) / p['current_citations']
+            growth_rates.append(growth)
+    
+    avg_growth = np.mean(growth_rates) if growth_rates else 0
+    
+    if avg_growth > 0.2:
+        return "IMPROVING"
+    elif avg_growth > 0:
+        return "STABLE_GROWTH"
+    elif avg_growth > -0.1:
+        return "STABLE"
+    else:
+        return "DECLINING"
+```
+
+### 10.6 Output Specification
+
+```json
+{
+  "patent_id": "EP1234567B1",
+  "prediction_date": "2024-12-15",
+  "prediction_horizon": 3,
+  
+  "citation_prediction": {
+    "current_citations": 25,
+    "predicted_citations": 43,
+    "confidence_interval": {
+      "lower": 35,
+      "upper": 51
+    },
+    "confidence_level": "MEDIUM",
+    "predicted_growth": 18,
+    "growth_rate": 72.0,
+    
+    "explanation": {
+      "summary": "The prediction is primarily driven by citation_velocity (2.56), which contributes +6.2 citations. Also supporting growth: legal_score, market_growth. However, patent_age (9.75 years) has a dampening effect (-2.1 citations).",
+      
+      "top_drivers": [
+        {
+          "feature": "citation_velocity",
+          "value": 2.56,
+          "impact": 6.2,
+          "impact_direction": "POSITIVE",
+          "explanation": "Strong citation momentum (2.56 cites/year) indicates continued interest"
+        },
+        {
+          "feature": "legal_score",
+          "value": 98,
+          "impact": 3.8,
+          "impact_direction": "POSITIVE",
+          "explanation": "Excellent legal strength correlates with future citations"
+        },
+        {
+          "feature": "market_growth_rate",
+          "value": 0.18,
+          "impact": 2.9,
+          "impact_direction": "POSITIVE",
+          "explanation": "Growing market (+18% CAGR) increases citation probability"
+        },
+        {
+          "feature": "patent_age",
+          "value": 9.75,
+          "impact": -2.1,
+          "impact_direction": "NEGATIVE",
+          "explanation": "Mature patents typically receive fewer new citations"
+        }
+      ]
+    }
+  },
+  
+  "maintenance_prediction": {
+    "maintenance_probability": 85,
+    "abandonment_risk": 15,
+    "likelihood": "VERY_LIKELY",
+    "risk_factors": {},
+    "recommendation": "Continue maintaining. Patent shows strong value."
+  },
+  
+  "licensing_potential": {
+    "probability": 0.73,
+    "estimated_value_3yr": {
+      "low": 180000,
+      "high": 450000,
+      "currency": "EUR"
+    },
+    "optimal_timing": "Year 2 (peak citation velocity)"
+  },
+  
+  "confidence_metrics": {
+    "model_accuracy": 82.3,
+    "similar_patents_analyzed": 347,
+    "prediction_stability": "HIGH"
+  }
+}
+```
+
+### 10.7 UI Display
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ 🔮 FUTURE PREDICTION - EP1234567B1 (3-Year Horizon)         │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│ CITATION FORECAST                                            │
+│                                                              │
+│ Current: 25 citations  →  Predicted: 43 citations           │
+│ Expected Growth: +18 (+72%)                                  │
+│                                                              │
+│ Confidence: MEDIUM [35 - 51 range]                          │
+│                                                              │
+│ ┌────────────────────────────────────────────────────────┐  │
+│ │ Year-by-Year Forecast:                                │  │
+│ │                                                        │  │
+│ │ 2025: 32 citations (▲7)  ████████████░░░░░░          │  │
+│ │ 2026: 37 citations (▲5)  █████████████░░░░░          │  │
+│ │ 2027: 43 citations (▲6)  ███████████████░░           │  │
+│ └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│ 💡 KEY DRIVERS OF GROWTH:                                   │
+│                                                              │
+│ ✓ Strong citation velocity (2.56/year)         +6.2 impact │
+│ ✓ Excellent legal strength (98/100)            +3.8 impact │
+│ ✓ Growing market (+18% CAGR)                   +2.9 impact │
+│ ⚠ Mature age (9.75 years)                      -2.1 impact │
+│                                                              │
+│ ┌────────────────────────────────────────────────────────┐  │
+│ │ MAINTENANCE PREDICTION                                │  │
+│ │                                                        │  │
+│ │ Probability: 85% (VERY LIKELY to be maintained)      │  │
+│ │ Abandonment Risk: LOW (15/100)                        │  │
+│ │                                                        │  │
+│ │ Recommendation: Continue maintaining. Patent shows    │  │
+│ │ strong value with growing citation base.              │  │
+│ └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│ 📊 MODEL CONFIDENCE:                                         │
+│ • Historical accuracy: 82.3% (347 similar patents)          │
+│ • Prediction stability: HIGH                                │
+│                                                              │
+│ [View Detailed Analysis] [Download Forecast Report]         │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### 10.8 Performance Requirements
+
+- Single patent prediction: <3 seconds
+- Portfolio prediction (500 patents): <90 seconds
+- SHAP explanation generation: <5 seconds
+- Model accuracy: ≥80% on test set
+
+
+### 10.9 Integration Points
+
+All use cases share common components:
+- Patent retrieval from PATSTAT
+- 4D dimension calculation
+- Category synthesis
+- Output formatting
+- Error handling
+- Caching strategy
+
+### 10.10 Performance Summary
+
+**Target Metrics:**
+- 95% of requests complete within target time
+- 99.9% API uptime
+- <1% error rate
+- Cache hit rate >70%
+
+
+### 10.11 Caching Strategy
+
+- Redis for hot data (<24h TTL)
+- S3 for portfolio results (<30d TTL)
+- Database for historical analyses (permanent)

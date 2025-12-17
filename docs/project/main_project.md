@@ -326,7 +326,7 @@
 ```
 ┌─────────────────────────────────────────┐
 │         Presentation Layer              │
-│  - Streamlit UI (Multi-page)            │
+│  - React UI (Multi-page SPA)            │
 │  - PDF Report Generator                 │
 └─────────────────┬───────────────────────┘
                   │
@@ -401,7 +401,14 @@
 
 | Layer | Technology | Version | Purpose |
 |-------|-----------|---------|---------|
-| **Frontend** | Streamlit | 1.30+ | Rapid UI development |
+| **Frontend** | React + TypeScript | 18.2+ / 5.0+ | Modern SPA framework |
+| **UI Framework** | Tailwind CSS | 3.3+ | Utility-first styling |
+| **State Management** | React Query + Zustand | 5.0+ / 4.4+ | Server & client state |
+| **Routing** | React Router | 6.20+ | Client-side routing |
+| **Charts** | Recharts | 2.10+ | Data visualization |
+| **Forms** | React Hook Form | 7.48+ | Form management |
+| **Build Tool** | Vite | 5.0+ | Fast build & dev server |
+| **Package Manager** | pnpm | 8.0+ | Fast, efficient package management |
 | **Backend** | FastAPI | 0.109+ | REST API |
 | **Database** | PostgreSQL | 14+ | PATSTAT storage |
 | **Data Processing** | Polars | 0.20+ | Fast DataFrames |
@@ -409,7 +416,6 @@
 | **Cache** | Redis | 7.0+ | Result caching |
 | **ML Framework** | LightGBM | 4.1+ | Gradient boosting |
 | **Explainability** | SHAP | 0.44+ | Feature importance |
-| **Visualization** | Plotly | 5.18+ | Interactive charts |
 
 ### 5.2 Development Tools
 
@@ -611,9 +617,10 @@ The system classifies every patent into one of 6 categories:
 - FastAPI development
 
 **Developer 4 (Frontend Lead):**
-- Streamlit UI
-- Visualizations
-- PDF export
+- React UI (TypeScript + Tailwind)
+- Component library (atomic design)
+- Data visualizations (Recharts)
+- PDF export (client-side generation)
 - UX/UI polish
 
 ---
