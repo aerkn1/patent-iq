@@ -22,3 +22,8 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Node / Next.js
+node_modules/
+.next/
+patents/
