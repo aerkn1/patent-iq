@@ -1,4 +1,5 @@
 import logging
+from typing import Optional, Union
 
 from domain.errors import ValidationError, NotFoundError, InternalServerError
 from infrastructure.repositories import (
@@ -405,6 +406,7 @@ class PatentPageService:
             },
         }
 
+
     @staticmethod
     def _interpret_entropy(norm: float) -> str:
         if norm < 0.30:
@@ -414,13 +416,13 @@ class PatentPageService:
         return "DIVERSIFIED"
 
     @staticmethod
-    def _maintenance_status(is_unknown: bool, is_maintained: bool | None) -> str:
+    def _maintenance_status(is_unknown: bool, is_maintained: Optional[bool]) -> str:
         if is_unknown:
             return "UNKNOWN"
         return "MAINTAINED" if is_maintained else "NOT_MAINTAINED"
 
     @staticmethod
-    def round3(value: float | None) -> float | None:
+    def round3(value: Optional[float]) -> Optional[float]:
         if value is None:
             return None
         return round(float(value), 3)
@@ -457,7 +459,7 @@ class PatentPageService:
         return "HIGHLY_CONCENTRATED"
 
     @staticmethod
-    def pct(v: float | None) -> float | None:
+    def pct(v: Optional[float]) -> Optional[float]:
         if v is None:
             return None
         return round(float(v), 1)

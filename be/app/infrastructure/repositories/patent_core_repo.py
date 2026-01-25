@@ -1,9 +1,11 @@
 from infrastructure.duckdb.connection import DuckDBConnection
 
 
+from typing import Optional
+
 class PatentCoreRepository:
 
-    def get_core(self, appln_id: int) -> dict | None:
+    def get_core(self, appln_id: int) -> Optional[dict]:
         conn = DuckDBConnection.get_connection()
 
         q = """
@@ -45,7 +47,7 @@ class PatentCoreRepository:
         df = conn.execute(q, [appln_id]).fetchdf()
         return not df.empty
 
-    def get_core_metrics(self, appln_id: int) -> dict | None:
+    def get_core_metrics(self, appln_id: int) -> Optional[dict]:
         conn = DuckDBConnection.get_connection()
         
         q = f"""

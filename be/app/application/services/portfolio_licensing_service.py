@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Optional
 from infrastructure.repositories.portfolio_licensing_repo import (
     PortfolioLicensingRepository,
 )
-
 
 class PortfolioLicensingService:
     def __init__(self) -> None:
@@ -20,7 +19,7 @@ class PortfolioLicensingService:
         return [str(v)]
 
     @staticmethod
-    def _round(v: Any, nd: int = 4) -> float | None:
+    def _round(v: Any, nd: int = 4) -> Optional[float]:
         if v is None:
             return None
         try:
@@ -33,8 +32,8 @@ class PortfolioLicensingService:
         owner_id: int,
         limit: int = 50,
         offset: int = 0,
-        min_industry_overlap: float | None = None,
-        min_cpc_overlap: float | None = None,
+        min_industry_overlap: Optional[float] = None,
+        min_cpc_overlap: Optional[float] = None,
     ) -> dict:
         rows = self.repo.get_candidates(
             owner_id=owner_id,

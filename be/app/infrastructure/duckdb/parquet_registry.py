@@ -4,7 +4,7 @@ BASE1 = Path(
     "~/CODEFEST_RESEARCH/ref_data_setup/data/reference/app_demo/final_parquets"
 ).expanduser()
 
-BASE = "https://huggingface.co/datasets/ardae1/analytics-parquets/main/patent-iq"
+BASE = "https://huggingface.co/datasets/ardae1/analytics-parquets/resolve/main/patent-iq"
 
 PARQUETS = {
     "patent_core": f"{BASE}/patent_core.parquet",

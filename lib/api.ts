@@ -4,7 +4,10 @@
 
 import type { PortfolioPatentsResponse } from "./types/patent";
 
-export const API_BASE = 'https://aurous-byron-disloyally.ngrok-free.dev';
+const NGROK_URL = 'https://aurous-byron-disloyally.ngrok-free.dev';
+const LOCALHOST_URL = 'http://localhost:8000';
+
+export const API_BASE = NGROK_URL;
 
 export function getPatentUrl(applnId: string): string {
   return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}`;
@@ -109,17 +112,32 @@ export async function fetchPortfolioCategoryCounts(
 }
 
 /**
- * Fetch JSON from API with proper error handling
+ * Fetch JSON from API with proper error handling and fallback mechanism
  */
 export async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      'ngrok-skip-browser-warning': 'true',
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  });
+  const fetchWithFallback = async (fetchUrl: string, isRetry: boolean = false): Promise<Response> => {
+    try {
+      const response = await fetch(fetchUrl, {
+        ...options,
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          'Content-Type': 'application/json',
+          ...options?.headers,
+        },
+      });
+      return response;
+    } catch (err) {
+      // If network error and using ngrok, try fallback to localhost
+      if (!isRetry && fetchUrl.startsWith(NGROK_URL)) {
+        console.warn(`Failed to connect to Ngrok URL: ${fetchUrl}. Falling back to localhost...`);
+        const fallbackUrl = fetchUrl.replace(NGROK_URL, LOCALHOST_URL);
+        return fetchWithFallback(fallbackUrl, true);
+      }
+      throw err;
+    }
+  };
+
+  const response = await fetchWithFallback(url);
 
   // Check content type before parsing
   const contentType = response.headers.get('content-type');

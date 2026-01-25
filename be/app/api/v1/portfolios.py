@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Path
 from fastapi.responses import JSONResponse
 from fastapi import APIRouter, Query
@@ -144,8 +145,8 @@ async def discover_portfolios(
 @router.get("/{owner_id}/patents")
 async def get_portfolio_patents(
     owner_id: int,
-    category: str | None = None,
-    jurisdiction: str | None = None,
+    category: Optional[str] = None,
+    jurisdiction: Optional[str] = None,
     sort: str = "blocking_power_pct",
     order: str = "desc",
     limit: int = 25,
@@ -197,8 +198,8 @@ async def get_portfolio_licensing_candidates(
     owner_id: int,
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
-    min_industry_overlap: float | None = Query(None, ge=0.0, le=1.0),
-    min_cpc_overlap: float | None = Query(None, ge=0.0, le=1.0),
+    min_industry_overlap: Optional[float] = Query(None, ge=0.0, le=1.0),
+    min_cpc_overlap: Optional[float] = Query(None, ge=0.0, le=1.0),
 ):
     service = PortfolioLicensingService()
     return service.get_candidates(

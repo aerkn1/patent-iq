@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Optional
 from infrastructure.duckdb.connection import DuckDBConnection
 
 
@@ -17,8 +17,8 @@ class PortfolioLicensingRepository:
         owner_id: int,
         limit: int = 50,
         offset: int = 0,
-        min_industry_overlap: float | None = None,
-        min_cpc_overlap: float | None = None,
+        min_industry_overlap: Optional[float] = None,
+        min_cpc_overlap: Optional[float] = None,
     ) -> list[dict[str, Any]]:
 
         where = ["owner_id = ?"]

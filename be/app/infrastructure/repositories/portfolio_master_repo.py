@@ -2,9 +2,11 @@
 
 from infrastructure.duckdb.connection import DuckDBConnection
 
+from typing import Optional
+
 class PortfolioMasterRepository:
 
-    def get(self, owner_id: int) -> dict | None:
+    def get(self, owner_id: int) -> Optional[dict]:
         conn = DuckDBConnection.get_connection()
 
         q = f"""
