@@ -98,3 +98,10 @@ docker-compose.override.yml
 .cache/
 tmp/
 temp/
+
+############################
+# DuckDB / Local Cache
+############################
+data_cache/
+analytics.duckdb
+analytics.duckdb.wal
