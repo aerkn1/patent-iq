@@ -21,6 +21,14 @@ export function getPatentAnalysisUrl(applnId: string): string {
   return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}/analysis`;
 }
 
+export function getPatentCitationMetricsUrl(applnId: string): string {
+  return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}/citation-metrics`;
+}
+
+export function getPatentCitationTimeSeriesUrl(applnId: string): string {
+  return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}/citation-ts`;
+}
+
 export function getPortfolioOverviewUrl(ownerId: string | number): string {
   return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/overview`;
 }

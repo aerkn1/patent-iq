@@ -71,3 +71,52 @@ async def get_patent_analysis(
     except InternalServerError as e:
         logger.error("Internal error appln_id")
         return JSONResponse(status_code=500, content={"error": {"code": "INTERNAL_SERVICE_ERROR", "message": str(e)}})
+
+
+@router.get("/{appln_id}/citation-metrics")
+async def get_citation_metrics(
+    appln_id: int = Path(..., ge=1, description="Application ID")
+):
+    try:
+        payload = await PatentPageService().get_citation_metrics(appln_id)
+        return JSONResponse(status_code=200, content=payload)
+    
+    except ValidationError as e:
+        return JSONResponse(
+            status_code=400,
+            content={"error": {"code": "INVALID_ARGUMENT", "message": str(e)}})
+
+    except NotFoundError as e:
+        return JSONResponse(
+            status_code=404,
+            content={"error": {"code": "METRICS_NOT_FOUND", "message": str(e)}})
+
+    except Exception as e:
+        logger.exception("Error fetching citation metrics")
+        return JSONResponse(
+            status_code=500,
+            content={"error": {"code": "INTERNAL_ERROR", "message": "Internal server error"}})
+
+@router.get("/{appln_id}/citation-ts")
+async def get_citation_timeseries(
+    appln_id: int = Path(..., ge=1, description="Application ID")
+):
+    try:
+        payload = await PatentPageService().get_citation_timeseries(appln_id)
+        return JSONResponse(status_code=200, content=payload)
+
+    except ValidationError as e:
+        return JSONResponse(
+            status_code=400,
+            content={"error": {"code": "INVALID_ARGUMENT", "message": str(e)}})
+
+    except NotFoundError as e:
+        return JSONResponse(
+            status_code=404,
+            content={"error": {"code": "METRICS_NOT_FOUND", "message": str(e)}})
+
+    except Exception as e:
+        logger.exception("Error fetching citation timeseries")
+        return JSONResponse(
+            status_code=500,
+            content={"error": {"code": "INTERNAL_ERROR", "message": str(e)}})

@@ -45,6 +45,8 @@ import {
 } from "lucide-react"
 import { RadarChart } from "@/components/radar-chart"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts"
+import { PortfolioCitationEvolutionChart, type PortfolioCitationYearData } from "@/components/portfolio-citation-evolution-chart"
+import { PortfolioHealthCards, type PortfolioLifecycleMetrics } from "@/components/portfolio-health-cards"
 
 export default function PortfolioAnalysisPage() {
   const searchParams = useSearchParams()
@@ -346,6 +348,55 @@ export default function PortfolioAnalysisPage() {
       { category: "Licensing", value: overviewData.radar.licensing, max: 100 },
     ]
     : []
+
+  // Mock Data for Portfolio Citation Analytics
+  const portfolioCitationEvolutionData: PortfolioCitationYearData[] = Array.from({ length: 15 }, (_, i) => {
+    const year = (2010 + i).toString()
+    const baseVal = 5 + Math.log(i + 1) * 2 // Growing trend
+    const noise = Math.random() * 2
+
+    return {
+      year,
+      total_cites: Math.floor(baseVal * 50 + noise * 10),
+      avg_cites_per_patent: baseVal + noise,
+      early_cites: (baseVal * 0.5) + noise,
+      mid_cites: (baseVal * 0.3) + noise,
+      late_cites: (baseVal * 0.2) + noise,
+      yoy_growth: i > 0 ? (Math.random() * 20 - 5) : null
+    }
+  })
+
+  const portfolioLifecycleMetrics: PortfolioLifecycleMetrics = {
+    trajectory: {
+      score_avg: 72,
+      score_pct: 85,
+      label: "Rising"
+    },
+    durability: {
+      score_avg: 68,
+      score_pct: 75
+    },
+    sustainability: {
+      score_avg: 80,
+      sustaining_share: 0.65
+    },
+    timing: {
+      mode: "MID",
+      score_avg: 55,
+      score_pct: 60
+    },
+    early_signal: {
+      share: 0.25
+    },
+    cites_per_patent: {
+      overall_avg: 12.5,
+      by_phase: {
+        early: 6.5,
+        mid: 4.0,
+        late: 2.0
+      }
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -1728,6 +1779,17 @@ export default function PortfolioAnalysisPage() {
                           </div>
                         </CardContent>
                       </Card>
+
+                      {/* NEW: Portfolio Citation Analytics */}
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-2">
+                          <TrendingUp className="h-5 w-5 text-primary" />
+                          <h3 className="text-lg font-semibold">Portfolio Citation Dynamics</h3>
+                        </div>
+
+                        <PortfolioCitationEvolutionChart data={portfolioCitationEvolutionData} />
+                        <PortfolioHealthCards metrics={portfolioLifecycleMetrics} />
+                      </div>
 
                       {/* Self-Citations */}
                       <Card>

@@ -27,6 +27,13 @@ PARQUETS = {
     "patent_rank_global": f"{BASE}/patent_rank_global.parquet",
     "patent_rank_in_tech": f"{BASE}/patent_rank_in_tech.parquet",
 
+    "patent_citation_events_core": f"{BASE}/patent_citation_events_core.parquet",
+    "patent_citation_events_yearly": f"{BASE}/patent_citation_events_yearly.parquet",
+    "patent_citation_metrics": f"{BASE}/patent_citation_metrics.parquet",
+
+    "portfolio_citation_timeseries": f"{BASE}/portfolio_citation_timeseries.parquet",
+    "portfolio_citation_metrics": f"{BASE}/portfolio_citation_metrics.parquet",
+
     # portfolio
     "portfolio_axis_scores": f"{BASE}/portfolio_axis_scores.parquet",
     "portfolio_master": f"{BASE}/portfolio_master.parquet",

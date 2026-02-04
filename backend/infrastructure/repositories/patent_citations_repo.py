@@ -49,3 +49,69 @@ class PatentCitationsRepository:
             },
             "family_citations": int(r.family_size),
         }
+
+    def get_citation_metrics(self, appln_id: int) -> dict:
+        conn = DuckDBConnection.get_connection()
+
+        q = """
+        SELECT
+            early_cites,
+            mid_cites,
+            late_cites,
+            trajectory_score,
+            durability_score,
+            sustainability_score_ui,
+            timing_score,
+            timing_class,
+            early_signal,
+            is_sustaining,
+            citation_span_years,
+            peak_age
+        FROM patent_citation_metrics
+        WHERE appln_id = ?
+        """
+        
+        df = conn.execute(q, [appln_id]).fetchdf()
+        
+        if df.empty:
+            return None
+            
+        return df.iloc[0].to_dict()
+
+    def get_citation_timeseries(self, appln_id: int) -> dict:
+        conn = DuckDBConnection.get_connection()
+
+        # Get filing year from events core
+        q_core = """
+        SELECT date_part('year', CAST(filing_date AS DATE)) as filing_year
+        FROM patent_citation_events_core
+        WHERE cited_appln_id = ?
+        """
+        
+        df_core = conn.execute(q_core, [appln_id]).fetchdf()
+        
+        if df_core.empty:
+            return None
+
+        filing_year = int(df_core.iloc[0]["filing_year"])
+
+        # Get timeseries
+        q_series = """
+        SELECT
+            age_year,
+            new_forward_cites,
+            cum_forward_cites
+        FROM patent_citation_events_yearly
+        WHERE cited_appln_id = ?
+        ORDER BY age_year ASC
+        """
+        
+        df_series = conn.execute(q_series, [appln_id]).fetchdf()
+        
+        series_data = df_series.to_dict(orient="records")
+        
+        return {
+            "appln_id": appln_id,
+            "filing_date": filing_year,
+            "series": series_data
+        }

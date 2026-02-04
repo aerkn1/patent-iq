@@ -464,3 +464,23 @@ class PatentPageService:
             return None
         return round(float(v), 1)
 
+    async def get_citation_metrics(self, appln_id: int) -> dict:
+        if appln_id <= 0:
+            raise ValidationError("appln_id must be positive")
+
+        metrics = self.citations_repo.get_citation_metrics(appln_id)
+        if metrics is None:
+            raise NotFoundError(f"Citation metrics not found for {appln_id}")
+
+        return metrics
+
+    async def get_citation_timeseries(self, appln_id: int) -> dict:
+        if appln_id <= 0:
+            raise ValidationError("appln_id must be positive")
+            
+        data = self.citations_repo.get_citation_timeseries(appln_id)
+        if data is None:
+             raise NotFoundError(f"Citation timeseries not found for {appln_id}")
+             
+        return data
+
