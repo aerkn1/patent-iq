@@ -73,7 +73,7 @@ export function CitationEvolutionChart({ data }: CitationEvolutionChartProps) {
                     <div>
                         <CardTitle className="flex items-center gap-2">
                             <Activity className="h-5 w-5 text-primary" />
-                            Citation Evolution
+                            Global Citation Evolution
                         </CardTitle>
                         <CardDescription>Yearly citation growth over patent lifecycle</CardDescription>
                     </div>
@@ -89,8 +89,8 @@ export function CitationEvolutionChart({ data }: CitationEvolutionChartProps) {
                         <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                             <defs>
                                 <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0.1} />
                                 </linearGradient>
                                 <linearGradient id="colorEarly" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
@@ -152,7 +152,7 @@ export function CitationEvolutionChart({ data }: CitationEvolutionChartProps) {
                                 <Area
                                     type="monotone"
                                     dataKey="total"
-                                    stroke="hsl(var(--primary))"
+                                    stroke="#8884d8"
                                     fill="url(#colorTotal)"
                                     name="Total Citations"
                                     strokeWidth={2}

@@ -1,8 +1,11 @@
 import logging
-from fastapi import APIRouter, Path
+from fastapi import APIRouter, Path, Query
 from fastapi.responses import JSONResponse
 
 from application.services.patent_page_service import PatentPageService
+from application.services.patent_advisory_service import PatentAdvisoryService
+from application.llm.config import SNAPSHOT_DATE_FIXED_V1
+from domain.schemas.advisory_outputs import PatentAdvisoryOutput
 from domain.errors import ValidationError, NotFoundError, DataUnavailableError, InternalServerError
 
 logger = logging.getLogger(__name__)
@@ -119,4 +122,44 @@ async def get_citation_timeseries(
         logger.exception("Error fetching citation timeseries")
         return JSONResponse(
             status_code=500,
-            content={"error": {"code": "INTERNAL_ERROR", "message": str(e)}})
+            content={"error": {"code": "INTERNAL_ERROR", "message": "Internal server error"}})
+
+
+@router.get("/{appln_id}/advisory", response_model=PatentAdvisoryOutput)
+async def get_patent_advisory(
+    appln_id: int = Path(..., ge=1, description="Application ID"),
+    snapshot_date: str = Query(SNAPSHOT_DATE_FIXED_V1),
+    force_refresh: bool = Query(False),
+):
+    try:
+        if snapshot_date != SNAPSHOT_DATE_FIXED_V1:
+            raise ValidationError(f"snapshot_date must be '{SNAPSHOT_DATE_FIXED_V1}'")
+
+        payload = await PatentAdvisoryService().get_advisory(appln_id, force_refresh=force_refresh)
+        return JSONResponse(status_code=200, content=payload)
+
+    except ValidationError as e:
+        return JSONResponse(
+            status_code=400,
+            content={"error": {"code": "INVALID_ARGUMENT", "message": str(e)}},
+        )
+
+    except NotFoundError as e:
+        return JSONResponse(
+            status_code=404,
+            content={"error": {"code": "PATENT_NOT_FOUND", "message": str(e)}},
+        )
+
+    except DataUnavailableError as e:
+        logger.warning(f"Advisory unavailable for appln_id={appln_id}: {e}", exc_info=True)
+        return JSONResponse(
+            status_code=503,
+            content={"error": {"code": "LLM_UNAVAILABLE", "message": "Advisory temporarily unavailable"}},
+        )
+
+    except Exception:
+        logger.exception("Unhandled patent advisory error")
+        return JSONResponse(
+            status_code=500,
+            content={"error": {"code": "INTERNAL_ERROR", "message": "Internal server error"}},
+        )

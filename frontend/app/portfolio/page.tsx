@@ -9,8 +9,10 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Separator } from "@/components/ui/separator"
-import { fetchJson, getPortfolioOverviewUrl, getPortfolioAnalyticsUrl, getPortfolioPatentsUrl, fetchPortfolioCategoryCounts, getPortfolioLicensingCandidatesUrl } from "@/lib/api"
+import { fetchJson, getPortfolioOverviewUrl, getPortfolioAnalyticsUrl, getPortfolioPatentsUrl, fetchPortfolioCategoryCounts, getPortfolioLicensingCandidatesUrl, getPortfolioCitationMetricsUrl, getPortfolioCitationTimeSeriesUrl, getPortfolioAdvisoryUrl, getPortfolioEvolutionAdvisoryUrl } from "@/lib/api"
 import type { PortfolioOverviewResponse, PortfolioAnalyticsResponse, PortfolioPatentsResponse, PortfolioCategoryCounts, PortfolioPatent, PortfolioLicensingCandidatesResponse, LicensingCandidateResult } from "@/lib/types/patent"
+import type { PortfolioCitationMetricsResponse, PortfolioCitationTimeSeriesResponse, PortfolioTimeSeriesPoint } from "@/lib/types/portfolio"
+import type { PortfolioAdvisoryOutput, PortfolioEvolutionAdvisoryOutput } from "@/lib/types/advisory"
 import { cn, formatLabel } from "@/lib/utils"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -47,6 +49,8 @@ import { RadarChart } from "@/components/radar-chart"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts"
 import { PortfolioCitationEvolutionChart, type PortfolioCitationYearData } from "@/components/portfolio-citation-evolution-chart"
 import { PortfolioHealthCards, type PortfolioLifecycleMetrics } from "@/components/portfolio-health-cards"
+import { PortfolioOverviewCard } from "@/components/portfolio-overview-card"
+import { LegalStrengthGrantCoverage } from "@/components/legal-strength-grant-coverage"
 
 export default function PortfolioAnalysisPage() {
   const searchParams = useSearchParams()
@@ -59,7 +63,17 @@ export default function PortfolioAnalysisPage() {
   const [analyticsData, setAnalyticsData] = useState<PortfolioAnalyticsResponse | null>(null)
   const [patentsData, setPatentsData] = useState<PortfolioPatentsResponse | null>(null)
   const [licensingData, setLicensingData] = useState<PortfolioLicensingCandidatesResponse | null>(null)
+
+  const [advisoryData, setAdvisoryData] = useState<PortfolioAdvisoryOutput | null>(null)
+  const [advisoryLoading, setAdvisoryLoading] = useState(false)
+  const [advisoryError, setAdvisoryError] = useState<string | null>(null)
+
+  const [evolutionAdvisoryData, setEvolutionAdvisoryData] = useState<PortfolioEvolutionAdvisoryOutput | null>(null)
+  const [evolutionLoading, setEvolutionLoading] = useState(false)
+  const [evolutionError, setEvolutionError] = useState<string | null>(null)
   const [categoryCounts, setCategoryCounts] = useState<PortfolioCategoryCounts | null>(null)
+  const [citationMetrics, setCitationMetrics] = useState<PortfolioCitationMetricsResponse | null>(null)
+  const [citationTimeSeries, setCitationTimeSeries] = useState<PortfolioCitationTimeSeriesResponse | null>(null)
   const [selectedCandidate, setSelectedCandidate] = useState<LicensingCandidateResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [analyticsLoading, setAnalyticsLoading] = useState(false)
@@ -250,6 +264,22 @@ export default function PortfolioAnalysisPage() {
     }
   }
 
+  const fetchCitationData = async (id: string) => {
+    if (!id.trim()) return
+
+    try {
+      // Fetch metrics
+      const metricsData = await fetchJson<PortfolioCitationMetricsResponse>(getPortfolioCitationMetricsUrl(id))
+      setCitationMetrics(metricsData)
+
+      // Fetch time series
+      const tsData = await fetchJson<PortfolioCitationTimeSeriesResponse>(getPortfolioCitationTimeSeriesUrl(id))
+      setCitationTimeSeries(tsData)
+    } catch (err) {
+      console.error("Failed to fetch citation data:", err)
+    }
+  }
+
   const fetchPortfolioLicensing = async (id: string) => {
     if (!id.trim()) return
 
@@ -268,6 +298,38 @@ export default function PortfolioAnalysisPage() {
     }
   }
 
+  const fetchPortfolioAdvisory = async (id: string) => {
+    if (!id.trim()) return
+
+    setAdvisoryLoading(true)
+    setAdvisoryError(null)
+    try {
+      const data = await fetchJson<PortfolioAdvisoryOutput>(getPortfolioAdvisoryUrl(id))
+      setAdvisoryData(data)
+    } catch (err) {
+      setAdvisoryError(err instanceof Error ? err.message : "Failed to fetch advisory")
+      setAdvisoryData(null)
+    } finally {
+      setAdvisoryLoading(false)
+    }
+  }
+
+  const fetchPortfolioEvolutionAdvisory = async (id: string) => {
+    if (!id.trim()) return
+
+    setEvolutionLoading(true)
+    setEvolutionError(null)
+    try {
+      const data = await fetchJson<PortfolioEvolutionAdvisoryOutput>(getPortfolioEvolutionAdvisoryUrl(id))
+      setEvolutionAdvisoryData(data)
+    } catch (err) {
+      setEvolutionError(err instanceof Error ? err.message : "Failed to fetch evolution advisory")
+      setEvolutionAdvisoryData(null)
+    } finally {
+      setEvolutionLoading(false)
+    }
+  }
+
   // Sync ownerId with URL params and auto-fetch
   useEffect(() => {
     const urlOwnerId = searchParams?.get("ownerId")
@@ -275,10 +337,11 @@ export default function PortfolioAnalysisPage() {
       setOwnerId(urlOwnerId)
       fetchPortfolioOverview(urlOwnerId)
       fetchPortfolioAnalytics(urlOwnerId)
-    } else if (ownerId.trim() && !overviewData && !loading) {
+      fetchCitationData(urlOwnerId)
       // Initial fetch if ownerId is set but no data loaded
       fetchPortfolioOverview(ownerId.trim())
       fetchPortfolioAnalytics(ownerId.trim())
+      fetchCitationData(ownerId.trim())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
@@ -287,6 +350,12 @@ export default function PortfolioAnalysisPage() {
     if (ownerId.trim()) {
       fetchPortfolioOverview(ownerId.trim())
       fetchPortfolioAnalytics(ownerId.trim())
+      fetchCitationData(ownerId.trim())
+      // Clear advisory caches for new owner
+      setAdvisoryData(null)
+      setEvolutionAdvisoryData(null)
+      setAdvisoryError(null)
+      setEvolutionError(null)
     }
   }
 
@@ -311,6 +380,22 @@ export default function PortfolioAnalysisPage() {
         }
         fetchPortfolioLicensing(ownerId.trim())
       }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, ownerId])
+
+  // Fetch advisory when switching to advisory tab
+  useEffect(() => {
+    if (activeTab === "advisory" && ownerId.trim() && !advisoryLoading && !advisoryData && !advisoryError) {
+      fetchPortfolioAdvisory(ownerId.trim())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, ownerId])
+
+  // Fetch evolution advisory when switching to evolution tab
+  useEffect(() => {
+    if (activeTab === "evolution" && ownerId.trim() && !evolutionLoading && !evolutionAdvisoryData && !evolutionError) {
+      fetchPortfolioEvolutionAdvisory(ownerId.trim())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, ownerId])
@@ -349,54 +434,53 @@ export default function PortfolioAnalysisPage() {
     ]
     : []
 
-  // Mock Data for Portfolio Citation Analytics
-  const portfolioCitationEvolutionData: PortfolioCitationYearData[] = Array.from({ length: 15 }, (_, i) => {
-    const year = (2010 + i).toString()
-    const baseVal = 5 + Math.log(i + 1) * 2 // Growing trend
-    const noise = Math.random() * 2
+  // Transform API data for Citation Evolution Chart
+  const portfolioCitationEvolutionData: PortfolioCitationYearData[] = citationTimeSeries?.series.map(point => ({
+    year: point.year.toString(),
+    total_cites: point.citations_total,
+    avg_cites_per_patent: point.citations_per_patent,
+    early_cites: point.early_cites,
+    mid_cites: point.mid_cites,
+    late_cites: point.late_cites,
+    yoy_growth: point.citations_yoy_pct ?? null,
+    phase: point.citation_phase
+  })) || []
 
-    return {
-      year,
-      total_cites: Math.floor(baseVal * 50 + noise * 10),
-      avg_cites_per_patent: baseVal + noise,
-      early_cites: (baseVal * 0.5) + noise,
-      mid_cites: (baseVal * 0.3) + noise,
-      late_cites: (baseVal * 0.2) + noise,
-      yoy_growth: i > 0 ? (Math.random() * 20 - 5) : null
-    }
-  })
+  // Helper to infer trajectory label
+  const getTrajectoryLabel = (pct: number): "Rising" | "Flat" | "Falling" => {
+    if (pct > 0.66) return "Rising"
+    if (pct < 0.33) return "Falling"
+    return "Flat"
+  }
 
-  const portfolioLifecycleMetrics: PortfolioLifecycleMetrics = {
+  // Transform API data for Portfolio Health Cards
+  const portfolioLifecycleMetrics: PortfolioLifecycleMetrics | null = citationMetrics ? {
     trajectory: {
-      score_avg: 72,
-      score_pct: 85,
-      label: "Rising"
+      score_avg: Number(citationMetrics.citation_quality_raw.trajectory_score_avg.toFixed(1)),
+      score_pct: Number((citationMetrics.citation_quality_percentile.trajectory_score_pct * 100).toFixed(0)),
+      label: getTrajectoryLabel(citationMetrics.citation_quality_percentile.trajectory_score_pct)
     },
     durability: {
-      score_avg: 68,
-      score_pct: 75
+      score_avg: Number(citationMetrics.citation_quality_raw.durability_score_avg.toFixed(1)),
+      score_pct: Number((citationMetrics.citation_quality_percentile.durability_score_pct * 100).toFixed(0))
     },
     sustainability: {
-      score_avg: 80,
-      sustaining_share: 0.65
+      score_avg: Number((citationMetrics.citation_quality_raw.sustainability_score_avg * 100).toFixed(0)),
+      score_pct: Number((citationMetrics.citation_quality_percentile.sustainability_score_pct * 100).toFixed(0)),
+      sustaining_share: citationMetrics.portfolio_behavior.sustaining_share
     },
     timing: {
-      mode: "MID",
-      score_avg: 55,
-      score_pct: 60
+      mode: citationMetrics.portfolio_behavior.timing_class_mode as "EARLY" | "MID" | "LATE",
+      score_avg: Number(citationMetrics.citation_quality_raw.timing_score_avg.toFixed(1)),
+      score_pct: Number((citationMetrics.citation_quality_percentile.timing_score_pct * 100).toFixed(0))
     },
     early_signal: {
-      share: 0.25
+      share: citationMetrics.portfolio_behavior.early_signal_share
     },
     cites_per_patent: {
-      overall_avg: 12.5,
-      by_phase: {
-        early: 6.5,
-        mid: 4.0,
-        late: 2.0
-      }
+      overall_avg: citationMetrics.citation_volume.cites_per_patent
     }
-  }
+  } : null
 
   return (
     <div className="min-h-screen bg-background">
@@ -468,55 +552,19 @@ export default function PortfolioAnalysisPage() {
           <Card>
             <CardContent className="pt-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="overview">
-                <TabsList className="grid w-full grid-cols-4 mb-6">
+                <TabsList className="grid w-full grid-cols-6 mb-6">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="patents">Patents</TabsTrigger>
                   <TabsTrigger value="licensing">Licensing</TabsTrigger>
                   <TabsTrigger value="analysis">Analysis</TabsTrigger>
+                  <TabsTrigger value="advisory">AI Advisory</TabsTrigger>
+                  <TabsTrigger value="evolution">Evolution</TabsTrigger>
                 </TabsList>
 
                 {/* OVERVIEW TAB */}
                 <TabsContent value="overview" className="space-y-6">
                   {/* Portfolio Overview Card */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-2xl">{overviewData.portfolio.owner_name}</CardTitle>
-                      <CardDescription>
-                        <div className="flex flex-wrap items-center gap-4 text-sm mt-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-muted-foreground">Owner ID:</span>
-                            <span className="font-semibold font-mono">{overviewData.portfolio.owner_id}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-muted-foreground">Type:</span>
-                            <Badge variant="outline">{overviewData.portfolio.owner_type}</Badge>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-muted-foreground">Country:</span>
-                            <Badge variant="outline">{overviewData.portfolio.country}</Badge>
-                          </div>
-                        </div>
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid md:grid-cols-3 gap-4">
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-1">Total Patents</div>
-                          <div className="text-2xl font-bold">{overviewData.portfolio.size.n_patents}</div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-1">Unique Patents</div>
-                          <div className="text-2xl font-bold">{overviewData.portfolio.size.n_unique_patents}</div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-1">Size Bucket</div>
-                          <Badge variant="outline" className="text-base px-3 py-1">
-                            {overviewData.portfolio.size.size_bucket}
-                          </Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <PortfolioOverviewCard data={overviewData} />
 
                   {/* Radar Chart + Values Card */}
                   <Card>
@@ -549,61 +597,56 @@ export default function PortfolioAnalysisPage() {
                   </Card>
 
                   {/* Strength Metrics */}
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <Target className="h-4 w-4 text-primary" />
-                          Blocking Power
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <div className="text-2xl font-bold">
-                            {overviewData.strength.blocking_power.percentile.toFixed(1)}/100
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-6">
+                      <Card>
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-sm font-medium flex items-center gap-2">
+                            <Target className="h-4 w-4 text-primary" />
+                            Blocking Power
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2">
+                            <div className="text-2xl font-bold">
+                              {overviewData.strength.blocking_power.percentile.toFixed(1)}/100
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Raw: {overviewData.strength.blocking_power.raw.toFixed(3)}
+                            </div>
+                            <Progress value={overviewData.strength.blocking_power.percentile} className="h-2" />
                           </div>
-                          <div className="text-xs text-muted-foreground">
-                            Raw: {overviewData.strength.blocking_power.raw.toFixed(3)}
-                          </div>
-                          <Progress value={overviewData.strength.blocking_power.percentile} className="h-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
 
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <TrendingUp className="h-4 w-4 text-primary" />
-                          Licensing Readiness
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <div className="text-2xl font-bold">
-                            {overviewData.strength.licensing_readiness.percentile.toFixed(1)}/100
+                      <Card>
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-sm font-medium flex items-center gap-2">
+                            <TrendingUp className="h-4 w-4 text-primary" />
+                            Licensing Readiness
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2">
+                            <div className="text-2xl font-bold">
+                              {overviewData.strength.licensing_readiness.percentile.toFixed(1)}/100
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Raw: {overviewData.strength.licensing_readiness.raw.toFixed(3)}
+                            </div>
+                            <Progress value={overviewData.strength.licensing_readiness.percentile} className="h-2" />
                           </div>
-                          <div className="text-xs text-muted-foreground">
-                            Raw: {overviewData.strength.licensing_readiness.raw.toFixed(3)}
-                          </div>
-                          <Progress value={overviewData.strength.licensing_readiness.percentile} className="h-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    </div>
 
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <BarChart3 className="h-4 w-4 text-primary" />
-                          Legal Strength
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <div className="text-2xl font-bold">{overviewData.strength.legal_strength.raw.toFixed(1)}/100</div>
-                          <Progress value={overviewData.strength.legal_strength.raw} className="h-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <div className="h-full">
+                      <LegalStrengthGrantCoverage
+                        grantCoverage={overviewData.grant_coverage}
+                        grantMix={overviewData.grant_mix}
+                        legalScore={overviewData.strength.legal_strength.raw}
+                      />
+                    </div>
                   </div>
 
                   {/* Technology & Market Profile */}
@@ -1667,7 +1710,7 @@ export default function PortfolioAnalysisPage() {
                       {/* Citation Mechanics */}
                       <Card>
                         <CardHeader>
-                          <CardTitle>Citation Mechanics</CardTitle>
+                          <CardTitle>EP Citation Mechanics</CardTitle>
                           <CardDescription>Portfolio influence and citation patterns</CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -1720,7 +1763,7 @@ export default function PortfolioAnalysisPage() {
                       {/* Citation Distribution */}
                       <Card>
                         <CardHeader>
-                          <CardTitle>Citation Distribution</CardTitle>
+                          <CardTitle>EP Citation Distribution</CardTitle>
                           <CardDescription>Depth view of citation patterns</CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -1780,21 +1823,10 @@ export default function PortfolioAnalysisPage() {
                         </CardContent>
                       </Card>
 
-                      {/* NEW: Portfolio Citation Analytics */}
-                      <div className="space-y-6">
-                        <div className="flex items-center gap-2">
-                          <TrendingUp className="h-5 w-5 text-primary" />
-                          <h3 className="text-lg font-semibold">Portfolio Citation Dynamics</h3>
-                        </div>
-
-                        <PortfolioCitationEvolutionChart data={portfolioCitationEvolutionData} />
-                        <PortfolioHealthCards metrics={portfolioLifecycleMetrics} />
-                      </div>
-
                       {/* Self-Citations */}
                       <Card>
                         <CardHeader>
-                          <CardTitle>Self-Citations</CardTitle>
+                          <CardTitle>EP Self-Citations</CardTitle>
                           <CardDescription>Portfolio independence indicators</CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -1814,6 +1846,20 @@ export default function PortfolioAnalysisPage() {
                           </div>
                         </CardContent>
                       </Card>
+
+                      {/* NEW: Portfolio Citation Analytics */}
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-2">
+                          <TrendingUp className="h-5 w-5 text-primary" />
+                          <h3 className="text-lg font-semibold">Global Portfolio Citation Dynamics</h3>
+                        </div>
+
+                        {portfolioLifecycleMetrics && (
+                          <PortfolioHealthCards metrics={portfolioLifecycleMetrics} />
+                        )}
+                        <PortfolioCitationEvolutionChart data={portfolioCitationEvolutionData} />
+                      </div>
+
 
                       {/* Legal Health */}
                       <Card>
@@ -2069,6 +2115,192 @@ export default function PortfolioAnalysisPage() {
                         </div>
                       </CardContent>
                     </Card>
+                  )}
+                </TabsContent>
+
+                {/* AI ADVISORY TAB */}
+                <TabsContent value="advisory" className="space-y-6">
+                  {advisoryLoading && (
+                    <div className="text-center py-12">
+                      <div className="text-muted-foreground">Generating advisory...</div>
+                    </div>
+                  )}
+
+                  {advisoryError && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{advisoryError}</AlertDescription>
+                    </Alert>
+                  )}
+
+                  {!advisoryLoading && !advisoryError && !advisoryData && (
+                    <div className="text-center py-12">
+                      <div className="text-muted-foreground">No advisory available</div>
+                    </div>
+                  )}
+
+                  {!advisoryLoading && !advisoryError && advisoryData && (
+                    <>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Executive Summary</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="flex flex-wrap gap-2">
+                            <Badge variant="outline">Condition: {advisoryData.executive_summary.overall_condition}</Badge>
+                            <Badge variant="outline">Licensing: {advisoryData.licensing_readiness.level}</Badge>
+                            <Badge variant="outline">Competitive: {advisoryData.competitive_positioning.relative_strength}</Badge>
+                            <Badge variant="outline">Coverage: {advisoryData.confidence.data_coverage}</Badge>
+                          </div>
+                          <p className="text-sm text-foreground/80 leading-relaxed">
+                            {advisoryData.executive_summary.one_sentence_takeaway}
+                          </p>
+                        </CardContent>
+                      </Card>
+
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Strengths</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            {advisoryData.strengths.map((s, idx) => (
+                              <div key={idx} className="p-3 rounded-lg border">
+                                <div className="text-sm font-semibold">{s.metric}</div>
+                                <div className="text-xs text-muted-foreground">Evidence: {s.evidence}</div>
+                                <div className="text-sm text-foreground/80 mt-2">{s.interpretation}</div>
+                              </div>
+                            ))}
+                          </CardContent>
+                        </Card>
+
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Weaknesses</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            {advisoryData.weaknesses.map((s, idx) => (
+                              <div key={idx} className="p-3 rounded-lg border">
+                                <div className="text-sm font-semibold">{s.metric}</div>
+                                <div className="text-xs text-muted-foreground">Evidence: {s.evidence}</div>
+                                <div className="text-sm text-foreground/80 mt-2">{s.interpretation}</div>
+                              </div>
+                            ))}
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Recommendations & Risks</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div>
+                            <div className="text-sm font-semibold mb-2">Recommendations</div>
+                            <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80">
+                              {advisoryData.strategic_recommendations.map((r, idx) => (
+                                <li key={idx}>
+                                  <span className="font-medium">{r.action}</span> ({r.time_horizon}): {r.rationale}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div>
+                            <div className="text-sm font-semibold mb-2">Risk flags</div>
+                            <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80">
+                              {advisoryData.risk_flags.map((r, idx) => (
+                                <li key={idx}>
+                                  <span className="font-medium">{r.risk_type}</span> ({r.severity}): {r.reason}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="text-xs text-muted-foreground">
+                            <span className="font-semibold">Limitations:</span> {advisoryData.confidence.limitations}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </>
+                  )}
+                </TabsContent>
+
+                {/* EVOLUTION TAB */}
+                <TabsContent value="evolution" className="space-y-6">
+                  {evolutionLoading && (
+                    <div className="text-center py-12">
+                      <div className="text-muted-foreground">Generating evolution advisory...</div>
+                    </div>
+                  )}
+
+                  {evolutionError && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{evolutionError}</AlertDescription>
+                    </Alert>
+                  )}
+
+                  {!evolutionLoading && !evolutionError && !evolutionAdvisoryData && (
+                    <div className="text-center py-12">
+                      <div className="text-muted-foreground">No evolution advisory available</div>
+                    </div>
+                  )}
+
+                  {!evolutionLoading && !evolutionError && evolutionAdvisoryData && (
+                    <>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Evolution Summary</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          <div className="flex flex-wrap gap-2">
+                            <Badge variant="outline">Trend: {evolutionAdvisoryData.executive_summary.trend_direction}</Badge>
+                            <Badge variant="outline">Coverage: {evolutionAdvisoryData.confidence.data_coverage}</Badge>
+                          </div>
+                          <p className="text-sm text-foreground/80">{evolutionAdvisoryData.executive_summary.one_sentence_takeaway}</p>
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Year-by-year</CardTitle>
+                          <CardDescription>Interpretation based on citation timeseries</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          {evolutionAdvisoryData.yearly.map((y, idx) => (
+                            <div key={idx} className="p-3 rounded-lg border">
+                              <div className="flex flex-wrap gap-2 items-center">
+                                <Badge variant="outline">{y.year}</Badge>
+                                <Badge variant="outline">Phase: {y.phase}</Badge>
+                                <Badge variant="outline">YoY: {(y.yoy_growth_pct * 100).toFixed(1)}%</Badge>
+                              </div>
+                              <div className="text-sm text-foreground/80 mt-2">{y.interpretation}</div>
+                              <div className="text-xs text-muted-foreground mt-1">Evidence: {y.evidence}</div>
+                            </div>
+                          ))}
+                        </CardContent>
+                      </Card>
+
+                      {evolutionAdvisoryData.risk_flags.length > 0 && (
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Risk flags</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80">
+                              {evolutionAdvisoryData.risk_flags.map((r, idx) => (
+                                <li key={idx}>
+                                  <span className="font-medium">{r.risk_type}</span> ({r.severity}): {r.reason}
+                                </li>
+                              ))}
+                            </ul>
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      <div className="text-xs text-muted-foreground">
+                        <span className="font-semibold">Limitations:</span> {evolutionAdvisoryData.confidence.limitations}
+                      </div>
+                    </>
                   )}
                 </TabsContent>
               </Tabs>

@@ -5,14 +5,21 @@ from infrastructure.duckdb.parquet_registry import PARQUETS
 
 from typing import Optional
 
+
+def _repo_root() -> Path:
+    # connection.py -> backend/infrastructure/duckdb/connection.py
+    return Path(__file__).resolve().parents[3]
+
+
 class DuckDBConnection:
     _conn: Optional[duckdb.DuckDBPyConnection] = None
 
     @classmethod
     def get_connection(cls) -> duckdb.DuckDBPyConnection:
         if cls._conn is None:
+            db_path = (_repo_root() / "analytics.duckdb").as_posix()
             cls._conn = duckdb.connect(
-                database="analytics.duckdb",
+                database=db_path,
                 read_only=False,
             )
             cls._initialize(cls._conn)

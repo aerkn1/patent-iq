@@ -14,6 +14,10 @@ class CitationMetricsResponse(BaseModel):
     is_sustaining: bool
     citation_span_years: int
     peak_age: int
+    trajectory_score_pct: float
+    durability_score_pct: float
+    sustainability_score_pct: float
+    timing_score_pct: float
 
 class TimeSeriesPoint(BaseModel):
     age_year: int

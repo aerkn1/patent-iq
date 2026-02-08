@@ -12,6 +12,8 @@ from infrastructure.repositories.portfolio_industry_stats_repo import PortfolioI
 from infrastructure.repositories.portfolio_cpc_stats_repo import PortfolioCpcStatsRepository
 from infrastructure.repositories.portfolio_industry_repo import PortfolioIndustryRepository
 from infrastructure.repositories.portfolio_cpc_repo import PortfolioCpcRepository
+from infrastructure.repositories.portfolio_family_metrics_repo import PortfolioFamilyMetricsRepository
+from infrastructure.repositories.portfolio_grant_mix_repo import PortfolioGrantMixRepository
 
 
 class PortfolioOverviewService:
@@ -27,6 +29,8 @@ class PortfolioOverviewService:
         self.ind_stats_repo = PortfolioIndustryStatsRepository()
         self.cpc_repo =  PortfolioCpcRepository()
         self.ind_repo = PortfolioIndustryRepository()
+        self.family_metrics_repo = PortfolioFamilyMetricsRepository()
+        self.grant_mix_repo = PortfolioGrantMixRepository()
 
     async def get_overview(self, owner_id: int) -> dict:
         if owner_id <= 0:
@@ -46,7 +50,13 @@ class PortfolioOverviewService:
         cpc_stats = self.cpc_stats_repo.get(owner_id)
         ind_stats = self.ind_stats_repo.get(owner_id)
         cpc_top = self.cpc_repo.get_top(owner_id)
+        cpc_top = self.cpc_repo.get_top(owner_id)
         ind_top = self.ind_repo.get_top(owner_id)
+        
+        # --- New Metrics ---
+        family_metrics = self.family_metrics_repo.get(owner_id) or {}
+        grant_mix_list = self.grant_mix_repo.get(owner_id) or []
+
         
 
         if not all([axes, final, rank, size]):
@@ -128,6 +138,27 @@ class PortfolioOverviewService:
                 "contract_version": "v1",
                 "confidence": "HIGH",
             },
+            "family_metrics": {
+                "active_patent_families": family_metrics.get("n_families_unique", 0),
+                "effective_patents": family_metrics.get("n_patents_effective", 0),
+                "avg_family_size": self._round3(family_metrics.get("family_members_count_avg", 0)),
+                "avg_jurisdiction_reach": self._round3(family_metrics.get("family_jurisdiction_count_avg", 0)),
+                "major_office_coverage": self._round3(family_metrics.get("major_office_grant_coverage_index", 0)),
+            },
+            "grant_coverage": {
+                "EP": self._round3((family_metrics.get("has_ep_grant_share", 0) or 0) * 100),
+                "US": self._round3((family_metrics.get("has_us_grant_share", 0) or 0) * 100),
+                "CN": self._round3((family_metrics.get("has_cn_grant_share", 0) or 0) * 100),
+                "JP": self._round3((family_metrics.get("has_jp_grant_share", 0) or 0) * 100),
+                "KR": self._round3((family_metrics.get("has_kr_grant_share", 0) or 0) * 100),
+            },
+            "grant_mix": [
+                {
+                    "publn_auth": x["publn_auth"],
+                    "granted_share": self._round3(x["granted_share"])
+                }
+                for x in grant_mix_list
+            ]
         }
 
     # ---------- helpers ----------

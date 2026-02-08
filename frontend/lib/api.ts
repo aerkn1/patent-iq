@@ -29,6 +29,10 @@ export function getPatentCitationTimeSeriesUrl(applnId: string): string {
   return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}/citation-ts`;
 }
 
+export function getPatentAdvisoryUrl(applnId: string | number): string {
+  return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}/advisory`;
+}
+
 export function getPortfolioOverviewUrl(ownerId: string | number): string {
   return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/overview`;
 }
@@ -56,6 +60,22 @@ export function getPortfolioDiscoverUrl(dimension: "CPC" | "INDUSTRY" | "COUNTRY
     limit: limit.toString(),
   });
   return `${API_BASE}/api/v1/portfolios/discover?${params.toString()}`;
+}
+
+export function getPortfolioCitationMetricsUrl(ownerId: string | number): string {
+  return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/citation-metrics`;
+}
+
+export function getPortfolioCitationTimeSeriesUrl(ownerId: string | number): string {
+  return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/citation-ts`;
+}
+
+export function getPortfolioAdvisoryUrl(ownerId: string | number): string {
+  return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/advisory`;
+}
+
+export function getPortfolioEvolutionAdvisoryUrl(ownerId: string | number): string {
+  return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/evolution-advisory`;
 }
 
 export function getPortfolioPatentsUrl(

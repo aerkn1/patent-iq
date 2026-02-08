@@ -34,6 +34,7 @@ export interface PortfolioLifecycleMetrics {
     }
     sustainability: {
         score_avg: number
+        score_pct: number
         sustaining_share: number
     }
     timing: {
@@ -46,11 +47,6 @@ export interface PortfolioLifecycleMetrics {
     }
     cites_per_patent: {
         overall_avg: number
-        by_phase: {
-            early: number
-            mid: number
-            late: number
-        }
     }
 }
 
@@ -119,13 +115,13 @@ export function PortfolioHealthCards({ metrics }: PortfolioHealthCardsProps) {
                             </div>
                             <div className="flex flex-col gap-1">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-2xl font-bold">{metrics.trajectory.score_avg}</span>
+                                    <span className="text-2xl font-bold">{metrics.trajectory.score_pct}</span>
                                     <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-5 ${getTrajectoryColor(metrics.trajectory.label)}`}>
                                         {getTrajectoryIcon(metrics.trajectory.label)}
                                         {metrics.trajectory.label}
                                     </Badge>
                                 </div>
-                                <span className="text-xs text-muted-foreground">{metrics.trajectory.score_pct}th percentile</span>
+                                <span className="text-xs text-muted-foreground">Avg Score: {metrics.trajectory.score_avg}</span>
                             </div>
                         </div>
                         <Progress value={metrics.trajectory.score_pct} className="h-1 mt-3" />
@@ -154,8 +150,8 @@ export function PortfolioHealthCards({ metrics }: PortfolioHealthCardsProps) {
                                 </Tooltip>
                             </div>
                             <div className="flex flex-col gap-1">
-                                <span className="text-2xl font-bold">{metrics.durability.score_avg}</span>
-                                <span className="text-xs text-muted-foreground">Avg Score</span>
+                                <span className="text-2xl font-bold">{metrics.durability.score_pct}</span>
+                                <span className="text-xs text-muted-foreground">Avg Score: {metrics.durability.score_avg}</span>
                                 <span className="text-xs font-medium text-green-600">Top {100 - metrics.durability.score_pct}%</span>
                             </div>
                         </div>
@@ -186,14 +182,17 @@ export function PortfolioHealthCards({ metrics }: PortfolioHealthCardsProps) {
                             </div>
                             <div className="flex flex-col gap-1">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-2xl font-bold">{metrics.sustainability.score_avg}</span>
+                                    <span className="text-2xl font-bold">{metrics.sustainability.score_pct}</span>
                                 </div>
-                                <Badge variant="secondary" className="w-fit text-[10px] px-1.5 h-5">
-                                    {(metrics.sustainability.sustaining_share * 100).toFixed(0)}% Sustaining
-                                </Badge>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs text-muted-foreground">Avg: {metrics.sustainability.score_avg}</span>
+                                    <Badge variant="secondary" className="w-fit text-[10px] px-1.5 h-5">
+                                        {(metrics.sustainability.sustaining_share * 100).toFixed(0)}% Sustaining
+                                    </Badge>
+                                </div>
                             </div>
                         </div>
-                        <Progress value={metrics.sustainability.score_avg} className="h-1 mt-3" />
+                        <Progress value={metrics.sustainability.score_pct} className="h-1 mt-3" />
                     </CardContent>
                 </Card>
             </TooltipProvider>
@@ -222,7 +221,10 @@ export function PortfolioHealthCards({ metrics }: PortfolioHealthCardsProps) {
                                 <Badge variant="outline" className={`w-fit mb-1 ${getTimingColor(metrics.timing.mode)}`}>
                                     {metrics.timing.mode} MOVER
                                 </Badge>
-                                <span className="text-xs text-muted-foreground">Score: {metrics.timing.score_avg}</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-2xl font-bold">{metrics.timing.score_pct}</span>
+                                    <span className="text-xs text-muted-foreground">Avg: {metrics.timing.score_avg}</span>
+                                </div>
                             </div>
                         </div>
                         <Progress value={metrics.timing.score_pct} className="h-1 mt-3" />
@@ -261,14 +263,14 @@ export function PortfolioHealthCards({ metrics }: PortfolioHealthCardsProps) {
                 </Card>
             </TooltipProvider>
 
-            {/* 6. Cites per Patent (Overall + Mini Bar) */}
+            {/* 6. Citation/Patent (Overall Only) */}
             <TooltipProvider>
                 <Card>
                     <CardContent className="p-4 flex flex-col justify-between h-full">
                         <div className="space-y-2">
                             <div className="flex items-center justify-between text-muted-foreground">
                                 <span className="text-xs font-medium flex items-center gap-1">
-                                    <BarChart3 className="h-3 w-3" /> Citations/Pat
+                                    <BarChart3 className="h-3 w-3" /> Citation/Patent
                                 </span>
                                 <Tooltip>
                                     <TooltipTrigger>
@@ -276,30 +278,13 @@ export function PortfolioHealthCards({ metrics }: PortfolioHealthCardsProps) {
                                     </TooltipTrigger>
                                     <TooltipContent>
                                         <p className="max-w-xs text-xs">
-                                            Average citations per patent. The bar shows the distribution of Early/Mid/Late phase citations.
+                                            Average citations per patent.
                                         </p>
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
                             <div className="flex flex-col gap-1">
                                 <span className="text-2xl font-bold">{metrics.cites_per_patent.overall_avg.toFixed(1)}</span>
-                                <div className="flex h-2 w-full mt-2 rounded-full overflow-hidden">
-                                    <div
-                                        className="bg-emerald-500 h-full"
-                                        style={{ width: `${(metrics.cites_per_patent.by_phase.early / metrics.cites_per_patent.overall_avg) * 100}%` }}
-                                        title="Early"
-                                    />
-                                    <div
-                                        className="bg-blue-500 h-full"
-                                        style={{ width: `${(metrics.cites_per_patent.by_phase.mid / metrics.cites_per_patent.overall_avg) * 100}%` }}
-                                        title="Mid"
-                                    />
-                                    <div
-                                        className="bg-amber-500 h-full"
-                                        style={{ width: `${(metrics.cites_per_patent.by_phase.late / metrics.cites_per_patent.overall_avg) * 100}%` }}
-                                        title="Late"
-                                    />
-                                </div>
                             </div>
                         </div>
                     </CardContent>

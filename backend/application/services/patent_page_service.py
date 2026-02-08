@@ -10,7 +10,8 @@ from infrastructure.repositories import (
     OwnerRepository,
     PatentCpcFrequencyRepository,
     PatentIndustryFrequencyRepository,
-    PatentDiversificationRepository
+    PatentDiversificationRepository,
+    PatentFamilyRepository
 )
 
 logger = logging.getLogger(__name__)
@@ -27,6 +28,7 @@ class PatentPageService:
         self.cpc_repo = PatentCpcFrequencyRepository()
         self.ind_repo = PatentIndustryFrequencyRepository()
         self.div_repo = PatentDiversificationRepository()
+        self.family_repo = PatentFamilyRepository()
 
 
     async def get_patent_page(self, appln_id: int) -> dict:
@@ -78,6 +80,7 @@ class PatentPageService:
 
         owners = self.owner_repo.get_owners(appln_id)
         citations = self.citations_repo.get_citations(appln_id)
+        family_data = self.family_repo.get_family_data(appln_id)
 
         # Locked v1 contract
         return {
@@ -93,6 +96,12 @@ class PatentPageService:
                 "status": core["status"],
                 "owners": owners,
                 "patent_category": core["patent_category"]
+            },
+            "family": {
+                "family_members_count": family_data.get("family_members_count") if family_data else None,
+                "family_jurisdiction_count": family_data.get("family_jurisdiction_count") if family_data else None,
+                "major_office_grant_auths": family_data.get("major_office_grant_auths") if family_data else None,
+                "family_cpc_subclass_count": family_data.get("family_cpc_subclass_count") if family_data else None,
             },
 
             "scores": {

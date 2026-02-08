@@ -9,18 +9,22 @@ import { Info, TrendingUp, TrendingDown, Minus, Clock, Calendar, Leaf, Zap, Awar
 export interface LifecycleMetrics {
     trajectory: {
         score: number
+        percentile: number
         label: "Rising" | "Flat" | "Falling"
     }
     durability: {
         score: number
+        percentile: number
         spanYears: number
     }
     sustainability: {
         score: number
+        percentile: number
         isSustaining: boolean
     }
     timing: {
         score: number
+        percentile: number
         class: "EARLY" | "MID" | "LATE"
     }
     peakAge: number
@@ -66,15 +70,18 @@ export function TrajectoryLifecycleCards({ metrics }: TrajectoryLifecycleCardsPr
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-2xl font-bold">{metrics.trajectory.score}</span>
-                                <Badge variant="outline" className={`text-[10px] px-1 py-0 h-5 gap-1 ${getTrajectoryColor(metrics.trajectory.label)}`}>
-                                    {getTrajectoryIcon(metrics.trajectory.label)}
-                                    {metrics.trajectory.label}
-                                </Badge>
+                            <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-2xl font-bold">{metrics.trajectory.percentile}</span>
+                                    <Badge variant="outline" className={`text-[10px] px-1 py-0 h-5 gap-1 ${getTrajectoryColor(metrics.trajectory.label)}`}>
+                                        {getTrajectoryIcon(metrics.trajectory.label)}
+                                        {metrics.trajectory.label}
+                                    </Badge>
+                                </div>
+                                <span className="text-xs text-muted-foreground">Avg Score: {metrics.trajectory.score}</span>
                             </div>
                         </div>
-                        <Progress value={metrics.trajectory.score} className="h-1 mt-3" />
+                        <Progress value={metrics.trajectory.percentile} className="h-1 mt-3" />
                     </CardContent>
                 </Card>
             </TooltipProvider>
@@ -95,15 +102,12 @@ export function TrajectoryLifecycleCards({ metrics }: TrajectoryLifecycleCardsPr
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-2xl font-bold">{metrics.durability.score}</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                <Clock className="h-3 w-3" />
-                                <span>{metrics.durability.spanYears} year span</span>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-2xl font-bold">{metrics.durability.percentile}</span>
+                                <span className="text-xs text-muted-foreground">Avg Score: {metrics.durability.score}</span>
                             </div>
                         </div>
-                        <Progress value={metrics.durability.score} className="h-1 mt-3" />
+                        <Progress value={metrics.durability.percentile} className="h-1 mt-3" />
                     </CardContent>
                 </Card>
             </TooltipProvider>
@@ -124,20 +128,23 @@ export function TrajectoryLifecycleCards({ metrics }: TrajectoryLifecycleCardsPr
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-2xl font-bold">{metrics.sustainability.score}</span>
-                                {metrics.sustainability.isSustaining ? (
-                                    <Badge variant="outline" className="text-[10px] px-1 py-0 h-5 bg-green-50 text-green-700 border-green-200">
-                                        Sustaining
-                                    </Badge>
-                                ) : (
-                                    <Badge variant="outline" className="text-[10px] px-1 py-0 h-5 bg-gray-50 text-gray-700 border-gray-200">
-                                        Normal
-                                    </Badge>
-                                )}
+                            <div className="flex flex-col gap-1">
+                                <span className="text-2xl font-bold">{metrics.sustainability.percentile}</span>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs text-muted-foreground">Avg: {metrics.sustainability.score}</span>
+                                    {metrics.sustainability.isSustaining ? (
+                                        <Badge variant="outline" className="text-[10px] px-1 py-0 h-5 bg-green-50 text-green-700 border-green-200">
+                                            Sustaining
+                                        </Badge>
+                                    ) : (
+                                        <Badge variant="outline" className="text-[10px] px-1 py-0 h-5 bg-gray-50 text-gray-700 border-gray-200">
+                                            Normal
+                                        </Badge>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                        <Progress value={metrics.sustainability.score} className="h-1 mt-3" />
+                        <Progress value={metrics.sustainability.percentile} className="h-1 mt-3" />
                     </CardContent>
                 </Card>
             </TooltipProvider>
@@ -158,14 +165,17 @@ export function TrajectoryLifecycleCards({ metrics }: TrajectoryLifecycleCardsPr
                                     </TooltipContent>
                                 </Tooltip>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-2xl font-bold">{metrics.timing.score}</span>
-                                <Badge variant="outline" className="text-[10px] px-1 py-0 h-5">
+                            <div className="flex flex-col gap-1">
+                                <Badge variant="outline" className="w-fit mb-1 text-[10px] px-1 py-0 h-5">
                                     {metrics.timing.class}
                                 </Badge>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-2xl font-bold">{metrics.timing.percentile}</span>
+                                    <span className="text-xs text-muted-foreground">Avg: {metrics.timing.score}</span>
+                                </div>
                             </div>
                         </div>
-                        <Progress value={metrics.timing.score} className="h-1 mt-3" />
+                        <Progress value={metrics.timing.percentile} className="h-1 mt-3" />
                     </CardContent>
                 </Card>
             </TooltipProvider>

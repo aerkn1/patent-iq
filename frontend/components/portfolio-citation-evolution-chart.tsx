@@ -77,7 +77,7 @@ export function PortfolioCitationEvolutionChart({ data }: PortfolioCitationEvolu
                     <div>
                         <CardTitle className="flex items-center gap-2">
                             <TrendingUp className="h-5 w-5 text-primary" />
-                            Portfolio Citation Evolution
+                            Global Portfolio Citation Evolution
                         </CardTitle>
                         <CardDescription>
                             Average citations per patent over time

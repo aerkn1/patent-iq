@@ -8,6 +8,12 @@ from application.services.portfolio_page_service import PortfolioOverviewService
 from application.services.portfolio_analytics_service import PortfolioAnalyticsService
 from application.services.portfolio_patents_service import PortfolioPatentsService
 from application.services.portfolio_licensing_service import PortfolioLicensingService
+from application.services.portfolio_citation_service import PortfolioCitationService
+from application.services.portfolio_advisory_service import PortfolioAdvisoryService
+from application.services.portfolio_evolution_advisory_service import PortfolioEvolutionAdvisoryService
+from application.llm.config import SNAPSHOT_DATE_FIXED_V1
+from domain.schemas.portfolio_citation import PortfolioCitationMetricsResponse, PortfolioCitationTimeSeriesResponse
+from domain.schemas.advisory_outputs import PortfolioAdvisoryOutput, PortfolioEvolutionAdvisoryOutput
 from domain.errors import ValidationError, NotFoundError, DataUnavailableError, InternalServerError
 
 import logging
@@ -209,3 +215,79 @@ async def get_portfolio_licensing_candidates(
         min_industry_overlap=min_industry_overlap,
         min_cpc_overlap=min_cpc_overlap,
     )
+
+@router.get("/{owner_id}/citation-metrics", response_model=PortfolioCitationMetricsResponse)
+async def get_portfolio_citation_metrics(owner_id: int):
+    try:
+        service = PortfolioCitationService()
+        return service.get_citation_metrics(owner_id)
+    except NotFoundError as e:
+        return JSONResponse(status_code=404, content={"error": "NOT_FOUND", "message": str(e)})
+    except Exception as e:
+        logger.exception("Error fetching portfolio citation metrics", extra={"owner_id": owner_id})
+        return JSONResponse(status_code=500, content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected error"})
+
+
+@router.get("/{owner_id}/citation-ts", response_model=PortfolioCitationTimeSeriesResponse)
+async def get_portfolio_citation_timeseries(owner_id: int):
+    try:
+        service = PortfolioCitationService()
+        return service.get_citation_timeseries(owner_id)
+    except Exception as e:
+        logger.exception("Error fetching portfolio citation timeseries", extra={"owner_id": owner_id})
+        return JSONResponse(status_code=500, content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected error"})
+
+
+@router.get("/{owner_id}/advisory", response_model=PortfolioAdvisoryOutput)
+async def get_portfolio_advisory(
+    owner_id: int,
+    snapshot_date: str = Query(SNAPSHOT_DATE_FIXED_V1),
+    force_refresh: bool = Query(False),
+):
+    try:
+        if snapshot_date != SNAPSHOT_DATE_FIXED_V1:
+            raise ValidationError(f"snapshot_date must be '{SNAPSHOT_DATE_FIXED_V1}'")
+
+        payload = await PortfolioAdvisoryService().get_advisory(owner_id, force_refresh=force_refresh)
+        return JSONResponse(status_code=200, content=payload)
+
+    except ValidationError as e:
+        return JSONResponse(status_code=400, content={"error": "INVALID_REQUEST", "message": str(e)})
+
+    except NotFoundError as e:
+        return JSONResponse(status_code=404, content={"error": "NOT_FOUND", "message": str(e)})
+
+    except DataUnavailableError as e:
+        logger.warning(f"Advisory unavailable for owner_id={owner_id}: {e}", exc_info=True)
+        return JSONResponse(status_code=503, content={"error": "LLM_UNAVAILABLE", "message": "Advisory temporarily unavailable"})
+
+    except Exception:
+        logger.exception("Unhandled portfolio advisory error", extra={"owner_id": owner_id})
+        return JSONResponse(status_code=500, content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected error"})
+
+
+@router.get("/{owner_id}/evolution-advisory", response_model=PortfolioEvolutionAdvisoryOutput)
+async def get_portfolio_evolution_advisory(
+    owner_id: int,
+    snapshot_date: str = Query(SNAPSHOT_DATE_FIXED_V1),
+    force_refresh: bool = Query(False),
+):
+    try:
+        if snapshot_date != SNAPSHOT_DATE_FIXED_V1:
+            raise ValidationError(f"snapshot_date must be '{SNAPSHOT_DATE_FIXED_V1}'")
+
+        payload = await PortfolioEvolutionAdvisoryService().get_advisory(owner_id, force_refresh=force_refresh)
+        return JSONResponse(status_code=200, content=payload)
+
+    except ValidationError as e:
+        return JSONResponse(status_code=400, content={"error": "INVALID_REQUEST", "message": str(e)})
+
+    except NotFoundError as e:
+        return JSONResponse(status_code=404, content={"error": "NOT_FOUND", "message": str(e)})
+
+    except DataUnavailableError:
+        return JSONResponse(status_code=503, content={"error": "LLM_UNAVAILABLE", "message": "Advisory temporarily unavailable"})
+
+    except Exception:
+        logger.exception("Unhandled portfolio evolution advisory error", extra={"owner_id": owner_id})
+        return JSONResponse(status_code=500, content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected error"})

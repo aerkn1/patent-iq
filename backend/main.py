@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
+
+load_dotenv()
 from api.v1.patents import router as patent_router
 from api.v1.portfolios import router as portfolios_router
 from fastapi.middleware.cors import CORSMiddleware

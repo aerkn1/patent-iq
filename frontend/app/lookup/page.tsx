@@ -7,9 +7,10 @@ import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { fetchJson, getPatentUrl, getPatentAnalysisUrl, getPatentCitationMetricsUrl, getPatentCitationTimeSeriesUrl } from "@/lib/api"
+import { fetchJson, getPatentUrl, getPatentAnalysisUrl, getPatentCitationMetricsUrl, getPatentCitationTimeSeriesUrl, getPatentAdvisoryUrl } from "@/lib/api"
 import type { PatentPageResponse, PatentAnalysisResponse } from "@/lib/types/patent"
 import type { CitationMetricsResponse, CitationTimeSeriesResponse } from "@/lib/types/citation"
+import type { PatentAdvisoryOutput } from "@/lib/types/advisory"
 import { cn, formatLabel } from "@/lib/utils"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -52,6 +53,7 @@ import { RadarChart } from "@/components/radar-chart"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts"
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from "recharts"
 import { CitationEvolutionChart, type CitationYearData } from "@/components/citation-evolution-chart"
+import { PatentLegalFamilyStrength } from "@/components/patent-legal-family-strength"
 import { TrajectoryLifecycleCards, type LifecycleMetrics } from "@/components/trajectory-lifecycle-cards"
 
 function MetricWithTooltip({
@@ -127,6 +129,10 @@ export default function PatentLookupPage() {
   const [analysisLoading, setAnalysisLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [analysisError, setAnalysisError] = useState<string | null>(null)
+  const [advisoryLoading, setAdvisoryLoading] = useState(false)
+  const [advisoryError, setAdvisoryError] = useState<string | null>(null)
+  const [advisoryData, setAdvisoryData] = useState<PatentAdvisoryOutput | null>(null)
+
   const [patentData, setPatentData] = useState<PatentPageResponse | null>(null)
   const [analysisData, setAnalysisData] = useState<PatentAnalysisResponse | null>(null)
   const [citationMetrics, setCitationMetrics] = useState<CitationMetricsResponse | null>(null)
@@ -150,6 +156,8 @@ export default function PatentLookupPage() {
       setPatentData(null)
       setAnalysisData(null)
       setAnalysisError(null)
+      setAdvisoryData(null)
+      setAdvisoryError(null)
 
       fetchJson<PatentPageResponse>(getPatentUrl(patentId))
         .then((data) => {
@@ -217,6 +225,25 @@ export default function PatentLookupPage() {
     }
   }, [activeTab, patentData, analysisData, analysisLoading, analysisError])
 
+  // Fetch advisory when AI Advisory tab is active
+  useEffect(() => {
+    if (activeTab === "advisory" && patentData && !advisoryData && !advisoryLoading && !advisoryError) {
+      setAdvisoryLoading(true)
+      setAdvisoryError(null)
+
+      fetchJson<PatentAdvisoryOutput>(getPatentAdvisoryUrl(patentData.patent.appln_id))
+        .then((data) => {
+          setAdvisoryData(data)
+        })
+        .catch((e: Error) => {
+          setAdvisoryError(e.message || "Failed to fetch advisory")
+        })
+        .finally(() => {
+          setAdvisoryLoading(false)
+        })
+    }
+  }, [activeTab, patentData, advisoryData, advisoryLoading, advisoryError])
+
   // Use real data from API
   const overviewData = patentData
 
@@ -259,19 +286,23 @@ export default function PatentLookupPage() {
   // Transform API data to LifecycleMetrics
   const lifecycleMetrics: LifecycleMetrics = citationMetrics ? {
     trajectory: {
-      score: citationMetrics.trajectory_score,
-      label: citationMetrics.trajectory_score >= 80 ? "Rising" : citationMetrics.trajectory_score <= 40 ? "Falling" : "Flat" // Simple heuristic for label if not provided by API
+      score: Number(citationMetrics.trajectory_score.toFixed(1)),
+      percentile: Number((citationMetrics.trajectory_score_pct * 100).toFixed(0)),
+      label: citationMetrics.trajectory_score >= 80 ? "Rising" : citationMetrics.trajectory_score <= 40 ? "Falling" : "Flat"
     },
     durability: {
-      score: citationMetrics.durability_score,
+      score: Number(citationMetrics.durability_score.toFixed(1)),
+      percentile: Number((citationMetrics.durability_score_pct * 100).toFixed(0)),
       spanYears: citationMetrics.citation_span_years
     },
     sustainability: {
-      score: citationMetrics.sustainability_score_ui,
+      score: Number(citationMetrics.sustainability_score_ui.toFixed(0)),
+      percentile: Number((citationMetrics.sustainability_score_pct * 100).toFixed(0)),
       isSustaining: citationMetrics.is_sustaining
     },
     timing: {
-      score: citationMetrics.timing_score,
+      score: Number(citationMetrics.timing_score.toFixed(1)),
+      percentile: Number((citationMetrics.timing_score_pct * 100).toFixed(0)),
       class: citationMetrics.timing_class as "EARLY" | "MID" | "LATE"
     },
     peakAge: citationMetrics.peak_age,
@@ -279,10 +310,10 @@ export default function PatentLookupPage() {
     totalCitations: citationMetrics.early_cites + citationMetrics.mid_cites + citationMetrics.late_cites
   } : {
     // Fallback/Loading state placeholder
-    trajectory: { score: 0, label: "Flat" },
-    durability: { score: 0, spanYears: 0 },
-    sustainability: { score: 0, isSustaining: false },
-    timing: { score: 0, class: "MID" },
+    trajectory: { score: 0, percentile: 0, label: "Flat" },
+    durability: { score: 0, percentile: 0, spanYears: 0 },
+    sustainability: { score: 0, percentile: 0, isSustaining: false },
+    timing: { score: 0, percentile: 0, class: "MID" },
     peakAge: 0,
     totalCitations: 0
   }
@@ -399,41 +430,49 @@ export default function PatentLookupPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-5 gap-4">
-                  <div>
-                    <div className="text-sm text-muted-foreground mb-1">Application Date</div>
-                    <div className="font-medium">{overviewData.patent.application_date.split(" ")[0]}</div>
+                <div className="space-y-6">
+                  <div className="grid md:grid-cols-5 gap-4">
+                    <div>
+                      <div className="text-sm text-muted-foreground mb-1">Application Date</div>
+                      <div className="font-medium">{overviewData.patent.application_date.split(" ")[0]}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground mb-1">Publication Date</div>
+                      <div className="font-medium">{overviewData.patent.publication_date.split(" ")[0]}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground mb-1">Grant Date</div>
+                      <div className="font-medium">{overviewData.patent.grant_date.split(" ")[0]}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground mb-1">Jurisdiction</div>
+                      <Badge variant="outline">{overviewData.patent.jurisdiction}</Badge>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground mb-1">Status</div>
+                      <Badge
+                        variant="outline"
+                        className={
+                          overviewData.patent.status?.toUpperCase().includes("GRANTED") ||
+                            overviewData.patent.status?.toUpperCase().includes("ACTIVE")
+                            ? "bg-green-100 text-green-800 border-green-300 font-medium"
+                            : overviewData.patent.status?.toUpperCase().includes("ABANDONED") ||
+                              overviewData.patent.status?.toUpperCase().includes("LAPSED") ||
+                              overviewData.patent.status?.toUpperCase().includes("EXPIRED")
+                              ? "bg-red-100 text-red-800 border-red-300 font-medium"
+                              : "bg-gray-100 text-gray-700 border-gray-300 font-medium"
+                        }
+                      >
+                        {overviewData.patent.status}
+                      </Badge>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-sm text-muted-foreground mb-1">Publication Date</div>
-                    <div className="font-medium">{overviewData.patent.publication_date.split(" ")[0]}</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-muted-foreground mb-1">Grant Date</div>
-                    <div className="font-medium">{overviewData.patent.grant_date.split(" ")[0]}</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-muted-foreground mb-1">Jurisdiction</div>
-                    <Badge variant="outline">{overviewData.patent.jurisdiction}</Badge>
-                  </div>
-                  <div>
-                    <div className="text-sm text-muted-foreground mb-1">Status</div>
-                    <Badge
-                      variant="outline"
-                      className={
-                        overviewData.patent.status?.toUpperCase().includes("GRANTED") ||
-                          overviewData.patent.status?.toUpperCase().includes("ACTIVE")
-                          ? "bg-green-100 text-green-800 border-green-300 font-medium"
-                          : overviewData.patent.status?.toUpperCase().includes("ABANDONED") ||
-                            overviewData.patent.status?.toUpperCase().includes("LAPSED") ||
-                            overviewData.patent.status?.toUpperCase().includes("EXPIRED")
-                            ? "bg-red-100 text-red-800 border-red-300 font-medium"
-                            : "bg-gray-100 text-gray-700 border-gray-300 font-medium"
-                      }
-                    >
-                      {overviewData.patent.status}
-                    </Badge>
-                  </div>
+
+                  {/* New Family & Legal Strength Component */}
+                  <PatentLegalFamilyStrength
+                    familyData={overviewData.family}
+                    legalStrengthScore={overviewData.scores?.legal_strength?.raw}
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -612,9 +651,10 @@ export default function PatentLookupPage() {
             <Card>
               <CardContent className="pt-6">
                 <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="overview">
-                  <TabsList className="grid w-full grid-cols-2 mb-6">
+                  <TabsList className="grid w-full grid-cols-3 mb-6">
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="advanced">Advanced</TabsTrigger>
+                    <TabsTrigger value="advisory">AI Advisory</TabsTrigger>
                   </TabsList>
 
                   {/* OVERVIEW TAB */}
@@ -1249,9 +1289,9 @@ export default function PatentLookupPage() {
                           <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                               <Activity className="h-5 w-5 text-primary" />
-                              Detailed Citation Analysis
+                              Detailed EP Citation Analysis
                             </CardTitle>
-                            <CardDescription>Complete breakdown of citation patterns and self-citations</CardDescription>
+                            <CardDescription>Complete breakdown of EP citation patterns and self-citations</CardDescription>
                           </CardHeader>
                           <CardContent>
                             <div className="grid md:grid-cols-3 gap-6">
@@ -1298,7 +1338,7 @@ export default function PatentLookupPage() {
                                 </div>
                               </div>
                               <div>
-                                <h4 className="font-semibold mb-4">Self Citations</h4>
+                                <h4 className="font-semibold mb-4">EP Self-Citations</h4>
                                 <div className="space-y-3">
                                   <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                                     <span className="text-sm">Forward</span>
@@ -1387,7 +1427,7 @@ export default function PatentLookupPage() {
                         <div className="space-y-6">
                           <h3 className="text-lg font-semibold flex items-center gap-2">
                             <TrendingUp className="h-5 w-5 text-primary" />
-                            Citation Dynamics & Lifecycle
+                            Global Citation Dynamics & Lifecycle
                           </h3>
 
                           <TrajectoryLifecycleCards metrics={lifecycleMetrics} />
@@ -1582,6 +1622,91 @@ export default function PatentLookupPage() {
                                   className="h-2"
                                 />
                               </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </>
+                    )}
+                  </TabsContent>
+
+                  {/* AI ADVISORY TAB */}
+                  <TabsContent value="advisory" className="space-y-6">
+                    {advisoryLoading && (
+                      <div className="text-center py-12">
+                        <div className="text-muted-foreground">Generating advisory...</div>
+                      </div>
+                    )}
+
+                    {advisoryError && (
+                      <Alert variant="destructive">
+                        <AlertDescription>{advisoryError}</AlertDescription>
+                      </Alert>
+                    )}
+
+                    {!advisoryLoading && !advisoryError && !advisoryData && (
+                      <div className="text-center py-12">
+                        <div className="text-muted-foreground">No advisory available</div>
+                      </div>
+                    )}
+
+                    {!advisoryLoading && !advisoryError && advisoryData && (
+                      <>
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Executive Summary</CardTitle>
+                            <CardDescription>LLM interpretation of existing analytics</CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            <div className="flex flex-wrap gap-2">
+                              <Badge variant="outline">Role: {advisoryData.patent_role}</Badge>
+                              <Badge variant="outline">Lifecycle: {advisoryData.lifecycle_stage}</Badge>
+                              <Badge variant="outline">Risk: {advisoryData.risk_assessment.risk_level}</Badge>
+                              <Badge variant="outline">Coverage: {advisoryData.confidence.data_coverage}</Badge>
+                            </div>
+                            <p className="text-sm text-foreground/80 leading-relaxed">
+                              {advisoryData.strategic_value}
+                            </p>
+                          </CardContent>
+                        </Card>
+
+                        <div className="grid md:grid-cols-2 gap-6">
+                          <Card>
+                            <CardHeader>
+                              <CardTitle>Strengths</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80">
+                                {advisoryData.strengths.map((s, idx) => (
+                                  <li key={idx}>{s}</li>
+                                ))}
+                              </ul>
+                            </CardContent>
+                          </Card>
+
+                          <Card>
+                            <CardHeader>
+                              <CardTitle>Weaknesses</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80">
+                                {advisoryData.weaknesses.map((s, idx) => (
+                                  <li key={idx}>{s}</li>
+                                ))}
+                              </ul>
+                            </CardContent>
+                          </Card>
+                        </div>
+
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Risk & Confidence</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            <div className="text-sm text-foreground/80">
+                              <span className="font-semibold">Risk assessment:</span> {advisoryData.risk_assessment.explanation}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              <span className="font-semibold">Limitations:</span> {advisoryData.confidence.limitations}
                             </div>
                           </CardContent>
                         </Card>

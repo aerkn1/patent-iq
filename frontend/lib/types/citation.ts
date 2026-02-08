@@ -11,6 +11,10 @@ export interface CitationMetricsResponse {
     is_sustaining: boolean
     citation_span_years: number
     peak_age: number
+    trajectory_score_pct: number
+    durability_score_pct: number
+    sustainability_score_pct: number
+    timing_score_pct: number
 }
 
 export interface TimeSeriesPoint {

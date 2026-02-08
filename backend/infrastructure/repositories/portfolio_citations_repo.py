@@ -70,6 +70,29 @@ class PortfolioCitationsRepository:
             return []
         return [{"bucket": str(r["bucket"]), "count": int(r["count"])} for _, r in df.iterrows()]
 
+    def get_citation_metrics(self, owner_id: int) -> dict:
+        q = """
+        SELECT *
+        FROM portfolio_citation_metrics
+        WHERE owner_id = ?
+        """
+        df = self.conn.execute(q, [owner_id]).fetchdf()
+        if df.empty:
+            return None
+        return df.iloc[0].to_dict()
+
+    def get_citation_timeseries(self, owner_id: int) -> list[dict]:
+        q = """
+        SELECT *
+        FROM portfolio_citation_timeseries
+        WHERE owner_id = ?
+        ORDER BY year ASC
+        """
+        df = self.conn.execute(q, [owner_id]).fetchdf()
+        if df.empty:
+            return []
+        return df.to_dict(orient="records")
+
     def get_backward_buckets(self, owner_id: int) -> list[dict]:
         q = """
         WITH t AS (

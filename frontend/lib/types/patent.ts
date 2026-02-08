@@ -80,8 +80,16 @@ export type RelativePositioning = {
   };
 };
 
+export type FamilyData = {
+  family_members_count: number;
+  family_jurisdiction_count: number;
+  major_office_grant_auths: string[];
+  family_cpc_subclass_count: number;
+};
+
 export type PatentPageResponse = {
   patent: PatentCoreDTO;
+  family: FamilyData;
   scores: {
     blocking_power: ScoreBlock;
     licensing_readiness: ScoreBlock;
@@ -315,6 +323,26 @@ export type MarketProfile = {
   top_industries: IndustryCode[];
 };
 
+export type PortfolioFamilyMetrics = {
+  active_patent_families: number;
+  effective_patents: number;
+  avg_family_size: number;
+  avg_jurisdiction_reach: number;
+  major_office_coverage: number;
+};
+
+export type PortfolioGrantCoverage = {
+  EP: number;
+  US: number;
+  CN: number;
+  JP: number;
+  KR: number;
+};
+export type PortfolioGrantMixItem = {
+  publn_auth: string;
+  granted_share: number;
+};
+
 export type PortfolioOverviewResponse = {
   portfolio: PortfolioInfo;
   radar: PortfolioRadar;
@@ -325,6 +353,9 @@ export type PortfolioOverviewResponse = {
   peer_positioning: PeerPositioning;
   technology_profile: TechnologyProfile;
   market_profile: MarketProfile;
+  family_metrics: PortfolioFamilyMetrics;
+  grant_coverage: PortfolioGrantCoverage;
+  grant_mix: PortfolioGrantMixItem[];
   metadata: {
     contract_version: string;
     confidence: string;

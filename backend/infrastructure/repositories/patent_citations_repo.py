@@ -66,7 +66,11 @@ class PatentCitationsRepository:
             early_signal,
             is_sustaining,
             citation_span_years,
-            peak_age
+            peak_age,
+            trajectory_score_pct,
+            durability_score_pct,
+            sustainability_score_pct,
+            timing_score_pct
         FROM patent_citation_metrics
         WHERE appln_id = ?
         """
@@ -102,7 +106,7 @@ class PatentCitationsRepository:
             new_forward_cites,
             cum_forward_cites
         FROM patent_citation_events_yearly
-        WHERE cited_appln_id = ?
+        WHERE appln_id = ?
         ORDER BY age_year ASC
         """
         
