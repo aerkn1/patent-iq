@@ -71,6 +71,15 @@ export async function searchPortfolios(query: string, limit: number = 10): Promi
   return fetchJson(url);
 }
 
+export async function searchPatents(query: string, limit: number = 10): Promise<{ results: Array<{ appln_id: number, appln_title: string, ep_publn_id_full: string }> }> {
+  const params = new URLSearchParams({
+    q: query,
+    limit: limit.toString()
+  });
+  const url = `${API_BASE}/api/v1/patents/search?${params.toString()}`;
+  return fetchJson(url);
+}
+
 export function getPortfolioCitationMetricsUrl(ownerId: string | number): string {
   return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/citation-metrics`;
 }

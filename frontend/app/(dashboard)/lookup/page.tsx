@@ -60,6 +60,7 @@ import { MetricWithTooltip } from "@/components/metric-with-tooltip"
 import { TierBadge } from "@/components/tier-badge"
 import { RED_PALETTE } from "@/lib/chart-config"
 import { llmQueue } from "@/lib/api/llm-queue"
+import { PatentSearch } from "@/components/patent-search"
 
 export default function PatentLookupPage() {
   const searchParams = useSearchParams()
@@ -293,23 +294,11 @@ export default function PatentLookupPage() {
         <CardContent className="pt-6">
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Enter patent ID (e.g., 482020668)"
-                value={patentId}
-                onChange={(e) => setPatentId(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && patentId.trim()) {
-                    setPatentId(patentId.trim())
-                  }
-                }}
-                className="pl-9"
-                disabled={loading}
+              <PatentSearch
+                onSelect={(applnId) => setPatentId(applnId)}
+                placeholder="Search by publication ID (e.g., EP1234567A1)"
               />
             </div>
-            <Button onClick={() => patentId.trim() && setPatentId(patentId.trim())} disabled={loading || !patentId.trim()}>
-              {loading ? "Loading..." : "Analyze Patent"}
-            </Button>
           </div>
         </CardContent>
       </Card>
