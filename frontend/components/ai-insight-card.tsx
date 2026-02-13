@@ -22,7 +22,6 @@ export function AiInsightCard({
 }: AiInsightCardProps) {
     const [expanded, setExpanded] = React.useState(false)
 
-    // If no insight, no loading, and no generation handler, don't render anything (legacy behavior)
     if (!loading && !insight && !onGenerate) return null
 
     const lines = (insight || "").split(/(?<=[.!?])\s+/)
@@ -32,25 +31,25 @@ export function AiInsightCard({
     return (
         <div
             className={cn(
-                "relative overflow-hidden rounded-lg border border-purple-500/20",
-                "bg-gradient-to-br from-purple-950/40 via-slate-900/60 to-indigo-950/40",
-                "backdrop-blur-sm shadow-lg shadow-purple-500/5",
+                "relative overflow-hidden rounded-lg border",
+                "border-primary/20 bg-primary/5",
+                "shadow-sm",
                 className
             )}
         >
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-transparent to-indigo-500/5 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 pointer-events-none" />
 
             <div className="relative p-4">
                 <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="h-4 w-4 text-purple-400 shrink-0" />
-                    <span className="text-xs font-semibold uppercase tracking-wider text-purple-300/80">
+                    <Sparkles className="h-4 w-4 text-primary shrink-0" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-primary/70">
                         {title}
                     </span>
                 </div>
 
                 {loading ? (
                     <div className="flex items-center gap-2 py-2">
-                        <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                        <Loader2 className="h-4 w-4 animate-spin text-primary" />
                         <span className="text-sm text-muted-foreground">Generating insight...</span>
                     </div>
                 ) : !insight && onGenerate ? (
@@ -61,7 +60,7 @@ export function AiInsightCard({
                         <Button
                             size="sm"
                             variant="outline"
-                            className="h-7 text-xs bg-purple-500/10 border-purple-500/20 hover:bg-purple-500/20 text-purple-300"
+                            className="h-7 text-xs bg-primary/10 border-primary/20 hover:bg-primary/20 text-primary"
                             onClick={onGenerate}
                         >
                             Generate
@@ -69,7 +68,7 @@ export function AiInsightCard({
                     </div>
                 ) : (
                     <>
-                        <p className="text-sm leading-relaxed text-slate-200/90 whitespace-pre-wrap">
+                        <p className="text-sm leading-relaxed text-foreground/80 whitespace-pre-wrap">
                             {expanded ? insight : previewText}
                             {!expanded && hasMore && "..."}
                         </p>
@@ -77,7 +76,7 @@ export function AiInsightCard({
                         {hasMore && (
                             <button
                                 onClick={() => setExpanded(!expanded)}
-                                className="mt-2 flex items-center gap-1 text-xs text-purple-400 hover:text-purple-300 transition-colors"
+                                className="mt-2 flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
                             >
                                 {expanded ? (
                                     <>

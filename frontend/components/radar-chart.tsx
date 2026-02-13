@@ -1,5 +1,8 @@
 "use client"
 
+import { ResponsiveRadar } from "@nivo/radar"
+import { RED_PALETTE } from "@/lib/chart-config"
+
 interface RadarData {
   category: string
   value: number
@@ -11,70 +14,87 @@ interface RadarChartProps {
 }
 
 export function RadarChart({ data }: RadarChartProps) {
-  const size = 300
-  const center = size / 2
-  const radius = size / 2 - 40
-  const levels = 5
-
-  // Calculate points for the data polygon
-  const calculatePoint = (value: number, max: number, angle: number) => {
-    const ratio = value / max
-    const x = center + radius * ratio * Math.cos(angle - Math.PI / 2)
-    const y = center + radius * ratio * Math.sin(angle - Math.PI / 2)
-    return { x, y }
-  }
-
-  const angleStep = (2 * Math.PI) / data.length
-  const dataPoints = data.map((item, index) => {
-    const angle = index * angleStep
-    return calculatePoint(item.value, item.max, angle)
-  })
-
-  const dataPath = dataPoints.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x},${point.y}`).join(" ") + " Z"
+  // Normalize data to 0-100 scale for the chart, but keep original values for tooltip
+  const chartData = data.map(d => ({
+    category: d.category,
+    value: Math.min(100, Math.max(0, (d.value / d.max) * 100)), // Clamp 0-100
+    originalValue: d.value,
+    max: d.max
+  }))
 
   return (
-    <div className="flex items-center justify-center">
-      <svg width={size} height={size}>
-        {Array.from({ length: levels }).map((_, i) => {
-          const r = radius * ((i + 1) / levels)
-          return <circle key={i} cx={center} cy={center} r={r} fill="none" stroke="#d1d5db" strokeWidth="1.5" />
-        })}
-
-        {data.map((_, index) => {
-          const angle = index * angleStep
-          const x = center + radius * Math.cos(angle - Math.PI / 2)
-          const y = center + radius * Math.sin(angle - Math.PI / 2)
-          return <line key={index} x1={center} y1={center} x2={x} y2={y} stroke="#9ca3af" strokeWidth="2" />
-        })}
-
-        <path d={dataPath} fill="#dc2626" fillOpacity="0.25" stroke="#dc2626" strokeWidth="3" />
-
-        {dataPoints.map((point, index) => (
-          <circle key={index} cx={point.x} cy={point.y} r="6" fill="#dc2626" stroke="white" strokeWidth="3" />
-        ))}
-        {/* </CHANGE> */}
-
-        {data.map((item, index) => {
-          const angle = index * angleStep
-          const labelDistance = radius + 25
-          const x = center + labelDistance * Math.cos(angle - Math.PI / 2)
-          const y = center + labelDistance * Math.sin(angle - Math.PI / 2)
+    <div className="w-full" style={{ height: 300 }}>
+      {/* Explicit height style to ensure visibility if Tailwind class fails */}
+      <ResponsiveRadar
+        data={chartData}
+        keys={["value"]}
+        indexBy="category"
+        maxValue={100}
+        margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
+        curve="linearClosed"
+        borderWidth={2}
+        borderColor={RED_PALETTE[3]}
+        gridLevels={5}
+        gridShape="circular"
+        gridLabelOffset={16}
+        enableDots={true}
+        dotSize={8}
+        dotColor="white"
+        dotBorderWidth={2}
+        dotBorderColor={RED_PALETTE[3]}
+        enableDotLabel={false}
+        colors={[RED_PALETTE[3]]}
+        fillOpacity={0.25}
+        blendMode="multiply"
+        motionConfig="wobbly"
+        theme={{
+          axis: {
+            ticks: {
+              text: {
+                fontSize: 12,
+                fill: "#6b7280" // Gray-500 hardcoded
+              }
+            }
+          },
+          grid: {
+            line: {
+              stroke: "#e5e7eb", // Gray-200 hardcoded
+              strokeDasharray: "4 4"
+            }
+          },
+          tooltip: {
+            container: {
+              background: "#ffffff",
+              color: "#000000",
+              fontSize: 12,
+              borderRadius: "6px",
+              boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+              border: "1px solid #e5e7eb"
+            }
+          }
+        }}
+        sliceTooltip={(props: any) => {
+          const index = props.index || props.slice?.index
+          const data = props.data || props.slice?.data
 
           return (
-            <text
-              key={index}
-              x={x}
-              y={y}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              className="text-xs font-semibold"
-              fill="#374151"
-            >
-              {item.category}
-            </text>
+            <div className="bg-background border border-border p-3 rounded-lg shadow-lg">
+              <div className="font-semibold mb-1">{index}</div>
+              {data && data.map((point: any) => {
+                const original = point.data?.originalValue
+                const max = point.data?.max
+                return (
+                  <div key={point.id} className="text-sm text-muted-foreground">
+                    <span className="text-foreground font-medium">{point.formattedValue || original?.toFixed(1) || point.value?.toFixed(0)}</span>
+                    <span className="mx-1">/</span>
+                    <span>{max}</span>
+                  </div>
+                )
+              })}
+            </div>
           )
-        })}
-      </svg>
+        }}
+      />
     </div>
   )
 }

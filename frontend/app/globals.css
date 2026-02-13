@@ -1,9 +1,32 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@source "../node_modules/@tremor";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Tremor Light Theme Mappings */
+  --tremor-brand-faint: var(--primary); /* Fallback */
+  --tremor-brand-muted: var(--primary);
+  --tremor-brand-subtle: var(--primary);
+  --tremor-brand: var(--primary);
+  --tremor-brand-emphasis: var(--primary);
+  --tremor-brand-inverted: var(--primary-foreground);
+  
+  --tremor-background-muted: var(--muted);
+  --tremor-background-subtle: var(--card);
+  --tremor-background: var(--background);
+  --tremor-background-emphasis: var(--foreground);
+  
+  --tremor-border: var(--border);
+  --tremor-ring: var(--ring);
+  
+  --tremor-content-subtle: var(--muted-foreground);
+  --tremor-content: var(--foreground);
+  --tremor-content-emphasis: var(--foreground);
+  --tremor-content-strong: var(--foreground);
+  --tremor-content-inverted: var(--background);
+
   /* White-red-gray light theme color palette */
   --background: oklch(1 0 0); /* Pure white background */
   --foreground: oklch(0.25 0 0); /* Dark gray text */
@@ -42,6 +65,27 @@
 }
 
 .dark {
+  /* Tremor Dark Theme Mappings */
+  --tremor-brand-faint: var(--primary);
+  --tremor-brand-muted: var(--primary);
+  --tremor-brand-subtle: var(--primary);
+  --tremor-brand: var(--primary);
+  --tremor-brand-emphasis: var(--primary);
+  --tremor-brand-inverted: var(--primary-foreground);
+  
+  --tremor-background-muted: var(--muted);
+  --tremor-background-subtle: var(--card);
+  --tremor-background: var(--background);
+  --tremor-background-emphasis: var(--foreground);
+  
+  --tremor-border: var(--border);
+  --tremor-ring: var(--ring);
+  --tremor-content-subtle: var(--muted-foreground);
+  --tremor-content: var(--foreground);
+  --tremor-content-emphasis: var(--foreground);
+  --tremor-content-strong: var(--foreground);
+  --tremor-content-inverted: var(--background);
+
   --background: oklch(0.15 0.01 0);
   --foreground: oklch(0.98 0 0);
   --card: oklch(0.18 0.01 0);
@@ -115,6 +159,25 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Tremor Theme Tokens */
+  --color-tremor-brand-faint: var(--tremor-brand-faint);
+  --color-tremor-brand-muted: var(--tremor-brand-muted);
+  --color-tremor-brand-subtle: var(--tremor-brand-subtle);
+  --color-tremor-brand: var(--tremor-brand);
+  --color-tremor-brand-emphasis: var(--tremor-brand-emphasis);
+  --color-tremor-brand-inverted: var(--tremor-brand-inverted);
+  --color-tremor-background-muted: var(--tremor-background-muted);
+  --color-tremor-background-subtle: var(--tremor-background-subtle);
+  --color-tremor-background: var(--tremor-background);
+  --color-tremor-background-emphasis: var(--tremor-background-emphasis);
+  --color-tremor-border: var(--tremor-border);
+  --color-tremor-ring: var(--tremor-ring);
+  --color-tremor-content-subtle: var(--tremor-content-subtle);
+  --color-tremor-content: var(--tremor-content);
+  --color-tremor-content-emphasis: var(--tremor-content-emphasis);
+  --color-tremor-content-strong: var(--tremor-content-strong);
+  --color-tremor-content-inverted: var(--tremor-content-inverted);
 }
 
 @layer base {
