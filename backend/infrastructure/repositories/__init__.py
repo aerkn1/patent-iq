@@ -7,6 +7,7 @@ from .patent_cpc_freq_repo import PatentCpcFrequencyRepository
 from .patent_diversification_repo import PatentDiversificationRepository
 from .patent_industry_freq_repo import PatentIndustryFrequencyRepository
 from .patent_family_repo import PatentFamilyRepository
+from .forecast_feature_repo import ForecastFeatureRepository
 
 __all__ = [
     "PatentCoreRepository",
@@ -17,5 +18,6 @@ __all__ = [
     "PatentCpcFrequencyRepository",
     "PatentIndustryFrequencyRepository",
     "PatentDiversificationRepository",
-    "PatentFamilyRepository"
+    "PatentFamilyRepository",
+    "ForecastFeatureRepository",
 ]

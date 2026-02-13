@@ -105,3 +105,5 @@ temp/
 data_cache/
 analytics.duckdb
 analytics.duckdb.wal
+
+*.env

@@ -18,9 +18,16 @@ async def lifespan(app: FastAPI):
     try:
         # This triggers CacheManager.ensure_cache()
         DuckDBConnection.get_connection()
-        logger.info("Startup: Cache verification complete. Backend ready.")
+        logger.info("Startup: Cache verification complete.")
+
+        # Load ML models for citation forecast
+        from infrastructure.ml.model_registry import ModelRegistry
+        ModelRegistry.initialize()
+        logger.info("Startup: ML models loaded. Forecast ready.")
+
+        logger.info("Startup: Backend ready.")
     except Exception as e:
-        logger.error(f"Startup Failed: Could not initialize database: {e}")
+        logger.error(f"Startup Failed: Could not initialize: {e}")
         raise e
     yield
     # Shutdown logic if needed (e.g. closing connection)

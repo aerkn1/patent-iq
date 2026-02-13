@@ -1,0 +1,41 @@
+{
+    "task": "Analyze the portfolio citation evolution timeseries and produce a structured advisory.",
+    "instructions": [
+        "Determine overall trend direction (ACCELERATING/STABILIZING/DECELERATING) from recent YoY growth",
+        "Provide a one-sentence executive takeaway grounded in the timeseries data",
+        "For each year in the timeseries, classify the phase, note YoY growth, and interpret the pattern",
+        "The yoy_growth_pct in yearly items MUST come directly from the input data citations_yoy_pct field",
+        "Flag any risks related to aging, crowding, or decline patterns"
+    ],
+    "output_schema": {
+        "executive_summary": {
+            "trend_direction": "ACCELERATING | STABILIZING | DECELERATING",
+            "one_sentence_takeaway": "string with trace tokens"
+        },
+        "yearly": [
+            {
+                "year": "integer",
+                "phase": "EMERGING | PEAK | DECLINING",
+                "yoy_growth_pct": "float — MUST match input data exactly",
+                "interpretation": "string with trace tokens",
+                "evidence": "string with trace tokens"
+            }
+        ],
+        "risk_flags": [
+            {
+                "risk_type": "AGING | CROWDING | DECLINE",
+                "severity": "LOW | MEDIUM | HIGH",
+                "reason": "string with trace tokens"
+            }
+        ],
+        "confidence": {
+            "data_coverage": "HIGH | MEDIUM | LOW",
+            "limitations": "string"
+        }
+    },
+    "trace_rules": [
+        "Every narrative string MUST contain at least one [[path=value]] trace token",
+        "yoy_growth_pct MUST be taken directly from ui_payload.portfolio_citation_timeseries.series[].citations_yoy_pct",
+        "Use paths like ui_payload.portfolio_citation_timeseries.series to reference data"
+    ]
+}

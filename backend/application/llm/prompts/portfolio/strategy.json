@@ -1,0 +1,33 @@
+{
+    "task": "Analyze the following portfolio UI snapshot data and produce a strategic assessment.",
+    "instructions": [
+        "Assess overall strategic condition (EMERGING/PEAK/DECLINING) from citation trends and portfolio composition",
+        "Generate 2-3 strategic recommendations with action, time horizon, and rationale",
+        "Flag risks with type, severity, and reason",
+        "Provide executive summary with condition and one sentence takeaway"
+    ],
+    "output_schema": {
+        "executive_summary": {
+            "overall_condition": "EMERGING | PEAK | DECLINING",
+            "one_sentence_takeaway": "string with trace tokens"
+        },
+        "strategic_recommendations": [
+            {
+                "action": "string",
+                "time_horizon": "SHORT | MID | LONG",
+                "rationale": "string with trace tokens"
+            }
+        ],
+        "risk_flags": [
+            {
+                "risk_type": "AGING | CROWDING | DECLINE",
+                "severity": "LOW | MEDIUM | HIGH",
+                "reason": "string with trace tokens"
+            }
+        ]
+    },
+    "trace_rules": [
+        "Every narrative string MUST contain at least one [[path=value]] trace token",
+        "Use paths like: derived.portfolio_timeseries_summary.current_phase, derived.blocking_summary.drivers"
+    ]
+}

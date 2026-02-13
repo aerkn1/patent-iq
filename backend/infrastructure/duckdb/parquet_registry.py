@@ -58,4 +58,7 @@ PARQUETS = {
     "portfolio_family_grant_mix": f"{BASE}/portfolio_family_grant_mix.parquet",
     "portfolio_family_top_cpcs": f"{BASE}/portfolio_family_top_cpcs.parquet",
     "portfolio_family_assets": f"{BASE}/portfolio_family_assets.parquet",
+
+    # ML inference
+    "ml_training_table": f"{BASE}/ml_patent_training_table.parquet",
 }

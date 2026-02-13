@@ -3,6 +3,67 @@ from infrastructure.duckdb.connection import DuckDBConnection
 
 class PatentCitationsRepository:
 
+    def get_cumulative_timeseries(self, appln_id: int) -> dict | None:
+        """Return cumulative forward citation timeseries with calendar years."""
+        conn = DuckDBConnection.get_connection()
+
+        # Get filing year from patent_core
+        q_core = """
+        SELECT 
+            date_part('year', CAST(filing_date AS DATE)) as filing_year,
+            patent_age_years
+        FROM patent_core
+        WHERE appln_id = ?
+        """
+        
+        df_core = conn.execute(q_core, [appln_id]).fetchdf()
+        
+        if df_core.empty:
+            return None
+
+        filing_year = int(df_core.iloc[0]["filing_year"])
+        age_years = df_core.iloc[0]["patent_age_years"]
+        if age_years is None or (isinstance(age_years, float) and age_years != age_years): # nan check
+             age_years = 0
+        else:
+             age_years = int(age_years)
+
+        q = """
+        SELECT
+            age_year,
+            cum_forward_cites
+        FROM patent_citation_events_yearly
+        WHERE appln_id = ?
+        ORDER BY age_year ASC
+        """
+        
+        df = conn.execute(q, [appln_id]).fetchdf()
+        
+        series = []
+        if df.empty:
+            # No citations -> flat line at 0
+            series.append({
+                "year": filing_year,
+                "cum_cites": 0
+            })
+            if age_years > 0:
+                series.append({
+                    "year": filing_year + age_years,
+                    "cum_cites": 0
+                })
+        else:
+            for _, r in df.iterrows():
+                series.append({
+                    "year": filing_year + int(r["age_year"]),
+                    "cum_cites": int(r["cum_forward_cites"])
+                })
+
+        return {
+            "appln_id": appln_id,
+            "filing_year": filing_year,
+            "series": series
+        }
+
     def get_citations(self, appln_id: int) -> dict:
         conn = DuckDBConnection.get_connection()
 

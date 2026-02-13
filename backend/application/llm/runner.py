@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import asyncio
+import logging
 from dataclasses import dataclass
 from typing import Any, Callable, Optional
 
@@ -9,6 +11,8 @@ from application.llm.config import (
 )
 from infrastructure.llm.groq_client import GroqChatClient, GroqRequestError, GroqAuthError
 from domain.errors import DataUnavailableError
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -24,7 +28,7 @@ class LlmRunner:
         except GroqAuthError as e:
             raise DataUnavailableError("LLM credentials are not configured") from e
 
-    def run_json_advisory(
+    async def run_json_advisory(
         self,
         *,
         system_prompt: str,
@@ -38,7 +42,7 @@ class LlmRunner:
         ]
 
         if repair_hint:
-            # Add a strict repair instruction as a system message.
+             # Add a strict repair instruction as a system message.
             messages.append(
                 {
                     "role": "system",
@@ -50,23 +54,34 @@ class LlmRunner:
             )
 
         messages.append({"role": "user", "content": user_prompt})
+        
+        for attempt in range(3):
+            try:
+                # Groq supports response_format={"type": "json_object"}
+                res = self.client.chat_completions_create(
+                    model=model,
+                    messages=messages,
+                    temperature=0.1,
+                    top_p=1.0,
+                    max_tokens=max_tokens,
+                    response_format={"type": "json_object"},
+                )
+                return LlmRunResult(model=model, content=res.content)
+            except GroqRequestError as e:
+                # Rate limits (429) backoff
+                if "429" in str(e) and attempt < 2:
+                    wait_time = 2 * (2 ** attempt) # 2s, 4s
+                    logger.warning(f"Groq 429 rate limit. Waiting {wait_time}s...")
+                    await asyncio.sleep(wait_time)
+                    continue
+                raise DataUnavailableError("LLM provider request failed") from e
+            except Exception as e:
+                 raise DataUnavailableError(f"LLM unexpected error: {e}") from e
+        
+        raise DataUnavailableError("LLM provider request failed after local retries")
 
-        try:
-            res = self.client.chat_completions_create(
-                model=model,
-                messages=messages,
-                temperature=0.0,
-                top_p=1.0,
-                max_tokens=max_tokens,
-                response_format={"type": "json_object"},
-            )
-        except GroqRequestError as e:
-            raise DataUnavailableError("LLM provider request failed") from e
 
-        return LlmRunResult(model=model, content=res.content)
-
-
-def run_with_retries(
+async def run_with_retries(
     *,
     runner: LlmRunner,
     system_prompt: str,
@@ -82,7 +97,7 @@ def run_with_retries(
         repair_hint = None if attempt == 1 else (str(last_exc) if last_exc else "Unknown validation error")
 
         try:
-            out = runner.run_json_advisory(
+            out = await runner.run_json_advisory(
                 system_prompt=system_prompt,
                 user_prompt=user_prompt,
                 max_tokens=max_tokens,

@@ -37,7 +37,8 @@ def validate_and_sanitize_portfolio_advisory(
 
     try:
         # Executive summary takeaway
-        require_and_validate_tokens(texts=[dumped["executive_summary"]["one_sentence_takeaway"]], input_obj=input_obj)
+        if dumped.get("executive_summary"):
+            require_and_validate_tokens(texts=[dumped["executive_summary"].get("one_sentence_takeaway", "")], input_obj=input_obj)
 
         # Strengths/weaknesses
         for item in dumped.get("strengths", []):
@@ -55,15 +56,22 @@ def validate_and_sanitize_portfolio_advisory(
             item["interpretation"] = strip_trace_tokens(item["interpretation"])
 
         # Licensing / competitive
-        require_and_validate_tokens(texts=[dumped["licensing_readiness"]["justification"]], input_obj=input_obj)
-        require_and_validate_tokens(texts=[dumped["competitive_positioning"]["explanation"]], input_obj=input_obj)
+        if dumped.get("licensing_readiness"):
+            require_and_validate_tokens(texts=[dumped["licensing_readiness"].get("justification", "")], input_obj=input_obj)
+            dumped["licensing_readiness"]["justification"] = strip_trace_tokens(
+                dumped["licensing_readiness"].get("justification", "")
+            )
 
-        dumped["licensing_readiness"]["justification"] = strip_trace_tokens(
-            dumped["licensing_readiness"]["justification"]
-        )
-        dumped["competitive_positioning"]["explanation"] = strip_trace_tokens(
-            dumped["competitive_positioning"]["explanation"]
-        )
+        if dumped.get("competitive_positioning"):
+            require_and_validate_tokens(texts=[dumped["competitive_positioning"].get("explanation", "")], input_obj=input_obj)
+            dumped["competitive_positioning"]["explanation"] = strip_trace_tokens(
+                dumped["competitive_positioning"].get("explanation", "")
+            )
+
+        for field in ("blocking_analysis", "innovation_assessment", "legal_health_interpretation", "citation_dynamics_note"):
+            val = dumped.get(field, "")
+            if val:
+                require_and_validate_tokens(texts=[val], input_obj=input_obj)
 
         # Recommendations
         for rec in dumped.get("strategic_recommendations", []):
@@ -77,15 +85,21 @@ def validate_and_sanitize_portfolio_advisory(
             rf["reason"] = strip_trace_tokens(rf.get("reason", ""))
 
         # Confidence
-        require_and_validate_tokens(texts=[dumped["confidence"]["limitations"]], input_obj=input_obj)
-        dumped["confidence"]["limitations"] = strip_trace_tokens(dumped["confidence"]["limitations"])
+        if dumped.get("confidence"):
+            require_and_validate_tokens(texts=[dumped["confidence"].get("limitations", "")], input_obj=input_obj)
+            dumped["confidence"]["limitations"] = strip_trace_tokens(dumped["confidence"].get("limitations", ""))
 
     except TraceTokenError as e:
         raise AdvisoryValidationError(f"Portfolio trace token validation failed: {e}") from e
 
-    dumped["executive_summary"]["one_sentence_takeaway"] = strip_trace_tokens(
-        dumped["executive_summary"]["one_sentence_takeaway"]
-    )
+    if dumped.get("executive_summary"):
+        dumped["executive_summary"]["one_sentence_takeaway"] = strip_trace_tokens(
+            dumped["executive_summary"].get("one_sentence_takeaway", "")
+        )
+
+    for field in ("blocking_analysis", "innovation_assessment", "legal_health_interpretation", "citation_dynamics_note"):
+        if dumped.get(field):
+            dumped[field] = strip_trace_tokens(dumped.get(field, ""))
 
     return dumped
 
@@ -104,22 +118,57 @@ def validate_and_sanitize_patent_advisory(
     dumped = model.model_dump()
 
     try:
-        require_and_validate_tokens(texts=[dumped.get("strategic_value", "")], input_obj=input_obj)
-        require_and_validate_tokens(texts=[dumped["risk_assessment"]["explanation"]], input_obj=input_obj)
-        require_and_validate_tokens(texts=[dumped["confidence"]["limitations"]], input_obj=input_obj)
+        if dumped.get("strategic_value"):
+            require_and_validate_tokens(texts=[dumped.get("strategic_value", "")], input_obj=input_obj)
 
-        # Each strength/weakness item must contain at least one token
-        require_and_validate_tokens(texts=dumped.get("strengths", []), input_obj=input_obj)
-        require_and_validate_tokens(texts=dumped.get("weaknesses", []), input_obj=input_obj)
+        if dumped.get("risk_assessment"):
+            require_and_validate_tokens(texts=[dumped["risk_assessment"].get("explanation", "")], input_obj=input_obj)
+
+        if dumped.get("confidence"):
+            require_and_validate_tokens(texts=[dumped["confidence"].get("limitations", "")], input_obj=input_obj)
+
+        for item in dumped.get("strengths", []):
+            ev_toks = extract_trace_tokens(item.get("evidence", ""))
+            require_and_validate_tokens(texts=[item.get("evidence", "")], input_obj=input_obj)
+            require_and_validate_tokens(texts=[item.get("interpretation", "")], input_obj=input_obj)
+            item["evidence"] = evidence_tokens_to_string(ev_toks)
+            item["interpretation"] = strip_trace_tokens(item["interpretation"])
+
+        for item in dumped.get("weaknesses", []):
+            ev_toks = extract_trace_tokens(item.get("evidence", ""))
+            require_and_validate_tokens(texts=[item.get("evidence", "")], input_obj=input_obj)
+            require_and_validate_tokens(texts=[item.get("interpretation", "")], input_obj=input_obj)
+            item["evidence"] = evidence_tokens_to_string(ev_toks)
+            item["interpretation"] = strip_trace_tokens(item["interpretation"])
+
+        for field in ("technology_insight", "market_insight", "legal_health_note", "innovation_insight", "blocking_insight"):
+            val = dumped.get(field)
+            if val:
+                require_and_validate_tokens(texts=[val], input_obj=input_obj)
+
+        for rec in dumped.get("actionable_recommendations", []):
+            if rec:
+                require_and_validate_tokens(texts=[rec], input_obj=input_obj)
 
     except TraceTokenError as e:
         raise AdvisoryValidationError(f"Patent trace token validation failed: {e}") from e
 
-    dumped["strengths"] = [strip_trace_tokens(s) for s in dumped.get("strengths", [])]
-    dumped["weaknesses"] = [strip_trace_tokens(s) for s in dumped.get("weaknesses", [])]
-    dumped["strategic_value"] = strip_trace_tokens(dumped.get("strategic_value", ""))
-    dumped["risk_assessment"]["explanation"] = strip_trace_tokens(dumped["risk_assessment"]["explanation"])
-    dumped["confidence"]["limitations"] = strip_trace_tokens(dumped["confidence"]["limitations"])
+    if dumped.get("strategic_value"):
+        dumped["strategic_value"] = strip_trace_tokens(dumped.get("strategic_value", ""))
+
+    if dumped.get("risk_assessment"):
+        dumped["risk_assessment"]["explanation"] = strip_trace_tokens(dumped["risk_assessment"].get("explanation", ""))
+
+    if dumped.get("confidence"):
+        dumped["confidence"]["limitations"] = strip_trace_tokens(dumped["confidence"].get("limitations", ""))
+
+    for field in ("technology_insight", "market_insight", "legal_health_note", "innovation_insight", "blocking_insight"):
+        if dumped.get(field):
+            dumped[field] = strip_trace_tokens(dumped.get(field, ""))
+
+    dumped["actionable_recommendations"] = [
+        strip_trace_tokens(r) for r in dumped.get("actionable_recommendations", [])
+    ]
 
     return dumped
 

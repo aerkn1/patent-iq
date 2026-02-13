@@ -55,6 +55,10 @@ import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from "recharts"
 import { CitationEvolutionChart, type CitationYearData } from "@/components/citation-evolution-chart"
 import { PatentLegalFamilyStrength } from "@/components/patent-legal-family-strength"
 import { TrajectoryLifecycleCards, type LifecycleMetrics } from "@/components/trajectory-lifecycle-cards"
+import { ForecastCard } from "@/components/forecast-card"
+import { CitationForecastChart } from "@/components/citation-forecast-chart"
+import { AiInsightCard } from "@/components/ai-insight-card"
+import { llmQueue } from "@/lib/api/llm-queue"
 
 function MetricWithTooltip({
   label,
@@ -131,7 +135,8 @@ export default function PatentLookupPage() {
   const [analysisError, setAnalysisError] = useState<string | null>(null)
   const [advisoryLoading, setAdvisoryLoading] = useState(false)
   const [advisoryError, setAdvisoryError] = useState<string | null>(null)
-  const [advisoryData, setAdvisoryData] = useState<PatentAdvisoryOutput | null>(null)
+  const [advisoryData, setAdvisoryData] = useState<Partial<PatentAdvisoryOutput> | null>(null)
+  const [loadingBuckets, setLoadingBuckets] = useState<Record<string, boolean>>({})
 
   const [patentData, setPatentData] = useState<PatentPageResponse | null>(null)
   const [analysisData, setAnalysisData] = useState<PatentAnalysisResponse | null>(null)
@@ -225,9 +230,10 @@ export default function PatentLookupPage() {
     }
   }, [activeTab, patentData, analysisData, analysisLoading, analysisError])
 
-  // Fetch advisory when AI Advisory tab is active
+  // Automatic advisory fetching removed in favor of granular on-demand generation
+  /*
   useEffect(() => {
-    if (activeTab === "advisory" && patentData && !advisoryData && !advisoryLoading && !advisoryError) {
+    if (patentData && !advisoryData && !advisoryLoading && !advisoryError) {
       setAdvisoryLoading(true)
       setAdvisoryError(null)
 
@@ -242,7 +248,28 @@ export default function PatentLookupPage() {
           setAdvisoryLoading(false)
         })
     }
-  }, [activeTab, patentData, advisoryData, advisoryLoading, advisoryError])
+  }, [patentData, advisoryData, advisoryLoading, advisoryError])
+  */
+
+  const generateInsight = async (bucket: string) => {
+    if (!patentData?.patent.appln_id) return
+
+    setLoadingBuckets((prev) => ({ ...prev, [bucket]: true }))
+    setAdvisoryError(null)
+
+    try {
+      await llmQueue.enqueue(async () => {
+        const url = `${getPatentAdvisoryUrl(patentData.patent.appln_id)}?bucket=${bucket}`
+        const data = await fetchJson<Partial<PatentAdvisoryOutput>>(url)
+        setAdvisoryData((prev) => ({ ...prev, ...data }))
+      })
+    } catch (e: any) {
+      console.error(e)
+      setAdvisoryError(e.message || `Failed to generate ${bucket} insight`)
+    } finally {
+      setLoadingBuckets((prev) => ({ ...prev, [bucket]: false }))
+    }
+  }
 
   // Use real data from API
   const overviewData = patentData
@@ -651,10 +678,9 @@ export default function PatentLookupPage() {
             <Card>
               <CardContent className="pt-6">
                 <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="overview">
-                  <TabsList className="grid w-full grid-cols-3 mb-6">
+                  <TabsList className="grid w-full grid-cols-2 mb-6">
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="advanced">Advanced</TabsTrigger>
-                    <TabsTrigger value="advisory">AI Advisory</TabsTrigger>
                   </TabsList>
 
                   {/* OVERVIEW TAB */}
@@ -1041,6 +1067,33 @@ export default function PatentLookupPage() {
                         </div>
                       </CardContent>
                     </Card>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <AiInsightCard
+                        title="Strategy Insight"
+                        insight={advisoryData?.strategic_value}
+                        loading={loadingBuckets["strategy"]}
+                        onGenerate={() => generateInsight("strategy")}
+                      />
+                      <AiInsightCard
+                        title="Technology Insight"
+                        insight={advisoryData?.technology_insight}
+                        loading={loadingBuckets["technology"]}
+                        onGenerate={() => generateInsight("technology")}
+                      />
+                      <AiInsightCard
+                        title="Market Insight"
+                        insight={advisoryData?.market_insight}
+                        loading={loadingBuckets["market"]}
+                        onGenerate={() => generateInsight("market")}
+                      />
+                      <AiInsightCard
+                        title="Legal Insight"
+                        insight={advisoryData?.blocking_insight || advisoryData?.legal_health_note}
+                        loading={loadingBuckets["legal"]}
+                        onGenerate={() => generateInsight("legal")}
+                      />
+                    </div>
                   </TabsContent>
 
                   {/* ADVANCED TAB */}
@@ -1433,6 +1486,12 @@ export default function PatentLookupPage() {
                           <TrajectoryLifecycleCards metrics={lifecycleMetrics} />
 
                           <CitationEvolutionChart data={citationEvolutionData} />
+
+                          {patentData?.patent?.appln_id ? (
+                            <>
+                              <ForecastCard applnId={patentData.patent.appln_id} />
+                            </>
+                          ) : null}
                         </div>
 
                         <Card>
@@ -1627,92 +1686,31 @@ export default function PatentLookupPage() {
                         </Card>
                       </>
                     )}
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <AiInsightCard
+                        insight={advisoryData?.technology_insight}
+                        loading={advisoryLoading}
+                        title="AI Technology Insight"
+                      />
+                      <AiInsightCard
+                        insight={advisoryData?.market_insight}
+                        loading={advisoryLoading}
+                        title="AI Market Insight"
+                      />
+                      <AiInsightCard
+                        insight={advisoryData?.legal_health_note}
+                        loading={advisoryLoading}
+                        title="AI Legal Health"
+                      />
+                      <AiInsightCard
+                        insight={advisoryData?.innovation_insight}
+                        loading={advisoryLoading}
+                        title="AI Innovation Insight"
+                      />
+                    </div>
                   </TabsContent>
 
-                  {/* AI ADVISORY TAB */}
-                  <TabsContent value="advisory" className="space-y-6">
-                    {advisoryLoading && (
-                      <div className="text-center py-12">
-                        <div className="text-muted-foreground">Generating advisory...</div>
-                      </div>
-                    )}
-
-                    {advisoryError && (
-                      <Alert variant="destructive">
-                        <AlertDescription>{advisoryError}</AlertDescription>
-                      </Alert>
-                    )}
-
-                    {!advisoryLoading && !advisoryError && !advisoryData && (
-                      <div className="text-center py-12">
-                        <div className="text-muted-foreground">No advisory available</div>
-                      </div>
-                    )}
-
-                    {!advisoryLoading && !advisoryError && advisoryData && (
-                      <>
-                        <Card>
-                          <CardHeader>
-                            <CardTitle>Executive Summary</CardTitle>
-                            <CardDescription>LLM interpretation of existing analytics</CardDescription>
-                          </CardHeader>
-                          <CardContent className="space-y-3">
-                            <div className="flex flex-wrap gap-2">
-                              <Badge variant="outline">Role: {advisoryData.patent_role}</Badge>
-                              <Badge variant="outline">Lifecycle: {advisoryData.lifecycle_stage}</Badge>
-                              <Badge variant="outline">Risk: {advisoryData.risk_assessment.risk_level}</Badge>
-                              <Badge variant="outline">Coverage: {advisoryData.confidence.data_coverage}</Badge>
-                            </div>
-                            <p className="text-sm text-foreground/80 leading-relaxed">
-                              {advisoryData.strategic_value}
-                            </p>
-                          </CardContent>
-                        </Card>
-
-                        <div className="grid md:grid-cols-2 gap-6">
-                          <Card>
-                            <CardHeader>
-                              <CardTitle>Strengths</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80">
-                                {advisoryData.strengths.map((s, idx) => (
-                                  <li key={idx}>{s}</li>
-                                ))}
-                              </ul>
-                            </CardContent>
-                          </Card>
-
-                          <Card>
-                            <CardHeader>
-                              <CardTitle>Weaknesses</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80">
-                                {advisoryData.weaknesses.map((s, idx) => (
-                                  <li key={idx}>{s}</li>
-                                ))}
-                              </ul>
-                            </CardContent>
-                          </Card>
-                        </div>
-
-                        <Card>
-                          <CardHeader>
-                            <CardTitle>Risk & Confidence</CardTitle>
-                          </CardHeader>
-                          <CardContent className="space-y-3">
-                            <div className="text-sm text-foreground/80">
-                              <span className="font-semibold">Risk assessment:</span> {advisoryData.risk_assessment.explanation}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              <span className="font-semibold">Limitations:</span> {advisoryData.confidence.limitations}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </>
-                    )}
-                  </TabsContent>
                 </Tabs>
               </CardContent>
             </Card>

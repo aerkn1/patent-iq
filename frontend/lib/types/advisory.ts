@@ -2,7 +2,7 @@ export type Coverage = "HIGH" | "MEDIUM" | "LOW"
 export type Level3 = "LOW" | "MEDIUM" | "HIGH"
 
 export type PortfolioOverallCondition = "EMERGING" | "PEAK" | "DECLINING"
-export type PortfolioMetricKey = "trajectory" | "durability" | "sustainability" | "timing"
+export type PortfolioMetricKey = "trajectory" | "durability" | "sustainability" | "timing" | "blocking" | "innovation" | "legal" | "market" | "technology"
 export type TimeHorizon = "SHORT" | "MID" | "LONG"
 export type RiskType = "AGING" | "CROWDING" | "DECLINE"
 
@@ -29,6 +29,10 @@ export type PortfolioAdvisoryOutput = {
     relative_strength: Level3
     explanation: string
   }
+  blocking_analysis: string
+  innovation_assessment: string
+  legal_health_interpretation: string
+  citation_dynamics_note: string
   strategic_recommendations: Array<{
     action: string
     time_horizon: TimeHorizon
@@ -48,17 +52,29 @@ export type PortfolioAdvisoryOutput = {
 export type PatentRole = "CORE" | "SUPPORTING" | "OPTIONAL"
 export type PatentLifecycleStage = "EARLY" | "PEAK" | "DECLINING"
 
+export type PatentInsightItem = {
+  area: string
+  evidence: string
+  interpretation: string
+}
+
 export type PatentAdvisoryOutput = {
-  patent_role: PatentRole
-  lifecycle_stage: PatentLifecycleStage
-  strengths: string[]
-  weaknesses: string[]
-  strategic_value: string
-  risk_assessment: {
+  patent_role?: PatentRole
+  lifecycle_stage?: PatentLifecycleStage
+  strategic_value?: string
+  strengths?: PatentInsightItem[]
+  weaknesses?: PatentInsightItem[]
+  technology_insight?: string
+  market_insight?: string
+  legal_health_note?: string
+  innovation_insight?: string
+  blocking_insight?: string
+  actionable_recommendations?: string[]
+  risk_assessment?: {
     risk_level: Level3
     explanation: string
   }
-  confidence: {
+  confidence?: {
     data_coverage: Coverage
     limitations: string
   }

@@ -62,6 +62,15 @@ export function getPortfolioDiscoverUrl(dimension: "CPC" | "INDUSTRY" | "COUNTRY
   return `${API_BASE}/api/v1/portfolios/discover?${params.toString()}`;
 }
 
+export async function searchPortfolios(query: string, limit: number = 10): Promise<{ results: Array<{ owner_id: number, owner_name: string }> }> {
+  const params = new URLSearchParams({
+    q: query,
+    limit: limit.toString()
+  });
+  const url = `${API_BASE}/api/v1/portfolios/search?${params.toString()}`;
+  return fetchJson(url);
+}
+
 export function getPortfolioCitationMetricsUrl(ownerId: string | number): string {
   return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/citation-metrics`;
 }
@@ -76,6 +85,36 @@ export function getPortfolioAdvisoryUrl(ownerId: string | number): string {
 
 export function getPortfolioEvolutionAdvisoryUrl(ownerId: string | number): string {
   return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/evolution-advisory`;
+}
+
+export function getPatentForecastUrl(applnId: string | number, horizon: "3y" | "5y"): string {
+  return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}/forecast?horizon=${horizon}`;
+}
+
+export function getPortfolioForecastUrl(
+  ownerId: string | number,
+  horizon: "3y" | "5y",
+  options?: {
+    segments?: boolean;
+    segments_top_k?: number;
+    cpc_top_n_per_patent?: number;
+  }
+): string {
+  const params = new URLSearchParams({
+    horizon,
+  });
+
+  if (options?.segments !== undefined) {
+    params.set("segments", String(options.segments));
+  }
+  if (options?.segments_top_k !== undefined) {
+    params.set("segments_top_k", options.segments_top_k.toString());
+  }
+  if (options?.cpc_top_n_per_patent !== undefined) {
+    params.set("cpc_top_n_per_patent", options.cpc_top_n_per_patent.toString());
+  }
+
+  return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/forecast?${params.toString()}`;
 }
 
 export function getPortfolioPatentsUrl(
@@ -199,3 +238,12 @@ export async function fetchJson<T>(url: string, options?: RequestInit): Promise<
   return json as T;
 }
 
+// ── Citation Forecast Timeseries ─────────────────────────────────────────────
+
+export function getPatentCitationForecastTsUrl(applnId: string | number, horizon: "3y" | "5y") {
+  return `${API_BASE}/api/v1/patents/${applnId}/citation-forecast-ts?horizon=${horizon}`
+}
+
+export function getPortfolioCitationForecastTsUrl(ownerId: string | number, horizon: "3y" | "5y") {
+  return `${API_BASE}/api/v1/portfolios/${ownerId}/citation-forecast-ts?horizon=${horizon}`
+}

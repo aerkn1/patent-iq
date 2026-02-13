@@ -1,7 +1,7 @@
 from typing import Optional
-from fastapi import APIRouter, Path
+
+from fastapi import APIRouter, Path, Query
 from fastapi.responses import JSONResponse
-from fastapi import APIRouter, Query
 
 from application.services.portfolio_discovery_service import PortfolioDiscoveryService
 from application.services.portfolio_page_service import PortfolioOverviewService
@@ -11,9 +11,11 @@ from application.services.portfolio_licensing_service import PortfolioLicensingS
 from application.services.portfolio_citation_service import PortfolioCitationService
 from application.services.portfolio_advisory_service import PortfolioAdvisoryService
 from application.services.portfolio_evolution_advisory_service import PortfolioEvolutionAdvisoryService
+from application.services.portfolio_forecast_service import PortfolioForecastService
 from application.llm.config import SNAPSHOT_DATE_FIXED_V1
 from domain.schemas.portfolio_citation import PortfolioCitationMetricsResponse, PortfolioCitationTimeSeriesResponse
 from domain.schemas.advisory_outputs import PortfolioAdvisoryOutput, PortfolioEvolutionAdvisoryOutput
+from domain.schemas.forecast import PortfolioForecastResponse as PortfolioForecastSchema
 from domain.errors import ValidationError, NotFoundError, DataUnavailableError, InternalServerError
 
 import logging
@@ -148,6 +150,25 @@ async def discover_portfolios(
         )
 
 
+@router.get("/search")
+async def search_portfolios(
+    q: str = Query(..., min_length=2, description="Search query for portfolio name"),
+    limit: int = Query(10, ge=1, le=50, description="Max results"),
+):
+    try:
+        service = PortfolioDiscoveryService()
+        return await service.search_portfolios(query=q, limit=limit)
+    except Exception as e:
+        logger.exception("Portfolio search failed", extra={"query": q})
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "INTERNAL_SERVER_ERROR",
+                "message": "Unexpected server error",
+            },
+        )
+
+
 @router.get("/{owner_id}/patents")
 async def get_portfolio_patents(
     owner_id: int,
@@ -236,19 +257,30 @@ async def get_portfolio_citation_timeseries(owner_id: int):
     except Exception as e:
         logger.exception("Error fetching portfolio citation timeseries", extra={"owner_id": owner_id})
         return JSONResponse(status_code=500, content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected error"})
-
+@router.get("/{owner_id}/citation-forecast-ts")
+async def get_portfolio_citation_forecast_timeseries(
+    owner_id: int = Path(..., gt=0, description="Portfolio owner_id"),
+    horizon: str = Query("3y", pattern="^(3y|5y)$"),
+):
+    try:
+        service = PortfolioCitationService()
+        return await service.get_citation_forecast_ts(owner_id, horizon)
+    except Exception as e:
+        logger.exception("Error fetching portfolio citation forecast timeseries", extra={"owner_id": owner_id})
+        return JSONResponse(status_code=500, content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected error"})
 
 @router.get("/{owner_id}/advisory", response_model=PortfolioAdvisoryOutput)
 async def get_portfolio_advisory(
     owner_id: int,
     snapshot_date: str = Query(SNAPSHOT_DATE_FIXED_V1),
+    bucket: Optional[str] = Query(None, description="Advisory bucket (strategy, technology, commercial, legal)"),
     force_refresh: bool = Query(False),
 ):
     try:
         if snapshot_date != SNAPSHOT_DATE_FIXED_V1:
             raise ValidationError(f"snapshot_date must be '{SNAPSHOT_DATE_FIXED_V1}'")
 
-        payload = await PortfolioAdvisoryService().get_advisory(owner_id, force_refresh=force_refresh)
+        payload = await PortfolioAdvisoryService().get_advisory(owner_id, bucket=bucket, force_refresh=force_refresh)
         return JSONResponse(status_code=200, content=payload)
 
     except ValidationError as e:
@@ -291,3 +323,54 @@ async def get_portfolio_evolution_advisory(
     except Exception:
         logger.exception("Unhandled portfolio evolution advisory error", extra={"owner_id": owner_id})
         return JSONResponse(status_code=500, content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected error"})
+
+
+@router.get("/{owner_id}/forecast", response_model=PortfolioForecastSchema)
+async def get_portfolio_forecast(
+    owner_id: int = Path(..., gt=0, description="Portfolio owner_id"),
+    horizon: str = Query(..., pattern="^(3y|5y)$", description="Forecast horizon"),
+    segments: bool = Query(
+        False,
+        description="Whether to include segment distributions in the response",
+    ),
+    segments_top_k: int = Query(
+        10,
+        ge=3,
+        le=50,
+        description="Keep top-K CPC subclasses; fold the remainder into OTHER",
+    ),
+    cpc_top_n_per_patent: int = Query(
+        5,
+        ge=1,
+        le=20,
+        description="Limit CPC rows per patent for performance; remainder goes into OTHER",
+    ),
+):
+    try:
+        payload = await PortfolioForecastService().get_forecast(
+            owner_id=owner_id,
+            horizon=horizon,
+            segments=segments,
+            segments_top_k=segments_top_k,
+            cpc_top_n_per_patent=cpc_top_n_per_patent,
+        )
+        return JSONResponse(status_code=200, content=payload)
+
+    except ValidationError as e:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "INVALID_REQUEST", "message": str(e)},
+        )
+
+    except NotFoundError as e:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "NOT_FOUND", "message": str(e)},
+        )
+
+    except Exception:
+        logger.exception("Unhandled portfolio forecast error", extra={"owner_id": owner_id})
+        return JSONResponse(
+            status_code=500,
+            content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected server error"},
+        )

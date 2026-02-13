@@ -35,3 +35,30 @@ class PortfolioMasterRepository:
 
         df = conn.execute(q, owner_ids).fetchdf()
         return dict(zip(df["owner_id"], df["owner_name_norm"]))
+
+    def search_by_name(self, query: str, limit: int = 20) -> list[dict]:
+        conn = DuckDBConnection.get_connection()
+        # Case-insensitive partial match
+        pattern = f"%{query}%"
+        
+        q = """
+        SELECT
+            portfolio_id AS owner_id,
+            owner_name_norm AS owner_name,
+            owner_type,
+            person_ctry_code AS country
+        FROM portfolio_master
+        WHERE owner_name_norm ILIKE ?
+        ORDER BY LENGTH(owner_name_norm) ASC
+        LIMIT ?
+        """
+        
+        try:
+            df = conn.execute(q, [pattern, limit]).fetchdf()
+            if df.empty:
+                return []
+            if "country" in df.columns:
+                df["country"] = df["country"].fillna("")
+            return df.to_dict(orient="records")
+        except Exception:
+            return []

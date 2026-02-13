@@ -7,7 +7,7 @@ from application.llm.config import (
     MAX_TOKENS_PORTFOLIO,
     SNAPSHOT_DATE_FIXED_V1,
 )
-from application.llm.prompts import load_prompt, render_prompt
+from application.llm.prompts import build_system_prompt, build_user_prompt
 from application.llm.runner import LlmRunner, run_with_retries
 from application.llm.advisory_validation import (
     validate_and_sanitize_portfolio_advisory,
@@ -96,6 +96,13 @@ class PortfolioAdvisoryService:
 
         candidate_density = "HIGH" if len(licensing_results) >= 10 else ("MEDIUM" if len(licensing_results) >= 5 else "LOW")
 
+        analytics_data = analytics or {}
+        categories = analytics_data.get("categories", {})
+        citations = analytics_data.get("citations", {})
+        legal = analytics_data.get("legal", {})
+        blocking_power = analytics_data.get("blocking_power", {})
+        innovation = analytics_data.get("innovation", {})
+
         derived = {
             "portfolio_timeseries_summary": {
                 "current_phase": str(last.get("citation_phase") or "UNKNOWN"),
@@ -109,6 +116,34 @@ class PortfolioAdvisoryService:
                 "avg_cpc_overlap": float(sum(cpc_scores) / len(cpc_scores)) if cpc_scores else 0.0,
                 "top_industries": top_industries,
                 "top_cpc_classes": top_cpcs,
+            },
+            "categories_summary": {
+                "portfolio_category": categories.get("portfolio_category", "UNKNOWN"),
+                "counts": categories.get("counts", {}),
+                "shares": categories.get("shares", {}),
+            },
+            "blocking_summary": {
+                "dominant_driver": blocking_power.get("dominant_driver", "UNKNOWN"),
+                "drivers": blocking_power.get("drivers", {}),
+                "top_patents_count": len(blocking_power.get("top_patents", [])),
+            },
+            "innovation_summary": {
+                "avg_innovation_score": innovation.get("avg_innovation_score"),
+                "avg_h_index_proxy": innovation.get("avg_h_index_proxy"),
+                "avg_field_normalized_citations": innovation.get("avg_field_normalized_citations"),
+                "top_patents_count": len(innovation.get("top_patents", [])),
+            },
+            "legal_summary": {
+                "abandoned_ratio": legal.get("abandoned_ratio"),
+                "legal_strength_avg": legal.get("legal_strength_avg"),
+                "legal_unknown_ratio": legal.get("legal_unknown_ratio"),
+                "maintenance_profile": legal.get("maintenance_profile", "UNKNOWN"),
+            },
+            "citation_summary": {
+                "forward_total": citations.get("forward_total", 0),
+                "backward_total": citations.get("backward_total", 0),
+                "self_forward_rate": citations.get("self_citations", {}).get("self_forward_rate", 0.0),
+                "self_backward_rate": citations.get("self_citations", {}).get("self_backward_rate", 0.0),
             },
             "data_quality": {
                 "coverage": coverage,
@@ -132,28 +167,94 @@ class PortfolioAdvisoryService:
             "derived": derived,
         }
 
-    async def get_advisory(self, owner_id: int, *, force_refresh: bool = False) -> dict[str, Any]:
-        input_obj = await self.build_input(owner_id)
+    def _filter_input_data(self, input_obj: dict[str, Any], bucket: str | None) -> dict[str, Any]:
+        if not bucket or bucket == "strategy":
+            return input_obj
+            
+        derived = input_obj["derived"].copy()
+        ui_payload = input_obj["ui_payload"].copy()
+        
+        if bucket == "technology":
+            keys_to_keep = {"innovation_summary", "blocking_summary", "data_quality"}
+            derived = {k: v for k, v in derived.items() if k in keys_to_keep}
+            
+            if "portfolio_analytics" in ui_payload:
+                pa = ui_payload["portfolio_analytics"] or {}
+                ui_payload["portfolio_analytics"] = {
+                    "innovation": pa.get("innovation"),
+                    "blocking_power": pa.get("blocking_power"),
+                }
+                
+        elif bucket == "commercial":
+            keys_to_keep = {"licensing_context_summary", "categories_summary", "data_quality"}
+            derived = {k: v for k, v in derived.items() if k in keys_to_keep}
+            
+            # Keep licensing candidates
+            # Remove unrelated analytics
+            if "portfolio_analytics" in ui_payload:
+                pa = ui_payload["portfolio_analytics"] or {}
+                ui_payload["portfolio_analytics"] = {
+                    "categories": pa.get("categories"),
+                }
+            # Remove citation data from payload to save space
+            if "portfolio_citation_timeseries" in ui_payload:
+                del ui_payload["portfolio_citation_timeseries"]
+                
+        elif bucket == "legal":
+            keys_to_keep = {"legal_summary", "citation_summary", "data_quality"}
+            derived = {k: v for k, v in derived.items() if k in keys_to_keep}
+            
+            if "portfolio_analytics" in ui_payload:
+                pa = ui_payload["portfolio_analytics"] or {}
+                ui_payload["portfolio_analytics"] = {
+                    "legal": pa.get("legal"),
+                    "citations": pa.get("citations"),
+                }
+            # Remove licensing candidates
+            if "portfolio_licensing_candidates" in ui_payload:
+                del ui_payload["portfolio_licensing_candidates"]
+
+        return {
+            "context": input_obj["context"],
+            "ui_payload": ui_payload,
+            "derived": derived,
+        }
+
+    async def get_advisory(self, owner_id: int, *, bucket: str | None = None, force_refresh: bool = False) -> dict[str, Any]:
+        full_input = await self.build_input(owner_id)
+        
+        # Slicing
+        input_obj = self._filter_input_data(full_input, bucket)
 
         parquet_hash = compute_parquet_version_hash()
         snapshot_date = SNAPSHOT_DATE_FIXED_V1
         analysis_type = "PORTFOLIO_ADVISORY"
-        cache_key = f"{analysis_type}:{owner_id}:{snapshot_date}:{parquet_hash}"
+        
+        # Cache key includes bucket
+        bucket_key = bucket if bucket else "full"
+        cache_key = f"{analysis_type}:{owner_id}:{snapshot_date}:{parquet_hash}:{bucket_key}"
 
         if not force_refresh:
             cached = self._cache.get(cache_key=cache_key)
             if cached is not None and cached.parquet_version_hash == parquet_hash:
-                logger.info("portfolio_advisory cache hit", extra={"owner_id": owner_id})
+                logger.info("portfolio_advisory cache hit", extra={"owner_id": owner_id, "bucket": bucket})
                 return cached.payload
 
-        system_prompt = load_prompt("system.txt")
-        user_prompt = render_prompt(load_prompt("portfolio_user.txt"), data_obj=input_obj)
+        system_prompt = build_system_prompt()
+        
+        # Determine prompt file
+        if bucket:
+            prompt_name = f"portfolio/{bucket}.json"
+        else:
+            prompt_name = "portfolio_user.json"
+
+        user_prompt = build_user_prompt(prompt_name, data_obj=input_obj)
 
         def _validate(content: str) -> dict[str, Any]:
             return validate_and_sanitize_portfolio_advisory(llm_content=content, input_obj=input_obj)
 
         try:
-            payload, model_used = run_with_retries(
+            payload, model_used = await run_with_retries(
                 runner=self._runner,
                 system_prompt=system_prompt,
                 user_prompt=user_prompt,
@@ -167,7 +268,7 @@ class PortfolioAdvisoryService:
         except DataUnavailableError:
             raise
         except Exception as e:
-            logger.exception("portfolio_advisory failed", extra={"owner_id": owner_id})
+            logger.exception("portfolio_advisory failed", extra={"owner_id": owner_id, "bucket": bucket})
             raise InternalServerError() from e
 
         self._cache.set(

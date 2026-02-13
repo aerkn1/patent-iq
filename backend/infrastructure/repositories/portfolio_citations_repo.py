@@ -4,6 +4,94 @@ class PortfolioCitationsRepository:
     def __init__(self):
         self.conn = DuckDBConnection.get_connection()
 
+    def get_cumulative_timeseries(self, owner_id: int) -> list[dict]:
+        """Aggregate cumulative citations by calendar year for a portfolio."""
+        
+        # 1. Get metadata (min/max year) to confirm portfolio exists
+        q_meta = """
+        SELECT
+            MIN(date_part('year', CAST(pc.filing_date AS DATE)))::INT as min_year,
+            MAX(date_part('year', CAST(pc.filing_date AS DATE)) + COALESCE(pc.patent_age_years, 0))::INT as max_year
+        FROM patent_portfolio_map ppm
+        JOIN patent_core pc ON pc.appln_id = ppm.appln_id
+        WHERE ppm.owner_id = ?
+        """
+        df_meta = self.conn.execute(q_meta, [owner_id]).fetchdf()
+        
+        if df_meta.empty or df_meta.iloc[0]["min_year"] is None:
+            # Portfolio doesn't exist or has no patents
+            return []
+
+        # Handle NaNs from DuckDB -> pandas
+        min_year_val = df_meta.iloc[0]["min_year"]
+        max_year_val = df_meta.iloc[0]["max_year"]
+        
+        # Check for NaN (float('nan') != float('nan'))
+        if isinstance(min_year_val, float) and min_year_val != min_year_val:
+            return []
+            
+        min_year = int(min_year_val)
+        if isinstance(max_year_val, float) and max_year_val != max_year_val:
+            max_year = min_year
+        else:
+            max_year = int(max_year_val)
+            
+        if max_year < min_year: max_year = min_year
+
+        # 2. Get citation timeseries
+        # 2. Get citation timeseries with dense grid + forward fill for monotonicity
+        q = """
+        WITH portfolio_events AS (
+            SELECT
+                ppm.appln_id,
+                (date_part('year', CAST(pc.filing_date AS DATE)) + y.age_year)::INT AS year,
+                y.cum_forward_cites
+            FROM patent_portfolio_map ppm
+            JOIN patent_citation_events_yearly y ON y.appln_id = ppm.appln_id
+            JOIN patent_core pc ON pc.appln_id = ppm.appln_id
+            WHERE ppm.owner_id = ?
+        ),
+        years AS (
+            SELECT unnest(generate_series(MIN(year), MAX(year), 1))::INT AS year
+            FROM portfolio_events
+        ),
+        patents AS (
+            SELECT DISTINCT appln_id FROM portfolio_events
+        ),
+        frame AS (
+            SELECT p.appln_id, y.year
+            FROM patents p, years y
+        ),
+        filled_data AS (
+            SELECT
+                f.year,
+                LAST_VALUE(e.cum_forward_cites IGNORE NULLS) OVER (
+                    PARTITION BY f.appln_id 
+                    ORDER BY f.year
+                    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                ) as ffilled_cites
+            FROM frame f
+            LEFT JOIN portfolio_events e ON f.appln_id = e.appln_id AND f.year = e.year
+        )
+        SELECT
+            year,
+            SUM(COALESCE(ffilled_cites, 0))::INT AS cum_cites,
+            COUNT(DISTINCT CASE WHEN ffilled_cites > 0 THEN 1 END)::INT AS n_patents
+        FROM filled_data
+        GROUP BY year
+        ORDER BY year ASC
+        """
+        df = self.conn.execute(q, [owner_id]).fetchdf()
+        
+        if df.empty:
+            # Return flat 0 line
+            return [
+                {"year": min_year, "cum_cites": 0, "n_patents": 0},
+                {"year": max_year, "cum_cites": 0, "n_patents": 0}
+            ]
+        
+        return df.to_dict(orient="records")
+
     def get_totals(self, owner_id: int) -> dict:
         q = """
         SELECT

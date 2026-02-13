@@ -13,6 +13,7 @@ from infrastructure.repositories import (
     PatentDiversificationRepository,
     PatentFamilyRepository
 )
+from application.services.patent_forecast_service import PatentForecastService
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,7 @@ class PatentPageService:
         self.ind_repo = PatentIndustryFrequencyRepository()
         self.div_repo = PatentDiversificationRepository()
         self.family_repo = PatentFamilyRepository()
+        self.forecast_service = PatentForecastService()
 
 
     async def get_patent_page(self, appln_id: int) -> dict:
@@ -493,3 +495,80 @@ class PatentPageService:
              
         return data
 
+    async def get_citation_forecast_ts(self, appln_id: int, horizon: str) -> dict:
+        if appln_id <= 0:
+            raise ValidationError("appln_id must be positive")
+
+        # 1. Get historical cumulative timeseries
+        hist_data = self.citations_repo.get_cumulative_timeseries(appln_id)
+        if not hist_data or not hist_data["series"]:
+            raise NotFoundError(f"Citation timeseries not found for {appln_id}")
+            
+        series = hist_data["series"]
+        last_observed = series[-1]
+        last_year = last_observed["year"]
+        last_cum = last_observed["cum_cites"]
+
+        # 2. Get ML forecast
+        try:
+            forecast_raw = await self.forecast_service.get_forecast(appln_id, horizon)
+            pred = forecast_raw["prediction"]
+            expected_add = pred["expected_citations"]
+            low_add = pred["interval_80"]["low"]
+            high_add = pred["interval_80"]["high"]
+        except Exception as e:
+            logger.warning(f"Forecast failed for {appln_id}: {e}")
+            expected_add = 0.0
+            low_add = 0.0
+            high_add = 0.0
+            pred = {
+                "expected_citations": 0.0,
+                "interval_80": {"low": 0.0, "high": 0.0},
+                "difficulty_bucket": "UNKNOWN"
+            }
+
+        # 3. Project forecast linearly over horizon
+        horizon_years = 3 if horizon == "3y" else 5
+        forecast_series = []
+        
+        # Start forecast from the last observed point to ensure continuity
+        forecast_series.append({
+            "year": last_year,
+            "cum_cites": last_cum,
+            "low": last_cum,
+            "high": last_cum
+        })
+        
+        for i in range(1, horizon_years + 1):
+            fraction = i / horizon_years
+            
+            proj_expected = last_cum + (expected_add * fraction)
+            proj_low = last_cum + (low_add * fraction)
+            proj_high = last_cum + (high_add * fraction)
+            
+            forecast_series.append({
+                "year": last_year + i,
+                "cum_cites": round(proj_expected, 1),
+                "low": round(proj_low, 1),
+                "high": round(proj_high, 1)
+            })
+
+        return {
+            "appln_id": appln_id,
+            "filing_year": int(hist_data["filing_year"]),
+            "horizon": horizon,
+            "last_observed_year": last_year,
+            "historical": series,
+            "forecast": forecast_series,
+            "prediction_summary": {
+                "expected_additional": round(expected_add, 1),
+                "interval_80": pred["interval_80"],
+                "difficulty_bucket": pred.get("difficulty_bucket", "UNKNOWN")
+            }
+        }
+
+
+    async def get_patent_forecast(self, appln_id: int, horizon: str) -> dict:
+        if appln_id <= 0:
+            raise ValidationError("appln_id must be positive")
+        return await self.forecast_service.get_forecast(appln_id, horizon)

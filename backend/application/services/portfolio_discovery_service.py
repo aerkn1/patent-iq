@@ -64,7 +64,6 @@ class PortfolioDiscoveryService:
             }
         }
 
-    def _empty_response(self, dimension, value, limit):
         return {
             "query": {
                 "dimension": dimension,
@@ -75,5 +74,45 @@ class PortfolioDiscoveryService:
             "metadata": {
                 "contract_version": "v1"
             }
+        }
+
+    async def search_portfolios(self, query: str, limit: int = 20) -> dict:
+        if not query or len(query.strip()) < 2:
+            return {"results": []}
+
+        # Search master table
+        raw_results = self.master_repo.search_by_name(query, limit=limit)
+        
+        if not raw_results:
+            return {"results": []}
+
+        # Get enriched data for these portfolios (ranking, etc.)
+        owner_ids = [r["owner_id"] for r in raw_results]
+        portfolios = self.rank_repo.get_by_owner_ids(owner_ids)
+        
+        # Create a map for quick lookup
+        rank_map = {p["owner_id"]: p for p in portfolios}
+
+        results = []
+        for r in raw_results:
+            owner_id = r["owner_id"]
+            rank_data = rank_map.get(owner_id, {})
+            
+            results.append({
+                "owner_id": owner_id,
+                "owner_name": r["owner_name"],
+                "country": r.get("country"),
+                "n_patents": rank_data.get("n_patents", 0),
+                "portfolio_power_pct": round(rank_data.get("portfolio_power_score_pct", 0), 2),
+                "portfolio_tier": rank_data.get("portfolio_tier", "UNKNOWN"),
+            })
+            
+        # Re-sort by relevance (match length) and then power
+        # Already sorted by length in repo, let's keep that but prioritize power slightly? 
+        # Actually client usually wants closest name match first.
+            
+        return {
+            "query": query,
+            "results": results
         }
         

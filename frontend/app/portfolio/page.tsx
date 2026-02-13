@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
@@ -50,7 +49,11 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, L
 import { PortfolioCitationEvolutionChart, type PortfolioCitationYearData } from "@/components/portfolio-citation-evolution-chart"
 import { PortfolioHealthCards, type PortfolioLifecycleMetrics } from "@/components/portfolio-health-cards"
 import { PortfolioOverviewCard } from "@/components/portfolio-overview-card"
+import { PortfolioForecastCard } from "@/components/portfolio-forecast-card"
 import { LegalStrengthGrantCoverage } from "@/components/legal-strength-grant-coverage"
+import { AiInsightCard } from "@/components/ai-insight-card"
+import { llmQueue } from "@/lib/api/llm-queue"
+import { PortfolioSearch } from "@/components/portfolio-search"
 
 export default function PortfolioAnalysisPage() {
   const searchParams = useSearchParams()
@@ -64,9 +67,10 @@ export default function PortfolioAnalysisPage() {
   const [patentsData, setPatentsData] = useState<PortfolioPatentsResponse | null>(null)
   const [licensingData, setLicensingData] = useState<PortfolioLicensingCandidatesResponse | null>(null)
 
-  const [advisoryData, setAdvisoryData] = useState<PortfolioAdvisoryOutput | null>(null)
+  const [advisoryData, setAdvisoryData] = useState<Partial<PortfolioAdvisoryOutput> | null>(null)
   const [advisoryLoading, setAdvisoryLoading] = useState(false)
   const [advisoryError, setAdvisoryError] = useState<string | null>(null)
+  const [loadingBuckets, setLoadingBuckets] = useState<Record<string, boolean>>({})
 
   const [evolutionAdvisoryData, setEvolutionAdvisoryData] = useState<PortfolioEvolutionAdvisoryOutput | null>(null)
   const [evolutionLoading, setEvolutionLoading] = useState(false)
@@ -346,15 +350,18 @@ export default function PortfolioAnalysisPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
 
-  const handleSearch = () => {
-    if (ownerId.trim()) {
-      fetchPortfolioOverview(ownerId.trim())
-      fetchPortfolioAnalytics(ownerId.trim())
-      fetchCitationData(ownerId.trim())
-      // Clear advisory caches for new owner
-      setAdvisoryData(null)
+  const handleSearch = (id?: string) => {
+    const targetId = id || ownerId
+    if (targetId.trim()) {
+      // If triggered by selection, update state
+      if (id && id !== ownerId) {
+        setOwnerId(id)
+      }
+
+      fetchPortfolioOverview(targetId.trim())
+      fetchPortfolioAnalytics(targetId.trim())
+      fetchCitationData(targetId.trim())
       setEvolutionAdvisoryData(null)
-      setAdvisoryError(null)
       setEvolutionError(null)
     }
   }
@@ -384,13 +391,28 @@ export default function PortfolioAnalysisPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, ownerId])
 
-  // Fetch advisory when switching to advisory tab
-  useEffect(() => {
-    if (activeTab === "advisory" && ownerId.trim() && !advisoryLoading && !advisoryData && !advisoryError) {
-      fetchPortfolioAdvisory(ownerId.trim())
+
+  const generateInsight = async (bucket: string) => {
+    if (!ownerId.trim()) return
+
+    setLoadingBuckets((prev) => ({ ...prev, [bucket]: true }))
+    setAdvisoryError(null)
+
+    try {
+      await llmQueue.enqueue(async () => {
+        const url = `${getPortfolioAdvisoryUrl(ownerId)}?bucket=${bucket}`
+        const data = await fetchJson<Partial<PortfolioAdvisoryOutput>>(url)
+        setAdvisoryData((prev) => ({ ...prev, ...data }))
+      })
+    } catch (e: any) {
+      console.error(e)
+      setAdvisoryError(e.message || `Failed to generate ${bucket} insight`)
+    } finally {
+      setLoadingBuckets((prev) => ({ ...prev, [bucket]: false }))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, ownerId])
+  }
+
+
 
   // Fetch evolution advisory when switching to evolution tab
   useEffect(() => {
@@ -518,21 +540,23 @@ export default function PortfolioAnalysisPage() {
         <Card className="mb-6">
           <CardHeader>
             <CardTitle>Search Portfolio</CardTitle>
-            <CardDescription>Enter owner ID to view portfolio analytics</CardDescription>
+            <CardDescription>Search by portfolio owner name</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex gap-2">
-              <Input
-                placeholder="Enter owner ID (e.g., 74456977)"
-                value={ownerId}
-                onChange={(e) => setOwnerId(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              <PortfolioSearch
                 className="flex-1"
+                placeholder="Type owner name (e.g. Google)..."
+                onSelect={(id) => handleSearch(id)}
               />
-              <Button onClick={handleSearch} disabled={loading || !ownerId.trim()}>
-                Search
-              </Button>
+              {/* Optional: we can remove the button or keep it for manual ID entry if we kept Input */}
             </div>
+            {/* Show current ID if selected? */}
+            {ownerId && (
+              <div className="mt-2 text-xs text-muted-foreground">
+                Selected Owner ID: {ownerId}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -557,8 +581,8 @@ export default function PortfolioAnalysisPage() {
                   <TabsTrigger value="patents">Patents</TabsTrigger>
                   <TabsTrigger value="licensing">Licensing</TabsTrigger>
                   <TabsTrigger value="analysis">Analysis</TabsTrigger>
-                  <TabsTrigger value="advisory">AI Advisory</TabsTrigger>
                   <TabsTrigger value="evolution">Evolution</TabsTrigger>
+                  <TabsTrigger value="forecast">Forecast</TabsTrigger>
                 </TabsList>
 
                 {/* OVERVIEW TAB */}
@@ -2116,113 +2140,49 @@ export default function PortfolioAnalysisPage() {
                       </CardContent>
                     </Card>
                   )}
-                </TabsContent>
 
-                {/* AI ADVISORY TAB */}
-                <TabsContent value="advisory" className="space-y-6">
-                  {advisoryLoading && (
-                    <div className="text-center py-12">
-                      <div className="text-muted-foreground">Generating advisory...</div>
-                    </div>
-                  )}
-
-                  {advisoryError && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{advisoryError}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  {!advisoryLoading && !advisoryError && !advisoryData && (
-                    <div className="text-center py-12">
-                      <div className="text-muted-foreground">No advisory available</div>
-                    </div>
-                  )}
-
-                  {!advisoryLoading && !advisoryError && advisoryData && (
-                    <>
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Executive Summary</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                          <div className="flex flex-wrap gap-2">
-                            <Badge variant="outline">Condition: {advisoryData.executive_summary.overall_condition}</Badge>
-                            <Badge variant="outline">Licensing: {advisoryData.licensing_readiness.level}</Badge>
-                            <Badge variant="outline">Competitive: {advisoryData.competitive_positioning.relative_strength}</Badge>
-                            <Badge variant="outline">Coverage: {advisoryData.confidence.data_coverage}</Badge>
-                          </div>
-                          <p className="text-sm text-foreground/80 leading-relaxed">
-                            {advisoryData.executive_summary.one_sentence_takeaway}
-                          </p>
-                        </CardContent>
-                      </Card>
-
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <Card>
-                          <CardHeader>
-                            <CardTitle>Strengths</CardTitle>
-                          </CardHeader>
-                          <CardContent className="space-y-3">
-                            {advisoryData.strengths.map((s, idx) => (
-                              <div key={idx} className="p-3 rounded-lg border">
-                                <div className="text-sm font-semibold">{s.metric}</div>
-                                <div className="text-xs text-muted-foreground">Evidence: {s.evidence}</div>
-                                <div className="text-sm text-foreground/80 mt-2">{s.interpretation}</div>
-                              </div>
-                            ))}
-                          </CardContent>
-                        </Card>
-
-                        <Card>
-                          <CardHeader>
-                            <CardTitle>Weaknesses</CardTitle>
-                          </CardHeader>
-                          <CardContent className="space-y-3">
-                            {advisoryData.weaknesses.map((s, idx) => (
-                              <div key={idx} className="p-3 rounded-lg border">
-                                <div className="text-sm font-semibold">{s.metric}</div>
-                                <div className="text-xs text-muted-foreground">Evidence: {s.evidence}</div>
-                                <div className="text-sm text-foreground/80 mt-2">{s.interpretation}</div>
-                              </div>
-                            ))}
-                          </CardContent>
-                        </Card>
-                      </div>
-
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Recommendations & Risks</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <div>
-                            <div className="text-sm font-semibold mb-2">Recommendations</div>
-                            <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80">
-                              {advisoryData.strategic_recommendations.map((r, idx) => (
-                                <li key={idx}>
-                                  <span className="font-medium">{r.action}</span> ({r.time_horizon}): {r.rationale}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div>
-                            <div className="text-sm font-semibold mb-2">Risk flags</div>
-                            <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80">
-                              {advisoryData.risk_flags.map((r, idx) => (
-                                <li key={idx}>
-                                  <span className="font-medium">{r.risk_type}</span> ({r.severity}): {r.reason}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div className="text-xs text-muted-foreground">
-                            <span className="font-semibold">Limitations:</span> {advisoryData.confidence.limitations}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </>
-                  )}
+                  <div className="grid md:grid-cols-2 gap-4 mt-4">
+                    <AiInsightCard
+                      title="Strategy Insight"
+                      insight={
+                        advisoryData?.executive_summary
+                          ? `${advisoryData.executive_summary.one_sentence_takeaway} ${advisoryData.strategic_recommendations?.map((r) => r.action).join(". ") || ""}`
+                          : null
+                      }
+                      loading={loadingBuckets["strategy"]}
+                      onGenerate={() => generateInsight("strategy")}
+                    />
+                    <AiInsightCard
+                      title="Technology Insight"
+                      insight={
+                        advisoryData?.innovation_assessment
+                          ? `${advisoryData.innovation_assessment} ${advisoryData.citation_dynamics_note || ""}`
+                          : null
+                      }
+                      loading={loadingBuckets["technology"]}
+                      onGenerate={() => generateInsight("technology")}
+                    />
+                    <AiInsightCard
+                      title="Commercial Insight"
+                      insight={
+                        advisoryData?.competitive_positioning
+                          ? `${advisoryData.competitive_positioning.explanation} Licensing Readiness: ${advisoryData.licensing_readiness?.justification || ""}`
+                          : null
+                      }
+                      loading={loadingBuckets["commercial"]}
+                      onGenerate={() => generateInsight("commercial")}
+                    />
+                    <AiInsightCard
+                      title="Legal Insight"
+                      insight={
+                        (advisoryData?.legal_health_interpretation || advisoryData?.blocking_analysis)
+                          ? `${advisoryData?.legal_health_interpretation || ""} Blocking Analysis: ${advisoryData?.blocking_analysis || ""}`
+                          : null
+                      }
+                      loading={loadingBuckets["legal"]}
+                      onGenerate={() => generateInsight("legal")}
+                    />
+                  </div>
                 </TabsContent>
 
                 {/* EVOLUTION TAB */}
@@ -2303,11 +2263,18 @@ export default function PortfolioAnalysisPage() {
                     </>
                   )}
                 </TabsContent>
+                {/* FORECAST TAB */}
+                <TabsContent value="forecast" className="space-y-6">
+                  <div className="text-sm text-muted-foreground mb-4">
+                    AI-driven citation forecasts for the next 3-5 years, based on patent characteristics and portfolio composition.
+                  </div>
+                  <PortfolioForecastCard ownerId={Number(ownerId)} />
+                </TabsContent>
               </Tabs>
             </CardContent>
           </Card>
         )}
       </div>
-    </div>
+    </div >
   )
 }

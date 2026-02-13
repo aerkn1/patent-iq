@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -17,6 +17,11 @@ class MetricKey(str, Enum):
     durability = "durability"
     sustainability = "sustainability"
     timing = "timing"
+    blocking = "blocking"
+    innovation = "innovation"
+    legal = "legal"
+    market = "market"
+    technology = "technology"
 
 
 class Level3(str, Enum):
@@ -98,14 +103,18 @@ class PortfolioConfidence(BaseModel):
 class PortfolioAdvisoryOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    executive_summary: PortfolioExecutiveSummary
+    executive_summary: Optional[PortfolioExecutiveSummary] = None
     strengths: List[PortfolioStrengthWeaknessItem] = Field(default_factory=list)
     weaknesses: List[PortfolioStrengthWeaknessItem] = Field(default_factory=list)
-    licensing_readiness: PortfolioLicensingReadiness
-    competitive_positioning: PortfolioCompetitivePositioning
+    licensing_readiness: Optional[PortfolioLicensingReadiness] = None
+    competitive_positioning: Optional[PortfolioCompetitivePositioning] = None
+    blocking_analysis: str = ""
+    innovation_assessment: str = ""
+    legal_health_interpretation: str = ""
+    citation_dynamics_note: str = ""
     strategic_recommendations: List[PortfolioStrategicRecommendation] = Field(default_factory=list)
     risk_flags: List[PortfolioRiskFlag] = Field(default_factory=list)
-    confidence: PortfolioConfidence
+    confidence: Optional[PortfolioConfidence] = None
 
 
 class PatentRole(str, Enum):
@@ -118,6 +127,14 @@ class PatentLifecycleStage(str, Enum):
     EARLY = "EARLY"
     PEAK = "PEAK"
     DECLINING = "DECLINING"
+
+
+class PatentInsightItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    area: str
+    evidence: str
+    interpretation: str
 
 
 class PatentRiskAssessment(BaseModel):
@@ -137,13 +154,19 @@ class PatentConfidence(BaseModel):
 class PatentAdvisoryOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    patent_role: PatentRole
-    lifecycle_stage: PatentLifecycleStage
-    strengths: List[str] = Field(default_factory=list)
-    weaknesses: List[str] = Field(default_factory=list)
-    strategic_value: str
-    risk_assessment: PatentRiskAssessment
-    confidence: PatentConfidence
+    patent_role: Optional[PatentRole] = None
+    lifecycle_stage: Optional[PatentLifecycleStage] = None
+    strategic_value: Optional[str] = None
+    strengths: List[PatentInsightItem] = Field(default_factory=list)
+    weaknesses: List[PatentInsightItem] = Field(default_factory=list)
+    technology_insight: str = ""
+    market_insight: str = ""
+    legal_health_note: str = ""
+    innovation_insight: str = ""
+    blocking_insight: str = ""
+    actionable_recommendations: List[str] = Field(default_factory=list)
+    risk_assessment: Optional[PatentRiskAssessment] = None
+    confidence: Optional[PatentConfidence] = None
 
 
 # -------- Portfolio evolution advisory (separate endpoint) --------

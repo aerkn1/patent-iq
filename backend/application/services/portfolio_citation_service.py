@@ -1,10 +1,15 @@
-from domain.errors import NotFoundError
+from domain.errors import NotFoundError, ValidationError
 from infrastructure.repositories.portfolio_citations_repo import PortfolioCitationsRepository
 from domain.schemas.portfolio_citation import PortfolioCitationMetricsResponse, PortfolioCitationTimeSeriesResponse
+from application.services.portfolio_forecast_service import PortfolioForecastService
+import logging
+
+logger = logging.getLogger(__name__)
 
 class PortfolioCitationService:
     def __init__(self):
         self.repo = PortfolioCitationsRepository()
+        self.forecast_service = PortfolioForecastService()
 
     def get_citation_metrics(self, owner_id: int) -> dict:
         data = self.repo.get_citation_metrics(owner_id)
@@ -62,4 +67,85 @@ class PortfolioCitationService:
         return {
             "owner_id": owner_id,
             "series": cleaned_series
+        }
+
+    async def get_citation_forecast_ts(self, owner_id: int, horizon: str) -> dict:
+        if owner_id <= 0:
+            raise ValidationError("owner_id must be positive")
+
+        # 1. Get historical cumulative timeseries from repo
+        hist_series = self.repo.get_cumulative_timeseries(owner_id)
+        
+        if not hist_series:
+            # If no history, we can't project properly or return empty
+            raise NotFoundError(f"No citation history found for portfolio {owner_id}")
+
+        last_observed = hist_series[-1]
+        last_year = int(last_observed["year"])
+        last_cum = float(last_observed["cum_cites"])
+
+        # 2. Get ML forecast (portfolio level)
+        # We don't need segmentation here, just total numbers
+        try:
+            forecast_raw = await self.forecast_service.get_forecast(
+                owner_id, 
+                horizon, 
+                segments=False
+            )
+            pred = forecast_raw["portfolio_prediction"]
+            expected_add = pred["expected_citations_total"]
+            low_add = pred["interval_80_total"]["low"]
+            high_add = pred["interval_80_total"]["high"]
+        except Exception as e:
+            logger.warning(f"Portfolio forecast failed for {owner_id}: {e}")
+            expected_add = 0.0
+            low_add = 0.0
+            high_add = 0.0
+            pred = {
+                "expected_citations_total": 0.0,
+                "interval_80_total": {"low": 0.0, "high": 0.0},
+                "n_patents_effective": 0.0,
+                "expected_per_effective_patent": 0.0
+            }
+
+        # 3. Project forecast linearly
+        horizon_years = 3 if horizon == "3y" else 5
+        forecast_series = []
+
+        # Continuity point
+        forecast_series.append({
+            "year": last_year,
+            "cum_cites": last_cum,
+            "low": last_cum,
+            "high": last_cum
+        })
+
+        for i in range(1, horizon_years + 1):
+            fraction = i / horizon_years
+            
+            proj_expected = last_cum + (expected_add * fraction)
+            proj_low = last_cum + (low_add * fraction)
+            proj_high = last_cum + (high_add * fraction)
+            
+            forecast_series.append({
+                "year": last_year + i,
+                "cum_cites": round(proj_expected, 1),
+                "low": round(proj_low, 1),
+                "high": round(proj_high, 1)
+            })
+
+        return {
+            "owner_id": owner_id,
+            "horizon": horizon,
+            "last_observed_year": last_year,
+            "historical": hist_series,
+            "forecast": forecast_series,
+            "prediction_summary": {
+                "expected_additional": round(expected_add, 1),
+                "interval_80": {
+                    "low": round(low_add, 1),
+                    "high": round(high_add, 1)
+                },
+                "difficulty_bucket": "N/A" # Portfolio doesn't have single difficulty
+            }
         }

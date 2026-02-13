@@ -7,7 +7,7 @@ from application.llm.config import (
     MAX_TOKENS_PATENT,
     SNAPSHOT_DATE_FIXED_V1,
 )
-from application.llm.prompts import load_prompt, render_prompt
+from application.llm.prompts import build_system_prompt, build_user_prompt
 from application.llm.runner import LlmRunner, run_with_retries
 from application.llm.advisory_validation import validate_and_sanitize_patent_advisory
 
@@ -82,6 +82,21 @@ class PatentAdvisoryService:
 
         series = (citation_ts or {}).get("series", [])
 
+        analysis = patent_analysis or {}
+        overview = patent_overview or {}
+
+        tech = analysis.get("technology", {})
+        market = analysis.get("market", {})
+        legal = analysis.get("legal", {})
+        innovation = analysis.get("innovation", {})
+        blocking = analysis.get("blocking_power_breakdown", {})
+        licensing = analysis.get("licensing_readiness_breakdown", {})
+        rankings = analysis.get("rankings", {})
+        family = overview.get("family", {})
+
+        top_cpcs = [c["code"] for c in tech.get("distribution", {}).get("cpc_subclasses", [])[:5]]
+        top_industries = [i["code"] for i in market.get("distribution", {}).get("industries", [])[:5]]
+
         derived = {
             "patent_metrics_summary": {
                 "total_citations": total_citations or 0,
@@ -89,6 +104,51 @@ class PatentAdvisoryService:
             "patent_timeseries_summary": {
                 "current_phase": _phase_from_timing_class((citation_metrics or {}).get("timing_class")),
                 "recent_growth": _recent_growth_from_timeseries(series),
+            },
+            "technology_summary": {
+                "top_cpcs": top_cpcs,
+                "diversification": tech.get("diversification", {}).get("interpretation", ""),
+                "entropy_normalized": tech.get("diversification", {}).get("normalized"),
+            },
+            "market_summary": {
+                "top_industries": top_industries,
+                "diversification": market.get("diversification", {}).get("interpretation", ""),
+                "entropy_normalized": market.get("diversification", {}).get("normalized"),
+            },
+            "legal_summary": {
+                "opposition_count": legal.get("opposition_count", 0),
+                "lapse_count": legal.get("lapse_count", 0),
+                "renewal_payment_count": legal.get("renewal_payment_count", 0),
+                "legal_uncertainty": legal.get("legal_uncertainty", False),
+            },
+            "innovation_summary": {
+                "innovation_score": innovation.get("innovation_score"),
+                "tech_field_influence": innovation.get("tech_field_influence"),
+                "field_attention": innovation.get("field_attention"),
+            },
+            "blocking_summary": {
+                "forward_impact_score": blocking.get("diagnostics", {}).get("forward_impact_score"),
+                "family_breadth_normalized": blocking.get("diagnostics", {}).get("family_breadth_normalized"),
+                "tech_breadth_penalty": blocking.get("diagnostics", {}).get("tech_breadth_penalty"),
+                "self_blocking_rate": blocking.get("diagnostics", {}).get("self_blocking_rate"),
+            },
+            "licensing_summary": {
+                "forward_impact_score": licensing.get("forward_impact_score"),
+                "claim_chartability_score": licensing.get("claim_chartability_score"),
+                "market_relevance_score": licensing.get("market_relevance_score"),
+                "legal_confidence_score": licensing.get("legal_confidence_score"),
+                "final_readiness_score": licensing.get("final_readiness_score"),
+            },
+            "rankings_summary": {
+                "blocking_power_pct_global": rankings.get("blocking_power", {}).get("percentile_global"),
+                "technology_pct_global": rankings.get("technology_axis", {}).get("percentile_global"),
+                "market_pct_global": rankings.get("market_axis", {}).get("percentile_global"),
+            },
+            "family_summary": {
+                "family_members_count": family.get("family_members_count"),
+                "family_jurisdiction_count": family.get("family_jurisdiction_count"),
+                "major_office_grant_auths": family.get("major_office_grant_auths"),
+                "family_cpc_subclass_count": family.get("family_cpc_subclass_count"),
             },
             "data_quality": {
                 "coverage": coverage,
@@ -111,28 +171,92 @@ class PatentAdvisoryService:
             "derived": derived,
         }
 
-    async def get_advisory(self, appln_id: int, *, force_refresh: bool = False) -> dict[str, Any]:
-        input_obj = await self.build_input(appln_id)
+    def _filter_input_data(self, input_obj: dict[str, Any], bucket: str | None) -> dict[str, Any]:
+        if not bucket or bucket == "strategy":
+            return input_obj
+        
+        # Deep copy structure to avoid mutating cache if we cached the full input
+        # But build_input returns a fresh dict, so shallow copy of top levels is fine, 
+        # but we are filtering inner dicts.
+        
+        derived = input_obj["derived"].copy()
+        ui_payload = input_obj["ui_payload"].copy()
+        
+        # Filter derived
+        if bucket == "technology":
+            keys_to_keep = {"technology_summary", "innovation_summary", "data_quality", "patent_metrics_summary"}
+            derived = {k: v for k, v in derived.items() if k in keys_to_keep}
+            
+            # Filter ui_payload (patent_analysis is main big object)
+            if "patent_analysis" in ui_payload:
+                pa = ui_payload["patent_analysis"] or {}
+                ui_payload["patent_analysis"] = {
+                    "technology": pa.get("technology"),
+                    "innovation": pa.get("innovation"),
+                }
+
+        elif bucket == "market":
+            keys_to_keep = {"market_summary", "data_quality", "patent_metrics_summary"}
+            derived = {k: v for k, v in derived.items() if k in keys_to_keep}
+            
+            if "patent_analysis" in ui_payload:
+                pa = ui_payload["patent_analysis"] or {}
+                ui_payload["patent_analysis"] = {
+                    "market": pa.get("market"),
+                }
+
+        elif bucket == "legal":
+            keys_to_keep = {"legal_summary", "blocking_summary", "family_summary", "data_quality", "patent_metrics_summary"}
+            derived = {k: v for k, v in derived.items() if k in keys_to_keep}
+             
+            if "patent_analysis" in ui_payload:
+                pa = ui_payload["patent_analysis"] or {}
+                ui_payload["patent_analysis"] = {
+                    "legal": pa.get("legal"),
+                    "blocking_power_breakdown": pa.get("blocking_power_breakdown"),
+                }
+        
+        return {
+            "context": input_obj["context"],
+            "ui_payload": ui_payload,
+            "derived": derived,
+        }
+
+    async def get_advisory(self, appln_id: int, *, bucket: str | None = None, force_refresh: bool = False) -> dict[str, Any]:
+        full_input = await self.build_input(appln_id)
+        
+        # Slicing
+        input_obj = self._filter_input_data(full_input, bucket)
 
         parquet_hash = compute_parquet_version_hash()
         snapshot_date = SNAPSHOT_DATE_FIXED_V1
         analysis_type = "PATENT_ADVISORY"
-        cache_key = f"{analysis_type}:{appln_id}:{snapshot_date}:{parquet_hash}"
+        
+        # Cache key includes bucket
+        bucket_key = bucket if bucket else "full"
+        cache_key = f"{analysis_type}:{appln_id}:{snapshot_date}:{parquet_hash}:{bucket_key}"
 
         if not force_refresh:
             cached = self._cache.get(cache_key=cache_key)
             if cached is not None and cached.parquet_version_hash == parquet_hash:
-                logger.info("patent_advisory cache hit", extra={"appln_id": appln_id})
+                logger.info("patent_advisory cache hit", extra={"appln_id": appln_id, "bucket": bucket})
                 return cached.payload
 
-        system_prompt = load_prompt("system.txt")
-        user_prompt = render_prompt(load_prompt("patent_user.txt"), data_obj=input_obj)
+        system_prompt = build_system_prompt()
+        
+        # Determine prompt file
+        if bucket:
+            prompt_name = f"patent/{bucket}.json"
+        else:
+            prompt_name = "patent_user.json"
+            
+        user_prompt = build_user_prompt(prompt_name, data_obj=input_obj)
 
         def _validate(content: str) -> dict[str, Any]:
             return validate_and_sanitize_patent_advisory(llm_content=content, input_obj=input_obj)
 
         try:
-            payload, model_used = run_with_retries(
+            payload, model_used = await run_with_retries(
                 runner=self._runner,
                 system_prompt=system_prompt,
                 user_prompt=user_prompt,
@@ -144,7 +268,7 @@ class PatentAdvisoryService:
         except DataUnavailableError:
             raise
         except Exception as e:
-            logger.exception("patent_advisory failed", extra={"appln_id": appln_id})
+            logger.exception("patent_advisory failed", extra={"appln_id": appln_id, "bucket": bucket})
             raise InternalServerError() from e
 
         self._cache.set(

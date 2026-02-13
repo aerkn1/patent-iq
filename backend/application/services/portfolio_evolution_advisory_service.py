@@ -7,7 +7,7 @@ from application.llm.config import (
     MAX_TOKENS_PORTFOLIO_EVOLUTION,
     SNAPSHOT_DATE_FIXED_V1,
 )
-from application.llm.prompts import load_prompt, render_prompt
+from application.llm.prompts import build_system_prompt, build_user_prompt
 from application.llm.runner import LlmRunner, run_with_retries
 from application.llm.advisory_validation import validate_and_sanitize_portfolio_evolution_advisory
 
@@ -81,8 +81,8 @@ class PortfolioEvolutionAdvisoryService:
                 logger.info("portfolio_evolution_advisory cache hit", extra={"owner_id": owner_id})
                 return cached.payload
 
-        system_prompt = load_prompt("system.txt")
-        user_prompt = render_prompt(load_prompt("portfolio_evolution_user.txt"), data_obj=input_obj)
+        system_prompt = build_system_prompt()
+        user_prompt = build_user_prompt("portfolio_evolution_user.json", data_obj=input_obj)
 
         def _validate(content: str) -> dict[str, Any]:
             return validate_and_sanitize_portfolio_evolution_advisory(llm_content=content, input_obj=input_obj)

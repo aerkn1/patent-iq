@@ -1,0 +1,21 @@
+{
+    "task": "Analyze the following portfolio UI snapshot data and produce a commercial insight.",
+    "instructions": [
+        "Assess licensing readiness level and justify using licensing candidate data",
+        "Evaluate competitive positioning relative strength from peer data and citation metrics"
+    ],
+    "output_schema": {
+        "licensing_readiness": {
+            "level": "LOW | MEDIUM | HIGH",
+            "justification": "string with trace tokens"
+        },
+        "competitive_positioning": {
+            "relative_strength": "LOW | MEDIUM | HIGH",
+            "explanation": "string with trace tokens"
+        }
+    },
+    "trace_rules": [
+        "Every narrative string MUST contain at least one [[path=value]] trace token",
+        "Use paths like: derived.licensing_context_summary.candidate_density, derived.licensing_context_summary.top_industries"
+    ]
+}
