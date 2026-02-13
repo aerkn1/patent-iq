@@ -14,6 +14,26 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/patents", tags=["patents"])
 
 
+
+@router.get("/search")
+async def search_patents(
+    q: str = Query(..., min_length=2, description="Search query for patent publication ID"),
+    limit: int = Query(10, ge=1, le=50, description="Max results"),
+):
+    try:
+        service = PatentPageService()
+        return await service.search_patents(query=q, limit=limit)
+    except Exception as e:
+        logger.exception("Patent search failed", extra={"query": q})
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "INTERNAL_SERVER_ERROR",
+                "message": "Unexpected server error",
+            },
+        )
+
+
 @router.get(
     "/{appln_id}"
 )

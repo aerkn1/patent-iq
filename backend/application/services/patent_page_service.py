@@ -572,3 +572,13 @@ class PatentPageService:
         if appln_id <= 0:
             raise ValidationError("appln_id must be positive")
         return await self.forecast_service.get_forecast(appln_id, horizon)
+
+    async def search_patents(self, query: str, limit: int = 10) -> dict:
+        if not query or len(query.strip()) < 2:
+            return {"results": []}
+
+        results = self.core_repo.search_by_publn_id(query, limit=limit)
+        return {
+            "query": query,
+            "results": results
+        }

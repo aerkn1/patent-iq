@@ -97,3 +97,31 @@ class PatentCoreRepository:
         r = df.iloc[0]
 
         return r.to_dict()
+
+    def search_by_publn_id(self, query: str, limit: int = 10) -> list[dict]:
+        conn = DuckDBConnection.get_connection()
+        
+        # Determine strict or partial matching strategy
+        # For huge datasets, ILIKE '%...%' can be slow without FTS. 
+        # Assuming dataset size is manageable or we rely on prefix search for speed if needed.
+        # Let's try basic ILIKE first.
+        pattern = f"%{query}%"
+
+        q = """
+        SELECT
+            appln_id,
+            appln_title,
+            ep_publn_id_full
+        FROM patent_core
+        WHERE ep_publn_id_full ILIKE ?
+        ORDER BY LENGTH(ep_publn_id_full) ASC
+        LIMIT ?
+        """
+
+        try:
+            df = conn.execute(q, [pattern, limit]).fetchdf()
+            if df.empty:
+                return []
+            return df.to_dict(orient="records")
+        except Exception:
+            return []
