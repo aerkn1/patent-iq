@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from api.v1.patents import router as patent_router
 from api.v1.portfolios import router as portfolios_router
+from api.v1.stats import router as stats_router
 from fastapi.middleware.cors import CORSMiddleware
 from infrastructure.duckdb.connection import DuckDBConnection
 import logging
@@ -54,3 +55,4 @@ app.include_router(
 )
 
 app.include_router(portfolios_router)
+app.include_router(stats_router, prefix="/api/v1")

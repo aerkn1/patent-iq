@@ -25,6 +25,12 @@ class PortfolioMasterRepository:
 
         return df.iloc[0].to_dict()
 
+    def get_total_count(self) -> int:
+        conn = DuckDBConnection.get_connection()
+        q = "SELECT COUNT(*) as count FROM portfolio_master"
+        df = conn.execute(q).fetchdf()
+        return int(df.iloc[0]["count"])
+
     def get_owner_names(self, owner_ids: list[int]) -> dict:
         conn = DuckDBConnection.get_connection()
         q = """

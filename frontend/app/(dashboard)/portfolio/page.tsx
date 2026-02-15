@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { fetchJson, getPortfolioOverviewUrl, getPortfolioAnalyticsUrl, getPortfolioPatentsUrl, fetchPortfolioCategoryCounts, getPortfolioLicensingCandidatesUrl, getPortfolioCitationMetricsUrl, getPortfolioCitationTimeSeriesUrl, getPortfolioAdvisoryUrl, getPortfolioEvolutionAdvisoryUrl } from "@/lib/api"
 import type { PortfolioOverviewResponse, PortfolioAnalyticsResponse, PortfolioPatentsResponse, PortfolioCategoryCounts, PortfolioPatent, PortfolioLicensingCandidatesResponse, LicensingCandidateResult } from "@/lib/types/patent"
 import type { PortfolioCitationMetricsResponse, PortfolioCitationTimeSeriesResponse, PortfolioTimeSeriesPoint } from "@/lib/types/portfolio"
-import type { PortfolioAdvisoryOutput, PortfolioEvolutionAdvisoryOutput } from "@/lib/types/advisory"
+import type { PortfolioAdvisoryOutput } from "@/lib/types/advisory"
 import { cn, formatLabel } from "@/lib/utils"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -67,8 +67,9 @@ import { TierBadge } from "@/components/tier-badge"
 import { RED_PALETTE } from "@/lib/chart-config"
 import { llmQueue } from "@/lib/api/llm-queue"
 import { PortfolioSearch } from "@/components/portfolio-search"
+import { DistributionChart } from "@/components/distribution-chart"
 
-export default function PortfolioAnalysisPage() {
+function PortfolioAnalysisContent() {
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState("overview")
   const [ownerId, setOwnerId] = useState(() => {
@@ -85,9 +86,7 @@ export default function PortfolioAnalysisPage() {
   const [advisoryError, setAdvisoryError] = useState<string | null>(null)
   const [loadingBuckets, setLoadingBuckets] = useState<Record<string, boolean>>({})
 
-  const [evolutionAdvisoryData, setEvolutionAdvisoryData] = useState<PortfolioEvolutionAdvisoryOutput | null>(null)
-  const [evolutionLoading, setEvolutionLoading] = useState(false)
-  const [evolutionError, setEvolutionError] = useState<string | null>(null)
+
   const [categoryCounts, setCategoryCounts] = useState<PortfolioCategoryCounts | null>(null)
   const [citationMetrics, setCitationMetrics] = useState<PortfolioCitationMetricsResponse | null>(null)
   const [citationTimeSeries, setCitationTimeSeries] = useState<PortfolioCitationTimeSeriesResponse | null>(null)
@@ -331,51 +330,43 @@ export default function PortfolioAnalysisPage() {
     }
   }
 
-  const fetchPortfolioEvolutionAdvisory = async (id: string) => {
-    if (!id.trim()) return
 
-    setEvolutionLoading(true)
-    setEvolutionError(null)
-    try {
-      const data = await fetchJson<PortfolioEvolutionAdvisoryOutput>(getPortfolioEvolutionAdvisoryUrl(id))
-      setEvolutionAdvisoryData(data)
-    } catch (err) {
-      setEvolutionError(err instanceof Error ? err.message : "Failed to fetch evolution advisory")
-      setEvolutionAdvisoryData(null)
-    } finally {
-      setEvolutionLoading(false)
-    }
-  }
 
-  // Sync ownerId with URL params and auto-fetch
+  // Sync ownerId with URL params
   useEffect(() => {
     const urlOwnerId = searchParams?.get("ownerId")
     if (urlOwnerId && urlOwnerId !== ownerId) {
       setOwnerId(urlOwnerId)
-      fetchPortfolioOverview(urlOwnerId)
-      fetchPortfolioAnalytics(urlOwnerId)
-      fetchCitationData(urlOwnerId)
-      // Initial fetch if ownerId is set but no data loaded
-      fetchPortfolioOverview(ownerId.trim())
-      fetchPortfolioAnalytics(ownerId.trim())
-      fetchCitationData(ownerId.trim())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
 
-  const handleSearch = (id?: string) => {
-    const targetId = id || ownerId
-    if (targetId.trim()) {
-      // If triggered by selection, update state
-      if (id && id !== ownerId) {
-        setOwnerId(id)
-      }
+  // Master effect: Fetch data when ownerId turns valid or changes
+  useEffect(() => {
+    if (!ownerId?.trim()) return
 
-      fetchPortfolioOverview(targetId.trim())
-      fetchPortfolioAnalytics(targetId.trim())
-      fetchCitationData(targetId.trim())
-      setEvolutionAdvisoryData(null)
-      setEvolutionError(null)
+    // Reset component states on new owner
+    setOverviewData(null)
+    setAnalyticsData(null)
+    setPatentsData(null)
+    setCitationMetrics(null)
+    setCitationTimeSeries(null)
+
+    // Trigger fetches
+    const id = ownerId.trim()
+    console.log("[Portfolio Page] Fetching data for owner:", id)
+
+    // Parallel fetch for core data
+    fetchPortfolioOverview(id)
+    fetchPortfolioAnalytics(id)
+    fetchCitationData(id)
+
+  }, [ownerId])
+
+  const handleSearch = (id?: string) => {
+    // If triggered by selection, just update state.
+    // The master useEffect will handle the fetching.
+    if (id && id.trim()) {
+      setOwnerId(id)
     }
   }
 
@@ -427,13 +418,7 @@ export default function PortfolioAnalysisPage() {
 
 
 
-  // Fetch evolution advisory when switching to evolution tab
-  useEffect(() => {
-    if (activeTab === "evolution" && ownerId.trim() && !evolutionLoading && !evolutionAdvisoryData && !evolutionError) {
-      fetchPortfolioEvolutionAdvisory(ownerId.trim())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, ownerId])
+
 
   // Fetch category counts when switching to patents tab
   useEffect(() => {
@@ -564,7 +549,6 @@ export default function PortfolioAnalysisPage() {
                 <TabsTrigger value="patents">Patents</TabsTrigger>
                 <TabsTrigger value="licensing">Licensing</TabsTrigger>
                 <TabsTrigger value="analysis">Analysis</TabsTrigger>
-                <TabsTrigger value="evolution">Evolution</TabsTrigger>
                 <TabsTrigger value="forecast">Forecast</TabsTrigger>
               </TabsList>
 
@@ -985,51 +969,14 @@ export default function PortfolioAnalysisPage() {
                         </div>
                       </div>
 
-                      {/* Right: Box Plot Visualization */}
+                      {/* Right: Distribution Visualization */}
                       <div className="space-y-4">
-                        <div className="text-sm font-semibold mb-4">Distribution Visualization</div>
-                        <div className="relative h-32 bg-muted/30 rounded-lg p-4 flex items-center">
-                          {/* Simplified box plot representation */}
-                          <div className="w-full space-y-2">
-                            {/* Q90 marker */}
-                            <div className="relative">
-                              <div className="absolute left-0 top-0 w-full h-1 bg-blue-200 rounded"></div>
-                              <div className="absolute left-[90%] top-[-4px] w-0.5 h-3 bg-blue-600"></div>
-                              <span className="absolute left-[90%] top-[-20px] text-xs text-blue-600 font-medium">Q90</span>
-                            </div>
-                            {/* Q75 marker */}
-                            <div className="relative mt-2">
-                              <div className="absolute left-0 top-0 w-[75%] h-1 bg-blue-300 rounded"></div>
-                              <div className="absolute left-[75%] top-[-4px] w-0.5 h-3 bg-blue-500"></div>
-                              <span className="absolute left-[75%] top-[-20px] text-xs text-blue-500 font-medium">Q75</span>
-                            </div>
-                            {/* Median marker */}
-                            <div className="relative mt-2">
-                              <div className="absolute left-0 top-0 w-[50%] h-2 bg-primary/50 rounded"></div>
-                              <div className="absolute left-[50%] top-[-6px] w-1 h-4 bg-primary"></div>
-                              <span className="absolute left-[50%] top-[-24px] text-xs text-primary font-semibold">Median</span>
-                            </div>
-                            {/* Portfolio position marker */}
-                            <div className="relative mt-4">
-                              <div
-                                className="absolute top-[-8px] w-1 h-6 bg-red-600 rounded"
-                                style={{ left: `${overviewData.peer_positioning.peer_percentile}%` }}
-                              ></div>
-                              <div
-                                className="absolute top-[-30px] text-xs text-red-600 font-bold whitespace-nowrap"
-                                style={{ left: `${Math.min(overviewData.peer_positioning.peer_percentile, 85)}%` }}
-                              >
-                                Portfolio
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-xs text-muted-foreground space-y-1">
-                          <p>• Q90: 90th percentile of peer group</p>
-                          <p>• Q75: 75th percentile of peer group</p>
-                          <p>• Median: 50th percentile of peer group</p>
-                          <p>• Red marker: This portfolio's position</p>
-                        </div>
+                        <DistributionChart
+                          zScore={overviewData.peer_positioning.peer_zscore}
+                          percentile={overviewData.peer_positioning.peer_percentile}
+                          title="Distribution Visualization"
+                          description="Portfolio performance relative to peer group (Normal Distribution)"
+                        />
                       </div>
                     </div>
                   </CardContent>
@@ -2192,84 +2139,6 @@ export default function PortfolioAnalysisPage() {
                 </div>
               </TabsContent>
 
-              {/* EVOLUTION TAB */}
-              <TabsContent value="evolution" className="space-y-6">
-                {evolutionLoading && (
-                  <div className="text-center py-12">
-                    <div className="text-muted-foreground">Generating evolution advisory...</div>
-                  </div>
-                )}
-
-                {evolutionError && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{evolutionError}</AlertDescription>
-                  </Alert>
-                )}
-
-                {!evolutionLoading && !evolutionError && !evolutionAdvisoryData && (
-                  <div className="text-center py-12">
-                    <div className="text-muted-foreground">No evolution advisory available</div>
-                  </div>
-                )}
-
-                {!evolutionLoading && !evolutionError && evolutionAdvisoryData && (
-                  <>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Evolution Summary</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-2">
-                        <div className="flex flex-wrap gap-2">
-                          <Badge variant="outline">Trend: {evolutionAdvisoryData.executive_summary.trend_direction}</Badge>
-                          <Badge variant="outline">Coverage: {evolutionAdvisoryData.confidence.data_coverage}</Badge>
-                        </div>
-                        <p className="text-sm text-foreground/80">{evolutionAdvisoryData.executive_summary.one_sentence_takeaway}</p>
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Year-by-year</CardTitle>
-                        <CardDescription>Interpretation based on citation timeseries</CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        {evolutionAdvisoryData.yearly.map((y, idx) => (
-                          <div key={idx} className="p-3 rounded-lg border">
-                            <div className="flex flex-wrap gap-2 items-center">
-                              <Badge variant="outline">{y.year}</Badge>
-                              <Badge variant="outline">Phase: {y.phase}</Badge>
-                              <Badge variant="outline">YoY: {(y.yoy_growth_pct * 100).toFixed(1)}%</Badge>
-                            </div>
-                            <div className="text-sm text-foreground/80 mt-2">{y.interpretation}</div>
-                            <div className="text-xs text-muted-foreground mt-1">Evidence: {y.evidence}</div>
-                          </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-
-                    {evolutionAdvisoryData.risk_flags.length > 0 && (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Risk flags</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <ul className="list-disc list-inside space-y-2 text-sm text-foreground/80">
-                            {evolutionAdvisoryData.risk_flags.map((r, idx) => (
-                              <li key={idx}>
-                                <span className="font-medium">{r.risk_type}</span> ({r.severity}): {r.reason}
-                              </li>
-                            ))}
-                          </ul>
-                        </CardContent>
-                      </Card>
-                    )}
-
-                    <div className="text-xs text-muted-foreground">
-                      <span className="font-semibold">Limitations:</span> {evolutionAdvisoryData.confidence.limitations}
-                    </div>
-                  </>
-                )}
-              </TabsContent>
               {/* FORECAST TAB */}
               <TabsContent value="forecast" className="space-y-6">
                 <div className="text-sm text-muted-foreground mb-4">
@@ -2282,5 +2151,13 @@ export default function PortfolioAnalysisPage() {
         </Card>
       )}
     </>
+  )
+}
+
+export default function PortfolioAnalysisPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading portfolio analysis...</div>}>
+      <PortfolioAnalysisContent />
+    </Suspense>
   )
 }

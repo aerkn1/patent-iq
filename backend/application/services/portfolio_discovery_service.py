@@ -15,12 +15,25 @@ class PortfolioDiscoveryService:
         self.master_repo = PortfolioMasterRepository()
         self.country_repo = PortfolioCountryRepository()
 
+    def _empty_response(self, dimension: str, value: str, limit: int) -> dict:
+        return {
+            "query": {
+                "dimension": dimension,
+                "value": value,
+                "limit": limit
+            },
+            "results": [],
+            "metadata": {
+                "contract_version": "v1"
+            }
+        }
+
     async def discover(self, dimension: str, value: str, limit: int) -> dict:
 
         if dimension == "CPC":
-            owner_ids = self.cpc_repo.get_owners_by_cpc(value)
+            owner_ids = self.cpc_repo.get_owners_by_cpc(value, limit=limit)
         elif dimension == "INDUSTRY":
-            owner_ids = self.industry_repo.get_owners_by_industry(value)
+            owner_ids = self.industry_repo.get_owners_by_industry(value, limit=limit)
         else:
             owner_ids = self.country_repo.get_by_country(value)
 
@@ -64,17 +77,7 @@ class PortfolioDiscoveryService:
             }
         }
 
-        return {
-            "query": {
-                "dimension": dimension,
-                "value": value,
-                "limit": limit
-            },
-            "results": [],
-            "metadata": {
-                "contract_version": "v1"
-            }
-        }
+
 
     async def search_portfolios(self, query: str, limit: int = 20) -> dict:
         if not query or len(query.strip()) < 2:

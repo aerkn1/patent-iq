@@ -9,6 +9,10 @@ const LOCALHOST_URL = 'http://localhost:8000';
 
 export const API_BASE = NGROK_URL;
 
+export async function getGlobalStats(): Promise<import("./types/stats").GlobalStats> {
+  return fetchJson(`${API_BASE}/api/v1/stats/`);
+}
+
 export function getPatentUrl(applnId: string): string {
   return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}`;
 }

@@ -1,18 +1,33 @@
+"use client"
+
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Shield, TrendingUp, Gem, Brain, ArrowRight, Search } from "lucide-react"
+import { Shield, TrendingUp, Gem, Brain, ArrowRight, Search, Database, Globe, Server } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { getGlobalStats } from "@/lib/api"
+import type { GlobalStats } from "@/lib/types/stats"
+import { PatentSearch } from "@/components/patent-search"
 
 export default function HomePage() {
+  const [stats, setStats] = useState<GlobalStats | null>(null)
+  const router = useRouter()
+
+  useEffect(() => {
+    getGlobalStats().then(setStats).catch(console.error)
+  }, [])
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Shield className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold">Patent Intelligence</h1>
+            <Image src="/logo.png" width={40} height={40} alt="Patent-IQ" className="rounded-full" />
+            <h1 className="text-2xl font-bold">Patent-IQ</h1>
           </div>
           <nav className="flex items-center gap-6">
             <Link href="/lookup" className="text-sm text-muted-foreground hover:text-foreground">
@@ -39,11 +54,12 @@ export default function HomePage() {
             Powered by AI • EPO CodeFest 2026
           </div>
           <h2 className="text-5xl font-bold mb-6 text-balance">
-            The first AI-powered platform to <span className="text-primary">predict patent blocking power</span>
+            <span className="text-primary">AI-Powered</span> IP Portfolio Intelligence Platform
           </h2>
-          <p className="text-xl text-muted-foreground mb-8 text-pretty">
-            Quantify blocking power using EPO examination evidence. Discover undervalued patents with high strategic
-            value through automated AI-driven analysis.
+          <p className="text-xl text-muted-foreground mb-8 text-pretty font-serif">
+            Unlock actionable insights across patent portfolios using advanced machine learning and data-driven
+            analytics. Identify strengths, benchmark performance, anticipate trends, and support strategic IP decisions
+            with precision and confidence.
           </p>
 
           {/* Quick Search */}
@@ -56,7 +72,11 @@ export default function HomePage() {
             </CardHeader>
             <CardContent>
               <div className="flex gap-2">
-                <Input placeholder="Enter patent ID (e.g., EP3123456B1, US10123456B2)" className="flex-1" />
+                <PatentSearch
+                  className="flex-1"
+                  placeholder="Enter patent ID (e.g., EP3123456B1)..."
+                  onSelect={(id) => router.push(`/lookup?patentId=${id}`)}
+                />
                 <Button asChild>
                   <Link href="/lookup">Analyze</Link>
                 </Button>
@@ -65,140 +85,69 @@ export default function HomePage() {
           </Card>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-4 gap-4 mb-12">
+          <div className="grid grid-cols-3 gap-4 mb-12">
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>Patents Analyzed</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">8.7M</div>
-                <p className="text-xs text-muted-foreground">2015-2024 dataset</p>
+                <div className="text-3xl font-bold">
+                  {stats ? stats.total_patents.toLocaleString() : "..."}
+                </div>
+                <p className="text-xs text-muted-foreground">EP & Global dataset</p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Blocking Events</CardDescription>
+                <CardDescription>Portfolios</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">500K+</div>
-                <p className="text-xs text-muted-foreground">X/Y citations tracked</p>
+                <div className="text-3xl font-bold">
+                  {stats ? stats.total_portfolios.toLocaleString() : "..."}
+                </div>
+                <p className="text-xs text-muted-foreground">Active owners tracked</p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>ML Models</CardDescription>
+                <CardDescription>ML Models Active</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">3</div>
-                <p className="text-xs text-muted-foreground">Production deployed</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardDescription>Model Accuracy</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">94.2%</div>
-                <p className="text-xs text-muted-foreground">AUC-ROC score</p>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className={`h-2.5 w-2.5 rounded-full ${stats?.models_status?.["3y"] ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-red-500"}`} />
+                    <span className="text-sm font-medium">3-Year Horizon</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className={`h-2.5 w-2.5 rounded-full ${stats?.models_status?.["5y"] ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-red-500"}`} />
+                    <span className="text-sm font-medium">5-Year Horizon</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
+
+          {/* Methodology / Trust Section */}
+          <div className="mb-12 p-6 bg-muted/30 rounded-xl border border-border">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-primary/10 rounded-lg shrink-0">
+                <Database className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">ML & Data</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Our insights are generated using advanced Machine Learning models trained on valid citations and examination data.
+                  We utilize <strong>EPO PATSTAT</strong> and other online open source resources to provide comprehensive coverage across both <strong>EP and Global scope</strong>.
+                  This ensures that our BPI and valuation metrics entail real-world examination evidence rather than just theoretical indicators.
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="container mx-auto px-4 py-16 border-t border-border">
-        <h3 className="text-3xl font-bold mb-12">Key Features</h3>
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Shield className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Blocking Power Index (BPI)</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-base">
-                Quantify a patent's ability to block competitors based on historical X/Y citations in EPO examination
-                proceedings. Novel 0-100 scale metric combining block count, recency, severity, and ML predictions.
-              </CardDescription>
-              <Button variant="outline" size="sm" className="mt-4 bg-transparent" asChild>
-                <Link href="/lookup">
-                  Try BPI Analysis <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
 
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Automated IPscore (A-B-C-D)</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-base">
-                4-dimensional patent valuation: Legal Strength (A), Technology Strength (B), Market Strength (C), and
-                Numeric Indicators (D). AI-powered scoring replaces weeks of manual due diligence.
-              </CardDescription>
-              <Button variant="outline" size="sm" className="mt-4 bg-transparent" asChild>
-                <Link href="/portfolio">
-                  Analyze Portfolio <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Gem className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Hidden Gems Discovery</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-base">
-                AI discovers patents with high blocking power but low conventional visibility. Find undervalued
-                acquisition targets before competitors.
-              </CardDescription>
-              <Button variant="outline" size="sm" className="mt-4 bg-transparent" asChild>
-                <Link href="/hidden-gems">
-                  Discover Gems <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Brain className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>AI Explanations</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-base">
-                LLM-generated insights and recommendations for every patent. Understand complex patent landscapes in
-                plain English.
-              </CardDescription>
-              <Button variant="outline" size="sm" className="mt-4 bg-transparent" asChild>
-                <Link href="/lookup">
-                  See Example <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-16 border-t border-border">

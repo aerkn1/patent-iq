@@ -34,13 +34,19 @@ class PortfolioIndustryRepository:
             for _, row in df.iterrows()
         ]
 
-    def get_owners_by_industry(self, industry_code: str) -> list[int]:
+    def get_owners_by_industry(self, industry_code: str, limit: int = 50) -> list[int]:
         conn = DuckDBConnection.get_connection()
+        
+        # Join with size reference to sort by "Effective Industry Patents"
+        # (Total Patents * Industry Weight) -> Largest players in this space
         q = """
-        SELECT DISTINCT owner_id
-        FROM portfolio_industry
-        WHERE wipo_industry_code = ?
+        SELECT pi.owner_id
+        FROM portfolio_industry pi
+        JOIN portfolio_size_reference ps ON pi.owner_id = ps.owner_id
+        WHERE pi.wipo_industry_code = ?
+        ORDER BY (ps.n_patents * pi.weight) DESC
+        LIMIT ?
         """
-        df = conn.execute(q, [industry_code]).fetchdf()
+        df = conn.execute(q, [industry_code, limit]).fetchdf()
         return df["owner_id"].tolist()
     

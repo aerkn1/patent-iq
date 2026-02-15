@@ -47,6 +47,12 @@ class PatentCoreRepository:
         df = conn.execute(q, [appln_id]).fetchdf()
         return not df.empty
 
+    def get_total_count(self) -> int:
+        conn = DuckDBConnection.get_connection()
+        q = "SELECT COUNT(*) as count FROM patent_core"
+        df = conn.execute(q).fetchdf()
+        return int(df.iloc[0]["count"])
+
     def get_core_metrics(self, appln_id: int) -> Optional[dict]:
         conn = DuckDBConnection.get_connection()
         

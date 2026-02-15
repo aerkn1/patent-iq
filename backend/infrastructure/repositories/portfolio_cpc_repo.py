@@ -34,12 +34,17 @@ class PortfolioCpcRepository:
             for _, row in df.iterrows()
         ]
 
-    def get_owners_by_cpc(self, cpc_subclass: str) -> list[int]:
+    def get_owners_by_cpc(self, cpc_subclass: str, limit: int = 50) -> list[int]:
         conn = DuckDBConnection.get_connection()
+        
+        # Join with size reference to sort by "Effective CPC Patents"
         q = """
-        SELECT DISTINCT owner_id
-        FROM portfolio_cpc
-        WHERE cpc_subclass = ?
+        SELECT pc.owner_id
+        FROM portfolio_cpc pc
+        JOIN portfolio_size_reference ps ON pc.owner_id = ps.owner_id
+        WHERE pc.cpc_subclass = ?
+        ORDER BY (ps.n_patents * pc.weight) DESC
+        LIMIT ?
         """
-        df = conn.execute(q, [cpc_subclass]).fetchdf()
+        df = conn.execute(q, [cpc_subclass, limit]).fetchdf()
         return df["owner_id"].tolist()
