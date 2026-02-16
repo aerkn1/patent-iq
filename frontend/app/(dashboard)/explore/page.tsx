@@ -260,7 +260,8 @@ export default function PortfolioExplorerPage() {
                     <th className="text-left p-3 text-sm font-medium">Rank</th>
                     <th className="text-left p-3 text-sm font-medium">Owner Name</th>
                     <th className="text-right p-3 text-sm font-medium">Patents</th>
-                    <th className="text-right p-3 text-sm font-medium">Power %</th>
+                    <th className="text-right p-3 text-sm font-medium">Avg Power</th>
+                    <th className="text-right p-3 text-sm font-medium">Total Power</th>
                     <th className="text-center p-3 text-sm font-medium">Tier</th>
                     <th className="text-center p-3 text-sm font-medium">Action</th>
                   </tr>
@@ -273,6 +274,9 @@ export default function PortfolioExplorerPage() {
                       <td className="p-3 text-sm text-right">{owner.n_patents.toLocaleString()}</td>
                       <td className="p-3 text-sm text-right font-medium">
                         {owner.portfolio_power_pct.toFixed(1)}%
+                      </td>
+                      <td className="p-3 text-sm text-right font-medium">
+                        {owner.adjusted_power_score?.toFixed(1) ?? "-"}
                       </td>
                       <td className="p-3 text-center">
                         <Badge variant="outline">{formatLabel(owner.portfolio_tier)}</Badge>

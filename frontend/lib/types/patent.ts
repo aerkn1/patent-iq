@@ -464,6 +464,7 @@ export type PortfolioDiscoverResult = {
   owner_name: string;
   n_patents: number;
   portfolio_power_pct: number;
+  adjusted_power_score: number;
   portfolio_tier: string;
   peer_class: string | null;
 };

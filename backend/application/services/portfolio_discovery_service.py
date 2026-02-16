@@ -1,5 +1,7 @@
 # application/services/portfolio_discovery_service.py
 
+import math
+
 from infrastructure.repositories.portfolio_cpc_repo import PortfolioCpcRepository
 from infrastructure.repositories.portfolio_industry_repo import PortfolioIndustryRepository
 from infrastructure.repositories.portfolio_rank_repo import PortfolioRankRepository
@@ -28,6 +30,11 @@ class PortfolioDiscoveryService:
             }
         }
 
+    def _adjusted_power_score(self, portfolio: dict) -> float:
+        power_pct = float(portfolio.get("portfolio_power_score_pct") or 0.0)
+        n_patents = float(portfolio.get("n_patents") or 0.0)
+        return power_pct * math.log(1.0 + n_patents)
+
     async def discover(self, dimension: str, value: str, limit: int) -> dict:
 
         if dimension == "CPC":
@@ -44,7 +51,7 @@ class PortfolioDiscoveryService:
 
         portfolios = sorted(
             portfolios,
-            key=lambda x: x["portfolio_power_score_pct"],
+            key=self._adjusted_power_score,
             reverse=True
         )[:limit]
 
@@ -60,6 +67,7 @@ class PortfolioDiscoveryService:
                 "owner_name": owner_names.get(p["owner_id"], "UNKNOWN"),
                 "n_patents": p["n_patents"],
                 "portfolio_power_pct": round(p["portfolio_power_score_pct"], 2),
+                "adjusted_power_score": round(self._adjusted_power_score(p), 2),
                 "portfolio_tier": p["portfolio_tier"],
                 "peer_class": p.get("peer_class"),
             })
@@ -100,6 +108,7 @@ class PortfolioDiscoveryService:
         for r in raw_results:
             owner_id = r["owner_id"]
             rank_data = rank_map.get(owner_id, {})
+            adjusted_score = self._adjusted_power_score(rank_data) if rank_data else 0.0
             
             results.append({
                 "owner_id": owner_id,
@@ -107,6 +116,7 @@ class PortfolioDiscoveryService:
                 "country": r.get("country"),
                 "n_patents": rank_data.get("n_patents", 0),
                 "portfolio_power_pct": round(rank_data.get("portfolio_power_score_pct", 0), 2),
+                "adjusted_power_score": round(adjusted_score, 2),
                 "portfolio_tier": rank_data.get("portfolio_tier", "UNKNOWN"),
             })
             
