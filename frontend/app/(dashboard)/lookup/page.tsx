@@ -67,7 +67,7 @@ export default function PatentLookupPage() {
   const [activeTab, setActiveTab] = useState("overview")
   const [patentId, setPatentId] = useState(() => {
     // Get patentId from URL params if available, otherwise use default
-    return searchParams?.get("patentId") || "482020668"
+    return searchParams?.get("patentId") || "337140993"
   })
   const [loading, setLoading] = useState(false)
   const [analysisLoading, setAnalysisLoading] = useState(false)
