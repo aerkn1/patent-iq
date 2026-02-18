@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Separator } from "@/components/ui/separator"
 import { fetchJson, getPortfolioOverviewUrl, getPortfolioAnalyticsUrl, getPortfolioPatentsUrl, fetchPortfolioCategoryCounts, getPortfolioLicensingCandidatesUrl, getPortfolioCitationMetricsUrl, getPortfolioCitationTimeSeriesUrl, getPortfolioAdvisoryUrl, getPortfolioEvolutionAdvisoryUrl } from "@/lib/api"
-import type { PortfolioOverviewResponse, PortfolioAnalyticsResponse, PortfolioPatentsResponse, PortfolioCategoryCounts, PortfolioPatent, PortfolioLicensingCandidatesResponse, LicensingCandidateResult } from "@/lib/types/patent"
+import type { PortfolioOverviewResponse, PortfolioAnalyticsResponse, PortfolioPatentsResponse, PortfolioCategoryCounts, PortfolioLicensingCandidatesResponse, LicensingCandidateResult } from "@/lib/types/patent"
 import type { PortfolioCitationMetricsResponse, PortfolioCitationTimeSeriesResponse, PortfolioTimeSeriesPoint } from "@/lib/types/portfolio"
 import type { PortfolioAdvisoryOutput } from "@/lib/types/advisory"
 import { cn, formatLabel } from "@/lib/utils"
@@ -99,12 +99,12 @@ function PortfolioAnalysisContent() {
 
   // Patents tab filters and pagination (applied vs draft)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const [selectedStatus, setSelectedStatus] = useState<string[]>([])
+  const [selectedStatus, setSelectedStatus] = useState<string[]>(["ACTIVE"])
   const [selectedJurisdictions, setSelectedJurisdictions] = useState<string[]>([])
   const [blockingPowerRange, setBlockingPowerRange] = useState<[number, number]>([0, 100])
   const [innovationScoreRange, setInnovationScoreRange] = useState<[number, number]>([0, 100])
   const [draftCategories, setDraftCategories] = useState<string[]>([])
-  const [draftStatus, setDraftStatus] = useState<string[]>([])
+  const [draftStatus, setDraftStatus] = useState<string[]>(["ACTIVE"])
   const [draftJurisdictions, setDraftJurisdictions] = useState<string[]>([])
   const [draftBlockingPowerRange, setDraftBlockingPowerRange] = useState<[number, number]>([0, 100])
   const [draftInnovationScoreRange, setDraftInnovationScoreRange] = useState<[number, number]>([0, 100])
@@ -147,112 +147,26 @@ function PortfolioAnalysisContent() {
 
     setPatentsLoading(true)
     try {
-      // If categories are selected, fetch for each category in parallel
-      // Otherwise, fetch without category filter
-      const categoriesToFetch = selectedCategories.length > 0 ? selectedCategories : [undefined]
       const offset = (currentPage - 1) * pageSize
-
-      // Fetch patents for all selected categories in parallel
-      const promises = categoriesToFetch.map(async (category) => {
-        try {
-          // Fetch a larger limit to account for client-side filtering
-          // We'll fetch more than needed and filter client-side
-          const fetchLimit = pageSize * 3 // Fetch 3x to account for filtering
-          const data = await fetchJson<PortfolioPatentsResponse>(
-            getPortfolioPatentsUrl(id, {
-              category,
-              sort: "blocking_power_pct",
-              order: "desc",
-              limit: fetchLimit,
-              offset: 0, // Always start from 0, we'll paginate client-side
-            })
-          )
-          return data.patents
-        } catch (err) {
-          console.error(`Failed to fetch patents for category ${category}:`, err)
-          return []
-        }
-      })
-
-      const allPatentsArrays = await Promise.all(promises)
-
-      // Combine all patents and remove duplicates (by appln_id)
-      const allPatentsMap = new Map<number, PortfolioPatent>()
-      allPatentsArrays.flat().forEach((patent) => {
-        if (!allPatentsMap.has(patent.appln_id)) {
-          allPatentsMap.set(patent.appln_id, patent)
-        }
-      })
-
-      let filteredPatents = Array.from(allPatentsMap.values())
-
-      // Apply client-side filters
-      // Filter by status (is_abandoned)
-      if (selectedStatus.length > 0) {
-        filteredPatents = filteredPatents.filter((patent) => {
-          const status = patent.is_abandoned ? "ABANDONED" : "ACTIVE"
-          return selectedStatus.includes(status)
-        })
-      }
-
-      // Filter by jurisdiction (publn_auth)
-      if (selectedJurisdictions.length > 0) {
-        filteredPatents = filteredPatents.filter((patent) =>
-          selectedJurisdictions.includes(patent.publn_auth)
-        )
-      }
-
-      // Filter by blocking power range
-      filteredPatents = filteredPatents.filter((patent) => {
-        if (patent.blocking_power_pct === null) return false
-        return (
-          patent.blocking_power_pct >= blockingPowerRange[0] &&
-          patent.blocking_power_pct <= blockingPowerRange[1]
-        )
-      })
-
-      // Filter by innovation score range
-      filteredPatents = filteredPatents.filter((patent) => {
-        if (patent.innovation_score === null) return false
-        return (
-          patent.innovation_score >= innovationScoreRange[0] &&
-          patent.innovation_score <= innovationScoreRange[1]
-        )
-      })
-
-      // Sort by blocking power (descending)
-      filteredPatents.sort((a, b) => {
-        const aVal = a.blocking_power_pct ?? 0
-        const bVal = b.blocking_power_pct ?? 0
-        return bVal - aVal
-      })
-
-      // Calculate total count (for pagination)
-      const total = filteredPatents.length
-
-      // Apply pagination
-      const paginatedPatents = filteredPatents.slice(offset, offset + pageSize)
-
-      // Create response object
-      const response: PortfolioPatentsResponse = {
-        portfolio: {
-          owner_id: Number(id),
-        },
-        pagination: {
-          total,
+      const data = await fetchJson<PortfolioPatentsResponse>(
+        getPortfolioPatentsUrl(id, {
+          category: selectedCategories.length > 0 ? selectedCategories : undefined,
+          jurisdiction: selectedJurisdictions.length > 0 ? selectedJurisdictions : undefined,
+          status: selectedStatus.length > 0 ? selectedStatus : undefined,
+          blocking_power_min: blockingPowerRange[0],
+          blocking_power_max: blockingPowerRange[1],
+          innovation_score_min: innovationScoreRange[0],
+          innovation_score_max: innovationScoreRange[1],
+          sort: "blocking_power_pct",
+          order: "desc",
           limit: pageSize,
           offset,
-        },
-        patents: paginatedPatents,
-        metadata: {
-          contract_version: "v1",
-          data_snapshot: new Date().toISOString().split("T")[0],
-        },
-      }
+        })
+      )
 
-      console.log("[Portfolio Patents] Filtered and paginated:", {
-        total,
-        showing: paginatedPatents.length,
+      console.log("[Portfolio Patents] Server response:", {
+        total: data.pagination.total,
+        showing: data.patents.length,
         filters: {
           categories: selectedCategories,
           status: selectedStatus,
@@ -262,7 +176,7 @@ function PortfolioAnalysisContent() {
         },
       })
 
-      setPatentsData(response)
+      setPatentsData(data)
     } catch (err) {
       console.error("Failed to fetch portfolio patents:", err)
       setPatentsData(null)
@@ -1089,6 +1003,7 @@ function PortfolioAnalysisContent() {
                                     <Checkbox
                                       id={`category-${category}`}
                                       checked={draftCategories.includes(category)}
+                                      className="cursor-pointer"
                                       onCheckedChange={(checked) => {
                                         if (checked) {
                                           setDraftCategories([...draftCategories, category])
@@ -1121,6 +1036,7 @@ function PortfolioAnalysisContent() {
                                     <Checkbox
                                       id={`status-${status}`}
                                       checked={draftStatus.includes(status)}
+                                      className="cursor-pointer"
                                       onCheckedChange={(checked) => {
                                         if (checked) {
                                           setDraftStatus([...draftStatus, status])
@@ -1151,6 +1067,7 @@ function PortfolioAnalysisContent() {
                                     <Checkbox
                                       id={`jurisdiction-${jurisdiction}`}
                                       checked={draftJurisdictions.includes(jurisdiction)}
+                                      className="cursor-pointer"
                                       onCheckedChange={(checked) => {
                                         if (checked) {
                                           setDraftJurisdictions([...draftJurisdictions, jurisdiction])
@@ -1368,12 +1285,13 @@ function PortfolioAnalysisContent() {
                                         <td className="p-2 text-xs text-right w-12">{patent.forward_patent_citation_count}</td>
                                         <td className="p-2 text-center w-18">
                                           <Badge
-                                            variant={
-                                              !patent.is_abandoned
-                                                ? "default"
-                                                : "destructive"
-                                            }
-                                            className="text-xs px-1.5 py-0.5"
+                                            variant="outline"
+                                            className={cn(
+                                              "text-xs px-1.5 py-0.5",
+                                              patent.is_abandoned
+                                                ? "border-rose-200 text-rose-700 bg-rose-50"
+                                                : "border-emerald-200 text-emerald-700 bg-emerald-50"
+                                            )}
                                           >
                                             {patent.is_abandoned ? "Abandoned" : "Active"}
                                           </Badge>

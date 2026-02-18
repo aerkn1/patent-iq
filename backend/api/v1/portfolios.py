@@ -174,14 +174,37 @@ async def get_portfolio_patents(
     owner_id: int,
     category: Optional[str] = None,
     jurisdiction: Optional[str] = None,
+    status: Optional[str] = None,
+    blocking_power_min: Optional[float] = None,
+    blocking_power_max: Optional[float] = None,
+    innovation_score_min: Optional[float] = None,
+    innovation_score_max: Optional[float] = None,
     sort: str = "blocking_power_pct",
     order: str = "desc",
     limit: int = 25,
     offset: int = 0,
 ):
+    categories = [c.strip() for c in category.split(",") if c.strip()] if category else None
+    jurisdictions = [j.strip() for j in jurisdiction.split(",") if j.strip()] if jurisdiction else None
+    statuses = [s.strip().upper() for s in status.split(",") if s.strip()] if status else None
+
+    status_filter = None
+    if statuses:
+        has_active = "ACTIVE" in statuses
+        has_abandoned = "ABANDONED" in statuses
+        if has_active and not has_abandoned:
+            status_filter = "ACTIVE"
+        elif has_abandoned and not has_active:
+            status_filter = "ABANDONED"
+
     filters = {
-        "category": category,
-        "jurisdiction": jurisdiction,
+        "categories": categories,
+        "jurisdictions": jurisdictions,
+        "status": status_filter,
+        "blocking_power_min": blocking_power_min,
+        "blocking_power_max": blocking_power_max,
+        "innovation_score_min": innovation_score_min,
+        "innovation_score_max": innovation_score_max,
     }
 
     try:

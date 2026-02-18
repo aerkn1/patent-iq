@@ -133,7 +133,13 @@ export function getPortfolioForecastUrl(
 export function getPortfolioPatentsUrl(
   ownerId: string | number,
   options?: {
-    category?: string;
+    category?: string | string[];
+    jurisdiction?: string | string[];
+    status?: string | string[];
+    blocking_power_min?: number;
+    blocking_power_max?: number;
+    innovation_score_min?: number;
+    innovation_score_max?: number;
     sort?: string;
     order?: "asc" | "desc";
     limit?: number;
@@ -144,7 +150,34 @@ export function getPortfolioPatentsUrl(
 
   if (options) {
     if (options.category) {
-      params.append("category", options.category);
+      const categoryValue = Array.isArray(options.category)
+        ? options.category.join(",")
+        : options.category;
+      params.append("category", categoryValue);
+    }
+    if (options.jurisdiction) {
+      const jurisdictionValue = Array.isArray(options.jurisdiction)
+        ? options.jurisdiction.join(",")
+        : options.jurisdiction;
+      params.append("jurisdiction", jurisdictionValue);
+    }
+    if (options.status) {
+      const statusValue = Array.isArray(options.status)
+        ? options.status.join(",")
+        : options.status;
+      params.append("status", statusValue);
+    }
+    if (options.blocking_power_min !== undefined) {
+      params.append("blocking_power_min", options.blocking_power_min.toString());
+    }
+    if (options.blocking_power_max !== undefined) {
+      params.append("blocking_power_max", options.blocking_power_max.toString());
+    }
+    if (options.innovation_score_min !== undefined) {
+      params.append("innovation_score_min", options.innovation_score_min.toString());
+    }
+    if (options.innovation_score_max !== undefined) {
+      params.append("innovation_score_max", options.innovation_score_max.toString());
     }
     if (options.sort) {
       params.append("sort", options.sort);

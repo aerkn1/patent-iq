@@ -16,9 +16,37 @@ class PortfolioPatentRepository:
         where = ["ppm.owner_id = ?"]
         params = [owner_id]
 
-        if filters.get("category"):
-            where.append("pc.patent_category = ?")
-            params.append(filters["category"])
+        categories = filters.get("categories")
+        if categories:
+            placeholders = ", ".join(["?"] * len(categories))
+            where.append(f"pc.patent_category IN ({placeholders})")
+            params.extend(categories)
+
+        jurisdictions = filters.get("jurisdictions")
+        if jurisdictions:
+            placeholders = ", ".join(["?"] * len(jurisdictions))
+            where.append(f"pc.publn_auth IN ({placeholders})")
+            params.extend(jurisdictions)
+
+        status = filters.get("status")
+        if status == "ACTIVE":
+            where.append("pc.is_abandoned = false")
+        elif status == "ABANDONED":
+            where.append("pc.is_abandoned = true")
+
+        blocking_min = filters.get("blocking_power_min")
+        blocking_max = filters.get("blocking_power_max")
+        if blocking_min is not None and blocking_max is not None:
+            where.append("pr.blocking_power_pct IS NOT NULL")
+            where.append("pr.blocking_power_pct BETWEEN ? AND ?")
+            params.extend([blocking_min, blocking_max])
+
+        innovation_min = filters.get("innovation_score_min")
+        innovation_max = filters.get("innovation_score_max")
+        if innovation_min is not None and innovation_max is not None:
+            where.append("pc.innovation_score IS NOT NULL")
+            where.append("pc.innovation_score BETWEEN ? AND ?")
+            params.extend([innovation_min, innovation_max])
             
         where_clause = " AND ".join(where)
 
@@ -37,6 +65,7 @@ class PortfolioPatentRepository:
         SELECT COUNT(DISTINCT pc.appln_id)
         FROM patent_portfolio_map ppm
         JOIN patent_core pc ON pc.appln_id = ppm.appln_id
+        JOIN patent_core_w_ranks pr ON pr.appln_id = ppm.appln_id
         WHERE {where_clause}
         """
         total = conn.execute(count_query, params).fetchone()[0]
