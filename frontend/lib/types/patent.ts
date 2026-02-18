@@ -41,6 +41,7 @@ export type IndustryItem = { code: string; weight: number };
 
 export type PatentCoreDTO = {
   appln_id: number;
+  ep_publn_id_full?: string;
   title: string;
   application_date: string;
   publication_date: string;
@@ -425,6 +426,7 @@ export type BlockingPowerDriver = {
 
 export type TopPatent = {
   appln_id: number;
+  ep_publn_id_full?: string;
   blocking_power_pct?: number;
   innovation_score?: number;
 };
@@ -493,6 +495,7 @@ export type PortfolioPatent = {
   is_abandoned: boolean;
   publn_auth: string; // e.g., "US", "EP", "WO"
   filing_date: string;
+  ep_publn_id_full: string;
 };
 
 export type PortfolioPatentsResponse = {

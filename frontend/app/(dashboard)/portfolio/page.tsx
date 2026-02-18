@@ -8,11 +8,12 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Separator } from "@/components/ui/separator"
-import { fetchJson, getPortfolioOverviewUrl, getPortfolioAnalyticsUrl, getPortfolioPatentsUrl, fetchPortfolioCategoryCounts, getPortfolioLicensingCandidatesUrl, getPortfolioCitationMetricsUrl, getPortfolioCitationTimeSeriesUrl, getPortfolioAdvisoryUrl, getPortfolioEvolutionAdvisoryUrl } from "@/lib/api"
+import { fetchJson, getPortfolioOverviewUrl, getPortfolioAnalyticsUrl, getPortfolioPatentsUrl, fetchPortfolioCategoryCounts, getPortfolioLicensingCandidatesUrl, getPortfolioCitationMetricsUrl, getPortfolioCitationTimeSeriesUrl } from "@/lib/api"
 import type { PortfolioOverviewResponse, PortfolioAnalyticsResponse, PortfolioPatentsResponse, PortfolioCategoryCounts, PortfolioPatent, PortfolioLicensingCandidatesResponse, LicensingCandidateResult } from "@/lib/types/patent"
 import type { PortfolioCitationMetricsResponse, PortfolioCitationTimeSeriesResponse, PortfolioTimeSeriesPoint } from "@/lib/types/portfolio"
-import type { PortfolioAdvisoryOutput } from "@/lib/types/advisory"
+
 import { cn, formatLabel } from "@/lib/utils"
+import { getTechnologyInsights, getMarketInsights, getPeerPositioningInsights } from "@/lib/insight-rules"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -59,13 +60,14 @@ import {
 } from "recharts"
 import { PortfolioCitationEvolutionChart, type PortfolioCitationYearData } from "@/components/portfolio-citation-evolution-chart"
 import { PortfolioHealthCards, type PortfolioLifecycleMetrics } from "@/components/portfolio-health-cards"
+import { GaugeChart } from "@/components/gauge-chart"
 import { PortfolioOverviewCard } from "@/components/portfolio-overview-card"
 import { PortfolioForecastCard } from "@/components/portfolio-forecast-card"
-import { LegalStrengthGrantCoverage } from "@/components/legal-strength-grant-coverage"
-import { AiInsightCard } from "@/components/ai-insight-card"
+import { GrantCoverageCard } from "@/components/grant-coverage-card"
+
 import { TierBadge } from "@/components/tier-badge"
 import { RED_PALETTE } from "@/lib/chart-config"
-import { llmQueue } from "@/lib/api/llm-queue"
+
 import { PortfolioSearch } from "@/components/portfolio-search"
 import { DistributionChart } from "@/components/distribution-chart"
 
@@ -81,10 +83,7 @@ function PortfolioAnalysisContent() {
   const [patentsData, setPatentsData] = useState<PortfolioPatentsResponse | null>(null)
   const [licensingData, setLicensingData] = useState<PortfolioLicensingCandidatesResponse | null>(null)
 
-  const [advisoryData, setAdvisoryData] = useState<Partial<PortfolioAdvisoryOutput> | null>(null)
-  const [advisoryLoading, setAdvisoryLoading] = useState(false)
-  const [advisoryError, setAdvisoryError] = useState<string | null>(null)
-  const [loadingBuckets, setLoadingBuckets] = useState<Record<string, boolean>>({})
+
 
 
   const [categoryCounts, setCategoryCounts] = useState<PortfolioCategoryCounts | null>(null)
@@ -105,6 +104,9 @@ function PortfolioAnalysisContent() {
   const [innovationScoreRange, setInnovationScoreRange] = useState<[number, number]>([0, 100])
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(25)
+
+  // State for raw patents (fetched from API, unfiltered by client criteria)
+  const [rawPatents, setRawPatents] = useState<PortfolioPatent[] | null>(null)
 
   const fetchPortfolioOverview = async (id: string) => {
     if (!id.trim()) return
@@ -137,29 +139,25 @@ function PortfolioAnalysisContent() {
     }
   }
 
-  const fetchPortfolioPatents = async (id: string) => {
+  // 1. Fetch ALL patents when owner or category changes
+  const fetchRawPatents = async (id: string) => {
     if (!id.trim()) return
 
     setPatentsLoading(true)
     try {
-      // If categories are selected, fetch for each category in parallel
-      // Otherwise, fetch without category filter
       const categoriesToFetch = selectedCategories.length > 0 ? selectedCategories : [undefined]
-      const offset = (currentPage - 1) * pageSize
 
-      // Fetch patents for all selected categories in parallel
       const promises = categoriesToFetch.map(async (category) => {
         try {
-          // Fetch a larger limit to account for client-side filtering
-          // We'll fetch more than needed and filter client-side
-          const fetchLimit = pageSize * 3 // Fetch 3x to account for filtering
+          // Fetch ALL (large limit) to enable client-side pagination/filtering
+          const fetchLimit = 10000
           const data = await fetchJson<PortfolioPatentsResponse>(
             getPortfolioPatentsUrl(id, {
               category,
               sort: "blocking_power_pct",
               order: "desc",
               limit: fetchLimit,
-              offset: 0, // Always start from 0, we'll paginate client-side
+              offset: 0,
             })
           )
           return data.patents
@@ -171,7 +169,7 @@ function PortfolioAnalysisContent() {
 
       const allPatentsArrays = await Promise.all(promises)
 
-      // Combine all patents and remove duplicates (by appln_id)
+      // Deduplicate
       const allPatentsMap = new Map<number, PortfolioPatent>()
       allPatentsArrays.flat().forEach((patent) => {
         if (!allPatentsMap.has(patent.appln_id)) {
@@ -179,92 +177,87 @@ function PortfolioAnalysisContent() {
         }
       })
 
-      let filteredPatents = Array.from(allPatentsMap.values())
-
-      // Apply client-side filters
-      // Filter by status (is_abandoned)
-      if (selectedStatus.length > 0) {
-        filteredPatents = filteredPatents.filter((patent) => {
-          const status = patent.is_abandoned ? "ABANDONED" : "ACTIVE"
-          return selectedStatus.includes(status)
-        })
-      }
-
-      // Filter by jurisdiction (publn_auth)
-      if (selectedJurisdictions.length > 0) {
-        filteredPatents = filteredPatents.filter((patent) =>
-          selectedJurisdictions.includes(patent.publn_auth)
-        )
-      }
-
-      // Filter by blocking power range
-      filteredPatents = filteredPatents.filter((patent) => {
-        if (patent.blocking_power_pct === null) return false
-        return (
-          patent.blocking_power_pct >= blockingPowerRange[0] &&
-          patent.blocking_power_pct <= blockingPowerRange[1]
-        )
-      })
-
-      // Filter by innovation score range
-      filteredPatents = filteredPatents.filter((patent) => {
-        if (patent.innovation_score === null) return false
-        return (
-          patent.innovation_score >= innovationScoreRange[0] &&
-          patent.innovation_score <= innovationScoreRange[1]
-        )
-      })
-
-      // Sort by blocking power (descending)
-      filteredPatents.sort((a, b) => {
-        const aVal = a.blocking_power_pct ?? 0
-        const bVal = b.blocking_power_pct ?? 0
-        return bVal - aVal
-      })
-
-      // Calculate total count (for pagination)
-      const total = filteredPatents.length
-
-      // Apply pagination
-      const paginatedPatents = filteredPatents.slice(offset, offset + pageSize)
-
-      // Create response object
-      const response: PortfolioPatentsResponse = {
-        portfolio: {
-          owner_id: Number(id),
-        },
-        pagination: {
-          total,
-          limit: pageSize,
-          offset,
-        },
-        patents: paginatedPatents,
-        metadata: {
-          contract_version: "v1",
-          data_snapshot: new Date().toISOString().split("T")[0],
-        },
-      }
-
-      console.log("[Portfolio Patents] Filtered and paginated:", {
-        total,
-        showing: paginatedPatents.length,
-        filters: {
-          categories: selectedCategories,
-          status: selectedStatus,
-          jurisdictions: selectedJurisdictions,
-          blockingPowerRange,
-          innovationScoreRange,
-        },
-      })
-
-      setPatentsData(response)
+      setRawPatents(Array.from(allPatentsMap.values()))
     } catch (err) {
-      console.error("Failed to fetch portfolio patents:", err)
+      console.error("Failed to fetch raw patents:", err)
+      setRawPatents(null)
       setPatentsData(null)
     } finally {
       setPatentsLoading(false)
     }
   }
+
+  // 2. Filter and Paginate locally whenever raw data or filters change
+  useEffect(() => {
+    if (!rawPatents || !ownerId) return
+
+    let filteredPatents = [...rawPatents]
+
+    // Apply client-side filters
+    if (selectedStatus.length > 0) {
+      filteredPatents = filteredPatents.filter((patent) => {
+        const status = patent.is_abandoned ? "ABANDONED" : "ACTIVE"
+        return selectedStatus.includes(status)
+      })
+    }
+
+    if (selectedJurisdictions.length > 0) {
+      filteredPatents = filteredPatents.filter((patent) =>
+        selectedJurisdictions.includes(patent.publn_auth)
+      )
+    }
+
+    filteredPatents = filteredPatents.filter((patent) => {
+      if (patent.blocking_power_pct === null) return false
+      return (
+        patent.blocking_power_pct >= blockingPowerRange[0] &&
+        patent.blocking_power_pct <= blockingPowerRange[1]
+      )
+    })
+
+    filteredPatents = filteredPatents.filter((patent) => {
+      if (patent.innovation_score === null) return false
+      return (
+        patent.innovation_score >= innovationScoreRange[0] &&
+        patent.innovation_score <= innovationScoreRange[1]
+      )
+    })
+
+    // Sort (Blocking Power Desc)
+    filteredPatents.sort((a, b) => {
+      const aVal = a.blocking_power_pct ?? 0
+      const bVal = b.blocking_power_pct ?? 0
+      return bVal - aVal
+    })
+
+    const total = filteredPatents.length
+    const offset = (currentPage - 1) * pageSize
+    const paginatedPatents = filteredPatents.slice(offset, offset + pageSize)
+
+    setPatentsData({
+      portfolio: { owner_id: Number(ownerId) },
+      pagination: {
+        total,
+        limit: pageSize,
+        offset,
+      },
+      patents: paginatedPatents,
+      metadata: {
+        contract_version: "v1",
+        data_snapshot: new Date().toISOString().split("T")[0],
+      },
+    })
+
+  }, [
+    rawPatents,
+    selectedStatus,
+    selectedJurisdictions,
+    blockingPowerRange,
+    innovationScoreRange,
+    currentPage,
+    pageSize,
+    ownerId
+  ])
 
   const fetchCategoryCounts = async (id: string) => {
     if (!id.trim()) return
@@ -314,24 +307,6 @@ function PortfolioAnalysisContent() {
     }
   }
 
-  const fetchPortfolioAdvisory = async (id: string) => {
-    if (!id.trim()) return
-
-    setAdvisoryLoading(true)
-    setAdvisoryError(null)
-    try {
-      const data = await fetchJson<PortfolioAdvisoryOutput>(getPortfolioAdvisoryUrl(id))
-      setAdvisoryData(data)
-    } catch (err) {
-      setAdvisoryError(err instanceof Error ? err.message : "Failed to fetch advisory")
-      setAdvisoryData(null)
-    } finally {
-      setAdvisoryLoading(false)
-    }
-  }
-
-
-
   // Sync ownerId with URL params
   useEffect(() => {
     const urlOwnerId = searchParams?.get("ownerId")
@@ -350,6 +325,7 @@ function PortfolioAnalysisContent() {
     setPatentsData(null)
     setCitationMetrics(null)
     setCitationTimeSeries(null)
+    setRawPatents(null)
 
     // Trigger fetches
     const id = ownerId.trim()
@@ -395,31 +371,6 @@ function PortfolioAnalysisContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, ownerId])
 
-
-  const generateInsight = async (bucket: string) => {
-    if (!ownerId.trim()) return
-
-    setLoadingBuckets((prev) => ({ ...prev, [bucket]: true }))
-    setAdvisoryError(null)
-
-    try {
-      await llmQueue.enqueue(async () => {
-        const url = `${getPortfolioAdvisoryUrl(ownerId)}?bucket=${bucket}`
-        const data = await fetchJson<Partial<PortfolioAdvisoryOutput>>(url)
-        setAdvisoryData((prev) => ({ ...prev, ...data }))
-      })
-    } catch (e: any) {
-      console.error(e)
-      setAdvisoryError(e.message || `Failed to generate ${bucket} insight`)
-    } finally {
-      setLoadingBuckets((prev) => ({ ...prev, [bucket]: false }))
-    }
-  }
-
-
-
-
-
   // Fetch category counts when switching to patents tab
   useEffect(() => {
     if (activeTab === "patents" && ownerId.trim()) {
@@ -428,13 +379,13 @@ function PortfolioAnalysisContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, ownerId])
 
-  // Fetch patents when switching to patents tab or filters change
+  // Trigger Fetching
   useEffect(() => {
     if (activeTab === "patents" && ownerId.trim()) {
-      fetchPortfolioPatents(ownerId.trim())
+      fetchRawPatents(ownerId.trim())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, ownerId, currentPage, pageSize, selectedCategories])
+  }, [activeTab, ownerId, selectedCategories])
 
   // Reset page when filters change
   useEffect(() => {
@@ -557,8 +508,16 @@ function PortfolioAnalysisContent() {
                 {/* Portfolio Overview Card */}
                 <PortfolioOverviewCard data={overviewData} />
 
-                {/* Radar Chart + Values Card */}
-                <Card>
+                {/* Grant Coverage */}
+                <div className="h-full">
+                  <GrantCoverageCard
+                    grantCoverage={overviewData.grant_coverage}
+                    grantMix={overviewData.grant_mix}
+                  />
+                </div>
+
+                {/* Radar Chart */}
+                <Card className="h-full">
                   <CardHeader>
                     <CardTitle>Portfolio Strength Radar</CardTitle>
                     <CardDescription>Multi-dimensional percentile visualization (5 key dimensions)</CardDescription>
@@ -586,59 +545,6 @@ function PortfolioAnalysisContent() {
                     </div>
                   </CardContent>
                 </Card>
-
-                {/* Strength Metrics */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-6">
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <Target className="h-4 w-4 text-primary" />
-                          Blocking Power
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <div className="text-2xl font-bold">
-                            {overviewData.strength.blocking_power.percentile.toFixed(1)}/100
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Raw: {overviewData.strength.blocking_power.raw.toFixed(3)}
-                          </div>
-                          <Progress value={overviewData.strength.blocking_power.percentile} className="h-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <TrendingUp className="h-4 w-4 text-primary" />
-                          Licensing Readiness
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <div className="text-2xl font-bold">
-                            {overviewData.strength.licensing_readiness.percentile.toFixed(1)}/100
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Raw: {overviewData.strength.licensing_readiness.raw.toFixed(3)}
-                          </div>
-                          <Progress value={overviewData.strength.licensing_readiness.percentile} className="h-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  <div className="h-full">
-                    <LegalStrengthGrantCoverage
-                      grantCoverage={overviewData.grant_coverage}
-                      grantMix={overviewData.grant_mix}
-                      legalScore={overviewData.strength.legal_strength.raw}
-                    />
-                  </div>
-                </div>
 
                 {/* Technology & Market Profile */}
                 <div className="grid md:grid-cols-2 gap-6">
@@ -702,48 +608,20 @@ function PortfolioAnalysisContent() {
                           </div>
                         </div>
 
-                        {/* Diversification Data */}
+                        {/* Diversification Insights - Replaced Raw Metrics */}
                         <div className="space-y-4">
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Axis Score</div>
-                            <div className="text-xl font-bold">
-                              {(overviewData.technology_profile.axis_score * 100).toFixed(1)}/100
-                            </div>
-                            <Progress value={overviewData.technology_profile.axis_score * 100} className="h-2 mt-1" />
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Entropy (Normalized)</div>
-                            <div className="text-lg font-semibold">
-                              {overviewData.technology_profile.diversification.entropy_norm.toFixed(3)}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Top K Share</div>
-                            <div className="text-lg font-semibold">
-                              {(overviewData.technology_profile.diversification.top_k_share * 100).toFixed(1)}%
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Long Tail Share</div>
-                            <div className="text-lg font-semibold">
-                              {(overviewData.technology_profile.diversification.long_tail_share * 100).toFixed(1)}%
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Interpretation</div>
-                            <Badge
-                              variant="outline"
-                              className={
-                                overviewData.technology_profile.diversification.interpretation === "HIGHLY_DIVERSIFIED"
-                                  ? "bg-green-100 text-green-800 border-green-300"
-                                  : overviewData.technology_profile.diversification.interpretation === "MODERATELY_DIVERSIFIED"
-                                    ? "bg-yellow-100 text-yellow-800 border-yellow-300"
-                                    : "bg-gray-100 text-gray-700 border-gray-300"
-                              }
-                            >
-                              {formatLabel(overviewData.technology_profile.diversification.interpretation)}
-                            </Badge>
-                          </div>
+                          <h4 className="text-sm font-semibold flex items-center gap-2">
+                            <Sparkles className="h-4 w-4 text-yellow-500" />
+                            Key Insights
+                          </h4>
+                          <ul className="space-y-3">
+                            {getTechnologyInsights(overviewData.technology_profile).map((insight, i) => (
+                              <li key={i} className="text-sm text-muted-foreground flex gap-2">
+                                <span className="text-primary mt-1">•</span>
+                                <span>{insight}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
                     </CardContent>
@@ -809,135 +687,88 @@ function PortfolioAnalysisContent() {
                           </div>
                         </div>
 
-                        {/* Diversification Data */}
+                        {/* Diversification Insights - Replaced Raw Metrics */}
                         <div className="space-y-4">
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Axis Score</div>
-                            <div className="text-xl font-bold">
-                              {(overviewData.market_profile.axis_score * 100).toFixed(1)}/100
-                            </div>
-                            <Progress value={overviewData.market_profile.axis_score * 100} className="h-2 mt-1" />
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Entropy (Normalized)</div>
-                            <div className="text-lg font-semibold">
-                              {overviewData.market_profile.diversification.entropy_norm.toFixed(3)}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Top K Share</div>
-                            <div className="text-lg font-semibold">
-                              {(overviewData.market_profile.diversification.top_k_share * 100).toFixed(1)}%
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Long Tail Share</div>
-                            <div className="text-lg font-semibold">
-                              {(overviewData.market_profile.diversification.long_tail_share * 100).toFixed(1)}%
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Interpretation</div>
-                            <Badge
-                              variant="outline"
-                              className={
-                                overviewData.market_profile.diversification.interpretation === "HIGHLY_DIVERSIFIED"
-                                  ? "bg-green-100 text-green-800 border-green-300"
-                                  : overviewData.market_profile.diversification.interpretation === "MODERATELY_DIVERSIFIED"
-                                    ? "bg-yellow-100 text-yellow-800 border-yellow-300"
-                                    : "bg-gray-100 text-gray-700 border-gray-300"
-                              }
-                            >
-                              {formatLabel(overviewData.market_profile.diversification.interpretation)}
-                            </Badge>
-                          </div>
+                          <h4 className="text-sm font-semibold flex items-center gap-2">
+                            <Sparkles className="h-4 w-4 text-yellow-500" />
+                            Key Insights
+                          </h4>
+                          <ul className="space-y-3">
+                            {getMarketInsights(overviewData.market_profile).map((insight, i) => (
+                              <li key={i} className="text-sm text-muted-foreground flex gap-2">
+                                <span className="text-primary mt-1">•</span>
+                                <span>{insight}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                 </div>
 
-                {/* Ranking & Health */}
+                {/* Portfolio Health & Peer Positioning */}
                 <div className="grid md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Gauge className="h-5 w-5 text-primary" />
-                        Global Ranking
-                      </CardTitle>
-                      <CardDescription>Portfolio positioning in global context</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <div className="text-sm text-muted-foreground mb-1">Power Score</div>
-                        <div className="text-2xl font-bold">{overviewData.strength.portfolio_general.power_score.toFixed(2)}</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground mb-1">Percentile Global</div>
-                        <div className="text-xl font-semibold">{overviewData.ranking.percentile_global.toFixed(2)}%</div>
-                        <Progress value={overviewData.ranking.percentile_global} className="h-2 mt-1" />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-1">Rank</div>
-                          <div className="text-lg font-medium">{overviewData.ranking.rank_global.toLocaleString()}</div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-1">Tier</div>
-                          <Badge variant="outline">{formatLabel(overviewData.ranking.tier)}</Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
+                  {/* Portfolio Health */}
+                  <Card className="h-full">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <FileText className="h-5 w-5 text-primary" />
                         Portfolio Health
                       </CardTitle>
-                      <CardDescription>Status indicators</CardDescription>
+                      <CardDescription className="flex items-center gap-2">
+                        Status indicators
+                        {analyticsData && (
+                          <Badge
+                            variant="outline"
+                            className={cn(
+                              "text-xs px-2 py-0.5 ml-auto",
+                              analyticsData.legal.maintenance_profile === "STRONGLY_MAINTAINED"
+                                ? "bg-green-100 text-green-800 border-green-300"
+                                : analyticsData.legal.maintenance_profile === "MODERATELY_MAINTAINED"
+                                  ? "bg-yellow-100 text-yellow-800 border-yellow-300"
+                                  : "bg-red-100 text-red-800 border-red-300"
+                            )}
+                          >
+                            {formatLabel(analyticsData.legal.maintenance_profile)}
+                          </Badge>
+                        )}
+                      </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-muted-foreground">Abandoned Ratio</span>
-                          <span className="text-sm font-semibold">{(overviewData.health.abandoned_ratio * 100).toFixed(1)}%</span>
+                    <CardContent>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col items-center">
+                          <div className="text-sm text-muted-foreground mb-2">Abandoned Ratio</div>
+                          <div className="h-24 w-full flex justify-center">
+                            <GaugeChart value={overviewData.health.abandoned_ratio * 100} color="#ef4444" showValue={true} />
+                          </div>
                         </div>
-                        <Progress value={overviewData.health.abandoned_ratio * 100} className="h-2" />
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-muted-foreground">Legal Unknown Ratio</span>
-                          <span className="text-sm font-semibold">{(overviewData.health.legal_unknown_ratio * 100).toFixed(1)}%</span>
+                        <div className="flex flex-col items-center">
+                          <div className="text-sm text-muted-foreground mb-2">Legal Unknown Ratio</div>
+                          <div className="h-24 w-full flex justify-center">
+                            <GaugeChart value={overviewData.health.legal_unknown_ratio * 100} color="#f59e0b" showValue={true} />
+                          </div>
                         </div>
-                        <Progress value={overviewData.health.legal_unknown_ratio * 100} className="h-2" />
                       </div>
                     </CardContent>
-                  </Card>
-                </div>
 
-                {/* Peer Positioning */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Users className="h-5 w-5 text-primary" />
-                      Peer Positioning
-                    </CardTitle>
-                    <CardDescription>Comparison with similar portfolios</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid md:grid-cols-2 gap-6">
-                      {/* Left: Peer Badge */}
+                  </Card>
+
+                  {/* Peer Positioning */}
+                  <Card className="h-full">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Users className="h-5 w-5 text-primary" />
+                        Peer Positioning
+                      </CardTitle>
+                      <CardDescription>Comparison with similar portfolios</CardDescription>
+                    </CardHeader>
+                    <CardContent>
                       <div className="space-y-4">
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-2">Peer Group</div>
+                        <div className="flex items-center gap-2 mb-4">
                           <Badge variant="outline" className="text-base px-3 py-1">
                             {formatLabel(overviewData.peer_positioning.peer_group_id)}
                           </Badge>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-2">Peer Class</div>
                           <Badge
                             variant="outline"
                             className={cn(
@@ -954,33 +785,45 @@ function PortfolioAnalysisContent() {
                             {formatLabel(overviewData.peer_positioning.peer_class)}
                           </Badge>
                         </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-1">Peer Percentile</div>
-                          <div className="text-2xl font-bold">{overviewData.peer_positioning.peer_percentile.toFixed(2)}%</div>
-                          <Progress value={overviewData.peer_positioning.peer_percentile} className="h-2 mt-1" />
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-1">Z-Score</div>
-                          <div className="text-xl font-semibold">{overviewData.peer_positioning.peer_zscore.toFixed(2)}</div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-1">Number of Peers</div>
-                          <div className="text-lg font-medium">{overviewData.peer_positioning.n_peers.toLocaleString()}</div>
-                        </div>
-                      </div>
 
-                      {/* Right: Distribution Visualization */}
-                      <div className="space-y-4">
-                        <DistributionChart
-                          zScore={overviewData.peer_positioning.peer_zscore}
-                          percentile={overviewData.peer_positioning.peer_percentile}
-                          title="Distribution Visualization"
-                          description="Portfolio performance relative to peer group (Normal Distribution)"
-                        />
+                        <h4 className="text-sm font-semibold flex items-center gap-2">
+                          <Sparkles className="h-4 w-4 text-yellow-500" />
+                          Key Insights
+                        </h4>
+                        <ul className="space-y-3 mb-6">
+                          {getPeerPositioningInsights(overviewData.peer_positioning).map((insight, i) => (
+                            <li key={i} className="text-sm text-muted-foreground flex gap-2">
+                              <span className="text-primary mt-1">•</span>
+                              <span>{insight}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        {/* Compact Horizontal Positioning Chart */}
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs text-muted-foreground">
+                            <span>Lagging</span>
+                            <span>Average</span>
+                            <span>Leading</span>
+                          </div>
+                          <div className="relative h-4 w-full rounded-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500">
+                            <div
+                              className="absolute top-0 h-full w-1bg-white border-2 border-primary rounded-full shadow-md transform -translate-x-1/2"
+                              style={{
+                                left: `${Math.min(Math.max(overviewData.peer_positioning.peer_percentile, 0), 100)}%`,
+                                width: '8px',
+                                height: '24px',
+                                top: '-4px',
+                                backgroundColor: 'white'
+                              }}
+                            />
+                          </div>
+
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               </TabsContent>
 
               {/* Patents Tab */}
@@ -1293,7 +1136,7 @@ function PortfolioAnalysisContent() {
                                         key={patent.appln_id}
                                         className="border-t border-border hover:bg-muted/30"
                                       >
-                                        <td className="p-2 text-xs font-mono w-20">{patent.appln_id}</td>
+                                        <td className="p-2 text-xs font-mono w-20">{patent.ep_publn_id_full || patent.appln_id}</td>
                                         <td className="p-2 text-xs">
 
                                           <Tooltip>
@@ -1692,7 +1535,7 @@ function PortfolioAnalysisContent() {
                         <CardDescription>Portfolio influence and citation patterns</CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <div className="grid md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                           <Card>
                             <CardHeader className="pb-3">
                               <CardTitle className="text-sm font-medium">Forward Citations</CardTitle>
@@ -1731,6 +1574,36 @@ function PortfolioAnalysisContent() {
                               </div>
                               <p className="text-xs text-muted-foreground mt-2">
                                 Scientific grounding
+                              </p>
+                            </CardContent>
+                          </Card>
+
+                          {/* Self-Forward */}
+                          <Card>
+                            <CardHeader className="pb-3">
+                              <CardTitle className="text-sm font-medium">Self-Forward Rate</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <div className="text-3xl font-bold text-purple-600">
+                                {(analyticsData.citations.self_citations.self_forward_rate * 100).toFixed(1)}%
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-2">
+                                Independence
+                              </p>
+                            </CardContent>
+                          </Card>
+
+                          {/* Self-Blocking */}
+                          <Card>
+                            <CardHeader className="pb-3">
+                              <CardTitle className="text-sm font-medium">Self-Blocking Rate</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <div className="text-3xl font-bold text-orange-600">
+                                {(analyticsData.citations.self_citations.avg_self_blocking_rate * 100).toFixed(1)}%
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-2">
+                                Defensive depth
                               </p>
                             </CardContent>
                           </Card>
@@ -1801,36 +1674,11 @@ function PortfolioAnalysisContent() {
                       </CardContent>
                     </Card>
 
-                    {/* Self-Citations */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>EP Self-Citations</CardTitle>
-                        <CardDescription>Portfolio independence indicators</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid md:grid-cols-2 gap-6">
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Self-Forward Rate</div>
-                            <div className="text-2xl font-bold">
-                              {(analyticsData.citations.self_citations.self_forward_rate * 100).toFixed(1)}%
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Self-Blocking Rate</div>
-                            <div className="text-2xl font-bold">
-                              {(analyticsData.citations.self_citations.avg_self_blocking_rate * 100).toFixed(1)}%
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+
 
                     {/* NEW: Portfolio Citation Analytics */}
                     <div className="space-y-6">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="h-5 w-5 text-primary" />
-                        <h3 className="text-lg font-semibold">Global Portfolio Citation Dynamics</h3>
-                      </div>
+                      {/* Header moved to PortfolioHealthCards */}
 
                       {portfolioLifecycleMetrics && (
                         <PortfolioHealthCards metrics={portfolioLifecycleMetrics} />
@@ -1839,51 +1687,7 @@ function PortfolioAnalysisContent() {
                     </div>
 
 
-                    {/* Legal Health */}
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Legal Health</CardTitle>
-                        <CardDescription>Portfolio maintainability indicators</CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-6">
-                        {/* KPI Strip */}
-                        <div className="grid md:grid-cols-3 gap-6">
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Patents</div>
-                            <div className="text-2xl font-bold">{analyticsData.legal.n_patents}</div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Abandoned</div>
-                            <div className="text-2xl font-bold text-red-600">
-                              {(analyticsData.legal.abandoned_ratio * 100).toFixed(0)}%
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-sm text-muted-foreground mb-1">Avg Legal Strength</div>
-                            <div className="text-2xl font-bold">
-                              {analyticsData.legal.legal_strength_avg.toFixed(1)} / 100
-                            </div>
-                          </div>
-                        </div>
 
-                        {/* Status Badge */}
-                        <div>
-                          <div className="text-sm text-muted-foreground mb-2">Maintenance Status</div>
-                          <Badge
-                            variant="outline"
-                            className={
-                              analyticsData.legal.maintenance_profile === "STRONGLY_MAINTAINED"
-                                ? "bg-green-100 text-green-800 border-green-300 text-base px-4 py-2"
-                                : analyticsData.legal.maintenance_profile === "MODERATELY_MAINTAINED"
-                                  ? "bg-yellow-100 text-yellow-800 border-yellow-300 text-base px-4 py-2"
-                                  : "bg-red-100 text-red-800 border-red-300 text-base px-4 py-2"
-                            }
-                          >
-                            {formatLabel(analyticsData.legal.maintenance_profile)}
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
 
                     {/* Blocking Power */}
                     <Card>
@@ -1929,7 +1733,7 @@ function PortfolioAnalysisContent() {
                             >
                               <CartesianGrid strokeDasharray="3 3" />
                               <XAxis type="number" />
-                              <YAxis dataKey="name" type="category" width={150} />
+                              <YAxis dataKey="name" type="category" width={180} />
                               <RechartsTooltip formatter={(value: number) => value.toFixed(2)} />
                               <Bar
                                 dataKey="value"
@@ -1957,7 +1761,7 @@ function PortfolioAnalysisContent() {
                                 {analyticsData.blocking_power.top_patents.map((patent, index) => (
                                   <tr key={patent.appln_id} className="border-t border-border hover:bg-muted/30">
                                     <td className="p-3 text-sm">{index + 1}</td>
-                                    <td className="p-3 text-sm font-mono">{patent.appln_id}</td>
+                                    <td className="p-3 text-sm font-mono">{patent.ep_publn_id_full || patent.appln_id}</td>
                                     <td className="p-3 text-sm text-right font-medium">
                                       {patent.blocking_power_pct?.toFixed(1) ?? "N/A"}
                                     </td>
@@ -2053,7 +1857,7 @@ function PortfolioAnalysisContent() {
                                 {analyticsData.innovation.top_patents.map((patent, index) => (
                                   <tr key={patent.appln_id} className="border-t border-border hover:bg-muted/30">
                                     <td className="p-3 text-sm">{index + 1}</td>
-                                    <td className="p-3 text-sm font-mono">{patent.appln_id}</td>
+                                    <td className="p-3 text-sm font-mono">{patent.ep_publn_id_full || patent.appln_id}</td>
                                     <td className="p-3 text-sm text-right font-medium">
                                       {patent.innovation_score?.toFixed(1) ?? "N/A"}
                                     </td>
@@ -2095,48 +1899,7 @@ function PortfolioAnalysisContent() {
                   </Card>
                 )}
 
-                <div className="grid md:grid-cols-2 gap-4 mt-4">
-                  <AiInsightCard
-                    title="Strategy Insight"
-                    insight={
-                      advisoryData?.executive_summary
-                        ? `${advisoryData.executive_summary.one_sentence_takeaway} ${advisoryData.strategic_recommendations?.map((r) => r.action).join(". ") || ""}`
-                        : null
-                    }
-                    loading={loadingBuckets["strategy"]}
-                    onGenerate={() => generateInsight("strategy")}
-                  />
-                  <AiInsightCard
-                    title="Technology Insight"
-                    insight={
-                      advisoryData?.innovation_assessment
-                        ? `${advisoryData.innovation_assessment} ${advisoryData.citation_dynamics_note || ""}`
-                        : null
-                    }
-                    loading={loadingBuckets["technology"]}
-                    onGenerate={() => generateInsight("technology")}
-                  />
-                  <AiInsightCard
-                    title="Commercial Insight"
-                    insight={
-                      advisoryData?.competitive_positioning
-                        ? `${advisoryData.competitive_positioning.explanation} Licensing Readiness: ${advisoryData.licensing_readiness?.justification || ""}`
-                        : null
-                    }
-                    loading={loadingBuckets["commercial"]}
-                    onGenerate={() => generateInsight("commercial")}
-                  />
-                  <AiInsightCard
-                    title="Legal Insight"
-                    insight={
-                      (advisoryData?.legal_health_interpretation || advisoryData?.blocking_analysis)
-                        ? `${advisoryData?.legal_health_interpretation || ""} Blocking Analysis: ${advisoryData?.blocking_analysis || ""}`
-                        : null
-                    }
-                    loading={loadingBuckets["legal"]}
-                    onGenerate={() => generateInsight("legal")}
-                  />
-                </div>
+
               </TabsContent>
 
               {/* FORECAST TAB */}
@@ -2148,8 +1911,9 @@ function PortfolioAnalysisContent() {
               </TabsContent>
             </Tabs>
           </CardContent>
-        </Card>
-      )}
+        </Card >
+      )
+      }
     </>
   )
 }

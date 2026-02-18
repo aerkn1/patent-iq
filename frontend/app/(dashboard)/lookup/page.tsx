@@ -6,11 +6,12 @@ import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { fetchJson, getPatentUrl, getPatentAnalysisUrl, getPatentCitationMetricsUrl, getPatentCitationTimeSeriesUrl, getPatentAdvisoryUrl } from "@/lib/api"
+import { fetchJson, getPatentUrl, getPatentAnalysisUrl, getPatentCitationMetricsUrl, getPatentCitationTimeSeriesUrl } from "@/lib/api"
 import type { PatentPageResponse, PatentAnalysisResponse } from "@/lib/types/patent"
 import type { CitationMetricsResponse, CitationTimeSeriesResponse } from "@/lib/types/citation"
-import type { PatentAdvisoryOutput } from "@/lib/types/advisory"
+
 import { cn, formatLabel } from "@/lib/utils"
+import { getTechnologyInsights, getMarketInsights } from "@/lib/insight-rules"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -55,11 +56,11 @@ import { PatentLegalFamilyStrength } from "@/components/patent-legal-family-stre
 import { TrajectoryLifecycleCards, type LifecycleMetrics } from "@/components/trajectory-lifecycle-cards"
 import { ForecastCard } from "@/components/forecast-card"
 import { CitationForecastChart } from "@/components/citation-forecast-chart"
-import { AiInsightCard } from "@/components/ai-insight-card"
+
 import { MetricWithTooltip } from "@/components/metric-with-tooltip"
 import { TierBadge } from "@/components/tier-badge"
 import { RED_PALETTE } from "@/lib/chart-config"
-import { llmQueue } from "@/lib/api/llm-queue"
+
 import { PatentSearch } from "@/components/patent-search"
 
 export default function PatentLookupPage() {
@@ -73,10 +74,7 @@ export default function PatentLookupPage() {
   const [analysisLoading, setAnalysisLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [analysisError, setAnalysisError] = useState<string | null>(null)
-  const [advisoryLoading, setAdvisoryLoading] = useState(false)
-  const [advisoryError, setAdvisoryError] = useState<string | null>(null)
-  const [advisoryData, setAdvisoryData] = useState<Partial<PatentAdvisoryOutput> | null>(null)
-  const [loadingBuckets, setLoadingBuckets] = useState<Record<string, boolean>>({})
+
 
   const [patentData, setPatentData] = useState<PatentPageResponse | null>(null)
   const [analysisData, setAnalysisData] = useState<PatentAnalysisResponse | null>(null)
@@ -101,8 +99,7 @@ export default function PatentLookupPage() {
       setPatentData(null)
       setAnalysisData(null)
       setAnalysisError(null)
-      setAdvisoryData(null)
-      setAdvisoryError(null)
+
 
       fetchJson<PatentPageResponse>(getPatentUrl(patentId))
         .then((data) => {
@@ -171,45 +168,7 @@ export default function PatentLookupPage() {
   }, [activeTab, patentData, analysisData, analysisLoading, analysisError])
 
   // Automatic advisory fetching removed in favor of granular on-demand generation
-  /*
-  useEffect(() => {
-    if (patentData && !advisoryData && !advisoryLoading && !advisoryError) {
-      setAdvisoryLoading(true)
-      setAdvisoryError(null)
 
-      fetchJson<PatentAdvisoryOutput>(getPatentAdvisoryUrl(patentData.patent.appln_id))
-        .then((data) => {
-          setAdvisoryData(data)
-        })
-        .catch((e: Error) => {
-          setAdvisoryError(e.message || "Failed to fetch advisory")
-        })
-        .finally(() => {
-          setAdvisoryLoading(false)
-        })
-    }
-  }, [patentData, advisoryData, advisoryLoading, advisoryError])
-  */
-
-  const generateInsight = async (bucket: string) => {
-    if (!patentData?.patent.appln_id) return
-
-    setLoadingBuckets((prev) => ({ ...prev, [bucket]: true }))
-    setAdvisoryError(null)
-
-    try {
-      await llmQueue.enqueue(async () => {
-        const url = `${getPatentAdvisoryUrl(patentData.patent.appln_id)}?bucket=${bucket}`
-        const data = await fetchJson<Partial<PatentAdvisoryOutput>>(url)
-        setAdvisoryData((prev) => ({ ...prev, ...data }))
-      })
-    } catch (e: any) {
-      console.error(e)
-      setAdvisoryError(e.message || `Failed to generate ${bucket} insight`)
-    } finally {
-      setLoadingBuckets((prev) => ({ ...prev, [bucket]: false }))
-    }
-  }
 
   // Use real data from API
   const overviewData = patentData
@@ -220,11 +179,11 @@ export default function PatentLookupPage() {
   // Prepare radar chart data
   const radarData = overviewData
     ? [
-      { category: "Technology", value: overviewData.technology.percentile_global, max: 100 },
-      { category: "Market", value: overviewData.market.percentile_global, max: 100 },
-      { category: "Blocking", value: overviewData.scores.blocking_power.percentile, max: 100 },
-      { category: "Licensing", value: overviewData.scores.licensing_readiness.percentile, max: 100 },
-      { category: "Legal", value: overviewData.scores.legal_strength.percentile, max: 100 },
+      { category: "Technology", value: overviewData.technology.percentile_global, max: 100, description: "Composite measure of technical novelty, citation quality, CPC diversity, and technological impact. Normalized against global patent database." },
+      { category: "Market", value: overviewData.market.percentile_global, max: 100, description: "Measures market breadth through industry coverage, jurisdictional reach, and economic sector alignment. Higher scores indicate broader commercial applicability." },
+      { category: "Blocking", value: overviewData.scores.blocking_power.percentile, max: 100, description: "Blocking Power Index measures a patent's ability to prevent competitors from operating in its technology space. Higher percentiles indicate stronger blocking potential." },
+      { category: "Licensing", value: overviewData.scores.licensing_readiness.percentile, max: 100, description: "Licensing Readiness indicates how well-positioned this patent is for commercial licensing. Considers legal strength, market relevance, and citation impact." },
+      { category: "Legal", value: overviewData.scores.legal_strength.percentile, max: 100, description: "Legal Strength assesses enforceability based on claim scope, prosecution history, oppositions, and legal events. Higher scores indicate more defensible patents." },
     ]
     : []
 
@@ -341,23 +300,27 @@ export default function PatentLookupPage() {
                     </div>
                   </div>
                 )}
+                {overviewData.patent.ep_publn_id_full && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">Publication ID:</span>
+                    <span className="font-semibold font-mono">{overviewData.patent.ep_publn_id_full}</span>
+                  </div>
+                )}
               </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                <div className="grid md:grid-cols-5 gap-4">
+                <div className="grid md:grid-cols-4 gap-4">
+
                   <div>
-                    <div className="text-sm text-muted-foreground mb-1">Application Date</div>
+                    <div className="text-sm text-muted-foreground mb-1">Filing Date</div>
                     <div className="font-medium">{overviewData.patent.application_date.split(" ")[0]}</div>
                   </div>
                   <div>
                     <div className="text-sm text-muted-foreground mb-1">Publication Date</div>
                     <div className="font-medium">{overviewData.patent.publication_date.split(" ")[0]}</div>
                   </div>
-                  <div>
-                    <div className="text-sm text-muted-foreground mb-1">Grant Date</div>
-                    <div className="font-medium">{overviewData.patent.grant_date.split(" ")[0]}</div>
-                  </div>
+
                   <div>
                     <div className="text-sm text-muted-foreground mb-1">Jurisdiction</div>
                     <Badge variant="outline">{overviewData.patent.jurisdiction}</Badge>
@@ -380,13 +343,42 @@ export default function PatentLookupPage() {
                       {overviewData.patent.status}
                     </Badge>
                   </div>
+
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Family Size</div>
+                    <div className="font-medium">{overviewData.family.family_members_count}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Family Jurisdictions</div>
+                    <div className="font-medium">{overviewData.family.family_jurisdiction_count}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Tech Breadth</div>
+                    <div className="font-medium">{overviewData.family.family_cpc_subclass_count} <span className="text-xs font-normal text-muted-foreground">CPC Subs</span></div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Major Grants</div>
+                    <div className="flex items-center gap-1">
+                      {["EP", "US", "CN", "JP", "KR"].map((office) => {
+                        const isGranted = overviewData.family.major_office_grant_auths?.includes(office)
+                        return (
+                          <Badge
+                            key={office}
+                            variant={isGranted ? "default" : "outline"}
+                            className={cn(
+                              "w-7 h-5 flex items-center justify-center p-0 text-[10px]",
+                              !isGranted && "text-muted-foreground/40 border-dashed"
+                            )}
+                          >
+                            {office}
+                          </Badge>
+                        )
+                      })}
+                    </div>
+                  </div>
                 </div>
 
-                {/* New Family & Legal Strength Component */}
-                <PatentLegalFamilyStrength
-                  familyData={overviewData.family}
-                  legalStrengthScore={overviewData.scores?.legal_strength?.raw}
-                />
+
               </div>
             </CardContent>
           </Card>
@@ -573,155 +565,7 @@ export default function PatentLookupPage() {
                 {/* OVERVIEW TAB */}
                 <TabsContent value="overview" className="space-y-6">
                   {/* Key Scores */}
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <Target className="h-4 w-4 text-primary" />
-                          Blocking Power
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <MetricWithTooltip
-                          icon={Target}
-                          label="BPI Score"
-                          value={`${overviewData.scores.blocking_power.percentile.toFixed(1)}/100`}
-                          tooltip="Blocking Power Index measures a patent's ability to prevent competitors from operating in its technology space. Higher percentiles indicate stronger blocking potential."
-                          percentile={overviewData.scores.blocking_power.percentile}
-                          tier={overviewData.scores.blocking_power.tier}
-                          rawValue={overviewData.scores.blocking_power.raw.toFixed(3)}
-                        />
-                      </CardContent>
-                    </Card>
 
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <TrendingUp className="h-4 w-4 text-primary" />
-                          Licensing Readiness
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <MetricWithTooltip
-                          icon={Award}
-                          label="Licensing Score"
-                          value={`${overviewData.scores.licensing_readiness.percentile.toFixed(1)}/100`}
-                          tooltip="Licensing Readiness indicates how well-positioned this patent is for commercial licensing. Considers legal strength, market relevance, and citation impact."
-                          percentile={overviewData.scores.licensing_readiness.percentile}
-                          tier={overviewData.scores.licensing_readiness.tier}
-                          rawValue={overviewData.scores.licensing_readiness.raw.toFixed(3)}
-                        />
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-sm font-medium flex items-center gap-2">
-                          <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                          Legal Strength
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <MetricWithTooltip
-                          icon={Shield}
-                          label="Legal Score"
-                          value={`${overviewData.scores.legal_strength.percentile.toFixed(1)}/100`}
-                          tooltip="Legal Strength assesses enforceability based on claim scope, prosecution history, oppositions, and legal events. Higher scores indicate more defensible patents."
-                          percentile={overviewData.scores.legal_strength.percentile}
-                          tier="STANDARD"
-                          rawValue={overviewData.scores.legal_strength.raw}
-                        />
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  {/* Technology & Market Positioning */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Zap className="h-5 w-5 text-primary" />
-                          Technology Positioning
-                        </CardTitle>
-                        <CardDescription>Technical strength and innovation level</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-
-                        <div className="space-y-4">
-                          <div>
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium">Technology Score</span>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                  </TooltipTrigger>
-                                  <TooltipContent className="max-w-xs">
-                                    <p>
-                                      Composite measure of technical novelty, citation quality, CPC diversity, and
-                                      technological impact. Normalized against global patent database.
-                                    </p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </div>
-                              <span className="text-lg font-bold text-primary">
-                                {overviewData.technology.percentile_global.toFixed(1)}/100
-                              </span>
-                            </div>
-                            <Progress value={overviewData.technology.percentile_global} className="h-2" />
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Raw Score: {overviewData.technology.axis_score.toFixed(3)}
-                            </p>
-                          </div>
-                          <TierBadge tier={overviewData.technology.tier} />
-                        </div>
-
-                      </CardContent>
-                    </Card>
-
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <Users className="h-5 w-5 text-primary" />
-                          Market Positioning
-                        </CardTitle>
-                        <CardDescription>Commercial relevance and market coverage</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-
-                        <div className="space-y-4">
-                          <div>
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium">Market Score</span>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                  </TooltipTrigger>
-                                  <TooltipContent className="max-w-xs">
-                                    <p>
-                                      Measures market breadth through industry coverage, jurisdictional reach, and
-                                      economic sector alignment. Higher scores indicate broader commercial
-                                      applicability.
-                                    </p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </div>
-                              <span className="text-lg font-bold text-primary">
-                                {overviewData.market.percentile_global.toFixed(1)}/100
-                              </span>
-                            </div>
-                            <Progress value={overviewData.market.percentile_global} className="h-2" />
-                            <p className="text-xs text-muted-foreground mt-1">
-                              Raw Score: {overviewData.market.axis_score.toFixed(3)}
-                            </p>
-                          </div>
-                          <TierBadge tier={overviewData.market.tier} />
-                        </div>
-
-                      </CardContent>
-                    </Card>
-                  </div>
 
                   {/* Radar Chart Overview */}
                   <Card>
@@ -742,7 +586,19 @@ export default function PatentLookupPage() {
                           {radarData.map((item, index) => (
                             <div key={index} className="space-y-2">
                               <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-foreground">{item.category}</span>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium text-foreground">{item.category}</span>
+                                  {item.description && (
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                      </TooltipTrigger>
+                                      <TooltipContent className="max-w-xs">
+                                        <p>{item.description}</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  )}
+                                </div>
                                 <span className="text-lg font-bold text-primary">{item.value.toFixed(1)}/100</span>
                               </div>
                               <Progress value={item.value} className="h-2" />
@@ -836,101 +692,9 @@ export default function PatentLookupPage() {
                   </Card>
 
                   {/* Relative Positioning */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <GitBranch className="h-5 w-5 text-primary" />
-                        Relative Positioning
-                      </CardTitle>
-                      <CardDescription>How this patent ranks globally</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid md:grid-cols-2 gap-6">
-
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-2">
-                            <Target className="h-5 w-5 text-primary" />
-                            <h4 className="font-semibold">Blocking Power</h4>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                              </TooltipTrigger>
-                              <TooltipContent className="max-w-xs">
-                                <p>
-                                  Percentile rank among all patents in the database. Shows competitive positioning for
-                                  blocking potential in technology landscape.
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-muted-foreground">Percentile</span>
-                            <span className="font-bold">
-                              {overviewData.relative_positioning.blocking_power.percentile_global.toFixed(1)}/100
-                            </span>
-                          </div>
-                          <Progress value={overviewData.relative_positioning.blocking_power.percentile_global} />
-                          <TierBadge tier={overviewData.relative_positioning.blocking_power.tier} />
-                        </div>
 
 
 
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-2">
-                            <TrendingUp className="h-5 w-5 text-primary" />
-                            <h4 className="font-semibold">Licensing Readiness</h4>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                              </TooltipTrigger>
-                              <TooltipContent className="max-w-xs">
-                                <p>
-                                  Composite ranking for licensing attractiveness. Considers legal status, market
-                                  alignment, technological value, and commercial readiness.
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-muted-foreground">Percentile</span>
-                            <span className="font-bold">
-                              {overviewData.relative_positioning.licensing_readiness.percentile_global.toFixed(1)}/100
-                            </span>
-                          </div>
-                          <Progress value={overviewData.relative_positioning.licensing_readiness.percentile_global} />
-                          <TierBadge tier={overviewData.relative_positioning.licensing_readiness.tier} />
-                        </div>
-
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <AiInsightCard
-                      title="Strategy Insight"
-                      insight={advisoryData?.strategic_value}
-                      loading={loadingBuckets["strategy"]}
-                      onGenerate={() => generateInsight("strategy")}
-                    />
-                    <AiInsightCard
-                      title="Technology Insight"
-                      insight={advisoryData?.technology_insight}
-                      loading={loadingBuckets["technology"]}
-                      onGenerate={() => generateInsight("technology")}
-                    />
-                    <AiInsightCard
-                      title="Market Insight"
-                      insight={advisoryData?.market_insight}
-                      loading={loadingBuckets["market"]}
-                      onGenerate={() => generateInsight("market")}
-                    />
-                    <AiInsightCard
-                      title="Legal Insight"
-                      insight={advisoryData?.blocking_insight || advisoryData?.legal_health_note}
-                      loading={loadingBuckets["legal"]}
-                      onGenerate={() => generateInsight("legal")}
-                    />
-                  </div>
                 </TabsContent>
 
                 {/* ADVANCED TAB */}
@@ -952,227 +716,238 @@ export default function PatentLookupPage() {
                   )}
                   {!analysisLoading && !analysisError && advancedData && (
                     <>
-                      {/* Technology Distribution */}
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <Layers className="h-5 w-5 text-primary" />
-                            Technology Distribution
-                          </CardTitle>
-                          <CardDescription>CPC subclass coverage and diversification analysis</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="grid md:grid-cols-2 gap-6">
-                            <div>
-                              <h4 className="font-semibold mb-4">CPC Subclass Breakdown</h4>
-                              <ResponsiveContainer width="100%" height={300}>
-                                <PieChart>
-                                  <Pie
-                                    data={cpcPieData}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={true}
-                                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
-                                    outerRadius={100}
-                                    fill="#dc2626"
-                                    dataKey="value"
-                                  >
-                                    {cpcPieData.map((entry, index) => (
-                                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                  </Pie>
-                                  <RechartsTooltip
-                                    contentStyle={{
-                                      backgroundColor: "white",
-                                      border: "1px solid #e2e8f0",
-                                      borderRadius: "6px",
-                                    }}
-                                    formatter={(value: any) => [`${Number(value).toFixed(1)}%`, "Weight"]}
-                                  />
-                                  <Legend />
-                                </PieChart>
-                              </ResponsiveContainer>
-                            </div>
-                            <div className="space-y-4">
-
-                              <h4 className="font-semibold mb-4">Diversification Metrics</h4>
-                              <div className="space-y-3">
-                                <div>
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-sm">Entropy</span>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                      </TooltipTrigger>
-                                      <TooltipContent className="max-w-xs">
-                                        <p>
-                                          Shannon entropy measures technology spread across CPC classes. Higher values
-                                          (closer to max ~3.5) indicate broader technical scope.
-                                        </p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                    <span className="text-sm font-bold ml-auto">
-                                      {advancedData.technology.diversification.entropy?.toFixed(3) ?? "N/A"}
-                                    </span>
+                      {/* Technology & Market Profile */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {/* Technology Profile */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Zap className="h-5 w-5 text-primary" />
+                              Technology Profile
+                            </CardTitle>
+                            <CardDescription>CPC class distribution and diversification</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="grid md:grid-cols-2 gap-6">
+                              {/* Pie Chart */}
+                              <div className="flex items-center justify-center">
+                                {/* Donut Chart */}
+                                {cpcPieData.length > 0 ? (
+                                  <div className="flex flex-col items-center justify-center">
+                                    <div className="h-[200px] w-full min-w-[200px]">
+                                      <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                          <Pie
+                                            data={cpcPieData}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            paddingAngle={2}
+                                            dataKey="value"
+                                            nameKey="name"
+                                          >
+                                            {cpcPieData.map((entry, index) => (
+                                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                          </Pie>
+                                          <RechartsTooltip contentStyle={{ borderRadius: "8px" }} formatter={(val: number) => `${val.toFixed(1)}%`} />
+                                        </PieChart>
+                                      </ResponsiveContainer>
+                                    </div>
                                   </div>
-                                  <Progress
-                                    value={advancedData.technology.diversification.entropy ? (advancedData.technology.diversification.entropy / 3.5) * 100 : 0}
-                                    className="h-2"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-sm">Normalized Score</span>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                      </TooltipTrigger>
-                                      <TooltipContent className="max-w-xs">
-                                        <p>
-                                          Entropy normalized to 0-1 scale for easier interpretation. Values above 0.7
-                                          indicate high diversification across multiple technology areas.
-                                        </p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                    <span className="text-sm font-bold ml-auto">
-                                      {advancedData.technology.diversification.normalized?.toFixed(3) ?? "N/A"}
-                                    </span>
+                                ) : (
+                                  <div className="h-[200px] w-full flex items-center justify-center text-muted-foreground text-sm">
+                                    No distribution data available
                                   </div>
-                                  <Progress
-                                    value={advancedData.technology.diversification.normalized ? advancedData.technology.diversification.normalized * 100 : 0}
-                                    className="h-2"
-                                  />
-                                </div>
-                                <Badge
-                                  variant="outline"
-                                  className={`mt-2 ${advancedData.technology.diversification.interpretation === "HIGH" ||
-                                    advancedData.technology.diversification.interpretation === "STRONG"
-                                    ? "bg-green-100 text-green-800 border-green-300"
-                                    : advancedData.technology.diversification.interpretation === "LOW" ||
-                                      advancedData.technology.diversification.interpretation === "WEAK"
-                                      ? "bg-red-100 text-red-800 border-red-300"
-                                      : "bg-gray-100 text-gray-700 border-gray-300"
-                                    }`}
-                                >
-                                  {formatLabel(advancedData.technology.diversification.interpretation)}
-                                </Badge>
+                                )}
                               </div>
 
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+                              {/* Insights Section */}
+                              <div className="space-y-4">
+                                <h4 className="text-sm font-semibold flex items-center gap-2">
+                                  <Sparkles className="h-4 w-4 text-yellow-500" />
+                                  Key Insights
+                                </h4>
+                                {(() => {
+                                  // Check if data exists
+                                  if (!advancedData.technology.distribution.cpc_subclasses || advancedData.technology.distribution.cpc_subclasses.length === 0) {
+                                    return <div className="text-sm text-muted-foreground">Insufficient data for insights.</div>
+                                  }
 
-                      {/* Market Distribution */}
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <Users className="h-5 w-5 text-primary" />
-                            Market Distribution
-                          </CardTitle>
-                          <CardDescription>Industry coverage and market diversification</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="grid md:grid-cols-2 gap-6">
-                            <div>
-                              <h4 className="font-semibold mb-4">Top 10 Industries</h4>
-                              <ResponsiveContainer width="100%" height={350}>
-                                <PieChart>
-                                  <Pie
-                                    data={industryPieData}
-                                    cx="50%"
-                                    cy="50%"
-                                    labelLine={false}
-                                    label={({ name, percent }) => (percent > 0.05 ? `${name.substring(0, 15)}...` : "")}
-                                    outerRadius={120}
-                                    fill="#dc2626"
-                                    dataKey="value"
-                                  >
-                                    {industryPieData.map((entry, index) => (
-                                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                  </Pie>
-                                  <RechartsTooltip
-                                    contentStyle={{
-                                      backgroundColor: "white",
-                                      border: "1px solid #e2e8f0",
-                                      borderRadius: "6px",
-                                    }}
-                                    formatter={(value: any, name: any) => [`${Number(value).toFixed(1)}%`, name]}
-                                  />
-                                  <Legend wrapperStyle={{ fontSize: "11px" }} />
-                                </PieChart>
-                              </ResponsiveContainer>
-                            </div>
-                            <div className="space-y-4">
+                                  // Construct profile for insight rules
+                                  const sorted = [...advancedData.technology.distribution.cpc_subclasses].sort((a, b) => b.weight - a.weight)
+                                  const top5 = sorted.slice(0, 5)
+                                  const top_k_share = top5.reduce((sum, item) => sum + item.weight, 0)
 
-                              <h4 className="font-semibold mb-4">Market Diversification</h4>
-                              <div className="space-y-3">
-                                <div>
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-sm">Entropy</span>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                      </TooltipTrigger>
-                                      <TooltipContent className="max-w-xs">
-                                        <p>
-                                          Measures market breadth across industry sectors. Higher entropy indicates
-                                          broader commercial applicability and diversified market opportunities.
-                                        </p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                    <span className="text-sm font-bold ml-auto">
-                                      {advancedData.market.diversification.entropy?.toFixed(3) ?? "N/A"}
-                                    </span>
+                                  const profile = {
+                                    axis_score: advancedData.technology.diversification.normalized,
+                                    diversification: {
+                                      entropy_norm: advancedData.technology.diversification.normalized,
+                                      top_k_share: top_k_share,
+                                      long_tail_share: 1 - top_k_share,
+                                      interpretation: advancedData.technology.diversification.interpretation
+                                    },
+                                    top_cpc_classes: advancedData.technology.distribution.cpc_subclasses
+                                  }
+                                  const insights = getTechnologyInsights(profile as any)
+
+                                  return (
+                                    <>
+                                      <ul className="space-y-3">
+                                        {insights.map((insight, i) => (
+                                          <li key={i} className="text-sm text-muted-foreground flex gap-2">
+                                            <span className="text-primary mt-1">•</span>
+                                            <span>{insight}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+
+                                      {/* Top CPCs List */}
+                                      <div className="mt-4 pt-4 border-t">
+                                        <h4 className="text-sm font-semibold mb-3">Top Classifications</h4>
+                                        <div className="space-y-2">
+                                          {advancedData.technology.distribution.cpc_subclasses
+                                            .slice(0, 5)
+                                            .map((item, i) => (
+                                              <div key={i} className="flex items-center justify-between text-sm gap-2">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                  <div
+                                                    className="w-2 h-2 rounded-full flex-shrink-0"
+                                                    style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                                                  />
+                                                  <span className="font-medium text-muted-foreground truncate" title={item.code}>
+                                                    {item.code}
+                                                  </span>
+                                                </div>
+                                                <span className="font-mono text-xs flex-shrink-0">{(item.weight * 100).toFixed(1)}%</span>
+                                              </div>
+                                            ))}
+                                        </div>
+                                      </div>
+                                    </>
+                                  )
+                                })()}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        {/* Market Profile */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Layers className="h-5 w-5 text-primary" />
+                              Market Profile
+                            </CardTitle>
+                            <CardDescription>Industry distribution and diversification</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="grid md:grid-cols-2 gap-6">
+                              {/* Pie Chart */}
+                              <div className="flex items-center justify-center">
+                                {/* Donut Chart */}
+                                {industryPieData.length > 0 ? (
+                                  <div className="flex flex-col items-center justify-center">
+                                    <div className="h-[200px] w-full min-w-[200px]">
+                                      <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                          <Pie
+                                            data={industryPieData}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            paddingAngle={2}
+                                            dataKey="value"
+                                            nameKey="name"
+                                          >
+                                            {industryPieData.map((entry, index) => (
+                                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                          </Pie>
+                                          <RechartsTooltip contentStyle={{ borderRadius: "8px" }} formatter={(val: number) => `${val.toFixed(1)}%`} />
+                                        </PieChart>
+                                      </ResponsiveContainer>
+                                    </div>
                                   </div>
-                                  <Progress
-                                    value={advancedData.market.diversification.entropy ? (advancedData.market.diversification.entropy / 3.5) * 100 : 0}
-                                    className="h-2"
-                                  />
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className="text-sm">Normalized Score</span>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                      </TooltipTrigger>
-                                      <TooltipContent className="max-w-xs">
-                                        <p>
-                                          Market entropy on 0-1 scale. Higher values suggest patent applicability across
-                                          multiple industry verticals, increasing licensing opportunities.
-                                        </p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                    <span className="text-sm font-bold ml-auto">
-                                      {advancedData.market.diversification.normalized?.toFixed(3) ?? "N/A"}
-                                    </span>
+                                ) : (
+                                  <div className="h-[200px] w-full flex items-center justify-center text-muted-foreground text-sm">
+                                    No distribution data available
                                   </div>
-                                  <Progress
-                                    value={advancedData.market.diversification.normalized ? advancedData.market.diversification.normalized * 100 : 0}
-                                    className="h-2"
-                                  />
-                                </div>
-                                <Badge
-                                  variant="outline"
-                                  className={`mt-2 ${advancedData.market.diversification.interpretation === "HIGH" ||
-                                    advancedData.market.diversification.interpretation === "STRONG"
-                                    ? "bg-green-100 text-green-800 border-green-300"
-                                    : advancedData.market.diversification.interpretation === "LOW" ||
-                                      advancedData.market.diversification.interpretation === "WEAK"
-                                      ? "bg-red-100 text-red-800 border-red-300"
-                                      : "bg-gray-100 text-gray-700 border-gray-300"
-                                    }`}
-                                >
-                                  {formatLabel(advancedData.market.diversification.interpretation)}
-                                </Badge>
+                                )}
                               </div>
 
+                              {/* Insights Section */}
+                              <div className="space-y-4">
+                                <h4 className="text-sm font-semibold flex items-center gap-2">
+                                  <Sparkles className="h-4 w-4 text-yellow-500" />
+                                  Key Insights
+                                </h4>
+                                {(() => {
+                                  // Check if data exists
+                                  if (!advancedData.market.distribution.industries || advancedData.market.distribution.industries.length === 0) {
+                                    return <div className="text-sm text-muted-foreground">Insufficient data for insights.</div>
+                                  }
+
+                                  // Construct profile for insight rules
+                                  const sorted = [...advancedData.market.distribution.industries].sort((a, b) => b.weight - a.weight)
+                                  const top5 = sorted.slice(0, 5)
+                                  const top_k_share = top5.reduce((sum, item) => sum + item.weight, 0)
+
+                                  const profile = {
+                                    axis_score: advancedData.market.diversification.normalized,
+                                    diversification: {
+                                      entropy_norm: advancedData.market.diversification.normalized,
+                                      top_k_share: top_k_share,
+                                      long_tail_share: 1 - top_k_share,
+                                      interpretation: advancedData.market.diversification.interpretation
+                                    },
+                                    top_industries: advancedData.market.distribution.industries
+                                  }
+                                  const insights = getMarketInsights(profile as any)
+
+                                  return (
+                                    <>
+                                      <ul className="space-y-3">
+                                        {insights.map((insight, i) => (
+                                          <li key={i} className="text-sm text-muted-foreground flex gap-2">
+                                            <span className="text-primary mt-1">•</span>
+                                            <span>{insight}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+
+                                      {/* Top Industries List */}
+                                      <div className="mt-4 pt-4 border-t">
+                                        <h4 className="text-sm font-semibold mb-3">Top Industries</h4>
+                                        <div className="space-y-2">
+                                          {advancedData.market.distribution.industries
+                                            .slice(0, 5)
+                                            .map((item, i) => (
+                                              <div key={i} className="flex items-center justify-between text-sm gap-2">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                  <div
+                                                    className="w-2 h-2 rounded-full flex-shrink-0"
+                                                    style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                                                  />
+                                                  <span className="font-medium text-muted-foreground truncate" title={item.code.replace(/_/g, " ")}>
+                                                    {item.code.replace(/_/g, " ")}
+                                                  </span>
+                                                </div>
+                                                <span className="font-mono text-xs flex-shrink-0">{(item.weight * 100).toFixed(1)}%</span>
+                                              </div>
+                                            ))}
+                                        </div>
+                                      </div>
+                                    </>
+                                  )
+                                })()}
+                              </div>
                             </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+                          </CardContent>
+                        </Card>
+                      </div>
 
                       {/* Citations Analysis */}
                       <Card>
@@ -1524,35 +1299,15 @@ export default function PatentLookupPage() {
                     </>
                   )}
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <AiInsightCard
-                      insight={advisoryData?.technology_insight}
-                      loading={advisoryLoading}
-                      title="AI Technology Insight"
-                    />
-                    <AiInsightCard
-                      insight={advisoryData?.market_insight}
-                      loading={advisoryLoading}
-                      title="AI Market Insight"
-                    />
-                    <AiInsightCard
-                      insight={advisoryData?.legal_health_note}
-                      loading={advisoryLoading}
-                      title="AI Legal Health"
-                    />
-                    <AiInsightCard
-                      insight={advisoryData?.innovation_insight}
-                      loading={advisoryLoading}
-                      title="AI Innovation Insight"
-                    />
-                  </div>
+
                 </TabsContent>
 
               </Tabs>
             </CardContent>
           </Card>
-        </div>
-      )}
+        </div >
+      )
+      }
     </>
   )
 }

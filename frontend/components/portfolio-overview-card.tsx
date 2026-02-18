@@ -6,12 +6,14 @@ import { Info } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import type { PortfolioOverviewResponse } from "@/lib/types/patent"
 
+import { cn, formatLabel } from "@/lib/utils"
+
 interface PortfolioOverviewCardProps {
     data: PortfolioOverviewResponse
 }
 
 export function PortfolioOverviewCard({ data }: PortfolioOverviewCardProps) {
-    const { portfolio, family_metrics } = data
+    const { portfolio, family_metrics, strength, ranking } = data
 
     const metrics = [
         {
@@ -56,7 +58,29 @@ export function PortfolioOverviewCard({ data }: PortfolioOverviewCardProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-2xl">{portfolio.owner_name}</CardTitle>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-4 flex-wrap">
+                            <CardTitle className="text-2xl">{portfolio.owner_name}</CardTitle>
+
+                            {/* Portfolio Score */}
+                            <div className="flex items-center gap-2 bg-muted/40 px-3 py-1 rounded-full border">
+                                <span className="text-sm font-medium text-muted-foreground">Portfolio Score:</span>
+                                <span className="text-base font-bold text-primary">
+                                    {strength?.portfolio_general?.power_score?.toFixed(0) ?? "-"}
+                                </span>
+                            </div>
+
+                            {/* Top Tier Badge */}
+                            <Badge
+                                variant="outline"
+                                className="text-sm px-3 py-1 bg-primary/5 border-primary/20 text-primary font-medium"
+                            >
+                                {ranking?.tier ? formatLabel(ranking.tier) : "Unranked"}
+                            </Badge>
+                        </div>
+                    </div>
+                </div>
                 <CardDescription>
                     <div className="flex flex-wrap items-center gap-4 text-sm mt-2">
                         <div className="flex items-center gap-2">

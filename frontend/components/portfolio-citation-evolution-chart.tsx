@@ -61,7 +61,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 }
 
 export function PortfolioCitationEvolutionChart({ data }: PortfolioCitationEvolutionChartProps) {
-    const [showSplit, setShowSplit] = useState(false)
     const [showYoY, setShowYoY] = useState(false)
 
     // Calculate some summary stats for the header
@@ -92,19 +91,6 @@ export function PortfolioCitationEvolutionChart({ data }: PortfolioCitationEvolu
                             />
                             <Label htmlFor="show-yoy" className="text-sm font-medium">
                                 Show YoY %
-                            </Label>
-                        </div>
-                        <div className="flex items-center gap-2 border-l pl-6">
-                            <Label htmlFor="split-view" className="text-sm font-medium text-muted-foreground">
-                                Total View
-                            </Label>
-                            <Switch
-                                id="split-view"
-                                checked={showSplit}
-                                onCheckedChange={setShowSplit}
-                            />
-                            <Label htmlFor="split-view" className="text-sm font-medium">
-                                Phase Split
                             </Label>
                         </div>
                     </div>
@@ -160,47 +146,15 @@ export function PortfolioCitationEvolutionChart({ data }: PortfolioCitationEvolu
                             <Tooltip content={<CustomTooltip />} />
                             <Legend verticalAlign="top" height={36} />
 
-                            {showSplit ? (
-                                <>
-                                    <Area
-                                        yAxisId="left"
-                                        type="monotone"
-                                        dataKey="late_cites"
-                                        name="Late Phase"
-                                        stackId="1"
-                                        stroke="#f59e0b"
-                                        fill="url(#colorLate)"
-                                    />
-                                    <Area
-                                        yAxisId="left"
-                                        type="monotone"
-                                        dataKey="mid_cites"
-                                        name="Mid Phase"
-                                        stackId="1"
-                                        stroke="#3b82f6"
-                                        fill="url(#colorMid)"
-                                    />
-                                    <Area
-                                        yAxisId="left"
-                                        type="monotone"
-                                        dataKey="early_cites"
-                                        name="Early Phase"
-                                        stackId="1"
-                                        stroke="#10b981"
-                                        fill="url(#colorEarly)"
-                                    />
-                                </>
-                            ) : (
-                                <Area
-                                    yAxisId="left"
-                                    type="monotone"
-                                    dataKey="avg_cites_per_patent"
-                                    name="Avg. Cites/Patent"
-                                    stroke="#8884d8"
-                                    fill="url(#colorTotal)"
-                                    strokeWidth={2}
-                                />
-                            )}
+                            <Area
+                                yAxisId="left"
+                                type="monotone"
+                                dataKey="avg_cites_per_patent"
+                                name="Avg. Cites/Patent"
+                                stroke="#8884d8"
+                                fill="url(#colorTotal)"
+                                strokeWidth={2}
+                            />
 
                             {showYoY && (
                                 <Line

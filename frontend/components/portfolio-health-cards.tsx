@@ -8,7 +8,14 @@ import {
     Leaf,
     BarChart3
 } from "lucide-react"
-import { TremorMetricCard } from "@/components/tremor-metric-card"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import {
     Tooltip,
     TooltipContent,
@@ -49,186 +56,160 @@ interface PortfolioHealthCardsProps {
 }
 
 export function PortfolioHealthCards({ metrics }: PortfolioHealthCardsProps) {
-    const getTrajectoryColor = (label: string): string => {
-        switch (label) {
-            case "Rising": return "emerald"
-            case "Falling": return "rose"
-            default: return "gray"
+    const getColorClass = (color: string) => {
+        switch (color) {
+            case "emerald": return "bg-emerald-500"
+            case "rose": return "bg-rose-500"
+            case "blue": return "bg-blue-500"
+            case "amber": return "bg-amber-500"
+            case "violet": return "bg-violet-500"
+            default: return "bg-slate-500"
         }
     }
 
-    const getTimingColor = (mode: string): string => {
-        switch (mode) {
-            case "EARLY": return "emerald"
-            case "MID": return "blue"
-            case "LATE": return "orange"
-            default: return "gray"
-        }
-    }
+    const MetricItem = ({
+        title,
+        icon: Icon,
+        value,
+        label,
+        color,
+        progressValue,
+        description
+    }: {
+        title: string
+        icon: any
+        value: string | number
+        label?: string
+        color: string
+        progressValue?: number
+        description: string
+    }) => (
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <div className="space-y-3 p-4 border rounded-lg bg-card hover:bg-muted/30 transition-colors cursor-help h-full flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-sm font-medium text-muted-foreground">{title}</span>
+                                <Icon className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                            <div className="flex items-baseline gap-2 mb-3">
+                                <span className="text-2xl font-bold tracking-tight">{value}</span>
+                                {label && (
+                                    <Badge variant="secondary" className="text-xs font-normal bg-muted">
+                                        {label}
+                                    </Badge>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            {/* Custom Progress Bar */}
+                            {typeof progressValue === 'number' && (
+                                <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
+                                    <div
+                                        className={`h-full ${getColorClass(color)} transition-all duration-500 ease-out`}
+                                        style={{ width: `${Math.min(100, Math.max(0, progressValue))}%` }}
+                                    />
+                                </div>
+                            )}
+                            {/* Description for context */}
+                            {/* <p className="text-xs text-muted-foreground line-clamp-2">
+                                {description}
+                            </p> */}
+                        </div>
+                    </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p className="max-w-xs text-xs">
+                        {description}
+                    </p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+    )
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {/* 1. Trajectory */}
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div>
-                            <TremorMetricCard
-                                title="Trajectory"
-                                metric={`${metrics.trajectory.score_pct}/100`}
-                                subtext={`Avg: ${metrics.trajectory.score_avg}`}
-                                icon={TrendingUp}
-                                progress={{ value: metrics.trajectory.score_pct, color: "blue", label: `${metrics.trajectory.score_pct}/100` }}
-                                status={{
-                                    label: metrics.trajectory.label,
-                                    color: getTrajectoryColor(metrics.trajectory.label) as any
-                                }}
-                                decorationColor={getTrajectoryColor(metrics.trajectory.label) as any}
-                                className="h-full cursor-help"
-                            />
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p className="max-w-xs text-xs">
-                            Average citation growth velocity across the portfolio.
-                            Percentile compares to global portfolios.
-                        </p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+        <Card>
+            <CardHeader>
+                <div className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    <div>
+                        <CardTitle className="text-lg">Global Portfolio Citation Dynamics</CardTitle>
+                        <CardDescription>Performance indicators relative to global benchmarks</CardDescription>
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {/* 1. Trajectory */}
+                    <MetricItem
+                        title="Trajectory"
+                        icon={TrendingUp}
+                        value={`${metrics.trajectory.score_pct}/100`}
+                        label={metrics.trajectory.label}
+                        progressValue={metrics.trajectory.score_pct}
+                        color={metrics.trajectory.label === "Rising" ? "emerald" : (metrics.trajectory.label === "Falling" ? "rose" : "slate")}
+                        description="Average citation growth velocity across the portfolio. Percentile compares to global portfolios."
+                    />
 
-            {/* 2. Durability */}
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div>
-                            <TremorMetricCard
-                                title="Durability"
-                                metric={`${metrics.durability.score_pct}/100`}
-                                subtext={`Avg: ${metrics.durability.score_avg}`}
-                                icon={Shield}
-                                progress={{ value: metrics.durability.score_pct, color: "violet", label: `${metrics.durability.score_pct}/100` }}
-                                trend={{
-                                    value: `Top ${100 - metrics.durability.score_pct}%`,
-                                    direction: "up",
-                                    label: "Global Rank"
-                                }}
-                                decorationColor="violet"
-                                className="h-full cursor-help"
-                            />
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p className="max-w-xs text-xs">
-                            Measure of citation longevity. Higher scores indicate patents that remain relevant for longer periods.
-                        </p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+                    {/* 2. Durability */}
+                    <MetricItem
+                        title="Durability"
+                        icon={Shield}
+                        value={`${metrics.durability.score_pct}/100`}
+                        label={`Top ${Math.max(1, 100 - metrics.durability.score_pct)}%`}
+                        progressValue={metrics.durability.score_pct}
+                        color="blue"
+                        description="Measure of citation longevity. Higher scores indicate patents that remain relevant for longer periods."
+                    />
 
-            {/* 3. Sustainability */}
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div>
-                            <TremorMetricCard
-                                title="Sustainability"
-                                metric={`${metrics.sustainability.score_pct}/100`}
-                                subtext={`Avg: ${metrics.sustainability.score_avg}`}
-                                icon={Leaf}
-                                progress={{ value: metrics.sustainability.score_pct, color: "green", label: `${metrics.sustainability.score_pct}/100` }}
-                                status={{
-                                    label: `${(metrics.sustainability.sustaining_share * 100).toFixed(0)}% Sustaining`,
-                                    color: "green"
-                                }}
-                                decorationColor="green"
-                                className="h-full cursor-help"
-                            />
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p className="max-w-xs text-xs">
-                            Share of patents exhibiting steady, long-term citation interest vs flashy short-term spikes.
-                        </p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+                    {/* 3. Sustainability */}
+                    <MetricItem
+                        title="Sustainability"
+                        icon={Leaf}
+                        value={`${metrics.sustainability.score_pct}/100`}
+                        label={`${(metrics.sustainability.sustaining_share * 100).toFixed(0)}% Sustaining`}
+                        progressValue={metrics.sustainability.score_pct}
+                        color="emerald"
+                        description="Share of patents exhibiting steady, long-term citation interest vs flashy short-term spikes."
+                    />
 
-            {/* 4. Strategic Timing */}
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div>
-                            <TremorMetricCard
-                                title="Timing"
-                                metric={`${metrics.timing.score_pct}/100`}
-                                subtext={`Avg: ${metrics.timing.score_avg}`}
-                                icon={Clock}
-                                progress={{ value: metrics.timing.score_pct, color: getTimingColor(metrics.timing.mode) as any, label: `${metrics.timing.score_pct}/100` }}
-                                status={{
-                                    label: `${metrics.timing.mode} MOVER`,
-                                    color: getTimingColor(metrics.timing.mode) as any
-                                }}
-                                decorationColor={getTimingColor(metrics.timing.mode) as any}
-                                className="h-full cursor-help"
-                            />
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p className="max-w-xs text-xs">
-                            Dominant strategic timing (Early/Mid/Late) relative to technology waves.
-                        </p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+                    {/* 4. Strategic Timing */}
+                    <MetricItem
+                        title="Timing"
+                        icon={Clock}
+                        value={`${metrics.timing.score_pct}/100`}
+                        label={`${metrics.timing.mode} MOVER`}
+                        progressValue={metrics.timing.score_pct}
+                        color={metrics.timing.mode === "EARLY" ? "emerald" : (metrics.timing.mode === "MID" ? "blue" : "amber")}
+                        description="Dominant strategic timing (Early/Mid/Late) relative to technology waves."
+                    />
 
-            {/* 5. Early Signal */}
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div>
-                            <TremorMetricCard
-                                title="Early Signal"
-                                metric={`${(metrics.early_signal.share * 100).toFixed(1)}%`}
-                                subtext="of total citations"
-                                icon={Zap}
-                                progress={{ value: metrics.early_signal.share * 100, color: "amber" }}
-                                decorationColor="amber"
-                                className="h-full cursor-help"
-                            />
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p className="max-w-xs text-xs">
-                            Percentage of citations received within the first 3 years of publication.
-                            High values indicate immediate industry relevance.
-                        </p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
+                    {/* 5. Early Signal */}
+                    <MetricItem
+                        title="Early Signal"
+                        icon={Zap}
+                        value={`${(metrics.early_signal.share * 100).toFixed(1)}%`}
+                        label="3-Year Impact"
+                        progressValue={metrics.early_signal.share * 100}
+                        color="amber"
+                        description="Percentage of citations received within the first 3 years of publication. High values indicate immediate industry relevance."
+                    />
 
-            {/* 6. Cite/Patent */}
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div>
-                            <TremorMetricCard
-                                title="Cite/Patent"
-                                metric={metrics.cites_per_patent.overall_avg.toFixed(1)}
-                                subtext="Avg per patent"
-                                icon={BarChart3}
-                                decorationColor="blue"
-                                className="h-full cursor-help"
-                            />
-                        </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p className="max-w-xs text-xs">
-                            Average citations per patent.
-                        </p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
-        </div>
+                    {/* 6. Cite/Patent */}
+                    <MetricItem
+                        title="Cite/Patent"
+                        icon={BarChart3}
+                        value={metrics.cites_per_patent.overall_avg.toFixed(1)}
+                        label="Per Patent"
+                        progressValue={0} // No progress bar for raw number? Or maybe scale it? Leaving 0 hides it effectively if I add check, but here I rendered bar always.
+                        // I will pass undefined to hide bar.
+                        color="blue"
+                        description="Average citations per patent."
+                    />
+                </div>
+            </CardContent>
+        </Card>
     )
 }

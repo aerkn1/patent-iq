@@ -33,9 +33,7 @@ export function getPatentCitationTimeSeriesUrl(applnId: string): string {
   return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}/citation-ts`;
 }
 
-export function getPatentAdvisoryUrl(applnId: string | number): string {
-  return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}/advisory`;
-}
+
 
 export function getPortfolioOverviewUrl(ownerId: string | number): string {
   return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/overview`;
@@ -92,13 +90,7 @@ export function getPortfolioCitationTimeSeriesUrl(ownerId: string | number): str
   return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/citation-ts`;
 }
 
-export function getPortfolioAdvisoryUrl(ownerId: string | number): string {
-  return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/advisory`;
-}
 
-export function getPortfolioEvolutionAdvisoryUrl(ownerId: string | number): string {
-  return `${API_BASE}/api/v1/portfolios/${encodeURIComponent(ownerId)}/evolution-advisory`;
-}
 
 export function getPatentForecastUrl(applnId: string | number, horizon: "3y" | "5y"): string {
   return `${API_BASE}/api/v1/patents/${encodeURIComponent(applnId)}/forecast?horizon=${horizon}`;

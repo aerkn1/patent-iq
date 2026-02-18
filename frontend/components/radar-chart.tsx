@@ -7,6 +7,7 @@ interface RadarData {
   category: string
   value: number
   max: number
+  description?: string
 }
 
 interface RadarChartProps {
@@ -19,7 +20,8 @@ export function RadarChart({ data }: RadarChartProps) {
     category: d.category,
     value: Math.min(100, Math.max(0, (d.value / d.max) * 100)), // Clamp 0-100
     originalValue: d.value,
-    max: d.max
+    max: d.max,
+    description: d.description
   }))
 
   return (
@@ -80,6 +82,11 @@ export function RadarChart({ data }: RadarChartProps) {
           return (
             <div className="bg-background border border-border p-3 rounded-lg shadow-lg">
               <div className="font-semibold mb-1">{index}</div>
+              {data && data[0]?.data?.description && (
+                <p className="text-xs text-muted-foreground mb-2 max-w-xs leading-snug">
+                  {data[0].data.description}
+                </p>
+              )}
               {data && data.map((point: any) => {
                 const original = point.data?.originalValue
                 const max = point.data?.max

@@ -47,12 +47,13 @@ export function TremorMetricCard({
         >
             <div>
                 <Flex alignItems="start" justifyContent="between">
-                    <div className="truncate">
+                    <div>
                         <Text>{title}</Text>
-                        <Metric className="mt-2 truncate">{metric}</Metric>
+                        <Metric className="mt-2">{metric}</Metric>
                     </div>
                     {(Icon || status) && (
-                        <div className="flex flex-col items-end gap-2">
+                        <div className="flex flex-col items-end gap-2 pl-2">
+                            {/* Added pl-2 to ensure spacing if wrapping occurs close to badge */}
                             {Icon && <Icon className="h-6 w-6 text-muted-foreground" />}
                             {status && (
                                 <Badge color={status.color || "gray"}>

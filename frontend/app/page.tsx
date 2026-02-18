@@ -53,6 +53,9 @@ export default function HomePage() {
           <div className="inline-block px-3 py-1 mb-6 text-xs font-medium bg-primary/10 text-primary rounded-full">
             Powered by AI • EPO CodeFest 2026
           </div>
+          <h1 className="text-6xl font-extrabold mb-4 tracking-tight text-foreground">
+            Patent-IQ
+          </h1>
           <h2 className="text-5xl font-bold mb-6 text-balance">
             <span className="text-primary">AI-Powered</span> IP Portfolio Intelligence Platform
           </h2>
