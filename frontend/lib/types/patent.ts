@@ -234,6 +234,11 @@ export type PortfolioInfo = {
   owner_type: string;
   country: string;
   size: PortfolioSize;
+  status_counts: {
+    total: number;
+    active: number;
+    abandoned: number;
+  };
 };
 
 export type PortfolioRadar = {

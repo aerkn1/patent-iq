@@ -92,4 +92,22 @@ class PortfolioPatentRepository:
             data_query, params + [limit, offset]
         ).fetchdf()
 
-        return rows.to_dict(orient="records"), total
+        summary_query = f"""
+        SELECT
+            COUNT(DISTINCT pc.appln_id)::INT AS total,
+            SUM(CASE WHEN pc.is_abandoned = true THEN 1 ELSE 0 END)::INT AS abandoned,
+            SUM(CASE WHEN pc.is_abandoned = false THEN 1 ELSE 0 END)::INT AS active
+        FROM patent_portfolio_map ppm
+        JOIN patent_core pc ON pc.appln_id = ppm.appln_id
+        JOIN patent_core_w_ranks pr ON pr.appln_id = ppm.appln_id
+        WHERE {where_clause}
+        """
+
+        summary_row = conn.execute(summary_query, params).fetchone()
+        summary = {
+            "total": int(summary_row[0] or 0),
+            "abandoned": int(summary_row[1] or 0),
+            "active": int(summary_row[2] or 0),
+        }
+
+        return rows.to_dict(orient="records"), total, summary

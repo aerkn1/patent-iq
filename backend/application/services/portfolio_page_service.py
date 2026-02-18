@@ -14,6 +14,7 @@ from infrastructure.repositories.portfolio_industry_repo import PortfolioIndustr
 from infrastructure.repositories.portfolio_cpc_repo import PortfolioCpcRepository
 from infrastructure.repositories.portfolio_family_metrics_repo import PortfolioFamilyMetricsRepository
 from infrastructure.repositories.portfolio_grant_mix_repo import PortfolioGrantMixRepository
+from infrastructure.repositories.portfolio_legal_repo import PortfolioLegalRepository
 
 
 class PortfolioOverviewService:
@@ -31,6 +32,7 @@ class PortfolioOverviewService:
         self.ind_repo = PortfolioIndustryRepository()
         self.family_metrics_repo = PortfolioFamilyMetricsRepository()
         self.grant_mix_repo = PortfolioGrantMixRepository()
+        self.legal_repo = PortfolioLegalRepository()
 
     async def get_overview(self, owner_id: int) -> dict:
         if owner_id <= 0:
@@ -56,6 +58,7 @@ class PortfolioOverviewService:
         # --- New Metrics ---
         family_metrics = self.family_metrics_repo.get(owner_id) or {}
         grant_mix_list = self.grant_mix_repo.get(owner_id) or []
+        legal_metrics = self.legal_repo.get_legal_aggregation(owner_id) or {}
 
         
 
@@ -63,6 +66,10 @@ class PortfolioOverviewService:
             raise NotFoundError(f"Incomplete portfolio data for {owner_id}")
 
         # --- Assemble response ---
+        total_patents = int(legal_metrics.get("n_patents") or size["n_patents"] or 0)
+        abandoned_count = int(legal_metrics.get("abandoned_count") or 0)
+        active_count = max(total_patents - abandoned_count, 0)
+
         return {
             "portfolio": {
                 "owner_id": owner_id,
@@ -73,6 +80,11 @@ class PortfolioOverviewService:
                     "n_patents": size["n_patents"],
                     "n_unique_patents": size["n_unique_patents"],
                     "size_bucket": peer_meta["portfolio_size_bucket"] if peer_meta else "UNKNOWN",
+                },
+                "status_counts": {
+                    "total": total_patents,
+                    "active": active_count,
+                    "abandoned": abandoned_count,
                 },
             },
             "radar": {

@@ -12,19 +12,24 @@ interface PortfolioOverviewCardProps {
 
 export function PortfolioOverviewCard({ data }: PortfolioOverviewCardProps) {
     const { portfolio, family_metrics } = data
+    const statusCounts = portfolio.status_counts
+    const totalPatents = statusCounts?.total ?? portfolio.size.n_patents
+    const activePatents = statusCounts?.active ?? Math.max(totalPatents - (statusCounts?.abandoned ?? 0), 0)
+    const abandonedPatents = statusCounts?.abandoned ?? 0
 
     const metrics = [
         {
-            label: "Total EP Patents",
-            value: portfolio.size.n_patents.toLocaleString(),
-            description: "Total count of EP patents",
-            tooltip: "Total number of EP patents in the portfolio."
+            label: "EP Patents (Active / Total)",
+            value: `${activePatents.toLocaleString()} / ${totalPatents.toLocaleString()}`,
+            description: "Active vs total EP patents",
+            detail: `Abandoned: ${abandonedPatents.toLocaleString()}`,
+            tooltip: "Active EP patents compared to total. Abandoned shown below."
         },
         {
-            label: "Active Families",
+            label: "Unique Families",
             value: family_metrics?.active_patent_families?.toLocaleString() || "-",
-            description: "Distinct patent families with at least one active member",
-            tooltip: "Number of unique patent families that are currently active."
+            description: "Distinct patent families in the portfolio",
+            tooltip: "Number of unique patent families in the portfolio."
         },
         {
             label: "Effective Patents",
@@ -96,7 +101,9 @@ export function PortfolioOverviewCard({ data }: PortfolioOverviewCardProps) {
                                 </TooltipProvider>
                             </div>
                             <div className="text-2xl font-bold">{metric.value}</div>
-                            {/* <div className="text-xs text-muted-foreground">{metric.description}</div> */}
+                            {metric.detail ? (
+                                <div className="text-xs text-muted-foreground">{metric.detail}</div>
+                            ) : null}
                         </div>
                     ))}
                 </div>
