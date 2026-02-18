@@ -88,6 +88,7 @@ class PatentPageService:
         return {
             "patent": {
                 "appln_id": int(core["appln_id"]),
+                "ep_publn_id_full": core.get("ep_publn_id_full"),
                 "title": core["appln_title"],
                 "application_date": str(core["filing_date"]) if core["filing_date"] else None,
                 "publication_date": str(core["publn_date"]) if core["publn_date"] else None,

@@ -28,16 +28,14 @@ class PortfolioPatentRepository:
         base_query = f"""
         FROM patent_portfolio_map ppm
         JOIN patent_core pc ON pc.appln_id = ppm.appln_id
-        JOIN patent_core_w_ranks pr ON pr.appln_id = ppm.appln_id
+        LEFT JOIN patent_core_w_ranks pr ON pr.appln_id = ppm.appln_id
         WHERE {where_clause}
         """
 
         # total count
         count_query = f"""
         SELECT COUNT(DISTINCT pc.appln_id)
-        FROM patent_portfolio_map ppm
-        JOIN patent_core pc ON pc.appln_id = ppm.appln_id
-        WHERE {where_clause}
+        {base_query}
         """
         total = conn.execute(count_query, params).fetchone()[0]
         
@@ -53,9 +51,10 @@ class PortfolioPatentRepository:
             pc.is_abandoned,
             pc.publn_auth,
             pr.blocking_power_pct,
-            pc.filing_date AS filing_date
+            pc.filing_date AS filing_date,
+            pc.ep_publn_id_full
         {base_query}
-        ORDER BY {sort_col} {order}
+        ORDER BY {sort_col} {order} NULLS LAST
         LIMIT ? OFFSET ?
         """
 

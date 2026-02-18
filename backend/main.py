@@ -50,8 +50,7 @@ app.add_middleware(
 
 app.include_router(
     patent_router,
-    prefix="/api/v1",
-    tags=["Patents"]
+    prefix="/api/v1"
 )
 
 app.include_router(portfolios_router)

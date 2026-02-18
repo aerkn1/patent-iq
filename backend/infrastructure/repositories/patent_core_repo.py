@@ -12,6 +12,7 @@ class PatentCoreRepository:
         SELECT
             appln_id,
             appln_title,
+            ep_publn_id_full,
             filing_date,
             grant_date,
             publn_date,

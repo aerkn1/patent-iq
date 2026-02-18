@@ -9,12 +9,9 @@ from application.services.portfolio_analytics_service import PortfolioAnalyticsS
 from application.services.portfolio_patents_service import PortfolioPatentsService
 from application.services.portfolio_licensing_service import PortfolioLicensingService
 from application.services.portfolio_citation_service import PortfolioCitationService
-from application.services.portfolio_advisory_service import PortfolioAdvisoryService
-from application.services.portfolio_evolution_advisory_service import PortfolioEvolutionAdvisoryService
 from application.services.portfolio_forecast_service import PortfolioForecastService
-from application.llm.config import SNAPSHOT_DATE_FIXED_V1
+
 from domain.schemas.portfolio_citation import PortfolioCitationMetricsResponse, PortfolioCitationTimeSeriesResponse
-from domain.schemas.advisory_outputs import PortfolioAdvisoryOutput, PortfolioEvolutionAdvisoryOutput
 from domain.schemas.forecast import PortfolioForecastResponse as PortfolioForecastSchema
 from domain.errors import ValidationError, NotFoundError, DataUnavailableError, InternalServerError
 
@@ -269,60 +266,7 @@ async def get_portfolio_citation_forecast_timeseries(
         logger.exception("Error fetching portfolio citation forecast timeseries", extra={"owner_id": owner_id})
         return JSONResponse(status_code=500, content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected error"})
 
-@router.get("/{owner_id}/advisory", response_model=PortfolioAdvisoryOutput)
-async def get_portfolio_advisory(
-    owner_id: int,
-    snapshot_date: str = Query(SNAPSHOT_DATE_FIXED_V1),
-    bucket: Optional[str] = Query(None, description="Advisory bucket (strategy, technology, commercial, legal)"),
-    force_refresh: bool = Query(False),
-):
-    try:
-        if snapshot_date != SNAPSHOT_DATE_FIXED_V1:
-            raise ValidationError(f"snapshot_date must be '{SNAPSHOT_DATE_FIXED_V1}'")
 
-        payload = await PortfolioAdvisoryService().get_advisory(owner_id, bucket=bucket, force_refresh=force_refresh)
-        return JSONResponse(status_code=200, content=payload)
-
-    except ValidationError as e:
-        return JSONResponse(status_code=400, content={"error": "INVALID_REQUEST", "message": str(e)})
-
-    except NotFoundError as e:
-        return JSONResponse(status_code=404, content={"error": "NOT_FOUND", "message": str(e)})
-
-    except DataUnavailableError as e:
-        logger.warning(f"Advisory unavailable for owner_id={owner_id}: {e}", exc_info=True)
-        return JSONResponse(status_code=503, content={"error": "LLM_UNAVAILABLE", "message": "Advisory temporarily unavailable"})
-
-    except Exception:
-        logger.exception("Unhandled portfolio advisory error", extra={"owner_id": owner_id})
-        return JSONResponse(status_code=500, content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected error"})
-
-
-@router.get("/{owner_id}/evolution-advisory", response_model=PortfolioEvolutionAdvisoryOutput)
-async def get_portfolio_evolution_advisory(
-    owner_id: int,
-    snapshot_date: str = Query(SNAPSHOT_DATE_FIXED_V1),
-    force_refresh: bool = Query(False),
-):
-    try:
-        if snapshot_date != SNAPSHOT_DATE_FIXED_V1:
-            raise ValidationError(f"snapshot_date must be '{SNAPSHOT_DATE_FIXED_V1}'")
-
-        payload = await PortfolioEvolutionAdvisoryService().get_advisory(owner_id, force_refresh=force_refresh)
-        return JSONResponse(status_code=200, content=payload)
-
-    except ValidationError as e:
-        return JSONResponse(status_code=400, content={"error": "INVALID_REQUEST", "message": str(e)})
-
-    except NotFoundError as e:
-        return JSONResponse(status_code=404, content={"error": "NOT_FOUND", "message": str(e)})
-
-    except DataUnavailableError:
-        return JSONResponse(status_code=503, content={"error": "LLM_UNAVAILABLE", "message": "Advisory temporarily unavailable"})
-
-    except Exception:
-        logger.exception("Unhandled portfolio evolution advisory error", extra={"owner_id": owner_id})
-        return JSONResponse(status_code=500, content={"error": "INTERNAL_SERVER_ERROR", "message": "Unexpected error"})
 
 
 @router.get("/{owner_id}/forecast", response_model=PortfolioForecastSchema)

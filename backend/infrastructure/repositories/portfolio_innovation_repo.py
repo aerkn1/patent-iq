@@ -32,6 +32,7 @@ class PortfolioInnovationRepository:
         q = """
         SELECT
             pc.appln_id,
+            pc.ep_publn_id_full,
             pc.innovation_score
         FROM patent_portfolio_map ppm
         JOIN patent_core pc ON pc.appln_id = ppm.appln_id
@@ -46,6 +47,7 @@ class PortfolioInnovationRepository:
         return [
             {
                 "appln_id": int(r["appln_id"]),
+                "ep_publn_id_full": str(r["ep_publn_id_full"]) if r["ep_publn_id_full"] is not None else None,
                 "innovation_score": round(float(r["innovation_score"]), 4),
             }
             for _, r in df.iterrows()

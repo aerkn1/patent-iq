@@ -32,9 +32,11 @@ class PortfolioBlockingRepository:
         q = """
         SELECT
             pc.appln_id,
+            core.ep_publn_id_full,
             pc.blocking_power_pct
         FROM patent_portfolio_map ppm
         JOIN patent_core_w_ranks pc ON pc.appln_id = ppm.appln_id
+        JOIN patent_core core ON core.appln_id = ppm.appln_id
         WHERE ppm.owner_id = ?
         ORDER BY pc.blocking_power_pct DESC
         LIMIT ?
@@ -46,6 +48,7 @@ class PortfolioBlockingRepository:
         return [
             {
                 "appln_id": int(r["appln_id"]),
+                "ep_publn_id_full": str(r["ep_publn_id_full"]) if r["ep_publn_id_full"] is not None else None,
                 "blocking_power_pct": round(float(r["blocking_power_pct"]), 4),
             }
             for _, r in df.iterrows()

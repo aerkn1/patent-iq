@@ -128,5 +128,14 @@ class PortfolioAnalyticsService:
     
     @staticmethod
     def _dominant_blocking_driver(drivers: dict) -> str:
-        filtered = {k: abs(v) for k, v in drivers.items()}
-        return max(filtered, key=filtered.get) if filtered else "UNKNOWN"
+        # Normalize drivers to roughly 0-100 scale for fair comparison
+        # Ratios (Forward, Family, Self-Blocking) are scaled by 100 to match the visual charts
+        # and the likely scale of 'tech_breadth_penalty'.
+        ratio_keys = {"forward_impact_score", "family_breadth_normalized", "self_blocking_rate"}
+        
+        normalized = {
+            k: abs(v) * 100 if k in ratio_keys else abs(v)
+            for k, v in drivers.items()
+        }
+        
+        return max(normalized, key=normalized.get) if normalized else "UNKNOWN"
