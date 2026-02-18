@@ -5,7 +5,16 @@ import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import {
 
 } from "lucide-react"
@@ -30,7 +39,6 @@ export default function PortfolioExplorerPage() {
     "AD", "AE", "AG", "AL", "AM", "AO", "AR", "AT", "AU", "AW", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BM", "BN", "BO", "BR", "BS", "BW", "BY", "BZ", "CA", "CH", "CL", "CM", "CN", "CO", "CR", "CU", "CW", "CY", "CZ", "DE", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "ES", "FI", "FJ", "FR", "GB", "GD", "GE", "GH", "GI", "GR", "GT", "HK", "HN", "HR", "HU", "ID", "IE", "IL", "IN", "IR", "IS", "IT", "JM", "JO", "JP", "KE", "KG", "KH", "KN", "KP", "KR", "KW", "KY", "KZ", "LB", "LC", "LI", "LK", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MG", "MK", "MN", "MO", "MT", "MU", "MW", "MX", "MY", "NA", "NG", "NI", "NL", "NO", "NZ", "OM", "PA", "PE", "PG", "PH", "PK", "PL", "PR", "PT", "QA", "RO", "RS", "RU", "SA", "SC", "SD", "SE", "SG", "SI", "SK", "SM", "SV", "SY", "TC", "TH", "TJ", "TM", "TN", "TR", "TT", "TW", "TZ", "UA", "UG", "US", "UY", "UZ", "VC", "VE", "VG", "VN", "WS", "ZA", "ZM", "ZW"
   ]
 
-  // Common CPC codes for dropdown
   // Common CPC codes for dropdown (Top 50 from parquet)
   const cpcCodes = [
     { code: "G06F", label: "G06F - Electric Digital Data Processing" },
@@ -86,7 +94,6 @@ export default function PortfolioExplorerPage() {
   ]
 
   // Industry codes for dropdown
-  // Industry codes for dropdown
   const industries = [
     { code: "ANALYSIS_OF_BIOLOGICAL_MATERIALS", label: "Analysis Of Biological Materials" },
     { code: "AUDIO_VISUAL_TECHNOLOGY", label: "Audio Visual Technology" },
@@ -124,6 +131,12 @@ export default function PortfolioExplorerPage() {
     { code: "THERMAL_PROCESSES_AND_APPARATUS", label: "Thermal Processes And Apparatus" },
     { code: "TRANSPORT", label: "Transport" },
   ]
+
+  const topCountries = ["US", "CN", "JP", "DE", "KR", "GB", "FR", "IN", "CA", "IT"]
+  const restCountries = countries
+    .filter((country) => !topCountries.includes(country))
+    .slice()
+    .sort()
 
   // Fetch discover data based on dimension and value
   const fetchDiscoverData = async (dim: "COUNTRY" | "CPC" | "INDUSTRY", value: string) => {
@@ -198,11 +211,23 @@ export default function PortfolioExplorerPage() {
                   <SelectValue placeholder="Select Country" />
                 </SelectTrigger>
                 <SelectContent>
-                  {countries.map((country) => (
-                    <SelectItem key={country} value={country}>
-                      {country}
-                    </SelectItem>
-                  ))}
+                  <SelectGroup>
+                    <SelectLabel>Top Countries</SelectLabel>
+                    {topCountries.map((country) => (
+                      <SelectItem key={country} value={country}>
+                        {country}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                  <SelectSeparator />
+                  <SelectGroup>
+                    <SelectLabel>All Countries</SelectLabel>
+                    {restCountries.map((country) => (
+                      <SelectItem key={country} value={country}>
+                        {country}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 </SelectContent>
               </Select>
             )}
@@ -210,7 +235,7 @@ export default function PortfolioExplorerPage() {
             {/* CPC Selector */}
             {dimension === "CPC" && (
               <Select value={selectedCPC} onValueChange={setSelectedCPC}>
-                <SelectTrigger className="w-[400px]">
+                <SelectTrigger className="w-[200px]">
                   <SelectValue placeholder="Select CPC Code" />
                 </SelectTrigger>
                 <SelectContent>
@@ -226,7 +251,7 @@ export default function PortfolioExplorerPage() {
             {/* Industry Selector */}
             {dimension === "INDUSTRY" && (
               <Select value={selectedIndustry} onValueChange={setSelectedIndustry}>
-                <SelectTrigger className="w-[400px]">
+                <SelectTrigger className="w-[240px]">
                   <SelectValue placeholder="Select Industry" />
                 </SelectTrigger>
                 <SelectContent>

@@ -97,12 +97,17 @@ function PortfolioAnalysisContent() {
   const [licensingLoading, setLicensingLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Patents tab filters and pagination
+  // Patents tab filters and pagination (applied vs draft)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedStatus, setSelectedStatus] = useState<string[]>([])
   const [selectedJurisdictions, setSelectedJurisdictions] = useState<string[]>([])
   const [blockingPowerRange, setBlockingPowerRange] = useState<[number, number]>([0, 100])
   const [innovationScoreRange, setInnovationScoreRange] = useState<[number, number]>([0, 100])
+  const [draftCategories, setDraftCategories] = useState<string[]>([])
+  const [draftStatus, setDraftStatus] = useState<string[]>([])
+  const [draftJurisdictions, setDraftJurisdictions] = useState<string[]>([])
+  const [draftBlockingPowerRange, setDraftBlockingPowerRange] = useState<[number, number]>([0, 100])
+  const [draftInnovationScoreRange, setDraftInnovationScoreRange] = useState<[number, number]>([0, 100])
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(25)
 
@@ -434,9 +439,9 @@ function PortfolioAnalysisContent() {
       fetchPortfolioPatents(ownerId.trim())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, ownerId, currentPage, pageSize, selectedCategories])
+  }, [activeTab, ownerId, currentPage, pageSize, selectedCategories, selectedStatus, selectedJurisdictions, blockingPowerRange, innovationScoreRange])
 
-  // Reset page when filters change
+  // Reset page when applied filters change
   useEffect(() => {
     if (activeTab === "patents") {
       setCurrentPage(1)
@@ -501,6 +506,25 @@ function PortfolioAnalysisContent() {
       overall_avg: citationMetrics.citation_volume.cites_per_patent
     }
   } : null
+
+  const normalizedList = (values: string[]) => [...values].sort().join("|")
+
+  const hasPendingFilterChanges =
+    normalizedList(draftCategories) !== normalizedList(selectedCategories) ||
+    normalizedList(draftStatus) !== normalizedList(selectedStatus) ||
+    normalizedList(draftJurisdictions) !== normalizedList(selectedJurisdictions) ||
+    draftBlockingPowerRange[0] !== blockingPowerRange[0] ||
+    draftBlockingPowerRange[1] !== blockingPowerRange[1] ||
+    draftInnovationScoreRange[0] !== innovationScoreRange[0] ||
+    draftInnovationScoreRange[1] !== innovationScoreRange[1]
+
+  const applyDraftFilters = () => {
+    setSelectedCategories(draftCategories)
+    setSelectedStatus(draftStatus)
+    setSelectedJurisdictions(draftJurisdictions)
+    setBlockingPowerRange(draftBlockingPowerRange)
+    setInnovationScoreRange(draftInnovationScoreRange)
+  }
 
   return (
     <>
@@ -1001,7 +1025,7 @@ function PortfolioAnalysisContent() {
                             const total = Object.values(categoryCounts).reduce((a, b) => a + b, 0)
                             return Object.entries(categoryCounts).map(([category, count]) => {
                               const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : "0"
-                              const isSelected = selectedCategories.includes(category as string)
+                              const isSelected = draftCategories.includes(category as string)
 
                               return (
                                 <div key={category}>
@@ -1012,9 +1036,9 @@ function PortfolioAnalysisContent() {
                                         size="sm"
                                         onClick={() => {
                                           if (isSelected) {
-                                            setSelectedCategories(selectedCategories.filter((c) => c !== category as string))
+                                            setDraftCategories(draftCategories.filter((c) => c !== category as string))
                                           } else {
-                                            setSelectedCategories([...selectedCategories, category as string])
+                                            setDraftCategories([...draftCategories, category as string])
                                           }
                                         }}
                                         className={cn(
@@ -1048,6 +1072,14 @@ function PortfolioAnalysisContent() {
                             </CardTitle>
                           </CardHeader>
                           <CardContent className="space-y-6">
+                            <Button
+                              size="sm"
+                              className="w-full"
+                              onClick={applyDraftFilters}
+                              disabled={!hasPendingFilterChanges}
+                            >
+                              Apply Filters
+                            </Button>
                             {/* Category Filter */}
                             <div>
                               <Label className="text-sm font-semibold mb-3 block">Category</Label>
@@ -1056,12 +1088,12 @@ function PortfolioAnalysisContent() {
                                   <div key={category} className="flex items-center space-x-2">
                                     <Checkbox
                                       id={`category-${category}`}
-                                      checked={selectedCategories.includes(category)}
+                                      checked={draftCategories.includes(category)}
                                       onCheckedChange={(checked) => {
                                         if (checked) {
-                                          setSelectedCategories([...selectedCategories, category])
+                                          setDraftCategories([...draftCategories, category])
                                         } else {
-                                          setSelectedCategories(selectedCategories.filter((c) => c !== category))
+                                          setDraftCategories(draftCategories.filter((c) => c !== category))
                                         }
                                       }}
                                     />
@@ -1088,12 +1120,12 @@ function PortfolioAnalysisContent() {
                                   <div key={status} className="flex items-center space-x-2">
                                     <Checkbox
                                       id={`status-${status}`}
-                                      checked={selectedStatus.includes(status)}
+                                      checked={draftStatus.includes(status)}
                                       onCheckedChange={(checked) => {
                                         if (checked) {
-                                          setSelectedStatus([...selectedStatus, status])
+                                          setDraftStatus([...draftStatus, status])
                                         } else {
-                                          setSelectedStatus(selectedStatus.filter((s) => s !== status))
+                                          setDraftStatus(draftStatus.filter((s) => s !== status))
                                         }
                                       }}
                                     />
@@ -1118,12 +1150,12 @@ function PortfolioAnalysisContent() {
                                   <div key={jurisdiction} className="flex items-center space-x-2">
                                     <Checkbox
                                       id={`jurisdiction-${jurisdiction}`}
-                                      checked={selectedJurisdictions.includes(jurisdiction)}
+                                      checked={draftJurisdictions.includes(jurisdiction)}
                                       onCheckedChange={(checked) => {
                                         if (checked) {
-                                          setSelectedJurisdictions([...selectedJurisdictions, jurisdiction])
+                                          setDraftJurisdictions([...draftJurisdictions, jurisdiction])
                                         } else {
-                                          setSelectedJurisdictions(selectedJurisdictions.filter((j) => j !== jurisdiction))
+                                          setDraftJurisdictions(draftJurisdictions.filter((j) => j !== jurisdiction))
                                         }
                                       }}
                                     />
@@ -1143,11 +1175,11 @@ function PortfolioAnalysisContent() {
                             {/* Blocking Power Range */}
                             <div>
                               <Label className="text-xs font-semibold mb-2 block">
-                                Blocking: {blockingPowerRange[0]}% - {blockingPowerRange[1]}%
+                                Blocking: {draftBlockingPowerRange[0]}% - {draftBlockingPowerRange[1]}%
                               </Label>
                               <Slider
-                                value={blockingPowerRange}
-                                onValueChange={(value) => setBlockingPowerRange(value as [number, number])}
+                                value={draftBlockingPowerRange}
+                                onValueChange={(value) => setDraftBlockingPowerRange(value as [number, number])}
                                 min={0}
                                 max={100}
                                 step={1}
@@ -1160,11 +1192,11 @@ function PortfolioAnalysisContent() {
                             {/* Innovation Score Range */}
                             <div>
                               <Label className="text-xs font-semibold mb-2 block">
-                                Innovation: {innovationScoreRange[0]}% - {innovationScoreRange[1]}%
+                                Innovation: {draftInnovationScoreRange[0]}% - {draftInnovationScoreRange[1]}%
                               </Label>
                               <Slider
-                                value={innovationScoreRange}
-                                onValueChange={(value) => setInnovationScoreRange(value as [number, number])}
+                                value={draftInnovationScoreRange}
+                                onValueChange={(value) => setDraftInnovationScoreRange(value as [number, number])}
                                 min={0}
                                 max={100}
                                 step={1}
@@ -1173,17 +1205,22 @@ function PortfolioAnalysisContent() {
                             </div>
 
                             {/* Clear Filters */}
-                            {(selectedCategories.length > 0 ||
-                              selectedStatus.length > 0 ||
-                              selectedJurisdictions.length > 0 ||
-                              blockingPowerRange[0] > 0 ||
-                              blockingPowerRange[1] < 100 ||
-                              innovationScoreRange[0] > 0 ||
-                              innovationScoreRange[1] < 100) && (
+                            {(draftCategories.length > 0 ||
+                              draftStatus.length > 0 ||
+                              draftJurisdictions.length > 0 ||
+                              draftBlockingPowerRange[0] > 0 ||
+                              draftBlockingPowerRange[1] < 100 ||
+                              draftInnovationScoreRange[0] > 0 ||
+                              draftInnovationScoreRange[1] < 100) && (
                                 <Button
                                   variant="outline"
                                   size="sm"
                                   onClick={() => {
+                                    setDraftCategories([])
+                                    setDraftStatus([])
+                                    setDraftJurisdictions([])
+                                    setDraftBlockingPowerRange([0, 100])
+                                    setDraftInnovationScoreRange([0, 100])
                                     setSelectedCategories([])
                                     setSelectedStatus([])
                                     setSelectedJurisdictions([])
