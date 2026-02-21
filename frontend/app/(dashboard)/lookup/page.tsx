@@ -2,12 +2,12 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { useSearchParams } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { fetchJson, getPatentUrl, getPatentAnalysisUrl, getPatentCitationMetricsUrl, getPatentCitationTimeSeriesUrl } from "@/lib/api"
-import type { PatentPageResponse, PatentAnalysisResponse } from "@/lib/types/patent"
+import type { PatentPageResponse, PatentAnalysisResponse, TechnologyProfile, MarketProfile } from "@/lib/types/patent"
 import type { CitationMetricsResponse, CitationTimeSeriesResponse } from "@/lib/types/citation"
 
 import { cn, formatLabel } from "@/lib/utils"
@@ -67,8 +67,7 @@ export default function PatentLookupPage() {
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState("overview")
   const [patentId, setPatentId] = useState(() => {
-    // Get patentId from URL params if available, otherwise use default
-    return searchParams?.get("patentId") || "482020668"
+    return searchParams?.get("patentId") || ""
   })
   const [loading, setLoading] = useState(false)
   const [analysisLoading, setAnalysisLoading] = useState(false)
@@ -114,35 +113,28 @@ export default function PatentLookupPage() {
     }
   }, [patentId])
 
-  // Fetch citation metrics and time series
+  // Fetch citation metrics and time series in parallel
   useEffect(() => {
     if (patentData?.patent.appln_id) {
+      const applnId = patentData.patent.appln_id.toString()
       setMetricsLoading(true)
-      setCitationMetrics(null)
       setTimeSeriesLoading(true)
+      setCitationMetrics(null)
       setCitationTimeSeries(null)
 
-      // Fetch Metrics
-      fetchJson<CitationMetricsResponse>(getPatentCitationMetricsUrl(patentData.patent.appln_id.toString()))
-        .then(data => {
-          setCitationMetrics(data)
+      Promise.all([
+        fetchJson<CitationMetricsResponse>(getPatentCitationMetricsUrl(applnId)),
+        fetchJson<CitationTimeSeriesResponse>(getPatentCitationTimeSeriesUrl(applnId)),
+      ])
+        .then(([metrics, timeSeries]) => {
+          setCitationMetrics(metrics)
+          setCitationTimeSeries(timeSeries)
         })
         .catch(e => {
-          console.error("Failed to fetch citation metrics:", e)
+          console.error("Failed to fetch citation data:", e)
         })
         .finally(() => {
           setMetricsLoading(false)
-        })
-
-      // Fetch Time Series
-      fetchJson<CitationTimeSeriesResponse>(getPatentCitationTimeSeriesUrl(patentData.patent.appln_id.toString()))
-        .then(data => {
-          setCitationTimeSeries(data)
-        })
-        .catch(e => {
-          console.error("Failed to fetch citation time series:", e)
-        })
-        .finally(() => {
           setTimeSeriesLoading(false)
         })
     }
@@ -176,8 +168,8 @@ export default function PatentLookupPage() {
   // Use real analysis data from API
   const advancedData = analysisData
 
-  // Prepare radar chart data
-  const radarData = overviewData
+  // Prepare radar chart data — memoized to avoid reconstructing on every render
+  const radarData = useMemo(() => overviewData
     ? [
       { category: "Technology", value: overviewData.technology.percentile_global, max: 100, description: "Composite measure of technical novelty, citation quality, CPC diversity, and technological impact. Normalized against global patent database." },
       { category: "Market", value: overviewData.market.percentile_global, max: 100, description: "Measures market breadth through industry coverage, jurisdictional reach, and economic sector alignment. Higher scores indicate broader commercial applicability." },
@@ -185,7 +177,7 @@ export default function PatentLookupPage() {
       { category: "Licensing", value: overviewData.scores.licensing_readiness.percentile, max: 100, description: "Licensing Readiness indicates how well-positioned this patent is for commercial licensing. Considers legal strength, market relevance, and citation impact." },
       { category: "Legal", value: overviewData.scores.legal_strength.percentile, max: 100, description: "Legal Strength assesses enforceability based on claim scope, prosecution history, oppositions, and legal events. Higher scores indicate more defensible patents." },
     ]
-    : []
+    : [], [overviewData])
 
   // Prepare pie chart data for advanced view
   const cpcPieData =
@@ -200,14 +192,17 @@ export default function PatentLookupPage() {
       value: ind.weight * 100,
     })) || []
 
-  // Transform API data for chart
-  const citationEvolutionData: CitationYearData[] = citationTimeSeries?.series.map(point => ({
-    year: citationTimeSeries.filing_date + point.age_year,
-    early: 0, // Not available in API yet
-    mid: point.new_forward_cites, // Treat all as mid/total for now to show color
-    late: 0, // Not available in API yet
-    total: point.new_forward_cites
-  })) || []
+  // Transform API data for chart — memoized to avoid reconstructing on every render
+  const citationEvolutionData: CitationYearData[] = useMemo(() =>
+    citationTimeSeries?.series.map(point => ({
+      year: citationTimeSeries.filing_date + point.age_year,
+      early: 0, // Not available in API yet
+      mid: point.new_forward_cites, // Treat all as mid/total for now to show color
+      late: 0, // Not available in API yet
+      total: point.new_forward_cites
+    })) || [],
+    [citationTimeSeries]
+  )
 
   // Transform API data to LifecycleMetrics
   const lifecycleMetrics: LifecycleMetrics = citationMetrics ? {
@@ -246,6 +241,8 @@ export default function PatentLookupPage() {
 
   const COLORS = RED_PALETTE
 
+  const handlePatentSelect = useCallback((applnId: string) => setPatentId(applnId), [])
+
   return (
     <>
       {/* Search Input */}
@@ -254,7 +251,7 @@ export default function PatentLookupPage() {
           <div className="flex gap-2">
             <div className="relative flex-1">
               <PatentSearch
-                onSelect={(applnId) => setPatentId(applnId)}
+                onSelect={handlePatentSelect}
                 placeholder="Search by publication ID (e.g., EP1234567A1)"
               />
             </div>
@@ -780,7 +777,7 @@ export default function PatentLookupPage() {
                                   const top5 = sorted.slice(0, 5)
                                   const top_k_share = top5.reduce((sum, item) => sum + item.weight, 0)
 
-                                  const profile = {
+                                  const profile: TechnologyProfile = {
                                     axis_score: advancedData.technology.diversification.normalized,
                                     diversification: {
                                       entropy_norm: advancedData.technology.diversification.normalized,
@@ -790,7 +787,7 @@ export default function PatentLookupPage() {
                                     },
                                     top_cpc_classes: advancedData.technology.distribution.cpc_subclasses
                                   }
-                                  const insights = getTechnologyInsights(profile as any)
+                                  const insights = getTechnologyInsights(profile)
 
                                   return (
                                     <>
@@ -895,7 +892,7 @@ export default function PatentLookupPage() {
                                   const top5 = sorted.slice(0, 5)
                                   const top_k_share = top5.reduce((sum, item) => sum + item.weight, 0)
 
-                                  const profile = {
+                                  const profile: MarketProfile = {
                                     axis_score: advancedData.market.diversification.normalized,
                                     diversification: {
                                       entropy_norm: advancedData.market.diversification.normalized,
@@ -905,7 +902,7 @@ export default function PatentLookupPage() {
                                     },
                                     top_industries: advancedData.market.distribution.industries
                                   }
-                                  const insights = getMarketInsights(profile as any)
+                                  const insights = getMarketInsights(profile)
 
                                   return (
                                     <>

@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { TrendingUp } from "lucide-react"
+import { ChartTooltip } from "@/components/charts/ChartTooltip"
+import { CHART_COLORS } from "@/lib/chart-config"
 
 export interface CitationYearData {
     year: number
@@ -34,52 +36,6 @@ export function CitationEvolutionChart({ data }: CitationEvolutionChartProps) {
         }
         return { ...item, yoy_growth }
     })
-
-    // Custom tooltip
-    const CustomTooltip = ({ active, payload, label }: any) => {
-        if (active && payload && payload.length) {
-            return (
-                <div className="bg-background border border-border p-3 rounded-lg shadow-lg text-sm">
-                    <div className="font-bold mb-2">{label}</div>
-                    {showSplit ? (
-                        <>
-                            <div className="flex items-center gap-2 mb-1">
-                                <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                                <span className="text-muted-foreground">Early:</span>
-                                <span className="font-mono font-medium">{payload.find((p: any) => p.dataKey === "early")?.value || 0}</span>
-                            </div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <div className="w-2 h-2 rounded-full bg-blue-500" />
-                                <span className="text-muted-foreground">Mid:</span>
-                                <span className="font-mono font-medium">{payload.find((p: any) => p.dataKey === "mid")?.value || 0}</span>
-                            </div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <div className="w-2 h-2 rounded-full bg-amber-500" />
-                                <span className="text-muted-foreground">Late:</span>
-                                <span className="font-mono font-medium">{payload.find((p: any) => p.dataKey === "late")?.value || 0}</span>
-                            </div>
-                        </>
-                    ) : (
-                        <div className="flex items-center gap-2 mb-1">
-                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: payload[0].color }} />
-                            <span className="text-muted-foreground">Citations:</span>
-                            <span className="font-mono font-medium">{payload.find((p: any) => p.dataKey === "total")?.value || 0}</span>
-                        </div>
-                    )}
-                    {showYoY && (
-                        <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border">
-                            <div className="w-2 h-2 rounded-full bg-red-500" />
-                            <span className="text-muted-foreground">YoY Growth:</span>
-                            <span className="font-mono font-medium">
-                                {payload.find((p: any) => p.dataKey === "yoy_growth")?.value?.toFixed(1) || "0.0"}%
-                            </span>
-                        </div>
-                    )}
-                </div>
-            )
-        }
-        return null
-    }
 
     return (
         <Card>
@@ -111,58 +67,58 @@ export function CitationEvolutionChart({ data }: CitationEvolutionChartProps) {
                     <ResponsiveContainer width="100%" height="100%">
                         <ComposedChart data={enrichedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                             <defs>
-                                <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0.1} />
+                                <linearGradient id="citationColorTotal" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor={CHART_COLORS.indigo} stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor={CHART_COLORS.indigo} stopOpacity={0.1} />
                                 </linearGradient>
-                                <linearGradient id="colorEarly" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
+                                <linearGradient id="citationColorEarly" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor={CHART_COLORS.green} stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor={CHART_COLORS.green} stopOpacity={0.1} />
                                 </linearGradient>
-                                <linearGradient id="colorMid" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
+                                <linearGradient id="citationColorMid" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor={CHART_COLORS.blue} stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor={CHART_COLORS.blue} stopOpacity={0.1} />
                                 </linearGradient>
-                                <linearGradient id="colorLate" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.1} />
+                                <linearGradient id="citationColorLate" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor={CHART_COLORS.amber} stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor={CHART_COLORS.amber} stopOpacity={0.1} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} />
                             <XAxis
                                 dataKey="year"
-                                tick={{ fontSize: 12, fill: "#6b7280" }}
+                                tick={{ fontSize: 12, fill: CHART_COLORS.gray }}
                                 axisLine={false}
                                 tickLine={false}
                             />
                             <YAxis
                                 yAxisId="left"
-                                tick={{ fontSize: 12, fill: "#6b7280" }}
+                                tick={{ fontSize: 12, fill: CHART_COLORS.gray }}
                                 axisLine={false}
                                 tickLine={false}
-                                label={{ value: 'Annual Citations', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#6b7280', fontSize: 12 } }}
+                                label={{ value: 'Annual Citations', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: CHART_COLORS.gray, fontSize: 12 } }}
                             />
                             {showYoY && (
                                 <YAxis
                                     yAxisId="right"
                                     orientation="right"
-                                    tick={{ fontSize: 12, fill: "#ef4444" }}
+                                    tick={{ fontSize: 12, fill: CHART_COLORS.red }}
                                     axisLine={false}
                                     tickLine={false}
                                     unit="%"
                                     domain={['auto', 'auto']}
                                 />
                             )}
-                            <Tooltip content={<CustomTooltip />} />
+                            <Tooltip content={<ChartTooltip formatYoY />} />
 
                             {showSplit ? (
                                 <>
-                                    <Area yAxisId="left" type="monotone" dataKey="late" stackId="1" stroke="#f59e0b" fill="url(#colorLate)" />
-                                    <Area yAxisId="left" type="monotone" dataKey="mid" stackId="1" stroke="#3b82f6" fill="url(#colorMid)" />
-                                    <Area yAxisId="left" type="monotone" dataKey="early" stackId="1" stroke="#10b981" fill="url(#colorEarly)" />
+                                    <Area yAxisId="left" type="monotone" dataKey="late" stackId="1" stroke={CHART_COLORS.amber} fill="url(#citationColorLate)" />
+                                    <Area yAxisId="left" type="monotone" dataKey="mid" stackId="1" stroke={CHART_COLORS.blue} fill="url(#citationColorMid)" />
+                                    <Area yAxisId="left" type="monotone" dataKey="early" stackId="1" stroke={CHART_COLORS.green} fill="url(#citationColorEarly)" />
                                 </>
                             ) : (
-                                <Area yAxisId="left" type="monotone" dataKey="total" stroke="#8884d8" fill="url(#colorTotal)" strokeWidth={2} />
+                                <Area yAxisId="left" type="monotone" dataKey="total" stroke={CHART_COLORS.indigo} fill="url(#citationColorTotal)" strokeWidth={2} />
                             )}
 
                             {showYoY && (
@@ -171,7 +127,7 @@ export function CitationEvolutionChart({ data }: CitationEvolutionChartProps) {
                                     type="monotone"
                                     dataKey="yoy_growth"
                                     name="YoY Growth"
-                                    stroke="#ef4444"
+                                    stroke={CHART_COLORS.red}
                                     strokeWidth={2}
                                     dot={{ r: 3 }}
                                     strokeDasharray="5 5"
