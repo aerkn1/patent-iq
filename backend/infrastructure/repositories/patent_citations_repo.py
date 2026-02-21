@@ -3,7 +3,7 @@ from infrastructure.duckdb.connection import DuckDBConnection
 
 class PatentCitationsRepository:
 
-    def get_cumulative_timeseries(self, appln_id: int) -> dict | None:
+    def get_cumulative_timeseries(self, appln_id: int) -> dict:
         """Return cumulative forward citation timeseries with calendar years."""
         conn = DuckDBConnection.get_connection()
 

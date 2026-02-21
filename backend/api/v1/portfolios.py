@@ -41,10 +41,7 @@ async def get_portfolio_overview(
         )
         return JSONResponse(
             status_code=400,
-            content={
-                "error": "INVALID_REQUEST",
-                "message": str(e),
-            },
+            content={"error": {"code": "INVALID_REQUEST", "message": str(e)}},
         )
 
     except NotFoundError as e:
@@ -54,10 +51,7 @@ async def get_portfolio_overview(
         )
         return JSONResponse(
             status_code=404,
-            content={
-                "error": "NOT_FOUND",
-                "message": str(e),
-            },
+            content={"error": {"code": "NOT_FOUND", "message": str(e)}},
         )
 
     except Exception as e:
@@ -67,10 +61,7 @@ async def get_portfolio_overview(
         )
         return JSONResponse(
             status_code=500,
-            content={
-                "error": "INTERNAL_SERVER_ERROR",
-                "message": "Unexpected server error",
-            },
+            content={"error": {"code": "INTERNAL_SERVER_ERROR", "message": "Unexpected server error"}},
         )
 
 @router.get("/{owner_id}/analytics")
@@ -86,10 +77,7 @@ async def get_portfolio_analytics(owner_id: int):
         )
         return JSONResponse(
             status_code=404,
-            content={
-                "error": "NOT_FOUND",
-                "message": str(e),
-            },
+            content={"error": {"code": "NOT_FOUND", "message": str(e)}},
         )
 
     except Exception as e:
@@ -99,10 +87,7 @@ async def get_portfolio_analytics(owner_id: int):
         )
         return JSONResponse(
             status_code=500,
-            content={
-                "error": "INTERNAL_SERVER_ERROR",
-                "message": "Unexpected server error",
-            },
+            content={"error": {"code": "INTERNAL_SERVER_ERROR", "message": "Unexpected server error"}},
         )
 
 @router.get("/discover")
@@ -128,10 +113,7 @@ async def discover_portfolios(
         )
         return JSONResponse(
             status_code=404,
-            content={
-                "error": "NOT_FOUND",
-                "message": str(e),
-            },
+            content={"error": {"code": "NOT_FOUND", "message": str(e)}},
         )
 
     except Exception as e:
@@ -140,10 +122,7 @@ async def discover_portfolios(
         )
         return JSONResponse(
             status_code=500,
-            content={
-                "error": "INTERNAL_SERVER_ERROR",
-                "message": "Unexpected server error",
-            },
+            content={"error": {"code": "INTERNAL_SERVER_ERROR", "message": "Unexpected server error"}},
         )
 
 
@@ -159,10 +138,7 @@ async def search_portfolios(
         logger.exception("Portfolio search failed", extra={"query": q})
         return JSONResponse(
             status_code=500,
-            content={
-                "error": "INTERNAL_SERVER_ERROR",
-                "message": "Unexpected server error",
-            },
+            content={"error": {"code": "INTERNAL_SERVER_ERROR", "message": "Unexpected server error"}},
         )
 
 
@@ -198,10 +174,7 @@ async def get_portfolio_patents(
         )
         return JSONResponse(
             status_code=404,
-            content={
-                "error": "NOT_FOUND",
-                "message": str(e),
-            },
+            content={"error": {"code": "NOT_FOUND", "message": str(e)}},
         )
 
     except Exception as e:
@@ -210,10 +183,7 @@ async def get_portfolio_patents(
         )
         return JSONResponse(
             status_code=500,
-            content={
-                "error": "INTERNAL_SERVER_ERROR",
-                "message": "Unexpected server error",
-            },
+            content={"error": {"code": "INTERNAL_SERVER_ERROR", "message": "Unexpected server error"}},
         )
 
 

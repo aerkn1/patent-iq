@@ -21,14 +21,11 @@ async def search_patents(
     try:
         service = PatentPageService()
         return await service.search_patents(query=q, limit=limit)
-    except Exception as e:
+    except Exception:
         logger.exception("Patent search failed", extra={"query": q})
         return JSONResponse(
             status_code=500,
-            content={
-                "error": "INTERNAL_SERVER_ERROR",
-                "message": "Unexpected server error",
-            },
+            content={"error": {"code": "INTERNAL_SERVER_ERROR", "message": "Unexpected server error"}},
         )
 
 

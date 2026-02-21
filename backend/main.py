@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
@@ -31,7 +32,9 @@ async def lifespan(app: FastAPI):
         logger.error(f"Startup Failed: Could not initialize: {e}")
         raise e
     yield
-    # Shutdown logic if needed (e.g. closing connection)
+    # Shutdown: close DuckDB connection
+    DuckDBConnection.close()
+    logger.info("Shutdown: DuckDB connection closed.")
     
 app = FastAPI(
     title="Patent Intelligence API",
@@ -42,7 +45,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # dev only
+    allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:3000").split(","),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

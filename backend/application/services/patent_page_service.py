@@ -419,11 +419,15 @@ class PatentPageService:
         }
 
 
+    # Entropy-based concentration thresholds (WIPO normalized entropy scale, 0–1)
+    _ENTROPY_HIGH_CONCENTRATION = 0.30  # Below this → highly concentrated
+    _ENTROPY_MODERATE = 0.60            # Below this → moderate; at/above → diversified
+
     @staticmethod
     def _interpret_entropy(norm: float) -> str:
-        if norm < 0.30:
+        if norm < PatentPageService._ENTROPY_HIGH_CONCENTRATION:
             return "HIGHLY_CONCENTRATED"
-        if norm < 0.60:
+        if norm < PatentPageService._ENTROPY_MODERATE:
             return "MODERATE"
         return "DIVERSIFIED"
 
@@ -517,8 +521,8 @@ class PatentPageService:
             expected_add = pred["expected_citations"]
             low_add = pred["interval_80"]["low"]
             high_add = pred["interval_80"]["high"]
-        except Exception as e:
-            logger.warning(f"Forecast failed for {appln_id}: {e}")
+        except Exception:
+            logger.exception(f"Forecast failed for appln_id={appln_id}; returning zero forecast")
             expected_add = 0.0
             low_add = 0.0
             high_add = 0.0

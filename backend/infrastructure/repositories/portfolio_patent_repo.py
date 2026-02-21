@@ -22,7 +22,8 @@ class PortfolioPatentRepository:
             
         where_clause = " AND ".join(where)
 
-        sort_col = sort or "blocking_power_pct"
+        ALLOWED_SORT_COLS = {"blocking_power_pct", "filing_date", "innovation_score", "legal_strength"}
+        sort_col = sort if sort in ALLOWED_SORT_COLS else "blocking_power_pct"
         order = "DESC" if order != "asc" else "ASC"
 
         base_query = f"""

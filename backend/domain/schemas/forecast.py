@@ -51,7 +51,7 @@ class TopContributor(BaseModel):
     expected: float
     interval_80: Interval80
     contribution: float
-    difficulty_bucket: str
+    difficulty_bucket: Literal["LOW", "MID", "HIGH"]
 
 
 class PortfolioPrediction(BaseModel):
@@ -104,7 +104,7 @@ class CitationForecastTimeSeriesItem(BaseModel):
 class ForecastPredictionSummary(BaseModel):
     expected_additional: float
     interval_80: Interval80
-    difficulty_bucket: str
+    difficulty_bucket: Literal["LOW", "MID", "HIGH", "UNKNOWN", "N/A"]
 
 
 class CitationForecastTimeSeriesResponse(BaseModel):

@@ -15,6 +15,12 @@ class DuckDBConnection:
     _conn: Optional[duckdb.DuckDBPyConnection] = None
 
     @classmethod
+    def close(cls) -> None:
+        if cls._conn is not None:
+            cls._conn.close()
+            cls._conn = None
+
+    @classmethod
     def get_connection(cls) -> duckdb.DuckDBPyConnection:
         if cls._conn is None:
             db_path = (_repo_root() / "analytics.duckdb").as_posix()

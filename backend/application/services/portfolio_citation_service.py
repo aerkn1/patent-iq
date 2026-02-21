@@ -96,8 +96,8 @@ class PortfolioCitationService:
             expected_add = pred["expected_citations_total"]
             low_add = pred["interval_80_total"]["low"]
             high_add = pred["interval_80_total"]["high"]
-        except Exception as e:
-            logger.warning(f"Portfolio forecast failed for {owner_id}: {e}")
+        except Exception:
+            logger.exception(f"Portfolio forecast failed for owner_id={owner_id}; returning zero forecast")
             expected_add = 0.0
             low_add = 0.0
             high_add = 0.0

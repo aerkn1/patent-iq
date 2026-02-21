@@ -1,3 +1,4 @@
+from domain.errors import ValidationError, NotFoundError
 from infrastructure.repositories.portfolio_patents_repo import PortfolioPatentsRepository
 from infrastructure.repositories.portfolio_category_repo import PortfolioCategoryRepository
 from infrastructure.repositories.portfolio_citations_repo import PortfolioCitationsRepository
@@ -37,13 +38,11 @@ class PortfolioAnalyticsService:
 
     async def get_analytics(self, owner_id: int) -> dict:
         if owner_id <= 0:
-            # use your ValidationError in real code
-            raise ValueError("owner_id must be positive")
+            raise ValidationError("owner_id must be positive")
 
         appln_ids = self.patents_repo.list_appln_ids(owner_id)
         if not appln_ids:
-            # use your NotFoundError in real code
-            raise KeyError(f"Portfolio {owner_id} not found or empty")
+            raise NotFoundError(f"Portfolio {owner_id} not found or empty")
 
         counts = self.category_repo.get_category_counts(owner_id)
         total = sum(counts.values())
