@@ -42,6 +42,7 @@ const TREND_PREFIX: Record<"up" | "down" | "neutral", string> = {
 interface TremorMetricCardProps {
     title: string
     metric: string | number
+    category?: string
     subtext?: string
     icon?: LucideIcon
     progress?: {
@@ -65,6 +66,7 @@ interface TremorMetricCardProps {
 export function TremorMetricCard({
     title,
     metric,
+    category,
     subtext,
     icon: Icon,
     progress,
@@ -84,10 +86,14 @@ export function TremorMetricCard({
             )}
         >
             <div>
+                {/* Category label */}
+                {category && (
+                    <p className="metric-label mb-2">{category}</p>
+                )}
                 <div className="flex items-start justify-between">
                     <div>
                         <p className="text-sm text-muted-foreground">{title}</p>
-                        <p className="mt-2 text-2xl font-bold tracking-tight">{metric}</p>
+                        <p className="metric-value mt-2 text-2xl">{metric}</p>
                     </div>
                     {(Icon || status) && (
                         <div className="flex flex-col items-end gap-2 pl-2">

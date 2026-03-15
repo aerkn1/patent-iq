@@ -30,6 +30,7 @@ const DECORATION_BORDER_CLASS: Record<string, string> = {
 interface GaugeMetricCardProps {
     title: string
     metric: string | number
+    category?: string
     subtext?: string
     icon?: LucideIcon
     gauge?: {
@@ -47,6 +48,7 @@ interface GaugeMetricCardProps {
 export function GaugeMetricCard({
     title,
     metric,
+    category,
     subtext,
     icon: Icon,
     gauge,
@@ -65,12 +67,16 @@ export function GaugeMetricCard({
             )}
         >
             <div>
+                {/* Category label */}
+                {category && (
+                    <p className="metric-label mb-2">{category}</p>
+                )}
                 <div className="flex items-start justify-between">
                     <div className="truncate">
                         <p className="text-sm text-muted-foreground">{title}</p>
-                        <p className="mt-1 truncate text-lg font-bold tracking-tight sm:text-xl">{metric}</p>
+                        <p className="metric-value mt-1 truncate text-lg sm:text-xl">{metric}</p>
                     </div>
-                    {Icon && <Icon className="h-5 w-5 text-muted-foreground" />}
+                    {Icon && <Icon className="h-5 w-5 text-muted-foreground shrink-0" />}
                 </div>
 
                 {status && (
@@ -87,7 +93,7 @@ export function GaugeMetricCard({
                         <GaugeChart value={gauge.value} color={gauge.color} showValue={false} height={80} />
                         {/* Centered Value inside Gauge */}
                         <div className="absolute bottom-0 left-0 right-0 text-center -mb-1">
-                            <span className="text-xl font-bold" style={{ color: gauge.color }}>
+                            <span className="metric-value text-xl" style={{ color: gauge.color }}>
                                 {gauge.value.toFixed(0)}
                             </span>
                         </div>

@@ -107,3 +107,5 @@ analytics.duckdb
 analytics.duckdb.wal
 
 *.env
+*prototype
+docs/oecd-patent-quality

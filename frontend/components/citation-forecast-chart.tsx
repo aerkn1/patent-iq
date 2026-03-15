@@ -1,18 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import {
-    Area,
-    ComposedChart,
-    CartesianGrid,
-    Line,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-    Legend,
-    ReferenceLine
-} from "recharts"
+import { ResponsiveLine } from "@nivo/line"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
@@ -23,6 +12,7 @@ import {
     fetchJson
 } from "@/lib/api"
 import { CitationForecastTimeSeriesResponse } from "@/lib/types/forecast"
+import { getNivoTheme } from "@/lib/nivo-theme"
 
 interface CitationForecastChartProps {
     entityId: number
@@ -31,45 +21,8 @@ interface CitationForecastChartProps {
     horizon?: "3y" | "5y"
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-        const isForecast = payload.some((p: any) => p.dataKey === "low")
-        const mainValue = payload.find((p: any) => p.dataKey === "cum_cites")
-
-        return (
-            <div className="bg-white p-3 border rounded shadow-lg text-sm z-50">
-                <p className="font-bold mb-2">{label} {isForecast ? "(Forecast)" : "(Historical)"}</p>
-
-                {mainValue && (
-                    <div className="flex items-center gap-2 mb-1">
-                        <div
-                            className="w-3 h-3 rounded-full"
-                            style={{ backgroundColor: mainValue.color }}
-                        />
-                        <span className="text-gray-600">Cumulative:</span>
-                        <span className="font-mono font-medium">
-                            {mainValue.value.toFixed(1)}
-                        </span>
-                    </div>
-                )}
-
-                {isForecast && payload[0].payload.low != null && (
-                    <div className="mt-2 pt-2 border-t border-gray-100">
-                        <p className="text-xs text-muted-foreground mb-1">80% Prediction Interval:</p>
-                        <div className="font-mono font-medium text-xs">
-                            {payload[0].payload.low.toFixed(1)} - {payload[0].payload.high?.toFixed(1)}
-                        </div>
-                    </div>
-                )}
-            </div>
-        )
-    }
-    return null
-}
-
 export function CitationForecastChart({ entityId, entityType, embedded = false, horizon: controlledHorizon }: CitationForecastChartProps) {
     const [localHorizon, setLocalHorizon] = useState<"3y" | "5y">("3y")
-    // Use controlled horizon if provided, otherwise local
     const horizon = controlledHorizon ?? localHorizon
 
     const [data, setData] = useState<CitationForecastTimeSeriesResponse | null>(null)
@@ -145,16 +98,73 @@ export function CitationForecastChart({ entityId, entityType, embedded = false, 
 
     if (!data) return null
 
-    // Combine historical and forecast for rendering
-    const chartData = [
-        ...data.historical.map(d => ({ ...d, type: 'historical' })),
-        // Skip the first forecast point if it overlaps exactly with last historical
-        ...data.forecast.slice(1).map(d => ({ ...d, type: 'forecast' }))
-    ]
-
     const historicalData = data.historical
     const forecastData = data.forecast
     const lastObservedYear = data.last_observed_year
+
+    const nivoSeries = [
+        {
+            id: "Historical",
+            color: "#8884d8",
+            data: historicalData.map((d) => ({ x: d.year, y: d.cum_cites })),
+        },
+        {
+            id: "Forecast",
+            color: "#10b981",
+            data: forecastData.map((d) => ({ x: d.year, y: d.cum_cites })),
+        },
+        {
+            id: "Upper 80%",
+            color: "#10b981",
+            data: forecastData.map((d) => ({ x: d.year, y: d.high ?? d.cum_cites })),
+        },
+        {
+            id: "Lower 80%",
+            color: "#10b981",
+            data: forecastData.map((d) => ({ x: d.year, y: d.low ?? d.cum_cites })),
+        },
+    ]
+
+    const ConfidenceBandLayer = ({ series, xScale, yScale }: any) => {
+        const upper = series.find((s: any) => s.id === "Upper 80%")?.data ?? []
+        const lower = series.find((s: any) => s.id === "Lower 80%")?.data ?? []
+        if (!upper.length || !lower.length) return null
+        const points = [
+            ...upper.map((d: any) => `${xScale(d.data.x)},${yScale(d.data.y)}`),
+            ...lower.slice().reverse().map((d: any) => `${xScale(d.data.x)},${yScale(d.data.y)}`),
+        ]
+        return <polygon points={points.join(" ")} fill="#10b981" fillOpacity={0.1} />
+    }
+
+    const ForecastLinesLayer = ({ series, lineGenerator, xScale, yScale }: any) => (
+        <g>
+            {series
+                .map((s: any) => (
+                    <path
+                        key={s.id}
+                        d={lineGenerator(
+                            s.data.map((d: any) => ({ x: xScale(d.data.x), y: yScale(d.data.y) }))
+                        )}
+                        fill="none"
+                        stroke={s.color}
+                        strokeWidth={s.id === "Historical" || s.id === "Forecast" ? 2 : 1}
+                        strokeOpacity={s.id === "Historical" || s.id === "Forecast" ? 1 : 0.4}
+                        strokeDasharray={s.id === "Historical" ? undefined : "5 5"}
+                    />
+                ))}
+        </g>
+    )
+
+    const NowLineLayer = ({ xScale, innerHeight }: any) => (
+        <g>
+            <line
+                x1={xScale(lastObservedYear)} x2={xScale(lastObservedYear)}
+                y1={0} y2={innerHeight}
+                stroke="#666" strokeDasharray="3 3"
+            />
+            <text x={xScale(lastObservedYear) + 4} y={-6} fontSize={11} fill="#666">Now</text>
+        </g>
+    )
 
     const Content = (
         <>
@@ -194,7 +204,7 @@ export function CitationForecastChart({ entityId, entityType, embedded = false, 
                                 [{data.prediction_summary.interval_80.low.toFixed(1)} - {data.prediction_summary.interval_80.high.toFixed(1)}]
                             </span>
                         </div>
-                        {typeof data.prediction_summary.difficulty_bucket === 'string' && (
+                        {typeof data.prediction_summary.difficulty_bucket === "string" && (
                             <Badge variant="outline" className="ml-auto">
                                 {data.prediction_summary.difficulty_bucket} DIFFICULTY
                             </Badge>
@@ -203,84 +213,45 @@ export function CitationForecastChart({ entityId, entityType, embedded = false, 
                 )}
 
                 <div className="h-[300px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                            <defs>
-                                <linearGradient id="colorHist" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0.1} />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                            <XAxis
-                                dataKey="year"
-                                type="number"
-                                domain={['auto', 'auto']}
-                                tick={{ fontSize: 12, fill: "#6b7280" }}
-                                tickCount={8}
-                                axisLine={false}
-                                tickLine={false}
-                                allowDuplicatedCategory={false}
-                            />
-                            <YAxis
-                                tick={{ fontSize: 12, fill: "#6b7280" }}
-                                axisLine={false}
-                                tickLine={false}
-                            />
-                            <Tooltip content={<CustomTooltip />} />
-                            <Legend verticalAlign="top" height={36} />
-
-                            {/* Historical Area */}
-                            <Area
-                                data={historicalData}
-                                type="monotone"
-                                dataKey="cum_cites"
-                                name="Historical"
-                                stroke="#8884d8"
-                                fill="url(#colorHist)"
-                                strokeWidth={2}
-                            />
-
-                            {/* Reference line for today */}
-                            <ReferenceLine x={lastObservedYear} stroke="#666" strokeDasharray="3 3" label="Now" />
-
-                            {/* Forecast Line */}
-                            <Line
-                                data={forecastData}
-                                type="monotone"
-                                dataKey="cum_cites"
-                                name="Forecast (Exp)"
-                                stroke="#10b981"
-                                strokeWidth={2}
-                                strokeDasharray="5 5"
-                                dot={{ r: 3 }}
-                            />
-
-                            {/* Confidence Interval Lines (simplified visualization) */}
-                            <Line
-                                data={forecastData}
-                                type="monotone"
-                                dataKey="low"
-                                name="Lower 80%"
-                                stroke="#10b981"
-                                strokeWidth={1}
-                                strokeOpacity={0.5}
-                                strokeDasharray="3 3"
-                                dot={false}
-                            />
-                            <Line
-                                data={forecastData}
-                                type="monotone"
-                                dataKey="high"
-                                name="Upper 80%"
-                                stroke="#10b981"
-                                strokeWidth={1}
-                                strokeOpacity={0.5}
-                                strokeDasharray="3 3"
-                                dot={false}
-                            />
-                        </ComposedChart>
-                    </ResponsiveContainer>
+                    <ResponsiveLine
+                        data={nivoSeries}
+                        theme={getNivoTheme()}
+                        colors={["#8884d8", "#10b981", "#10b981", "#10b981"]}
+                        margin={{ top: 20, right: 10, bottom: 40, left: 45 }}
+                        xScale={{ type: "linear", min: "auto", max: "auto" }}
+                        yScale={{ type: "linear", min: 0, max: "auto" }}
+                        enableArea={false}
+                        axisBottom={{
+                            tickSize: 0,
+                            tickPadding: 8,
+                        }}
+                        axisLeft={{
+                            tickSize: 0,
+                            tickPadding: 8,
+                        }}
+                        enablePoints={false}
+                        enableGridX={false}
+                        curve="monotoneX"
+                        layers={[
+                            "grid",
+                            "axes",
+                            "areas",
+                            ConfidenceBandLayer,
+                            ForecastLinesLayer,
+                            NowLineLayer,
+                            "points",
+                            "slices",
+                            "mesh",
+                            "legends",
+                        ]}
+                        tooltip={({ point }) => (
+                            <div className="bg-background border border-border p-2 rounded-lg text-xs shadow">
+                                <span className="font-semibold">{point.seriesId}</span>
+                                {" · "}
+                                <span>{String(point.data.x)}: {Number(point.data.y).toFixed(1)}</span>
+                            </div>
+                        )}
+                    />
                 </div>
             </div>
         </>

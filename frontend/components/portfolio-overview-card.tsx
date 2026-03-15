@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { Info } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import type { PortfolioOverviewResponse } from "@/lib/types/patent"
+import { motion } from "motion/react"
+import { cardContainerVariants, cardItemVariants } from "@/lib/motion-variants"
 
 import { cn, formatLabel } from "@/lib/utils"
 
@@ -103,9 +105,14 @@ export function PortfolioOverviewCard({ data }: PortfolioOverviewCardProps) {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <motion.div
+                    className="grid grid-cols-2 md:grid-cols-3 gap-6"
+                    variants={cardContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
                     {metrics.map((metric, index) => (
-                        <div key={index} className="space-y-1">
+                        <motion.div key={index} variants={cardItemVariants} className="space-y-1">
                             <div className="flex items-center gap-1.5">
                                 <span className="text-sm font-medium text-muted-foreground">{metric.label}</span>
                                 <TooltipProvider>
@@ -119,11 +126,10 @@ export function PortfolioOverviewCard({ data }: PortfolioOverviewCardProps) {
                                     </Tooltip>
                                 </TooltipProvider>
                             </div>
-                            <div className="text-2xl font-bold">{metric.value}</div>
-                            {/* <div className="text-xs text-muted-foreground">{metric.description}</div> */}
-                        </div>
+                            <div className="metric-value text-2xl">{metric.value}</div>
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </CardContent>
         </Card>
     )

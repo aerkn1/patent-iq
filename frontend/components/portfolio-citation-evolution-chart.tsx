@@ -1,24 +1,10 @@
 "use client"
 
-import { useState } from "react"
-import {
-    Area,
-    AreaChart,
-    CartesianGrid,
-    ComposedChart,
-    Line,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-    Legend
-} from "recharts"
+import { ResponsiveLine } from "@nivo/line"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { TrendingUp } from "lucide-react"
-import { ChartTooltip } from "@/components/charts/ChartTooltip"
+import { TrendingUp, BarChart3 } from "lucide-react"
 import { CHART_COLORS } from "@/lib/chart-config"
+import { getNivoTheme } from "@/lib/nivo-theme"
 
 export interface PortfolioCitationYearData {
     year: string
@@ -34,15 +20,14 @@ interface PortfolioCitationEvolutionChartProps {
     data: PortfolioCitationYearData[]
 }
 
-
 export function PortfolioCitationEvolutionChart({ data }: PortfolioCitationEvolutionChartProps) {
-    const [showYoY, setShowYoY] = useState(false)
-
-    // Calculate some summary stats for the header
-    const latestYear = data[data.length - 1]
-    const trend = data.length > 2
-        ? (data[data.length - 1].avg_cites_per_patent - data[data.length - 2].avg_cites_per_patent)
-        : 0
+    const nivoData = [
+        {
+            id: "Avg. Cites/Patent",
+            color: CHART_COLORS.indigo,
+            data: data.map((d) => ({ x: d.year, y: d.avg_cites_per_patent })),
+        },
+    ]
 
     return (
         <Card>
@@ -57,95 +42,46 @@ export function PortfolioCitationEvolutionChart({ data }: PortfolioCitationEvolu
                             Average citations per patent over time
                         </CardDescription>
                     </div>
-                    <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-2">
-                            <Switch
-                                id="show-yoy"
-                                checked={showYoY}
-                                onCheckedChange={setShowYoY}
-                            />
-                            <Label htmlFor="show-yoy" className="text-sm font-medium">
-                                Show YoY %
-                            </Label>
-                        </div>
-                    </div>
                 </div>
             </CardHeader>
             <CardContent>
-                <div className="h-[350px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                            <defs>
-                                <linearGradient id="portfolioColorTotal" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor={CHART_COLORS.indigo} stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor={CHART_COLORS.indigo} stopOpacity={0.1} />
-                                </linearGradient>
-                                <linearGradient id="portfolioColorEarly" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor={CHART_COLORS.green} stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor={CHART_COLORS.green} stopOpacity={0.1} />
-                                </linearGradient>
-                                <linearGradient id="portfolioColorMid" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor={CHART_COLORS.blue} stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor={CHART_COLORS.blue} stopOpacity={0.1} />
-                                </linearGradient>
-                                <linearGradient id="portfolioColorLate" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor={CHART_COLORS.amber} stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor={CHART_COLORS.amber} stopOpacity={0.1} />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                            <XAxis
-                                dataKey="year"
-                                tick={{ fontSize: 12, fill: CHART_COLORS.gray }}
-                                axisLine={false}
-                                tickLine={false}
-                            />
-                            <YAxis
-                                yAxisId="left"
-                                tick={{ fontSize: 12, fill: CHART_COLORS.gray }}
-                                axisLine={false}
-                                tickLine={false}
-                                label={{ value: 'Citations per Patent', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: CHART_COLORS.gray, fontSize: 12 } }}
-                            />
-                            {showYoY && (
-                                <YAxis
-                                    yAxisId="right"
-                                    orientation="right"
-                                    tick={{ fontSize: 12, fill: CHART_COLORS.red }}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    unit="%"
-                                    label={{ value: 'YoY Growth', angle: 90, position: 'insideRight', style: { textAnchor: 'middle', fill: CHART_COLORS.red, fontSize: 12 } }}
-                                />
+                {data.length === 0 ? (
+                    <div className="flex h-[350px] flex-col items-center justify-center gap-2 text-muted-foreground">
+                        <BarChart3 className="h-8 w-8 opacity-40" />
+                        <p className="text-sm">No data available</p>
+                    </div>
+                ) : (
+                    <div className="h-[350px] w-full">
+                        <ResponsiveLine
+                            data={nivoData}
+                            theme={getNivoTheme()}
+                            colors={[CHART_COLORS.indigo]}
+                            margin={{ top: 10, right: 10, bottom: 40, left: 45 }}
+                            xScale={{ type: "point" }}
+                            yScale={{ type: "linear", min: 0, max: "auto" }}
+                            enableArea={true}
+                            areaOpacity={0.2}
+                            axisBottom={{
+                                tickSize: 0,
+                                tickPadding: 8,
+                            }}
+                            axisLeft={{
+                                tickSize: 0,
+                                tickPadding: 8,
+                            }}
+                            enablePoints={false}
+                            enableGridX={false}
+                            curve="monotoneX"
+                            tooltip={({ point }) => (
+                                <div className="bg-background border border-border p-2 rounded-lg text-xs shadow">
+                                    <span className="font-semibold">{String(point.data.x)}</span>
+                                    {": "}
+                                    <span>{Number(point.data.y).toFixed(2)} cites/patent</span>
+                                </div>
                             )}
-                            <Tooltip content={<ChartTooltip formatYoY />} />
-                            <Legend verticalAlign="top" height={36} />
-
-                            <Area
-                                yAxisId="left"
-                                type="monotone"
-                                dataKey="avg_cites_per_patent"
-                                name="Avg. Cites/Patent"
-                                stroke={CHART_COLORS.indigo}
-                                fill="url(#portfolioColorTotal)"
-                                strokeWidth={2}
-                            />
-
-                            {showYoY && (
-                                <Line
-                                    yAxisId="right"
-                                    type="monotone"
-                                    dataKey="yoy_growth"
-                                    name="YoY Growth"
-                                    stroke={CHART_COLORS.red}
-                                    strokeWidth={2}
-                                    dot={{ r: 3 }}
-                                    strokeDasharray="5 5"
-                                />
-                            )}
-                        </ComposedChart>
-                    </ResponsiveContainer>
-                </div>
+                        />
+                    </div>
+                )}
             </CardContent>
         </Card>
     )

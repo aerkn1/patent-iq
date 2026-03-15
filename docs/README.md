@@ -22,6 +22,11 @@ The `docs/project` directory contains detailed architectural and design specific
 - **[Testing Strategy](project/testing_strategy.md)**: Quality assurance plans.
 - **[Error Log Debugging](project/error_log_debugging.md)**: Debugging procedures.
 
+Additional planning and UI strategy material:
+
+- **[Next Phase V2](next-phase-v2/README.md)**: V2 execution plan, release shape, workstreams, and guardrails.
+- **[UI Hub](UI-Hub/README.md)**: UI inspiration notes and proposed page/workspace structure for the next product version.
+
 ## Quick Start
 
 Please refer to the README files in the `backend` and `frontend` directories for specific setup instructions.

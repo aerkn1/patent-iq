@@ -1,18 +1,9 @@
 "use client"
 
 import { useMemo } from "react"
-import {
-    Area,
-    AreaChart,
-    CartesianGrid,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-    ReferenceLine,
-    Label,
-} from "recharts"
+import { ResponsiveLine } from "@nivo/line"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { getNivoTheme } from "@/lib/nivo-theme"
 
 interface DistributionChartProps {
     zScore: number
@@ -27,21 +18,35 @@ export function DistributionChart({
     title = "Peer Group Distribution",
     description = "Your portfolio vs. peer group (Normal Distribution)",
 }: DistributionChartProps) {
-    // Generate data points for a standard normal distribution (mean=0, std=1)
-    const data = useMemo(() => {
+    const generatedData = useMemo(() => {
         const points = []
-        // Range from -3.5 to +3.5 covers 99.9% of the distribution
         for (let x = -3.5; x <= 3.5; x += 0.1) {
-            // Normal distribution PDF formula: (1 / sqrt(2*pi)) * e^(-0.5 * x^2)
-            // We scale it for better visualization
             const y = (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * x * x)
-            points.push({ x, y })
+            points.push({ x: Math.round(x * 10) / 10, y })
         }
         return points
     }, [])
 
-    // Clamp zScore to visible range for the chart, but display real value
     const clampedZScore = Math.max(-3.5, Math.min(3.5, zScore))
+
+    const nivoData = [{ id: "distribution", color: "#8884d8", data: generatedData }]
+
+    const RefLinesLayer = ({ xScale, innerHeight }: any) => (
+        <g>
+            <line
+                x1={xScale(0)} x2={xScale(0)}
+                y1={0} y2={innerHeight}
+                stroke="#888" strokeDasharray="3 3"
+            />
+            <text x={xScale(0) + 4} y={-6} fontSize={11} fill="#888">Peer Avg</text>
+            <line
+                x1={xScale(clampedZScore)} x2={xScale(clampedZScore)}
+                y1={0} y2={innerHeight}
+                stroke="#ef4444" strokeWidth={2}
+            />
+            <text x={xScale(clampedZScore) + 4} y={-6} fontSize={11} fill="#ef4444" fontWeight="bold">You</text>
+        </g>
+    )
 
     return (
         <Card>
@@ -51,71 +56,32 @@ export function DistributionChart({
             </CardHeader>
             <CardContent>
                 <div className="h-[250px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={data} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
-                            <defs>
-                                <linearGradient id="colorY" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-                                </linearGradient>
-                            </defs>
-                            <XAxis
-                                dataKey="x"
-                                type="number"
-                                domain={[-3.5, 3.5]}
-                                tickFormatter={(val) => {
-                                    if (val === 0) return "Avg"
-                                    return val > 0 ? `+${val}σ` : `${val}σ`
-                                }}
-                                tickCount={7}
-                            />
-                            <YAxis hide />
-                            <Tooltip
-                                cursor={{ strokeDasharray: "3 3" }}
-                                content={({ active, payload }) => {
-                                    if (active && payload && payload.length) {
-                                        const dataPoint = payload[0].payload
-                                        return (
-                                            <div className="rounded-lg border bg-background p-2 shadow-sm">
-                                                <div className="grid grid-cols-2 gap-2">
-                                                    <span className="font-medium">Deviation:</span>
-                                                    <span className="text-muted-foreground">
-                                                        {dataPoint.x > 0 ? "+" : ""}
-                                                        {dataPoint.x.toFixed(1)}σ
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        )
-                                    }
-                                    return null
-                                }}
-                            />
-                            <Area
-                                type="monotone"
-                                dataKey="y"
-                                stroke="#8884d8"
-                                fillOpacity={1}
-                                fill="url(#colorY)"
-                                isAnimationActive={false}
-                            />
-                            {/* Mean Line */}
-                            <ReferenceLine x={0} stroke="#666" strokeDasharray="3 3">
-                                <Label value="Peer Avg" position="top" offset={10} fontSize={12} fill="#666" />
-                            </ReferenceLine>
-
-                            {/* Portfolio Position Line */}
-                            <ReferenceLine x={clampedZScore} stroke="#ef4444" strokeWidth={2}>
-                                <Label
-                                    value="You"
-                                    position="top"
-                                    offset={10}
-                                    fontSize={12}
-                                    fill="#ef4444"
-                                    fontWeight="bold"
-                                />
-                            </ReferenceLine>
-                        </AreaChart>
-                    </ResponsiveContainer>
+                    <ResponsiveLine
+                        data={nivoData}
+                        theme={getNivoTheme()}
+                        colors={["#8884d8"]}
+                        margin={{ top: 20, right: 20, bottom: 40, left: 20 }}
+                        xScale={{ type: "linear", min: -3.5, max: 3.5 }}
+                        yScale={{ type: "linear", min: 0, max: "auto" }}
+                        enableArea={true}
+                        areaOpacity={0.4}
+                        axisLeft={null}
+                        axisBottom={{
+                            tickSize: 0,
+                            tickPadding: 8,
+                            tickValues: [-3, -2, -1, 0, 1, 2, 3],
+                            format: (v: number) => v === 0 ? "Avg" : v > 0 ? `+${v}σ` : `${v}σ`,
+                        }}
+                        enablePoints={false}
+                        enableGridX={false}
+                        curve="natural"
+                        layers={["grid", "axes", "areas", "lines", RefLinesLayer, "points", "slices", "mesh", "legends"]}
+                        tooltip={({ point }) => (
+                            <div className="bg-background border border-border p-2 rounded-lg text-xs shadow">
+                                <span>Deviation: {Number(point.data.x) > 0 ? "+" : ""}{Number(point.data.x).toFixed(1)}σ</span>
+                            </div>
+                        )}
+                    />
                 </div>
                 <div className="mt-4 flex items-center justify-between text-sm">
                     <div className="flex gap-4">

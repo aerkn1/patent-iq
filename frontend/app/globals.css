@@ -30,7 +30,7 @@
   --chart-4: oklch(0.6 0.01 0); /* Light gray chart color 4 */
   --chart-5: oklch(0.45 0.18 30); /* Deep red-gray chart color 5 */
   --radius: 0.5rem;
-  --sidebar: oklch(1 0 0);
+  --sidebar: oklch(0.97 0 0);
   --sidebar-foreground: oklch(0.25 0 0);
   --sidebar-primary: oklch(0.55 0.22 25);
   --sidebar-primary-foreground: oklch(1 0 0);
@@ -125,3 +125,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* --- Metric typography --- */
+.metric-value {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+

@@ -40,24 +40,18 @@ import {
   Filter,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
+  ChevronDown,
   X,
   AlertTriangle,
   Eye,
 } from "lucide-react"
 import { RadarChart } from "@/components/radar-chart"
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip as RechartsTooltip,
-  Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts"
+import { ResponsivePie } from "@nivo/pie"
+import { ResponsiveBar } from "@nivo/bar"
+import { motion, AnimatePresence } from "motion/react"
+import { getNivoTheme } from "@/lib/nivo-theme"
+import { tabVariants, tabTransition } from "@/lib/motion-variants"
 import { PortfolioCitationEvolutionChart, type PortfolioCitationYearData } from "@/components/portfolio-citation-evolution-chart"
 import { PortfolioHealthCards, type PortfolioLifecycleMetrics } from "@/components/portfolio-health-cards"
 import { GaugeChart } from "@/components/gauge-chart"
@@ -70,6 +64,7 @@ import { RED_PALETTE } from "@/lib/chart-config"
 
 import { PortfolioSearch } from "@/components/portfolio-search"
 import { DistributionChart } from "@/components/distribution-chart"
+import { Skeleton } from "@/components/ui/skeleton"
 
 function PortfolioAnalysisContent() {
   const searchParams = useSearchParams()
@@ -104,6 +99,8 @@ function PortfolioAnalysisContent() {
   const [innovationScoreRange, setInnovationScoreRange] = useState<[number, number]>([0, 100])
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(25)
+  const [sortCol, setSortCol] = useState<"blocking_power_pct" | "innovation_score" | "legal_strength" | "forward_patent_citation_count">("blocking_power_pct")
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc")
 
   // State for raw patents (fetched from API, unfiltered by client criteria)
   const [rawPatents, setRawPatents] = useState<PortfolioPatent[] | null>(null)
@@ -223,11 +220,11 @@ function PortfolioAnalysisContent() {
       )
     })
 
-    // Sort (Blocking Power Desc)
+    // Sort by active column
     filteredPatents.sort((a, b) => {
-      const aVal = a.blocking_power_pct ?? 0
-      const bVal = b.blocking_power_pct ?? 0
-      return bVal - aVal
+      const aVal = (a[sortCol] ?? 0) as number
+      const bVal = (b[sortCol] ?? 0) as number
+      return sortDir === "desc" ? bVal - aVal : aVal - bVal
     })
 
     const total = filteredPatents.length
@@ -256,7 +253,9 @@ function PortfolioAnalysisContent() {
     innovationScoreRange,
     currentPage,
     pageSize,
-    ownerId
+    ownerId,
+    sortCol,
+    sortDir,
   ])
 
   const fetchCategoryCounts = async (id: string) => {
@@ -453,6 +452,15 @@ function PortfolioAnalysisContent() {
     }
   } : null
 
+  const portfolioTypeBreakdown = analyticsData
+    ? Object.entries(analyticsData.categories.counts)
+        .map(([key, value]) => ({
+          id: formatLabel(key),
+          value: Number(value),
+        }))
+        .filter((item) => item.value > 0)
+    : []
+
   return (
     <>
       {/* Search Section */}
@@ -486,8 +494,44 @@ function PortfolioAnalysisContent() {
       )}
 
       {loading && (
-        <div className="text-center py-12">
-          <div className="text-muted-foreground">Loading portfolio data...</div>
+        <div className="space-y-6">
+          {/* Overview card skeleton */}
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-7 w-64 mb-2" />
+              <Skeleton className="h-4 w-48" />
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="space-y-2">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-8 w-20" />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          {/* KPI row skeleton */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i} className="p-6">
+                <Skeleton className="h-3 w-20 mb-3" />
+                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="h-2 w-full" />
+              </Card>
+            ))}
+          </div>
+          {/* Chart skeleton */}
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-5 w-48" />
+              <Skeleton className="h-3 w-64 mt-1" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-[350px] w-full rounded-md" />
+            </CardContent>
+          </Card>
         </div>
       )}
 
@@ -505,6 +549,14 @@ function PortfolioAnalysisContent() {
 
               {/* OVERVIEW TAB */}
               <TabsContent value="overview" className="space-y-6">
+                <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab + "-overview"}
+                  variants={tabVariants}
+                  initial="initial" animate="animate" exit="exit"
+                  transition={tabTransition}
+                  className="space-y-6"
+                >
                 {/* Portfolio Overview Card */}
                 <PortfolioOverviewCard data={overviewData} />
 
@@ -562,36 +614,25 @@ function PortfolioAnalysisContent() {
                         {/* Pie Chart */}
                         <div className="flex items-center justify-center">
                           {/* Donut Chart with Custom Legend */}
-                          <div className="flex flex-col items-center justify-center">
+                          <div className="flex flex-col items-center justify-center w-full">
                             <div className="h-[200px] w-full">
-                              <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                  <Pie
-                                    data={overviewData.technology_profile.top_cpc_classes.map((cpc) => ({
-                                      name: cpc.code,
-                                      value: cpc.weight * 100,
-                                    }))}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}
-                                    outerRadius={80}
-                                    paddingAngle={2}
-                                    dataKey="value"
-                                  >
-                                    {overviewData.technology_profile.top_cpc_classes.map((_, index) => (
-                                      <Cell
-                                        key={`cell-${index}`}
-                                        fill={RED_PALETTE[index % RED_PALETTE.length]}
-                                      />
-                                    ))}
-                                  </Pie>
-                                  <RechartsTooltip
-                                    formatter={(value: number) => `${value.toFixed(1)}%`}
-                                    labelFormatter={(label) => `CPC: ${label}`}
-                                    contentStyle={{ borderRadius: "8px", border: "1px solid #e5e7eb" }}
-                                  />
-                                </PieChart>
-                              </ResponsiveContainer>
+                              <ResponsivePie
+                                data={overviewData.technology_profile.top_cpc_classes.map((cpc, i) => ({
+                                  id: cpc.code,
+                                  value: cpc.weight * 100,
+                                }))}
+                                innerRadius={0.6}
+                                padAngle={2}
+                                colors={RED_PALETTE}
+                                enableArcLabels={false}
+                                enableArcLinkLabels={false}
+                                legends={[]}
+                                tooltip={({ datum }) => (
+                                  <div className="bg-background border border-border p-2 rounded-lg text-xs">
+                                    CPC: {datum.id}: {datum.value.toFixed(1)}%
+                                  </div>
+                                )}
+                              />
                             </div>
                             {/* Custom Legend */}
                             <div className="mt-4 flex flex-wrap justify-center gap-3">
@@ -641,36 +682,25 @@ function PortfolioAnalysisContent() {
                         {/* Pie Chart */}
                         <div className="flex items-center justify-center">
                           {/* Donut Chart with Custom Legend */}
-                          <div className="flex flex-col items-center justify-center">
+                          <div className="flex flex-col items-center justify-center w-full">
                             <div className="h-[200px] w-full">
-                              <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                  <Pie
-                                    data={overviewData.market_profile.top_industries.map((ind) => ({
-                                      name: ind.code.replace(/_/g, " "),
-                                      value: ind.weight * 100,
-                                    }))}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}
-                                    outerRadius={80}
-                                    paddingAngle={2}
-                                    dataKey="value"
-                                  >
-                                    {overviewData.market_profile.top_industries.map((_, index) => (
-                                      <Cell
-                                        key={`cell-${index}`}
-                                        fill={RED_PALETTE[index % RED_PALETTE.length]}
-                                      />
-                                    ))}
-                                  </Pie>
-                                  <RechartsTooltip
-                                    formatter={(value: number) => `${value.toFixed(1)}%`}
-                                    labelFormatter={(label) => label}
-                                    contentStyle={{ borderRadius: "8px", border: "1px solid #e5e7eb" }}
-                                  />
-                                </PieChart>
-                              </ResponsiveContainer>
+                              <ResponsivePie
+                                data={overviewData.market_profile.top_industries.map((ind) => ({
+                                  id: ind.code.replace(/_/g, " "),
+                                  value: ind.weight * 100,
+                                }))}
+                                innerRadius={0.6}
+                                padAngle={2}
+                                colors={RED_PALETTE}
+                                enableArcLabels={false}
+                                enableArcLinkLabels={false}
+                                legends={[]}
+                                tooltip={({ datum }) => (
+                                  <div className="bg-background border border-border p-2 rounded-lg text-xs">
+                                    {datum.id}: {datum.value.toFixed(1)}%
+                                  </div>
+                                )}
+                              />
                             </div>
                             {/* Custom Legend */}
                             <div className="mt-4 flex flex-wrap justify-center gap-3">
@@ -824,13 +854,40 @@ function PortfolioAnalysisContent() {
                     </CardContent>
                   </Card>
                 </div>
+                </motion.div>
+                </AnimatePresence>
               </TabsContent>
 
               {/* Patents Tab */}
               <TabsContent value="patents" className="space-y-6">
+                <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab + "-patents"}
+                  variants={tabVariants}
+                  initial="initial" animate="animate" exit="exit"
+                  transition={tabTransition}
+                  className="space-y-6"
+                >
                 {patentsLoading && (
-                  <div className="text-center py-12">
-                    <div className="text-muted-foreground">Loading patents...</div>
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <Card key={i} className="p-6">
+                          <Skeleton className="h-3 w-20 mb-3" />
+                          <Skeleton className="h-8 w-16 mb-2" />
+                          <Skeleton className="h-2 w-full" />
+                        </Card>
+                      ))}
+                    </div>
+                    <Card>
+                      <CardHeader>
+                        <Skeleton className="h-5 w-48" />
+                        <Skeleton className="h-3 w-64 mt-1" />
+                      </CardHeader>
+                      <CardContent>
+                        <Skeleton className="h-[400px] w-full rounded-md" />
+                      </CardContent>
+                    </Card>
                   </div>
                 )}
 
@@ -1114,17 +1171,42 @@ function PortfolioAnalysisContent() {
                           </CardHeader>
                           <CardContent>
                             <div className="border rounded-lg overflow-hidden">
-                              <div className="overflow-x-auto">
+                              <div className="overflow-auto max-h-[600px]">
                                 <table className="w-full">
-                                  <thead className="bg-muted/50">
+                                  <thead className="bg-card sticky top-0 z-10 border-b border-border">
                                     <tr>
                                       <th className="text-left p-2 text-xs font-medium w-20">ID</th>
                                       <th className="text-left p-2 text-xs font-medium w-[180px]">Title</th>
                                       <th className="text-center p-2 text-xs font-medium w-18">Category</th>
-                                      <th className="text-right p-2 text-xs font-medium w-16">Block</th>
-                                      <th className="text-right p-2 text-xs font-medium w-16">Innov</th>
-                                      <th className="text-right p-2 text-xs font-medium w-14">Legal</th>
-                                      <th className="text-right p-2 text-xs font-medium w-12">Cite</th>
+                                      {(["blocking_power_pct", "innovation_score", "legal_strength", "forward_patent_citation_count"] as const).map((col, idx) => {
+                                        const labels = ["Block", "Innov", "Legal", "Cite"]
+                                        const isActive = sortCol === col
+                                        return (
+                                          <th
+                                            key={col}
+                                            className="text-right p-2 text-xs font-medium cursor-pointer select-none hover:text-foreground"
+                                            onClick={() => {
+                                              if (isActive) {
+                                                setSortDir(d => d === "desc" ? "asc" : "desc")
+                                              } else {
+                                                setSortCol(col)
+                                                setSortDir("desc")
+                                              }
+                                            }}
+                                          >
+                                            <span className="inline-flex items-center gap-0.5 justify-end">
+                                              {labels[idx]}
+                                              {isActive ? (
+                                                sortDir === "desc"
+                                                  ? <ChevronDown className="h-3 w-3 text-primary" />
+                                                  : <ChevronUp className="h-3 w-3 text-primary" />
+                                              ) : (
+                                                <ChevronDown className="h-3 w-3 opacity-30" />
+                                              )}
+                                            </span>
+                                          </th>
+                                        )
+                                      })}
                                       <th className="text-center p-2 text-xs font-medium w-18">Status</th>
                                       <th className="text-center p-2 text-xs font-medium w-12">Juris</th>
                                       <th className="text-center p-2 text-xs font-medium w-20">Action</th>
@@ -1214,7 +1296,7 @@ function PortfolioAnalysisContent() {
                             {/* Pagination */}
                             <div className="flex items-center justify-between mt-4">
                               <div className="text-sm text-muted-foreground">
-                                Page {currentPage} of {Math.ceil(patentsData.pagination.total / pageSize)}
+                                Showing {patentsData.pagination.offset + 1}–{Math.min(patentsData.pagination.offset + patentsData.patents.length, patentsData.pagination.total)} of {patentsData.pagination.total} patents
                               </div>
                               <div className="flex items-center gap-2">
                                 <Button
@@ -1255,11 +1337,21 @@ function PortfolioAnalysisContent() {
                     </CardContent>
                   </Card>
                 )}
+                </motion.div>
+                </AnimatePresence>
               </TabsContent>
 
 
 
               <TabsContent value="licensing" className="space-y-6">
+                <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab + "-licensing"}
+                  variants={tabVariants}
+                  initial="initial" animate="animate" exit="exit"
+                  transition={tabTransition}
+                  className="space-y-6"
+                >
                 {licensingLoading && (
                   <div className="text-center py-12">
                     <div className="text-muted-foreground">Loading licensing candidates...</div>
@@ -1472,9 +1564,19 @@ function PortfolioAnalysisContent() {
                     </CardContent>
                   </Card>
                 )}
+                </motion.div>
+                </AnimatePresence>
               </TabsContent>
 
               <TabsContent value="analysis" className="space-y-6">
+                <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab + "-analysis"}
+                  variants={tabVariants}
+                  initial="initial" animate="animate" exit="exit"
+                  transition={tabTransition}
+                  className="space-y-6"
+                >
                 {analyticsLoading && (
                   <div className="text-center py-12">
                     <div className="text-muted-foreground">Loading analytics data...</div>
@@ -1495,35 +1597,35 @@ function PortfolioAnalysisContent() {
                           </p>
                         </div>
                         {/* Category Donut Chart */}
-                        <div className="mt-6 flex justify-center">
-                          <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                              <Pie
-                                data={Object.entries(analyticsData.categories.counts).map(([key, value]) => ({
-                                  name: formatLabel(key),
-                                  value: value,
-                                }))}
-                                cx="50%"
-                                cy="50%"
-                                innerRadius={80}
-                                outerRadius={120}
-                                paddingAngle={2}
-                                dataKey="value"
-                              >
-                                {Object.keys(analyticsData.categories.counts).map((_, index) => (
-                                  <Cell
-                                    key={`cell-${index}`}
-                                    fill={RED_PALETTE[index % RED_PALETTE.length]}
-                                  />
-                                ))}
-                              </Pie>
-                              <RechartsTooltip
-                                formatter={(value: number) => `${value} patents`}
-                                labelFormatter={(label) => label}
-                              />
-                              <Legend />
-                            </PieChart>
-                          </ResponsiveContainer>
+                        <div className="mt-6 space-y-4">
+                          <div className="mx-auto h-[260px] w-full max-w-[520px]">
+                            <ResponsivePie
+                              data={portfolioTypeBreakdown}
+                              innerRadius={0.67}
+                              padAngle={2}
+                              colors={RED_PALETTE}
+                              enableArcLabels={false}
+                              enableArcLinkLabels={false}
+                              margin={{ top: 10, right: 20, bottom: 20, left: 20 }}
+                              tooltip={({ datum }) => (
+                                <div className="bg-background border border-border p-2 rounded-lg text-xs">
+                                  {datum.id}: {datum.value} patents
+                                </div>
+                              )}
+                            />
+                          </div>
+                          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+                            {portfolioTypeBreakdown.map((item, index) => (
+                              <div key={item.id} className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+                                <span
+                                  className="h-2.5 w-2.5 rounded-full"
+                                  style={{ backgroundColor: RED_PALETTE[index % RED_PALETTE.length] }}
+                                />
+                                <span className="font-medium text-foreground">{item.id}</span>
+                                <span>({item.value})</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -1634,15 +1736,21 @@ function PortfolioAnalysisContent() {
                               </Tooltip>
 
                             </h4>
-                            <ResponsiveContainer width="100%" height={250}>
-                              <BarChart data={analyticsData.citations.distribution.forward_buckets}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="bucket" />
-                                <YAxis />
-                                <RechartsTooltip />
-                                <Bar dataKey="count" fill="#10b981" />
-                              </BarChart>
-                            </ResponsiveContainer>
+                            <div className="h-[250px] w-full">
+                              <ResponsiveBar
+                                data={analyticsData.citations.distribution.forward_buckets}
+                                keys={["count"]}
+                                indexBy="bucket"
+                                colors={["#10b981"]}
+                                theme={getNivoTheme()}
+                                margin={{ top: 10, right: 10, bottom: 50, left: 45 }}
+                                padding={0.2}
+                                enableLabel={false}
+                                borderRadius={4}
+                                axisBottom={{ tickRotation: -30, tickSize: 0, tickPadding: 6 }}
+                                axisLeft={{ tickSize: 0 }}
+                              />
+                            </div>
                           </div>
 
                           {/* Backward Citations Histogram */}
@@ -1660,15 +1768,21 @@ function PortfolioAnalysisContent() {
                               </Tooltip>
 
                             </h4>
-                            <ResponsiveContainer width="100%" height={250}>
-                              <BarChart data={analyticsData.citations.distribution.backward_buckets}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="bucket" />
-                                <YAxis />
-                                <RechartsTooltip />
-                                <Bar dataKey="count" fill="#6b7280" />
-                              </BarChart>
-                            </ResponsiveContainer>
+                            <div className="h-[250px] w-full">
+                              <ResponsiveBar
+                                data={analyticsData.citations.distribution.backward_buckets}
+                                keys={["count"]}
+                                indexBy="bucket"
+                                colors={["#6b7280"]}
+                                theme={getNivoTheme()}
+                                margin={{ top: 10, right: 10, bottom: 50, left: 45 }}
+                                padding={0.2}
+                                enableLabel={false}
+                                borderRadius={4}
+                                axisBottom={{ tickRotation: -30, tickSize: 0, tickPadding: 6 }}
+                                axisLeft={{ tickSize: 0 }}
+                              />
+                            </div>
                           </div>
                         </div>
                       </CardContent>
@@ -1709,39 +1823,27 @@ function PortfolioAnalysisContent() {
                               </Badge>
                             )}
                           </div>
-                          <ResponsiveContainer width="100%" height={300}>
-                            <BarChart
+                          <div className="h-[300px] w-full">
+                            <ResponsiveBar
                               data={[
-                                {
-                                  name: "Forward Impact",
-                                  value: analyticsData.blocking_power.drivers.forward_impact_score * 100,
-                                },
-                                {
-                                  name: "Family Breadth",
-                                  value: analyticsData.blocking_power.drivers.family_breadth_normalized * 100,
-                                },
-                                {
-                                  name: "Tech Breadth Penalty",
-                                  value: analyticsData.blocking_power.drivers.tech_breadth_penalty,
-                                },
-                                {
-                                  name: "Self Blocking",
-                                  value: analyticsData.blocking_power.drivers.self_blocking_rate * 100,
-                                },
+                                { metric: "Forward Impact", value: analyticsData.blocking_power.drivers.forward_impact_score * 100 },
+                                { metric: "Family Breadth", value: analyticsData.blocking_power.drivers.family_breadth_normalized * 100 },
+                                { metric: "Tech Breadth Penalty", value: analyticsData.blocking_power.drivers.tech_breadth_penalty },
+                                { metric: "Self Blocking", value: analyticsData.blocking_power.drivers.self_blocking_rate * 100 },
                               ]}
-                              layout="vertical"
-                            >
-                              <CartesianGrid strokeDasharray="3 3" />
-                              <XAxis type="number" />
-                              <YAxis dataKey="name" type="category" width={180} />
-                              <RechartsTooltip formatter={(value: number) => value.toFixed(2)} />
-                              <Bar
-                                dataKey="value"
-                                fill={RED_PALETTE[0]}
-                                radius={[0, 4, 4, 0]}
-                              />
-                            </BarChart>
-                          </ResponsiveContainer>
+                              keys={["value"]}
+                              indexBy="metric"
+                              layout="horizontal"
+                              colors={[RED_PALETTE[0]]}
+                              theme={getNivoTheme()}
+                              margin={{ top: 10, right: 40, bottom: 10, left: 180 }}
+                              padding={0.3}
+                              borderRadius={4}
+                              enableLabel={false}
+                              axisBottom={{ tickSize: 0, format: (v: number) => v.toFixed(0) }}
+                              axisLeft={{ tickSize: 0 }}
+                            />
+                          </div>
                         </div>
 
                         {/* Top Blocking Patents Table */}
@@ -1898,16 +2000,27 @@ function PortfolioAnalysisContent() {
                     </CardContent>
                   </Card>
                 )}
-
+                </motion.div>
+                </AnimatePresence>
 
               </TabsContent>
 
               {/* FORECAST TAB */}
               <TabsContent value="forecast" className="space-y-6">
+                <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab + "-forecast"}
+                  variants={tabVariants}
+                  initial="initial" animate="animate" exit="exit"
+                  transition={tabTransition}
+                  className="space-y-6"
+                >
                 <div className="text-sm text-muted-foreground mb-4">
                   AI-driven citation forecasts for the next 3-5 years, based on patent characteristics and portfolio composition.
                 </div>
                 <PortfolioForecastCard ownerId={Number(ownerId)} />
+                </motion.div>
+                </AnimatePresence>
               </TabsContent>
             </Tabs>
           </CardContent>

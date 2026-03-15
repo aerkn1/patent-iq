@@ -1,7 +1,8 @@
 import type React from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { AppHeader } from "@/components/app-header"
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 
 export default function DashboardLayout({
     children,
@@ -11,12 +12,17 @@ export default function DashboardLayout({
     return (
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             <TooltipProvider delayDuration={200}>
-                <div className="min-h-screen bg-background">
-                    <AppHeader />
-                    <main className="container mx-auto px-4 py-8 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-in-out">
-                        {children}
-                    </main>
-                </div>
+                <SidebarProvider defaultOpen={true}>
+                    <AppSidebar />
+                    <SidebarInset>
+                        <header className="flex h-10 items-center border-b border-border px-4 shrink-0">
+                            <SidebarTrigger className="-ml-1" />
+                        </header>
+                        <main className="flex-1 overflow-auto p-6">
+                            {children}
+                        </main>
+                    </SidebarInset>
+                </SidebarProvider>
             </TooltipProvider>
         </ThemeProvider>
     )

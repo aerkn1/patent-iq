@@ -1,0 +1,44 @@
+build:
+  release_id: "mvp-local-build"
+  year_window_start: 2006
+  year_window_end: 2026
+  snapshot_date: "2026-03-15"
+  azure_publish_enabled: false
+  vector_sample_pct: 0.1
+  active_grant_only_for_semantic: true
+
+sources:
+  patstat_source_mode: "tip"
+  register_source_mode: "tip"
+  epab_source_mode: "tip"
+  uspto_source_mode: "local_files"
+  refs_source_mode: "local_files"
+  tip_env: "PROD"
+
+paths:
+  repo_root: ".."
+  raw_patstat_dir: "etl/data/raw/patstat"
+  raw_register_dir: "etl/data/raw/register"
+  raw_uspto_dir: "etl/data/raw/uspto"
+  raw_epab_dir: "etl/data/raw/epab"
+  raw_refs_dir: "etl/data/raw/refs"
+  bounded_patstat_dir: "etl/data/raw-bounded/patstat"
+  bounded_register_dir: "etl/data/raw-bounded/register"
+  bounded_uspto_dir: "etl/data/raw-bounded/uspto"
+  bounded_epab_dir: "etl/data/raw-bounded/epab"
+  bounded_refs_dir: "etl/data/raw-bounded/refs"
+  bounded_seed_dir: "etl/data/raw-bounded/_seeds"
+  bronze_dir: "etl/data/bronze"
+  silver_dir: "etl/data/silver"
+  gold_dir: "etl/data/gold"
+  ml_dir: "etl/data/ml"
+  vectors_dir: "etl/data/vectors"
+  releases_dir: "etl/data/releases"
+  manifests_dir: "etl/manifests"
+  journal_path: "etl/ETL_IMPLEMENTATION_LOG.md"
+  ref_techn_field_ipc: "data-analytics/cpc-coverage-data/ipc_to_wipo_industry.csv"
+
+methods:
+  method_version: "v2_mvp_local_etl"
+  semantic_embedding_method: "stable_hash_embedding_mvp"
+  semantic_ann_method: "manifest_only_placeholder"

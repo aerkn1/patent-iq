@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress"
 import { Info } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import type { PortfolioGrantCoverage, PortfolioGrantMixItem } from "@/lib/types/patent"
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend, Sector } from "recharts"
+import { ResponsivePie } from "@nivo/pie"
 
 interface GrantCoverageCardProps {
     grantCoverage: PortfolioGrantCoverage
@@ -16,11 +16,7 @@ interface GrantCoverageCardProps {
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"]
 
 export function GrantCoverageCard({ grantCoverage, grantMix }: GrantCoverageCardProps) {
-    const [activeIndex, setActiveIndex] = useState(0)
-
-    const onPieEnter = (_: any, index: number) => {
-        setActiveIndex(index)
-    }
+    const [hovered, setHovered] = useState<{ id: string; label: string; value: number } | null>(null)
 
     const coverageData = [
         { office: "EP", value: grantCoverage?.EP || 0 },
@@ -30,45 +26,16 @@ export function GrantCoverageCard({ grantCoverage, grantMix }: GrantCoverageCard
         { office: "KR", value: grantCoverage?.KR || 0 },
     ]
 
-    // Donut chart data - share of granted families by office
-    const pieData = grantMix ? grantMix.map(d => ({
-        name: d.publn_auth,
-        value: d.granted_share
-    })).filter(d => d.value > 0) : []
-
-    const renderActiveShape = (props: any) => {
-        const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, value } = props
-
-        return (
-            <g>
-                <text x={cx} y={cy} dy={-4} textAnchor="middle" fill={fill} className="text-xl font-bold">
-                    {payload.name}
-                </text>
-                <text x={cx} y={cy} dy={16} textAnchor="middle" fill="#999" className="text-sm">
-                    {`${(value).toFixed(1)}%`}
-                </text>
-                <Sector
-                    cx={cx}
-                    cy={cy}
-                    innerRadius={innerRadius}
-                    outerRadius={outerRadius + 6}
-                    startAngle={startAngle}
-                    endAngle={endAngle}
-                    fill={fill}
-                    cornerRadius={6}
-                />
-                <Sector
-                    cx={cx}
-                    cy={cy}
-                    startAngle={startAngle}
-                    endAngle={endAngle}
-                    innerRadius={innerRadius - 8}
-                    outerRadius={innerRadius - 4}
-                    fill={fill}
-                />
-            </g>
-        )
-    }
+    const pieData = grantMix
+        ? grantMix
+            .map((d, i) => ({
+                id: d.publn_auth,
+                label: d.publn_auth,
+                value: d.granted_share,
+                color: COLORS[i % COLORS.length],
+            }))
+            .filter((d) => d.value > 0)
+        : []
 
     return (
         <Card className="h-full">
@@ -89,7 +56,6 @@ export function GrantCoverageCard({ grantCoverage, grantMix }: GrantCoverageCard
             </CardHeader>
             <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6 pt-4">
-
                     {/* Grant Coverage Bars */}
                     <div className="space-y-4">
                         <h4 className="text-sm font-semibold text-muted-foreground mb-2">Coverage by Office</h4>
@@ -107,33 +73,31 @@ export function GrantCoverageCard({ grantCoverage, grantMix }: GrantCoverageCard
                     {/* Grant Mix Donut */}
                     <div className="h-[250px] w-full flex flex-col items-center justify-center">
                         <h4 className="text-sm font-semibold text-muted-foreground mb-4 text-center">Grant Mix</h4>
-                        <div className="h-[200px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        activeIndex={activeIndex}
-                                        activeShape={renderActiveShape}
-                                        data={pieData}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        paddingAngle={4}
-                                        dataKey="value"
-                                        onMouseEnter={onPieEnter}
-                                        stroke="none"
-                                        cornerRadius={5}
-                                    >
-                                        {pieData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                </PieChart>
-                            </ResponsiveContainer>
+                        <div className="h-[200px] w-full relative">
+                            <ResponsivePie
+                                data={pieData}
+                                innerRadius={0.65}
+                                padAngle={4}
+                                cornerRadius={5}
+                                activeOuterRadiusOffset={8}
+                                colors={pieData.map((d) => d.color)}
+                                enableArcLabels={false}
+                                enableArcLinkLabels={false}
+                                onMouseEnter={(datum) =>
+                                    setHovered({ id: datum.id as string, label: datum.label as string, value: datum.value })
+                                }
+                                onMouseLeave={() => setHovered(null)}
+                                tooltip={() => null}
+                            />
+                            {hovered && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span className="text-base font-bold">{hovered.label}</span>
+                                    <span className="text-sm text-muted-foreground">{(hovered.value).toFixed(1)}%</span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
-
             </CardContent>
         </Card>
     )

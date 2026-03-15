@@ -87,14 +87,14 @@ export function PortfolioHealthCards({ metrics }: PortfolioHealthCardsProps) {
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <div className="space-y-3 p-4 border rounded-lg bg-card hover:bg-muted/30 transition-colors cursor-help h-full flex flex-col justify-between">
+                    <div className="space-y-3 p-4 border rounded-lg bg-card hover:bg-muted/30 transition-[box-shadow,background-color] duration-150 cursor-help h-full flex flex-col justify-between">
                         <div>
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-sm font-medium text-muted-foreground">{title}</span>
                                 <Icon className="h-4 w-4 text-muted-foreground" />
                             </div>
                             <div className="flex items-baseline gap-2 mb-3">
-                                <span className="text-2xl font-bold tracking-tight">{value}</span>
+                                <span className="metric-value text-2xl">{value}</span>
                                 {label && (
                                     <Badge variant="secondary" className="text-xs font-normal bg-muted">
                                         {label}
@@ -141,7 +141,7 @@ export function PortfolioHealthCards({ metrics }: PortfolioHealthCardsProps) {
                 </div>
             </CardHeader>
             <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
                     {/* 1. Trajectory */}
                     <MetricItem
                         title="Trajectory"

@@ -49,10 +49,9 @@ import {
   Crown,
 } from "lucide-react"
 import { RadarChart } from "@/components/radar-chart"
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts"
-import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from "recharts"
+import { ResponsivePie } from "@nivo/pie"
+import { motion, AnimatePresence } from "motion/react"
 import { CitationEvolutionChart, type CitationYearData } from "@/components/citation-evolution-chart"
-import { PatentLegalFamilyStrength } from "@/components/patent-legal-family-strength"
 import { TrajectoryLifecycleCards, type LifecycleMetrics } from "@/components/trajectory-lifecycle-cards"
 import { ForecastCard } from "@/components/forecast-card"
 import { CitationForecastChart } from "@/components/citation-forecast-chart"
@@ -60,8 +59,10 @@ import { CitationForecastChart } from "@/components/citation-forecast-chart"
 import { MetricWithTooltip } from "@/components/metric-with-tooltip"
 import { TierBadge } from "@/components/tier-badge"
 import { RED_PALETTE } from "@/lib/chart-config"
+import { tabVariants, tabTransition, cardContainerVariants, cardItemVariants } from "@/lib/motion-variants"
 
 import { PatentSearch } from "@/components/patent-search"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function PatentLookupPage() {
   const searchParams = useSearchParams()
@@ -179,16 +180,16 @@ export default function PatentLookupPage() {
     ]
     : [], [overviewData])
 
-  // Prepare pie chart data for advanced view
+  // Prepare pie chart data for advanced view (Nivo uses id/value)
   const cpcPieData =
     advancedData?.technology?.distribution?.cpc_subclasses?.map((cpc) => ({
-      name: cpc.code,
+      id: cpc.code,
       value: cpc.weight * 100,
     })) || []
 
   const industryPieData =
     advancedData?.market?.distribution?.industries?.slice(0, 10).map((ind) => ({
-      name: ind.code.replace(/_/g, " "),
+      id: ind.code.replace(/_/g, " "),
       value: ind.weight * 100,
     })) || []
 
@@ -266,10 +267,46 @@ export default function PatentLookupPage() {
         </Alert>
       )}
 
-      {/* Loading State */}
+      {/* Loading State — shape-matched skeletons */}
       {loading && (
-        <div className="text-center py-12">
-          <div className="text-muted-foreground">Loading patent data...</div>
+        <div className="space-y-6">
+          {/* Metadata card skeleton */}
+          <Card className="mb-6">
+            <CardHeader>
+              <Skeleton className="h-7 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-1/2" />
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-4 gap-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="space-y-2">
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-5 w-24" />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          {/* KPI card row skeleton */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i} className="p-6">
+                <Skeleton className="h-3 w-20 mb-3" />
+                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="h-2 w-full" />
+              </Card>
+            ))}
+          </div>
+          {/* Chart skeleton */}
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-5 w-48" />
+              <Skeleton className="h-3 w-64 mt-1" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-[350px] w-full rounded-md" />
+            </CardContent>
+          </Card>
         </div>
       )}
 
@@ -561,10 +598,19 @@ export default function PatentLookupPage() {
 
                 {/* OVERVIEW TAB */}
                 <TabsContent value="overview" className="space-y-6">
+                  <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab + "-overview"}
+                    variants={tabVariants}
+                    initial="initial" animate="animate" exit="exit"
+                    transition={tabTransition}
+                    className="space-y-6"
+                  >
                   {/* Key Scores */}
 
-
+                  <motion.div variants={cardContainerVariants} initial="hidden" animate="visible" className="space-y-6">
                   {/* Radar Chart Overview */}
+                  <motion.div variants={cardItemVariants}>
                   <Card>
                     <CardHeader>
                       <CardTitle>Patent Strength Radar</CardTitle>
@@ -605,8 +651,10 @@ export default function PatentLookupPage() {
                       </div>
                     </CardContent>
                   </Card>
+                  </motion.div>
 
                   {/* Citations Overview */}
+                  <motion.div variants={cardItemVariants}>
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
@@ -687,18 +735,45 @@ export default function PatentLookupPage() {
 
                     </CardContent>
                   </Card>
+                  </motion.div>
 
                   {/* Relative Positioning */}
 
-
-
+                  </motion.div>
+                  </motion.div>
+                  </AnimatePresence>
                 </TabsContent>
 
                 {/* ADVANCED TAB */}
                 <TabsContent value="advanced" className="space-y-6">
+                  <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab + "-advanced"}
+                    variants={tabVariants}
+                    initial="initial" animate="animate" exit="exit"
+                    transition={tabTransition}
+                    className="space-y-6"
+                  >
                   {analysisLoading && (
-                    <div className="text-center py-12">
-                      <div className="text-muted-foreground">Loading analysis data...</div>
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                          <Card key={i} className="p-6">
+                            <Skeleton className="h-3 w-20 mb-3" />
+                            <Skeleton className="h-8 w-16 mb-2" />
+                            <Skeleton className="h-2 w-full" />
+                          </Card>
+                        ))}
+                      </div>
+                      <Card>
+                        <CardHeader>
+                          <Skeleton className="h-5 w-48" />
+                          <Skeleton className="h-3 w-64 mt-1" />
+                        </CardHeader>
+                        <CardContent>
+                          <Skeleton className="h-[350px] w-full rounded-md" />
+                        </CardContent>
+                      </Card>
                     </div>
                   )}
                   {analysisError && (
@@ -730,28 +805,20 @@ export default function PatentLookupPage() {
                               <div className="flex items-center justify-center">
                                 {/* Donut Chart */}
                                 {cpcPieData.length > 0 ? (
-                                  <div className="flex flex-col items-center justify-center">
-                                    <div className="h-[200px] w-full min-w-[200px]">
-                                      <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                          <Pie
-                                            data={cpcPieData}
-                                            cx="50%"
-                                            cy="50%"
-                                            innerRadius={60}
-                                            outerRadius={80}
-                                            paddingAngle={2}
-                                            dataKey="value"
-                                            nameKey="name"
-                                          >
-                                            {cpcPieData.map((entry, index) => (
-                                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                            ))}
-                                          </Pie>
-                                          <RechartsTooltip contentStyle={{ borderRadius: "8px" }} formatter={(val: number) => `${val.toFixed(1)}%`} />
-                                        </PieChart>
-                                      </ResponsiveContainer>
-                                    </div>
+                                  <div className="h-[200px] w-full min-w-[200px]">
+                                    <ResponsivePie
+                                      data={cpcPieData}
+                                      innerRadius={0.6}
+                                      padAngle={2}
+                                      colors={COLORS}
+                                      enableArcLabels={false}
+                                      enableArcLinkLabels={false}
+                                      tooltip={({ datum }) => (
+                                        <div className="bg-background border border-border p-2 rounded-lg text-xs">
+                                          {datum.id}: {datum.value.toFixed(1)}%
+                                        </div>
+                                      )}
+                                    />
                                   </div>
                                 ) : (
                                   <div className="h-[200px] w-full flex items-center justify-center text-muted-foreground text-sm">
@@ -845,28 +912,20 @@ export default function PatentLookupPage() {
                               <div className="flex items-center justify-center">
                                 {/* Donut Chart */}
                                 {industryPieData.length > 0 ? (
-                                  <div className="flex flex-col items-center justify-center">
-                                    <div className="h-[200px] w-full min-w-[200px]">
-                                      <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                          <Pie
-                                            data={industryPieData}
-                                            cx="50%"
-                                            cy="50%"
-                                            innerRadius={60}
-                                            outerRadius={80}
-                                            paddingAngle={2}
-                                            dataKey="value"
-                                            nameKey="name"
-                                          >
-                                            {industryPieData.map((entry, index) => (
-                                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                            ))}
-                                          </Pie>
-                                          <RechartsTooltip contentStyle={{ borderRadius: "8px" }} formatter={(val: number) => `${val.toFixed(1)}%`} />
-                                        </PieChart>
-                                      </ResponsiveContainer>
-                                    </div>
+                                  <div className="h-[200px] w-full min-w-[200px]">
+                                    <ResponsivePie
+                                      data={industryPieData}
+                                      innerRadius={0.6}
+                                      padAngle={2}
+                                      colors={COLORS}
+                                      enableArcLabels={false}
+                                      enableArcLinkLabels={false}
+                                      tooltip={({ datum }) => (
+                                        <div className="bg-background border border-border p-2 rounded-lg text-xs">
+                                          {datum.id}: {datum.value.toFixed(1)}%
+                                        </div>
+                                      )}
+                                    />
                                   </div>
                                 ) : (
                                   <div className="h-[200px] w-full flex items-center justify-center text-muted-foreground text-sm">
@@ -1295,7 +1354,8 @@ export default function PatentLookupPage() {
                       </Card>
                     </>
                   )}
-
+                  </motion.div>
+                  </AnimatePresence>
 
                 </TabsContent>
 

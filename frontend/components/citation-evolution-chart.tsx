@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from "react"
-import { Area, ComposedChart, Line, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { useMemo, useState } from "react"
+import { ResponsiveLine } from "@nivo/line"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { TrendingUp } from "lucide-react"
-import { ChartTooltip } from "@/components/charts/ChartTooltip"
+import { TrendingUp, BarChart3 } from "lucide-react"
 import { CHART_COLORS } from "@/lib/chart-config"
+import { getNivoTheme } from "@/lib/nivo-theme"
 
 export interface CitationYearData {
     year: number
@@ -22,20 +22,23 @@ interface CitationEvolutionChartProps {
 }
 
 export function CitationEvolutionChart({ data }: CitationEvolutionChartProps) {
-    const [showYoY, setShowYoY] = useState(false)
     const [showSplit, setShowSplit] = useState(false)
 
-    // Enrich data with YoY growth
-    const enrichedData = data.map((item, index) => {
-        const prev = data[index - 1]
-        let yoy_growth = null
-        if (prev && prev.total > 0) {
-            yoy_growth = ((item.total - prev.total) / prev.total) * 100
-        } else if (prev && prev.total === 0 && item.total > 0) {
-            yoy_growth = 100 // Treat 0 to >0 as 100% growth for visualization cap
-        }
-        return { ...item, yoy_growth }
-    })
+    const nivoData = useMemo(
+        () =>
+            showSplit
+                ? [
+                      { id: "early", data: data.map((d) => ({ x: d.year, y: d.early })) },
+                      { id: "mid", data: data.map((d) => ({ x: d.year, y: d.mid })) },
+                      { id: "late", data: data.map((d) => ({ x: d.year, y: d.late })) },
+                  ]
+                : [{ id: "total", data: data.map((d) => ({ x: d.year, y: d.total })) }],
+        [data, showSplit]
+    )
+
+    const colors = showSplit
+        ? [CHART_COLORS.green, CHART_COLORS.blue, CHART_COLORS.amber]
+        : [CHART_COLORS.indigo]
 
     return (
         <Card>
@@ -47,95 +50,53 @@ export function CitationEvolutionChart({ data }: CitationEvolutionChartProps) {
                             Global Citation Dynamics
                         </CardTitle>
                         <CardDescription>
-                            Annual citation impact and growth trajectory
+                            Annual citations — split by citation age cohort
                         </CardDescription>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                            <Switch id="split-mode" checked={showSplit} onCheckedChange={setShowSplit} />
-                            <Label htmlFor="split-mode" className="text-xs">Split View</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Switch id="show-yoy" checked={showYoY} onCheckedChange={setShowYoY} />
-                            <Label htmlFor="show-yoy" className="text-xs">YoY %</Label>
-                        </div>
+                    <div className="flex items-center gap-2">
+                        <Switch id="split-mode" checked={showSplit} onCheckedChange={setShowSplit} />
+                        <Label htmlFor="split-mode" className="text-xs">Split View</Label>
                     </div>
                 </div>
             </CardHeader>
             <CardContent>
-                <div className="h-[350px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={enrichedData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                            <defs>
-                                <linearGradient id="citationColorTotal" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor={CHART_COLORS.indigo} stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor={CHART_COLORS.indigo} stopOpacity={0.1} />
-                                </linearGradient>
-                                <linearGradient id="citationColorEarly" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor={CHART_COLORS.green} stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor={CHART_COLORS.green} stopOpacity={0.1} />
-                                </linearGradient>
-                                <linearGradient id="citationColorMid" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor={CHART_COLORS.blue} stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor={CHART_COLORS.blue} stopOpacity={0.1} />
-                                </linearGradient>
-                                <linearGradient id="citationColorLate" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor={CHART_COLORS.amber} stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor={CHART_COLORS.amber} stopOpacity={0.1} />
-                                </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                            <XAxis
-                                dataKey="year"
-                                tick={{ fontSize: 12, fill: CHART_COLORS.gray }}
-                                axisLine={false}
-                                tickLine={false}
-                            />
-                            <YAxis
-                                yAxisId="left"
-                                tick={{ fontSize: 12, fill: CHART_COLORS.gray }}
-                                axisLine={false}
-                                tickLine={false}
-                                label={{ value: 'Annual Citations', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: CHART_COLORS.gray, fontSize: 12 } }}
-                            />
-                            {showYoY && (
-                                <YAxis
-                                    yAxisId="right"
-                                    orientation="right"
-                                    tick={{ fontSize: 12, fill: CHART_COLORS.red }}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    unit="%"
-                                    domain={['auto', 'auto']}
-                                />
+                {data.length === 0 ? (
+                    <div className="flex h-[350px] flex-col items-center justify-center gap-2 text-muted-foreground">
+                        <BarChart3 className="h-8 w-8 opacity-40" />
+                        <p className="text-sm">No data available</p>
+                    </div>
+                ) : (
+                    <div className="h-[350px] w-full">
+                        <ResponsiveLine
+                            data={nivoData}
+                            theme={getNivoTheme()}
+                            colors={colors}
+                            margin={{ top: 10, right: 10, bottom: 40, left: 45 }}
+                            xScale={{ type: "point" }}
+                            yScale={{ type: "linear", stacked: showSplit, min: 0, max: "auto" }}
+                            enableArea={true}
+                            areaOpacity={0.2}
+                            axisBottom={{
+                                tickSize: 0,
+                                tickPadding: 8,
+                            }}
+                            axisLeft={{
+                                tickSize: 0,
+                                tickPadding: 8,
+                            }}
+                            enablePoints={false}
+                            enableGridX={false}
+                            curve="monotoneX"
+                            tooltip={({ point }) => (
+                                <div className="bg-background border border-border p-2 rounded-lg text-xs shadow">
+                                    <span className="font-semibold">{point.seriesId}</span>
+                                    {" · "}
+                                    <span>{String(point.data.x)}: {String(point.data.y)}</span>
+                                </div>
                             )}
-                            <Tooltip content={<ChartTooltip formatYoY />} />
-
-                            {showSplit ? (
-                                <>
-                                    <Area yAxisId="left" type="monotone" dataKey="late" stackId="1" stroke={CHART_COLORS.amber} fill="url(#citationColorLate)" />
-                                    <Area yAxisId="left" type="monotone" dataKey="mid" stackId="1" stroke={CHART_COLORS.blue} fill="url(#citationColorMid)" />
-                                    <Area yAxisId="left" type="monotone" dataKey="early" stackId="1" stroke={CHART_COLORS.green} fill="url(#citationColorEarly)" />
-                                </>
-                            ) : (
-                                <Area yAxisId="left" type="monotone" dataKey="total" stroke={CHART_COLORS.indigo} fill="url(#citationColorTotal)" strokeWidth={2} />
-                            )}
-
-                            {showYoY && (
-                                <Line
-                                    yAxisId="right"
-                                    type="monotone"
-                                    dataKey="yoy_growth"
-                                    name="YoY Growth"
-                                    stroke={CHART_COLORS.red}
-                                    strokeWidth={2}
-                                    dot={{ r: 3 }}
-                                    strokeDasharray="5 5"
-                                />
-                            )}
-                        </ComposedChart>
-                    </ResponsiveContainer>
-                </div>
+                        />
+                    </div>
+                )}
             </CardContent>
         </Card>
     )
