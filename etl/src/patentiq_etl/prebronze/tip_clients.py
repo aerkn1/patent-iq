@@ -83,10 +83,20 @@ def close_tip_client(client) -> None:
 
 
 def get_patstat_database_module():
-    """Return the TIP PATSTAT database/model module."""
-    from epo.tipdata.patstat import database as patstat_database
+    """Return the TIP PATSTAT ORM model module.
 
-    return patstat_database
+    TIP environments commonly expose the table classes from
+    `epo.tipdata.patstat.database.models`. Keep a fallback to the broader
+    `epo.tipdata.patstat.database` module for compatibility with older layouts.
+    """
+    try:
+        from epo.tipdata.patstat.database import models as patstat_models
+
+        return patstat_models
+    except ImportError:
+        from epo.tipdata.patstat import database as patstat_database
+
+        return patstat_database
 
 
 def resolve_model(database_module, candidates: Iterable[str]):
