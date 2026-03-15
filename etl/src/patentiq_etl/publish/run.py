@@ -5,8 +5,6 @@ import os
 import shutil
 from pathlib import Path
 
-from azure.storage.blob import BlobServiceClient
-
 from patentiq_etl.common.io import write_text_json
 from patentiq_etl.common.types import BuildSettings, StageResult
 
@@ -63,6 +61,8 @@ def publish_release(settings: BuildSettings) -> list[StageResult]:
     result.outputs.append(str(active_release_path))
 
     if settings.azure_publish_enabled:
+        from azure.storage.blob import BlobServiceClient
+
         connection_string = os.environ.get(settings.azure["connection_string_env"])
         if not connection_string:
             result.status = "degraded"

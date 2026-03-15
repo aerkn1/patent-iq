@@ -17,7 +17,6 @@ from patentiq_etl.common.stats import write_stage_stats
 from patentiq_etl.common.types import StageResult
 from patentiq_etl.gold.run import run_gold
 from patentiq_etl.ml.run import run_ml
-from patentiq_etl.publish.run import publish_release
 from patentiq_etl.prebronze.run import run_prebronze
 from patentiq_etl.semantic.run import run_semantic
 from patentiq_etl.silver.run import run_scope, run_silver
@@ -32,7 +31,7 @@ STAGES: dict[str, Callable] = {
     "ml": run_ml,
     "semantic": run_semantic,
     "certify-release": lambda settings: [certify_release(settings)],
-    "publish": publish_release,
+    "publish": lambda settings: __import__("patentiq_etl.publish.run", fromlist=["publish_release"]).publish_release(settings),
 }
 
 
