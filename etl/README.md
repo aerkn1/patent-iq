@@ -26,6 +26,7 @@ This ETL is designed for:
 
 ```bash
 python scripts/certify_sources.py
+python scripts/run_stage.py certify
 python scripts/run_stage.py prebronze
 python scripts/run_stage.py bronze
 python scripts/run_stage.py scope

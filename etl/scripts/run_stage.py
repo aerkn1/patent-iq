@@ -7,7 +7,7 @@ from _bootstrap import bootstrap
 
 etl_root = bootstrap()
 
-from patentiq_etl.bronze.certify import certify_release
+from patentiq_etl.bronze.certify import certify_release, certify_sources
 from patentiq_etl.bronze.run import run_bronze
 from patentiq_etl.common.config import load_settings
 from patentiq_etl.common.journal import append_stage_entry
@@ -23,6 +23,8 @@ from patentiq_etl.silver.run import run_scope, run_silver
 
 
 STAGES: dict[str, Callable] = {
+    "certify": lambda settings: [certify_sources(settings)],
+    "source-certification": lambda settings: [certify_sources(settings)],
     "prebronze": run_prebronze,
     "bronze": run_bronze,
     "scope": run_scope,
@@ -31,6 +33,7 @@ STAGES: dict[str, Callable] = {
     "ml": run_ml,
     "semantic": run_semantic,
     "certify-release": lambda settings: [certify_release(settings)],
+    "release-certification": lambda settings: [certify_release(settings)],
     "publish": lambda settings: __import__("patentiq_etl.publish.run", fromlist=["publish_release"]).publish_release(settings),
 }
 
