@@ -9,6 +9,7 @@ from patentiq_etl.bronze.source_registry import PATSTAT_TABLES, REFERENCE_TABLES
 from patentiq_etl.common.io import candidate_files
 from patentiq_etl.common.types import BuildSettings, StageResult
 from patentiq_etl.prebronze.tip_clients import (
+    close_tip_client,
     get_epab_client,
     get_patstat_client,
     get_patstat_database_module,
@@ -30,6 +31,8 @@ LOGGER = logging.getLogger(__name__)
 def _certify_tip_patstat(settings: BuildSettings, result: StageResult) -> dict[str, Path]:
     """Verify TIP PATSTAT and Register availability instead of local raw files."""
     resolved: dict[str, Path] = {}
+    patstat = None
+    db = None
     try:
         patstat, db = get_patstat_client(settings.tip_env)
         database_module = get_patstat_database_module()
@@ -78,12 +81,15 @@ def _certify_tip_patstat(settings: BuildSettings, result: StageResult) -> dict[s
     except Exception as exc:  # pragma: no cover - requires TIP runtime
         result.status = "degraded" if result.status == "success" else result.status
         result.warnings.append(f"TIP PATSTAT field coverage check degraded due to query failure: {exc}")
+    finally:
+        close_tip_client(patstat)
 
     return resolved
 
 
 def _certify_tip_epab(settings: BuildSettings, result: StageResult) -> None:
     """Verify TIP EPAB client availability and query construction."""
+    epab = None
     try:
         epab = get_epab_client(settings.tip_env)
     except Exception as exc:  # pragma: no cover - requires TIP runtime
@@ -99,6 +105,8 @@ def _certify_tip_epab(settings: BuildSettings, result: StageResult) -> None:
     except Exception as exc:  # pragma: no cover - requires TIP runtime
         result.status = "degraded" if result.status == "success" else result.status
         result.warnings.append(f"TIP EPAB publication query construction failed: {exc}")
+    finally:
+        close_tip_client(epab)
 
 
 def _read_source_columns(path: Path) -> list[str]:

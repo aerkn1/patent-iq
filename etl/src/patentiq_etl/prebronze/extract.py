@@ -15,6 +15,7 @@ from patentiq_etl.bronze.source_registry import PATSTAT_TABLES, REFERENCE_TABLES
 from patentiq_etl.common.io import candidate_files, ensure_dir, parquet_row_count, write_text_json
 from patentiq_etl.common.types import BuildSettings, StageResult
 from patentiq_etl.prebronze.tip_clients import (
+    close_tip_client,
     get_epab_client,
     get_patstat_client,
     get_patstat_database_module,
@@ -736,265 +737,277 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult):
     """Build the bounded PATSTAT seed universe from TIP clients."""
     from sqlalchemy import func
 
-    patstat, db = get_patstat_client(settings.tip_env)
-    database_module = get_patstat_database_module()
-    TLS201 = resolve_patstat_model(database_module, "bronze_patstat_appln")
-    TLS211 = resolve_patstat_model(database_module, "bronze_patstat_pat_publn")
-    TLS207 = resolve_patstat_model(database_module, "bronze_patstat_pers_appln")
-    TLS230 = resolve_patstat_model(database_module, "bronze_patstat_appln_techn_field")
-    TLS901 = resolve_patstat_model(database_module, "bronze_ref_techn_field_ipc")
+    patstat = None
+    try:
+        patstat, db = get_patstat_client(settings.tip_env)
+        database_module = get_patstat_database_module()
+        TLS201 = resolve_patstat_model(database_module, "bronze_patstat_appln")
+        TLS211 = resolve_patstat_model(database_module, "bronze_patstat_pat_publn")
+        TLS207 = resolve_patstat_model(database_module, "bronze_patstat_pers_appln")
+        TLS230 = resolve_patstat_model(database_module, "bronze_patstat_appln_techn_field")
+        TLS901 = resolve_patstat_model(database_module, "bronze_ref_techn_field_ipc")
 
-    if None in {TLS201, TLS211, TLS230, TLS901}:
-        result.status = "failed"
-        result.warnings.append("TIP PATSTAT seed extraction requires TLS201, TLS211, TLS230, and TLS901 models.")
-        return {}
+        if None in {TLS201, TLS211, TLS230, TLS901}:
+            result.status = "failed"
+            result.warnings.append("TIP PATSTAT seed extraction requires TLS201, TLS211, TLS230, and TLS901 models.")
+            return {}
 
-    ensure_dir(settings.bounded_seed_dir)
-    seed_appln_q = (
-        db.query(
-            TLS230.appln_id.label("appln_id"),
-            TLS901.techn_field.label("wipo_field"),
-        )
-        .join(TLS901, TLS230.techn_field_nr == TLS901.techn_field_nr)
-        .filter(TLS901.techn_field.in_(settings.selected_wipo_fields))
-        .distinct()
-    )
-    seed_appln_df = query_to_dataframe(patstat, seed_appln_q)
-    result.metrics["seed_appln_count"] = write_dataframe_parquet(seed_appln_df, settings.bounded_seed_dir / "seed_appln_ids.parquet")
-    result.outputs.append(str(settings.bounded_seed_dir / "seed_appln_ids.parquet"))
-
-    seed_appln_sq = seed_appln_q.subquery()
-    seed_family_q = (
-        db.query(TLS201.docdb_family_id.label("docdb_family_id"))
-        .join(seed_appln_sq, TLS201.appln_id == seed_appln_sq.c.appln_id)
-        .filter(TLS201.docdb_family_id.isnot(None))
-        .distinct()
-    )
-    seed_family_df = query_to_dataframe(patstat, seed_family_q)
-    result.metrics["seed_family_count"] = write_dataframe_parquet(seed_family_df, settings.bounded_seed_dir / "seed_family_ids.parquet")
-    result.outputs.append(str(settings.bounded_seed_dir / "seed_family_ids.parquet"))
-
-    seed_publn_q = (
-        db.query(
-            TLS211.pat_publn_id.label("pat_publn_id"),
-            TLS211.appln_id.label("appln_id"),
-            TLS211.publn_auth.label("publn_auth"),
-            TLS211.publn_nr.label("publication_number"),
-            TLS211.publn_kind.label("publication_kind"),
-            TLS211.publn_date.label("publication_date"),
-            func.concat(
-                func.coalesce(TLS211.publn_auth, ""),
-                func.coalesce(TLS211.publn_nr, ""),
-                func.coalesce(TLS211.publn_kind, ""),
-            ).label("publication_number_full"),
-        )
-        .join(seed_appln_sq, TLS211.appln_id == seed_appln_sq.c.appln_id)
-        .filter(TLS211.pat_publn_id.isnot(None))
-        .distinct()
-    )
-    seed_publn_df = query_to_dataframe(patstat, seed_publn_q)
-    result.metrics["seed_publn_count"] = write_dataframe_parquet(seed_publn_df, settings.bounded_seed_dir / "seed_publn_ids.parquet")
-    result.outputs.append(str(settings.bounded_seed_dir / "seed_publn_ids.parquet"))
-
-    if TLS207 is not None:
-        seed_person_q = (
-            db.query(TLS207.person_id.label("person_id"))
-            .join(seed_appln_sq, TLS207.appln_id == seed_appln_sq.c.appln_id)
-            .filter(TLS207.person_id.isnot(None))
+        ensure_dir(settings.bounded_seed_dir)
+        seed_appln_q = (
+            db.query(
+                TLS230.appln_id.label("appln_id"),
+                TLS901.techn_field.label("wipo_field"),
+            )
+            .join(TLS901, TLS230.techn_field_nr == TLS901.techn_field_nr)
+            .filter(TLS901.techn_field.in_(settings.selected_wipo_fields))
             .distinct()
         )
-        seed_person_df = query_to_dataframe(patstat, seed_person_q)
-        result.metrics["seed_person_count"] = write_dataframe_parquet(seed_person_df, settings.bounded_seed_dir / "seed_person_ids.parquet")
-        result.outputs.append(str(settings.bounded_seed_dir / "seed_person_ids.parquet"))
+        seed_appln_df = query_to_dataframe(patstat, seed_appln_q)
+        result.metrics["seed_appln_count"] = write_dataframe_parquet(seed_appln_df, settings.bounded_seed_dir / "seed_appln_ids.parquet")
+        result.outputs.append(str(settings.bounded_seed_dir / "seed_appln_ids.parquet"))
 
-    seed_ep_appln_q = (
-        db.query(TLS201.appln_id.label("appln_id"))
-        .join(seed_appln_sq, TLS201.appln_id == seed_appln_sq.c.appln_id)
-        .filter(TLS201.appln_auth == "EP")
-        .distinct()
-    )
-    seed_ep_appln_df = query_to_dataframe(patstat, seed_ep_appln_q)
-    result.metrics["seed_ep_appln_count"] = write_dataframe_parquet(seed_ep_appln_df, settings.bounded_seed_dir / "seed_ep_appln_ids.parquet")
-    result.outputs.append(str(settings.bounded_seed_dir / "seed_ep_appln_ids.parquet"))
+        seed_appln_sq = seed_appln_q.subquery()
+        seed_family_q = (
+            db.query(TLS201.docdb_family_id.label("docdb_family_id"))
+            .join(seed_appln_sq, TLS201.appln_id == seed_appln_sq.c.appln_id)
+            .filter(TLS201.docdb_family_id.isnot(None))
+            .distinct()
+        )
+        seed_family_df = query_to_dataframe(patstat, seed_family_q)
+        result.metrics["seed_family_count"] = write_dataframe_parquet(seed_family_df, settings.bounded_seed_dir / "seed_family_ids.parquet")
+        result.outputs.append(str(settings.bounded_seed_dir / "seed_family_ids.parquet"))
 
-    seed_ep_publn_df = seed_publn_df[seed_publn_df["publn_auth"] == "EP"].copy()
-    if not seed_ep_publn_df.empty:
-        write_dataframe_parquet(seed_ep_publn_df, settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet")
-        result.outputs.append(str(settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet"))
-        result.metrics["seed_ep_publication_count"] = len(seed_ep_publn_df.index)
-    else:
-        result.metrics["seed_ep_publication_count"] = 0
+        seed_publn_q = (
+            db.query(
+                TLS211.pat_publn_id.label("pat_publn_id"),
+                TLS211.appln_id.label("appln_id"),
+                TLS211.publn_auth.label("publn_auth"),
+                TLS211.publn_nr.label("publication_number"),
+                TLS211.publn_kind.label("publication_kind"),
+                TLS211.publn_date.label("publication_date"),
+                func.concat(
+                    func.coalesce(TLS211.publn_auth, ""),
+                    func.coalesce(TLS211.publn_nr, ""),
+                    func.coalesce(TLS211.publn_kind, ""),
+                ).label("publication_number_full"),
+            )
+            .join(seed_appln_sq, TLS211.appln_id == seed_appln_sq.c.appln_id)
+            .filter(TLS211.pat_publn_id.isnot(None))
+            .distinct()
+        )
+        seed_publn_df = query_to_dataframe(patstat, seed_publn_q)
+        result.metrics["seed_publn_count"] = write_dataframe_parquet(seed_publn_df, settings.bounded_seed_dir / "seed_publn_ids.parquet")
+        result.outputs.append(str(settings.bounded_seed_dir / "seed_publn_ids.parquet"))
 
-    seed_us_publn_df = seed_publn_df[seed_publn_df["publn_auth"] == "US"].copy()
-    if not seed_us_publn_df.empty:
-        write_dataframe_parquet(seed_us_publn_df, settings.bounded_seed_dir / "seed_us_publication_numbers.parquet")
-        result.outputs.append(str(settings.bounded_seed_dir / "seed_us_publication_numbers.parquet"))
-        result.metrics["seed_us_publication_count"] = len(seed_us_publn_df.index)
-    else:
-        result.metrics["seed_us_publication_count"] = 0
+        if TLS207 is not None:
+            seed_person_q = (
+                db.query(TLS207.person_id.label("person_id"))
+                .join(seed_appln_sq, TLS207.appln_id == seed_appln_sq.c.appln_id)
+                .filter(TLS207.person_id.isnot(None))
+                .distinct()
+            )
+            seed_person_df = query_to_dataframe(patstat, seed_person_q)
+            result.metrics["seed_person_count"] = write_dataframe_parquet(seed_person_df, settings.bounded_seed_dir / "seed_person_ids.parquet")
+            result.outputs.append(str(settings.bounded_seed_dir / "seed_person_ids.parquet"))
 
-    field_family_df = (
-        seed_appln_df.merge(query_to_dataframe(patstat, db.query(TLS201.appln_id, TLS201.docdb_family_id)), on="appln_id", how="left")
-        .groupby("wipo_field", dropna=False)["docdb_family_id"]
-        .nunique()
-        .reset_index(name="family_count")
-    )
-    write_dataframe_parquet(field_family_df, settings.bounded_seed_dir / "seed_family_field_counts.parquet")
-    result.outputs.append(str(settings.bounded_seed_dir / "seed_family_field_counts.parquet"))
-    result.metrics["seed_field_family_count_rows"] = len(field_family_df.index)
-    for _, row in field_family_df.iterrows():
-        result.metrics[f"seed_family_count__{row['wipo_field']}"] = int(row["family_count"])
+        seed_ep_appln_q = (
+            db.query(TLS201.appln_id.label("appln_id"))
+            .join(seed_appln_sq, TLS201.appln_id == seed_appln_sq.c.appln_id)
+            .filter(TLS201.appln_auth == "EP")
+            .distinct()
+        )
+        seed_ep_appln_df = query_to_dataframe(patstat, seed_ep_appln_q)
+        result.metrics["seed_ep_appln_count"] = write_dataframe_parquet(seed_ep_appln_df, settings.bounded_seed_dir / "seed_ep_appln_ids.parquet")
+        result.outputs.append(str(settings.bounded_seed_dir / "seed_ep_appln_ids.parquet"))
 
-    result.inputs.append(f"tip://patstat/{settings.tip_env}")
-    return {
-        "seed_appln_ids": settings.bounded_seed_dir / "seed_appln_ids.parquet",
-        "seed_family_ids": settings.bounded_seed_dir / "seed_family_ids.parquet",
-        "seed_publn_ids": settings.bounded_seed_dir / "seed_publn_ids.parquet",
-        "seed_person_ids": settings.bounded_seed_dir / "seed_person_ids.parquet",
-        "seed_ep_appln_ids": settings.bounded_seed_dir / "seed_ep_appln_ids.parquet",
-        "seed_us_publication_numbers": settings.bounded_seed_dir / "seed_us_publication_numbers.parquet",
-        "seed_ep_publication_numbers": settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet",
-    }
+        seed_ep_publn_df = seed_publn_df[seed_publn_df["publn_auth"] == "EP"].copy()
+        if not seed_ep_publn_df.empty:
+            write_dataframe_parquet(seed_ep_publn_df, settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet")
+            result.outputs.append(str(settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet"))
+            result.metrics["seed_ep_publication_count"] = len(seed_ep_publn_df.index)
+        else:
+            result.metrics["seed_ep_publication_count"] = 0
+
+        seed_us_publn_df = seed_publn_df[seed_publn_df["publn_auth"] == "US"].copy()
+        if not seed_us_publn_df.empty:
+            write_dataframe_parquet(seed_us_publn_df, settings.bounded_seed_dir / "seed_us_publication_numbers.parquet")
+            result.outputs.append(str(settings.bounded_seed_dir / "seed_us_publication_numbers.parquet"))
+            result.metrics["seed_us_publication_count"] = len(seed_us_publn_df.index)
+        else:
+            result.metrics["seed_us_publication_count"] = 0
+
+        field_family_df = (
+            seed_appln_df.merge(query_to_dataframe(patstat, db.query(TLS201.appln_id, TLS201.docdb_family_id)), on="appln_id", how="left")
+            .groupby("wipo_field", dropna=False)["docdb_family_id"]
+            .nunique()
+            .reset_index(name="family_count")
+        )
+        write_dataframe_parquet(field_family_df, settings.bounded_seed_dir / "seed_family_field_counts.parquet")
+        result.outputs.append(str(settings.bounded_seed_dir / "seed_family_field_counts.parquet"))
+        result.metrics["seed_field_family_count_rows"] = len(field_family_df.index)
+        for _, row in field_family_df.iterrows():
+            result.metrics[f"seed_family_count__{row['wipo_field']}"] = int(row["family_count"])
+
+        result.inputs.append(f"tip://patstat/{settings.tip_env}")
+        return {
+            "seed_appln_ids": settings.bounded_seed_dir / "seed_appln_ids.parquet",
+            "seed_family_ids": settings.bounded_seed_dir / "seed_family_ids.parquet",
+            "seed_publn_ids": settings.bounded_seed_dir / "seed_publn_ids.parquet",
+            "seed_person_ids": settings.bounded_seed_dir / "seed_person_ids.parquet",
+            "seed_ep_appln_ids": settings.bounded_seed_dir / "seed_ep_appln_ids.parquet",
+            "seed_us_publication_numbers": settings.bounded_seed_dir / "seed_us_publication_numbers.parquet",
+            "seed_ep_publication_numbers": settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet",
+        }
+    finally:
+        close_tip_client(patstat)
 
 
 def _extract_patstat_bounded_raw_tip(settings: BuildSettings, seeds: dict[str, Path], result: StageResult) -> None:
     """Extract bounded PATSTAT raw tables from TIP PATSTAT ORM queries."""
-    patstat, db = get_patstat_client(settings.tip_env)
-    database_module = get_patstat_database_module()
+    patstat = None
+    try:
+        patstat, db = get_patstat_client(settings.tip_env)
+        database_module = get_patstat_database_module()
 
-    seed_appln = seeds["seed_appln_ids"]
-    seed_family = seeds["seed_family_ids"]
-    seed_publn = seeds["seed_publn_ids"]
-    seed_person = seeds.get("seed_person_ids")
+        seed_appln = seeds["seed_appln_ids"]
+        seed_family = seeds["seed_family_ids"]
+        seed_publn = seeds["seed_publn_ids"]
+        seed_person = seeds.get("seed_person_ids")
 
-    seed_frames = {
-        "appln": duckdb.connect().execute("select appln_id from read_parquet(?)", [str(seed_appln)]).df(),
-        "family": duckdb.connect().execute("select docdb_family_id from read_parquet(?)", [str(seed_family)]).df(),
-        "publn": duckdb.connect().execute("select pat_publn_id from read_parquet(?)", [str(seed_publn)]).df(),
-    }
-    if seed_person and seed_person.exists():
-        seed_frames["person"] = duckdb.connect().execute("select person_id from read_parquet(?)", [str(seed_person)]).df()
+        seed_frames = {
+            "appln": duckdb.connect().execute("select appln_id from read_parquet(?)", [str(seed_appln)]).df(),
+            "family": duckdb.connect().execute("select docdb_family_id from read_parquet(?)", [str(seed_family)]).df(),
+            "publn": duckdb.connect().execute("select pat_publn_id from read_parquet(?)", [str(seed_publn)]).df(),
+        }
+        if seed_person and seed_person.exists():
+            seed_frames["person"] = duckdb.connect().execute("select person_id from read_parquet(?)", [str(seed_person)]).df()
 
-    filter_specs = {
-        "bronze_patstat_appln": ("family", "docdb_family_id"),
-        "bronze_patstat_appln_title": ("appln", "appln_id"),
-        "bronze_patstat_appln_abstr": ("appln", "appln_id"),
-        "bronze_patstat_appln_prior": ("appln", "appln_id"),
-        "bronze_patstat_person": ("person", "person_id"),
-        "bronze_patstat_pers_appln": ("appln", "appln_id"),
-        "bronze_patstat_appln_ipc": ("appln", "appln_id"),
-        "bronze_patstat_pat_publn": ("appln", "appln_id"),
-        "bronze_patstat_appln_contn": ("appln", "appln_id"),
-        "bronze_patstat_appln_cpc": ("appln", "appln_id"),
-        "bronze_patstat_appln_techn_field": ("appln", "appln_id"),
-        "bronze_patstat_inpadoc_legal_event": ("appln", "appln_id"),
-        "bronze_patstat_citation": ("publn", "pat_publn_id"),
-        "bronze_patstat_docdb_fam_citn": ("family", "docdb_family_id"),
-    }
+        filter_specs = {
+            "bronze_patstat_appln": ("family", "docdb_family_id"),
+            "bronze_patstat_appln_title": ("appln", "appln_id"),
+            "bronze_patstat_appln_abstr": ("appln", "appln_id"),
+            "bronze_patstat_appln_prior": ("appln", "appln_id"),
+            "bronze_patstat_person": ("person", "person_id"),
+            "bronze_patstat_pers_appln": ("appln", "appln_id"),
+            "bronze_patstat_appln_ipc": ("appln", "appln_id"),
+            "bronze_patstat_pat_publn": ("appln", "appln_id"),
+            "bronze_patstat_appln_contn": ("appln", "appln_id"),
+            "bronze_patstat_appln_cpc": ("appln", "appln_id"),
+            "bronze_patstat_appln_techn_field": ("appln", "appln_id"),
+            "bronze_patstat_inpadoc_legal_event": ("appln", "appln_id"),
+            "bronze_patstat_citation": ("publn", "pat_publn_id"),
+            "bronze_patstat_docdb_fam_citn": ("family", "docdb_family_id"),
+        }
 
-    for logical_name, (seed_type, column_name) in filter_specs.items():
-        model = resolve_patstat_model(database_module, logical_name)
-        if model is None:
-            result.warnings.append(f"Skipped TIP extract for `{logical_name}` because the ORM model was unavailable.")
-            continue
-        if seed_type not in seed_frames:
-            result.warnings.append(f"Skipped TIP extract for `{logical_name}` because the `{seed_type}` seed was unavailable.")
-            continue
-        seed_values = seed_frames[seed_type].iloc[:, 0].dropna().tolist()
-        if not seed_values:
-            continue
-        query = db.query(model).filter(getattr(model, column_name).in_(seed_values))
-        df = query_to_dataframe(patstat, query)
-        _write_tip_dataframe(df, settings.bounded_patstat_dir / f"{PATSTAT_TABLES[logical_name][0]}.parquet", logical_name, result)
-
-    legal_model = resolve_patstat_model(database_module, "bronze_ref_legal_event_code")
-    if legal_model is not None:
-        df = query_to_dataframe(patstat, db.query(legal_model))
-        _write_tip_dataframe(df, settings.bounded_patstat_dir / f"{PATSTAT_TABLES['bronze_ref_legal_event_code'][0]}.parquet", "bronze_ref_legal_event_code", result)
-
-    npl_model = resolve_patstat_model(database_module, "bronze_patstat_npl_publn")
-    citation_path = settings.bounded_patstat_dir / f"{PATSTAT_TABLES['bronze_patstat_citation'][0]}.parquet"
-    if npl_model is not None and citation_path.exists():
-        npl_ids = duckdb.connect().execute("select distinct npl_publn_id from read_parquet(?) where npl_publn_id is not null", [str(citation_path)]).df()
-        if not npl_ids.empty:
-            query = db.query(npl_model).filter(getattr(npl_model, "npl_publn_id").in_(npl_ids["npl_publn_id"].tolist()))
+        for logical_name, (seed_type, column_name) in filter_specs.items():
+            model = resolve_patstat_model(database_module, logical_name)
+            if model is None:
+                result.warnings.append(f"Skipped TIP extract for `{logical_name}` because the ORM model was unavailable.")
+                continue
+            if seed_type not in seed_frames:
+                result.warnings.append(f"Skipped TIP extract for `{logical_name}` because the `{seed_type}` seed was unavailable.")
+                continue
+            seed_values = seed_frames[seed_type].iloc[:, 0].dropna().tolist()
+            if not seed_values:
+                continue
+            query = db.query(model).filter(getattr(model, column_name).in_(seed_values))
             df = query_to_dataframe(patstat, query)
-            _write_tip_dataframe(df, settings.bounded_patstat_dir / f"{PATSTAT_TABLES['bronze_patstat_npl_publn'][0]}.parquet", "bronze_patstat_npl_publn", result)
+            _write_tip_dataframe(df, settings.bounded_patstat_dir / f"{PATSTAT_TABLES[logical_name][0]}.parquet", logical_name, result)
 
-    if citation_path.exists():
-        con = duckdb.connect()
-        citation_metrics = con.execute(
-            """
-            select
-                count(*) as edge_count,
-                count(distinct pat_publn_id) as source_publn_count,
-                count(distinct cited_pat_publn_id) as cited_publn_count
-            from read_parquet(?)
-            """,
-            [str(citation_path)],
-        ).fetchone()
-        result.metrics["bounded_citation_edge_count"] = int(citation_metrics[0] or 0)
-        result.metrics["bounded_citation_source_publication_count"] = int(citation_metrics[1] or 0)
-        result.metrics["bounded_citation_cited_publication_count"] = int(citation_metrics[2] or 0)
+        legal_model = resolve_patstat_model(database_module, "bronze_ref_legal_event_code")
+        if legal_model is not None:
+            df = query_to_dataframe(patstat, db.query(legal_model))
+            _write_tip_dataframe(df, settings.bounded_patstat_dir / f"{PATSTAT_TABLES['bronze_ref_legal_event_code'][0]}.parquet", "bronze_ref_legal_event_code", result)
+
+        npl_model = resolve_patstat_model(database_module, "bronze_patstat_npl_publn")
+        citation_path = settings.bounded_patstat_dir / f"{PATSTAT_TABLES['bronze_patstat_citation'][0]}.parquet"
+        if npl_model is not None and citation_path.exists():
+            npl_ids = duckdb.connect().execute("select distinct npl_publn_id from read_parquet(?) where npl_publn_id is not null", [str(citation_path)]).df()
+            if not npl_ids.empty:
+                query = db.query(npl_model).filter(getattr(npl_model, "npl_publn_id").in_(npl_ids["npl_publn_id"].tolist()))
+                df = query_to_dataframe(patstat, query)
+                _write_tip_dataframe(df, settings.bounded_patstat_dir / f"{PATSTAT_TABLES['bronze_patstat_npl_publn'][0]}.parquet", "bronze_patstat_npl_publn", result)
+
+        if citation_path.exists():
+            con = duckdb.connect()
+            citation_metrics = con.execute(
+                """
+                select
+                    count(*) as edge_count,
+                    count(distinct pat_publn_id) as source_publn_count,
+                    count(distinct cited_pat_publn_id) as cited_publn_count
+                from read_parquet(?)
+                """,
+                [str(citation_path)],
+            ).fetchone()
+            result.metrics["bounded_citation_edge_count"] = int(citation_metrics[0] or 0)
+            result.metrics["bounded_citation_source_publication_count"] = int(citation_metrics[1] or 0)
+            result.metrics["bounded_citation_cited_publication_count"] = int(citation_metrics[2] or 0)
+    finally:
+        close_tip_client(patstat)
 
 
 def _extract_register_bounded_raw_tip(settings: BuildSettings, seeds: dict[str, Path], result: StageResult) -> None:
     """Extract bounded Register tables from TIP PATSTAT/Register ORM models."""
-    patstat, db = get_patstat_client(settings.tip_env)
-    database_module = get_patstat_database_module()
-    ep_seed_df = duckdb.connect().execute("select appln_id from read_parquet(?)", [str(seeds["seed_ep_appln_ids"])]).df()
-    if ep_seed_df.empty:
-        return
+    patstat = None
+    try:
+        patstat, db = get_patstat_client(settings.tip_env)
+        database_module = get_patstat_database_module()
+        ep_seed_df = duckdb.connect().execute("select appln_id from read_parquet(?)", [str(seeds["seed_ep_appln_ids"])]).df()
+        if ep_seed_df.empty:
+            return
 
-    reg101_model = resolve_register_model(database_module, "bronze_reg101_appln")
-    if reg101_model is None:
-        result.warnings.append("Skipped TIP Register extraction because REG101_APPLN was unavailable.")
-        return
+        reg101_model = resolve_register_model(database_module, "bronze_reg101_appln")
+        if reg101_model is None:
+            result.warnings.append("Skipped TIP Register extraction because REG101_APPLN was unavailable.")
+            return
 
-    reg101_query = db.query(reg101_model).filter(getattr(reg101_model, "appln_id").in_(ep_seed_df["appln_id"].tolist()))
-    reg101_df = query_to_dataframe(patstat, reg101_query)
-    reg101_path = settings.bounded_register_dir / f"{REGISTER_TABLES['bronze_reg101_appln'][0]}.parquet"
-    _write_tip_dataframe(reg101_df, reg101_path, "bronze_reg101_appln", result)
-    if reg101_df.empty:
-        return
+        reg101_query = db.query(reg101_model).filter(getattr(reg101_model, "appln_id").in_(ep_seed_df["appln_id"].tolist()))
+        reg101_df = query_to_dataframe(patstat, reg101_query)
+        reg101_path = settings.bounded_register_dir / f"{REGISTER_TABLES['bronze_reg101_appln'][0]}.parquet"
+        _write_tip_dataframe(reg101_df, reg101_path, "bronze_reg101_appln", result)
+        if reg101_df.empty:
+            return
 
-    reg_ids = reg101_df["id"].dropna().tolist() if "id" in reg101_df.columns else []
-    step_ids: list[Any] = []
-    event_codes: list[Any] = []
-    reg701_ids: list[Any] = []
-    reg731_event_codes: list[Any] = []
+        reg_ids = reg101_df["id"].dropna().tolist() if "id" in reg101_df.columns else []
+        step_ids: list[Any] = []
+        event_codes: list[Any] = []
+        reg701_ids: list[Any] = []
+        reg731_event_codes: list[Any] = []
 
-    for logical_name in REGISTER_TABLES:
-        if logical_name == "bronze_reg101_appln":
-            continue
-        model = resolve_register_model(database_module, logical_name)
-        if model is None:
-            continue
-        query = None
-        if hasattr(model, "appln_id"):
-            query = db.query(model).filter(getattr(model, "appln_id").in_(ep_seed_df["appln_id"].tolist()))
-        elif hasattr(model, "id") and reg_ids:
-            ids = reg701_ids if logical_name == "bronze_reg731_event_data" and reg701_ids else reg_ids
-            query = db.query(model).filter(getattr(model, "id").in_(ids))
-        elif hasattr(model, "step_id") and step_ids:
-            query = db.query(model).filter(getattr(model, "step_id").in_(step_ids))
-        elif hasattr(model, "event_code"):
-            codes = reg731_event_codes if logical_name == "bronze_reg742_event_text" and reg731_event_codes else event_codes
-            if codes:
-                query = db.query(model).filter(getattr(model, "event_code").in_(codes))
-        if query is None:
-            continue
-        df = query_to_dataframe(patstat, query)
-        out_path = settings.bounded_register_dir / f"{REGISTER_TABLES[logical_name][0]}.parquet"
-        _write_tip_dataframe(df, out_path, logical_name, result)
-        if logical_name == "bronze_reg201_proc_step" and "step_id" in df.columns:
-            step_ids = df["step_id"].dropna().tolist()
-        elif logical_name == "bronze_reg301_event_data" and "event_code" in df.columns:
-            event_codes = df["event_code"].dropna().tolist()
-        elif logical_name == "bronze_reg701_appln" and "id" in df.columns:
-            reg701_ids = df["id"].dropna().tolist()
-        elif logical_name == "bronze_reg731_event_data" and "event_code" in df.columns:
-            reg731_event_codes = df["event_code"].dropna().tolist()
+        for logical_name in REGISTER_TABLES:
+            if logical_name == "bronze_reg101_appln":
+                continue
+            model = resolve_register_model(database_module, logical_name)
+            if model is None:
+                continue
+            query = None
+            if hasattr(model, "appln_id"):
+                query = db.query(model).filter(getattr(model, "appln_id").in_(ep_seed_df["appln_id"].tolist()))
+            elif hasattr(model, "id") and reg_ids:
+                ids = reg701_ids if logical_name == "bronze_reg731_event_data" and reg701_ids else reg_ids
+                query = db.query(model).filter(getattr(model, "id").in_(ids))
+            elif hasattr(model, "step_id") and step_ids:
+                query = db.query(model).filter(getattr(model, "step_id").in_(step_ids))
+            elif hasattr(model, "event_code"):
+                codes = reg731_event_codes if logical_name == "bronze_reg742_event_text" and reg731_event_codes else event_codes
+                if codes:
+                    query = db.query(model).filter(getattr(model, "event_code").in_(codes))
+            if query is None:
+                continue
+            df = query_to_dataframe(patstat, query)
+            out_path = settings.bounded_register_dir / f"{REGISTER_TABLES[logical_name][0]}.parquet"
+            _write_tip_dataframe(df, out_path, logical_name, result)
+            if logical_name == "bronze_reg201_proc_step" and "step_id" in df.columns:
+                step_ids = df["step_id"].dropna().tolist()
+            elif logical_name == "bronze_reg301_event_data" and "event_code" in df.columns:
+                event_codes = df["event_code"].dropna().tolist()
+            elif logical_name == "bronze_reg701_appln" and "id" in df.columns:
+                reg701_ids = df["id"].dropna().tolist()
+            elif logical_name == "bronze_reg731_event_data" and "event_code" in df.columns:
+                reg731_event_codes = df["event_code"].dropna().tolist()
+    finally:
+        close_tip_client(patstat)
 
 
 def _extract_epab_bounded_raw_tip(settings: BuildSettings, seeds: dict[str, Path], result: StageResult) -> None:
@@ -1015,66 +1028,70 @@ def _extract_epab_bounded_raw_tip(settings: BuildSettings, seeds: dict[str, Path
     if seed_df.empty:
         return
 
-    epab = get_epab_client(settings.tip_env)
-    group_frames: dict[str, list[Any]] = {
-        "publication": [],
-        "application": [],
-        "abstract": [],
-        "claims": [],
-        "pct": [],
-        "designated_states": [],
-        "priority": [],
-        "parent": [],
-        "divisional": [],
-        "applicant": [],
-        "inventor": [],
-        "representative": [],
-    }
-    allowed_pairs = {
-        (str(row["publication_number"]), str(row["publication_kind"]))
-        for _, row in seed_df.iterrows()
-        if row["publication_number"] is not None and row["publication_kind"] is not None
-    }
-    batch_size = 100
-    for start in range(0, len(seed_df.index), batch_size):
-        batch = seed_df.iloc[start : start + batch_size]
-        numbers = [str(value) for value in batch["publication_number"].dropna().tolist()]
-        kinds = sorted({str(value) for value in batch["publication_kind"].dropna().tolist()})
-        if not numbers:
-            continue
-        q = epab.query_publication(number=numbers, kind_code=kinds or None)
-        for group in list(group_frames.keys()):
-            try:
-                payload = q.get_results(group)
-                group_frames[group].append(result_to_dataframe(payload))
-            except Exception as exc:  # pragma: no cover - requires TIP runtime
-                result.warnings.append(f"EPAB group `{group}` could not be materialized from TIP: {exc}")
+    epab = None
+    try:
+        epab = get_epab_client(settings.tip_env)
+        group_frames: dict[str, list[Any]] = {
+            "publication": [],
+            "application": [],
+            "abstract": [],
+            "claims": [],
+            "pct": [],
+            "designated_states": [],
+            "priority": [],
+            "parent": [],
+            "divisional": [],
+            "applicant": [],
+            "inventor": [],
+            "representative": [],
+        }
+        allowed_pairs = {
+            (str(row["publication_number"]), str(row["publication_kind"]))
+            for _, row in seed_df.iterrows()
+            if row["publication_number"] is not None and row["publication_kind"] is not None
+        }
+        batch_size = 100
+        for start in range(0, len(seed_df.index), batch_size):
+            batch = seed_df.iloc[start : start + batch_size]
+            numbers = [str(value) for value in batch["publication_number"].dropna().tolist()]
+            kinds = sorted({str(value) for value in batch["publication_kind"].dropna().tolist()})
+            if not numbers:
+                continue
+            q = epab.query_publication(number=numbers, kind_code=kinds or None)
+            for group in list(group_frames.keys()):
+                try:
+                    payload = q.get_results(group)
+                    group_frames[group].append(result_to_dataframe(payload))
+                except Exception as exc:  # pragma: no cover - requires TIP runtime
+                    result.warnings.append(f"EPAB group `{group}` could not be materialized from TIP: {exc}")
 
-    group_name_map = {
-        "publication": "publication",
-        "application": "application",
-        "abstract": "abstract",
-        "claims": "claims",
-        "pct": "pct",
-        "designated_states": "designated_states",
-        "priority": "priority_links",
-        "parent": "parent_links",
-        "divisional": "divisional_links",
-        "applicant": "applicants",
-        "inventor": "inventors",
-        "representative": "representative",
-    }
-    for group, frames in group_frames.items():
-        if not frames:
-            continue
-        df = pd.concat(frames, ignore_index=True)
-        if group == "publication":
-            possible_number = next((col for col in df.columns if col.lower().endswith("publication.number") or col.lower().endswith("number")), None)
-            possible_kind = next((col for col in df.columns if col.lower().endswith("publication.kind") or col.lower().endswith("kind")), None)
-            if possible_number and possible_kind:
-                df = df[df.apply(lambda row: (str(row[possible_number]), str(row[possible_kind])) in allowed_pairs, axis=1)]
-        out_path = settings.bounded_epab_dir / f"epab_{group_name_map[group]}.parquet"
-        _write_tip_dataframe(df, out_path, f"epab_{group_name_map[group]}", result)
+        group_name_map = {
+            "publication": "publication",
+            "application": "application",
+            "abstract": "abstract",
+            "claims": "claims",
+            "pct": "pct",
+            "designated_states": "designated_states",
+            "priority": "priority_links",
+            "parent": "parent_links",
+            "divisional": "divisional_links",
+            "applicant": "applicants",
+            "inventor": "inventors",
+            "representative": "representative",
+        }
+        for group, frames in group_frames.items():
+            if not frames:
+                continue
+            df = pd.concat(frames, ignore_index=True)
+            if group == "publication":
+                possible_number = next((col for col in df.columns if col.lower().endswith("publication.number") or col.lower().endswith("number")), None)
+                possible_kind = next((col for col in df.columns if col.lower().endswith("publication.kind") or col.lower().endswith("kind")), None)
+                if possible_number and possible_kind:
+                    df = df[df.apply(lambda row: (str(row[possible_number]), str(row[possible_kind])) in allowed_pairs, axis=1)]
+            out_path = settings.bounded_epab_dir / f"epab_{group_name_map[group]}.parquet"
+            _write_tip_dataframe(df, out_path, f"epab_{group_name_map[group]}", result)
+    finally:
+        close_tip_client(epab)
 
 
 def _write_extraction_summary(settings: BuildSettings, seeds: dict[str, Path], result: StageResult) -> None:

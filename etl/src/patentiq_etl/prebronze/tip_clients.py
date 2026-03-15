@@ -68,6 +68,20 @@ def get_epab_client(env: str):
     return EPABClient(env=env)
 
 
+def close_tip_client(client) -> None:
+    """Close one TIP client safely when the client exposes an explicit close method."""
+    if client is None:
+        return
+    for method_name in ("close_session", "close"):
+        method = getattr(client, method_name, None)
+        if callable(method):
+            try:
+                method()
+            except Exception:
+                LOGGER.debug("Ignoring TIP client close failure for %s.%s", type(client).__name__, method_name, exc_info=True)
+            return
+
+
 def get_patstat_database_module():
     """Return the TIP PATSTAT database/model module."""
     from epo.tipdata.patstat import database as patstat_database
