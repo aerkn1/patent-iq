@@ -89,6 +89,13 @@ Must record:
 2. total Bronze row count
 3. total parsed row count for USPTO Bronze
 4. total parsed row count for EPAB Bronze
+5. for USPTO local ODP extraction, per-file counts for:
+   - weekly ZIPs discovered
+   - weekly ZIPs downloaded
+   - publication documents seen
+   - publication documents matched
+   - publication documents discarded
+   - bytes downloaded and bytes deleted after cleanup
 
 These metrics prove that the bounded raw landing completed and that the text-provider side is not silently empty.
 

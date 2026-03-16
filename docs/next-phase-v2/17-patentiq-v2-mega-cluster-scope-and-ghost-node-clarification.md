@@ -31,14 +31,17 @@ That means:
 
 The MVP in-scope family universe is:
 
-1. the extracted global family set for the last 20 years,
+1. the extracted global family set for the main operating window `2007-2026`,
 2. restricted to the 10 WIPO mega-cluster fields already defined in the source requirements.
+
+Heritage and historical citation analytics may additionally use an older mega-cluster backfill horizon, but that backfill must remain explicitly separated from the main operating window.
 
 Implementation meaning:
 
 1. `silver_family_core` should represent the in-scope extracted family universe,
 2. all downstream Silver and Gold marts should treat this as the canonical family base,
 3. families outside the mega-cluster are not full first-class family objects in the MVP analytical warehouse unless a later expansion explicitly adds them.
+4. older mega-cluster families included only for historical support must be flagged separately from main-window families rather than silently merged into current-state analytics.
 
 ## In-Scope Portfolio Universe
 

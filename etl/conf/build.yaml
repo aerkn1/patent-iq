@@ -1,7 +1,9 @@
 build:
   release_id: "mvp-local-build"
-  year_window_start: 2006
+  year_window_start: 2007
   year_window_end: 2026
+  heritage_backfill_start: 1996
+  heritage_backfill_end: 2006
   snapshot_date: "2026-03-15"
   azure_publish_enabled: false
   vector_sample_pct: 0.1
@@ -11,9 +13,46 @@ sources:
   patstat_source_mode: "tip"
   register_source_mode: "tip"
   epab_source_mode: "tip"
-  uspto_source_mode: "local_files"
+  uspto_source_mode: "odp_api"
   refs_source_mode: "local_files"
   tip_env: "PROD"
+
+execution:
+  tip_chunked_export_enabled: true
+  heritage_backfill_enabled: false
+  blob_intermediate_enabled: true
+  upload_after_chunk: true
+  cleanup_after_upload: true
+  uspto_odp_api_key_env: "USPTO_ODP_API_KEY"
+  uspto_odp_delay_seconds: 2.5
+  uspto_odp_timeout_seconds: 600
+  uspto_odp_max_retries: 5
+  chunk_year_span: 3
+  table_families:
+    - "core"
+    - "publications"
+    - "legal"
+    - "register"
+    - "epab"
+    - "citations"
+  heritage_table_families:
+    - "core"
+    - "publications"
+    - "citations"
+  max_workers:
+    core: 2
+    publications: 2
+    legal: 1
+    register: 1
+    epab: 1
+    citations: 1
+  heritage_max_workers:
+    core: 1
+    publications: 1
+    citations: 1
+  local_limits:
+    max_chunk_output_gb: 4
+    max_temp_usage_gb: 20
 
 paths:
   repo_root: ".."

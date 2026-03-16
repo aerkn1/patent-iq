@@ -48,7 +48,7 @@ flowchart LR
   end
 
   subgraph Silver["Silver Layer"]
-    S1["silver_family_core"]
+    S1["silver_family_core<br/>main-window + heritage flags"]
     S2["silver_family_member_publications"]
     S3["silver_assignee_harmonized"]
     S4["silver_kind_code_normalization"]
@@ -84,12 +84,14 @@ flowchart LR
 
   subgraph Gold["Gold Layer"]
     G1["gold_family_summary"]
+    G1A["gold_family_heritage_summary"]
     G2["gold_family_blocking_power"]
     G3["gold_family_blocking_power_timeseries"]
     G4["gold_family_field_contributions_timeseries"]
     G5["gold_family_attacker_summary"]
     G6["gold_portfolio_field_timeseries"]
     G7["gold_portfolio_summary"]
+    G7A["gold_portfolio_heritage_summary"]
     G8["gold_portfolio_threat_matrix"]
     G9["gold_family_forecast_summary"]
     G10["gold_portfolio_forecast_summary"]
@@ -187,11 +189,14 @@ flowchart LR
   S24A --> G11
 
   S1 --> G1
+  S1 --> G1A
   S3 --> G1
+  S3 --> G1A
   S9 --> G1
   S18 --> G1
   S11 --> G1
   S21 --> G1
+  S15 --> G1A
 
   S20 --> G2
   S15 --> G2
@@ -206,6 +211,8 @@ flowchart LR
   G2 --> G7
   G4 --> G7
   S21 --> G7
+  G1A --> G7A
+  S3 --> G7A
   S16 --> G8
   G2 --> G8
   S22 --> G9
@@ -248,7 +255,7 @@ flowchart TD
   A10["PATSTAT Register EP / UP procedural tables"]
   A11["USPTO full text + EPAB + PATSTAT abstracts<br/>semantic text hierarchy"]
 
-  S1["silver_family_core<br/>family_earliest_priority_date<br/>family_priority_year"]
+  S1["silver_family_core<br/>family_earliest_priority_date<br/>family_priority_year<br/>is_main_window_family<br/>is_heritage_backfill_family"]
   S2["silver_kind_code_normalization<br/>branch_universal_stage<br/>branch_stage_multiplier"]
   S3["silver_tiered_market_weighting<br/>final_market_multiplier"]
   S4["silver_family_wipo_fields<br/>family_tech_breadth_wipo_count<br/>family_field_fraction"]

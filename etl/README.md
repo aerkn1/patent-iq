@@ -22,12 +22,21 @@ This ETL is designed for:
 3. one authoritative Azure artifact store as publish target
 4. strong stage manifests and markdown operation logging
 
+The current scope policy is:
+
+1. main operating window: `2007-2026`
+2. separate heritage backfill horizon: `1996-2006` for older mega-cluster families when historical influence requires it
+
 ## Main Commands
 
 ```bash
 python scripts/certify_sources.py
 python scripts/run_stage.py certify
+python scripts/run_stage.py plan-tip-export
+python scripts/run_stage.py plan-tip-heritage-export
 python scripts/run_stage.py prebronze
+python scripts/run_stage.py prebronze-heritage
+python scripts/run_stage.py prebronze-uspto-odp
 python scripts/run_stage.py bronze
 python scripts/run_stage.py scope
 python scripts/run_stage.py silver
@@ -45,14 +54,49 @@ The current default ETL configuration is:
 1. `PATSTAT` -> `TIP`
 2. `PATSTAT Register` -> `TIP`
 3. `EPAB` -> `TIP`
-4. `USPTO` -> `local_files`
+4. `USPTO` -> `odp_api`
 5. `refs` -> `local_files`
 
 This means `prebronze` is the source-adapter stage:
 
 1. TIP clients build bounded PATSTAT, Register, and EPAB extracts,
-2. USPTO bulk XML files are filtered locally into the bounded raw layer,
-3. Bronze, Silver, and Gold continue from parquet artifacts instead of live client queries.
+2. USPTO is externalized by default through the local `odp_api` path rather than treated as a required TIP-local raw source,
+3. when `tip_chunked_export_enabled = true`, `prebronze` executes field/year/table-family chunks instead of one monolithic bounded raw export,
+4. Bronze, Silver, and Gold continue from parquet artifacts instead of live client queries,
+5. the TIP seed stage respects the configured ETL year window rather than pulling the full historical field universe.
+
+When `uspto_source_mode = "odp_api"`:
+
+1. run `prebronze` for the PATSTAT/Register/EPAB seed path as usual,
+2. then run `prebronze-uspto-odp` locally to turn bounded USPTO APPXML into direct Bronze parquet outputs,
+3. then run `bronze`, which will reuse those existing USPTO Bronze artifacts instead of reparsing bounded XML,
+4. generic TIP certification should no longer degrade just because local USPTO XML files are absent in that runtime.
+
+## TIP Capacity Note
+
+When this ETL is run inside TIP, assume roughly:
+
+1. `4 CPU cores`
+2. `32 GB RAM`
+3. `30 GB local storage`
+
+That is enough for:
+
+1. source certification,
+2. seed generation,
+3. bounded chunk extraction,
+4. immediate upload to Blob.
+
+It is not enough for:
+
+1. one monolithic full-scope `prebronze` export,
+2. keeping the whole bounded raw layer locally,
+3. full downstream warehouse consolidation.
+
+For the full 10-field scope, use the TIP chunked execution plan:
+
+1. [28-patentiq-v2-tip-chunked-full-scope-execution-plan.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md)
+2. [29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md)
 
 ## Tracking
 
@@ -110,7 +154,8 @@ flowchart LR
 See:
 
 1. [24-patentiq-v2-local-etl-and-artifact-build-runbook.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md)
-2. [14-patentiq-v2-metrics-generation-flow-and-guardrails.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md)
-3. [15-patentiq-v2-prediction-training-flow-and-guardrails.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md)
-4. [16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md)
-5. [17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md)
+2. [uspto-odp-stream-extraction-pipeline.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/data/uspto-odp-stream-extraction-pipeline.md)
+3. [14-patentiq-v2-metrics-generation-flow-and-guardrails.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md)
+4. [15-patentiq-v2-prediction-training-flow-and-guardrails.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md)
+5. [16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md)
+6. [17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md)

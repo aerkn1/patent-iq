@@ -47,6 +47,8 @@ class BuildSettings:
     snapshot_date: str
     year_window_start: int
     year_window_end: int
+    heritage_backfill_start: int
+    heritage_backfill_end: int
     azure_publish_enabled: bool
     vector_sample_pct: float
     active_grant_only_for_semantic: bool
@@ -84,3 +86,4 @@ class BuildSettings:
     selected_wipo_fields: list[str]
     thresholds: dict[str, Any]
     azure: dict[str, Any]
+    execution: dict[str, Any] = field(default_factory=dict)

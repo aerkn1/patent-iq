@@ -18,6 +18,7 @@ This runbook is the implementation companion to:
 4. [16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md](./16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md)
 5. [17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md](./17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md)
 6. [21-patentiq-v2-azure-runtime-and-storage-architecture.md](./21-patentiq-v2-azure-runtime-and-storage-architecture.md)
+7. [29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md](./29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md)
 
 ## Core Build Decision
 
@@ -113,15 +114,17 @@ The build should run through these stages:
 
 1. source certification
 2. pre-Bronze bounded raw extraction
-3. Bronze ingestion
-4. bounded-scope seeding
-5. Silver core normalization
-6. Silver legal, citation, market, and semantic preparation
-7. Gold marts
-8. ML feature and model build
-9. semantic vector build
-10. release certification
-11. publish to Blob / ADLS
+3. optional heritage-backfill pre-Bronze extraction
+4. optional local USPTO ODP direct-Bronze stream extraction
+5. Bronze ingestion
+6. bounded-scope seeding
+7. Silver core normalization
+8. Silver legal, citation, market, and semantic preparation
+9. Gold marts
+10. ML feature and model build
+11. semantic vector build
+12. release certification
+13. publish to Blob / ADLS
 
 ## Current Source Access Profile
 
@@ -130,14 +133,45 @@ The current intended MVP source-access split is:
 1. `PATSTAT` -> `TIP PatstatClient`
 2. `PATSTAT Register` -> `TIP PatstatClient`
 3. `EPAB` -> `TIP EPABClient`
-4. `USPTO` -> local staged USPTO bulk XML files
+4. `USPTO` -> external local ODP worker by default
 5. `refs` -> local staged reference files
 
 That means:
 
 1. source certification must validate a mix of TIP-backed and file-backed sources,
 2. `prebronze` is the client-adapter stage that converts TIP queries into bounded parquet artifacts,
-3. Bronze, Silver, and Gold remain artifact-driven after the bounded raw layer is written.
+3. Bronze, Silver, and Gold remain artifact-driven after the bounded raw layer is written,
+4. USPTO should be treated as an externalized ODP-fed source by default rather than a required TIP-local XML source,
+5. for large local USPTO acquisition from ODP, the preferred operating model is `download ZIP -> temp XML -> direct Bronze parquet -> cleanup`, not long-lived bounded XML retention.
+
+If the local USPTO ODP worker is used:
+
+1. it should run after the bounded U.S. publication seed exists,
+2. it should write direct `bronze_uspto_ft_*` parquet outputs,
+3. the subsequent Bronze stage should treat those outputs as already materialized rather than reparsing bounded XML.
+
+## TIP Capacity Constraint
+
+When PatentIQ ETL runs inside TIP, the working constraint is approximately:
+
+1. `4 CPU cores`
+2. `32 GB RAM`
+3. `30 GB local storage`
+
+Under those limits, the full 10-field mega-cluster cannot be exported safely as
+one monolithic local `prebronze` run.
+
+The required execution model is:
+
+1. TIP builds seeds and bounded chunks,
+2. each chunk is uploaded to Azure Blob / ADLS immediately,
+3. local chunk files are deleted after upload verification,
+4. full bounded raw consolidation and heavy Bronze/Silver/Gold execution happen outside TIP.
+5. the TIP seed query must apply the configured ETL year window before chunk extraction begins.
+
+See the dedicated TIP full-scope operating note:
+
+1. [28-patentiq-v2-tip-chunked-full-scope-execution-plan.md](./28-patentiq-v2-tip-chunked-full-scope-execution-plan.md)
 
 ## ETL Flow Diagrams
 
@@ -696,7 +730,7 @@ For each source family emit:
 4. citation rows bridge to publications at acceptable rates,
 5. English title and abstract coverage is sufficient for the in-scope family universe,
 6. `docdb_family_id` coverage is sufficient for family-first analytics,
-7. the 20-year extraction window is present.
+7. the main `2007-2026` extraction window is present.
 
 ### Sufficiency checks for the 10 mega-cluster
 
@@ -835,7 +869,7 @@ In the current TIP-tailored ETL, this stage is where:
 
 1. `PatstatClient` materializes bounded PATSTAT and Register parquet extracts,
 2. `EPABClient` materializes bounded EPAB result-group parquet extracts,
-3. USPTO bulk XML files are filtered by the in-scope publication universe,
+3. USPTO bulk XML files are filtered by the in-scope publication universe and, in TIP chunked mode, reduced to the same field/year publication chunk,
 4. refs remain local-file copies.
 
 ### Rule set

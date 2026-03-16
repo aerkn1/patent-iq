@@ -210,14 +210,16 @@ Create:
 1. group by `docdb_family_id`,
 2. resolve the earliest valid priority-linked filing date,
 3. set `family_priority_year = EXTRACT(YEAR FROM family_earliest_priority_date)`,
-4. carry `inpadoc_family_id` and family size fields.
+4. set scope-horizon flags for the main operating window and the heritage backfill window,
+5. carry `inpadoc_family_id` and family size fields.
 
 ### Guardrails
 
 1. one row per `docdb_family_id`,
 2. no null `family_earliest_priority_date` for in-scope families unless explicitly quarantined,
 3. `family_priority_year` must equal the year portion of the anchor date,
-4. family size must be non-negative and within plausible PATSTAT range.
+4. `is_main_window_family` and `is_heritage_backfill_family` must not both be false for any family intentionally retained as a first-class family object,
+5. family size must be non-negative and within plausible PATSTAT range.
 
 ### Stop Conditions
 

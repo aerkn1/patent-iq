@@ -20,7 +20,7 @@ It also states which current v1 views can seed or partially backfill the V2 buil
 
 Scope rule:
 - the V2 MVP warehouse should be interpreted as a `mega-cluster-bounded` analytics environment rather than a universal global patent estate
-- `silver_family_core` is therefore the in-scope mega-cluster family universe
+- `silver_family_core` is therefore the canonical mega-cluster family universe with explicit horizon flags
 - owner and portfolio rollups should aggregate only over that in-scope family universe unless explicitly labeled otherwise
 - out-of-bounds citation families may persist as ghost-node stubs for network math without becoming full family objects
 - PATSTAT Register, when present, is an EP-only legal power-up and must not alter cross-office family blocking-power or portfolio percentile math
@@ -422,6 +422,7 @@ These are not true Bronze, but they can bootstrap V2:
 ### `silver_family_core`
 - family anchor table
 - one row per `docdb_family_id`
+- carries scope-horizon flags used to separate current-state and heritage logic
 
 Built from:
 - `bronze_patstat_appln`
@@ -432,7 +433,14 @@ Outputs:
 - `inpadoc_family_id`
 - `family_earliest_priority_date`
 - `family_priority_year`
+- `is_main_window_family`
+- `is_heritage_backfill_family`
+- `is_out_of_bounds_ghost`
 - `family_size_docdb`
+
+Rule:
+- current-state marts should roll over `is_main_window_family = true`
+- heritage-oriented marts may additionally include `is_heritage_backfill_family = true`
 
 ### `silver_family_member_publications`
 - family-to-publication bridge
@@ -815,6 +823,7 @@ Outputs:
 ## Gold Layer
 
 ### `gold_family_summary`
+### `gold_family_heritage_summary`
 
 Built from:
 - `silver_family_core`
@@ -842,6 +851,7 @@ Outputs:
 ### `gold_family_attacker_summary`
 ### `gold_portfolio_field_timeseries`
 ### `gold_portfolio_summary`
+### `gold_portfolio_heritage_summary`
 ### `gold_portfolio_threat_matrix`
 ### `gold_family_forecast_summary`
 ### `gold_portfolio_forecast_summary`
@@ -852,6 +862,10 @@ Outputs:
 Register Gold constraint:
 - these marts are evidence and UI-overlay marts
 - they must not be reused as hidden inputs to percentile-ranking or blocking-power generation
+
+Heritage Gold rule:
+- heritage-oriented Gold marts may include `is_heritage_backfill_family = true`
+- current-state Gold marts must remain restricted to `is_main_window_family = true`
 
 ## Minimum V2 Warehouse Skeleton
 

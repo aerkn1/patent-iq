@@ -73,17 +73,33 @@ def table_exists(path: Path) -> bool:
 
 def write_pylist_parquet(rows: list[dict], out_path: Path, columns: list[str] | None = None) -> int:
     """Write a list-of-dicts payload to parquet, preserving an empty-schema contract if needed."""
-    import pyarrow as pa
-    import pyarrow.parquet as pq
-
     ensure_dir(out_path.parent)
-    if rows:
-        table = pa.Table.from_pylist(rows)
-    else:
+    try:
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+
+        if rows:
+            table = pa.Table.from_pylist(rows)
+        else:
+            names = columns or []
+            table = pa.table({name: pa.array([], type=pa.string()) for name in names})
+        pq.write_table(table, out_path, compression="zstd")
+        return table.num_rows
+    except ModuleNotFoundError:
+        if rows:
+            import pandas as pd
+
+            frame = pd.DataFrame.from_records(rows)
+            con = duckdb_connect()
+            con.register("pylist_frame", frame)
+            con.execute("copy (select * from pylist_frame) to ? (format parquet, compression zstd)", [str(out_path)])
+            return len(frame.index)
+
         names = columns or []
-        table = pa.table({name: pa.array([], type=pa.string()) for name in names})
-    pq.write_table(table, out_path, compression="zstd")
-    return table.num_rows
+        con = duckdb_connect()
+        projection = ", ".join(f"null::varchar as {name}" for name in names) or "null::varchar as _empty"
+        con.execute(f"copy (select {projection} where false) to ? (format parquet, compression zstd)", [str(out_path)])
+        return 0
 
 
 def normalize_ws(text: str | None) -> str | None:
@@ -127,3 +143,11 @@ def write_text_json(path: Path, payload: dict) -> None:
     """Write a JSON payload to disk with stable formatting."""
     ensure_dir(path.parent)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def append_jsonl(path: Path, payload: dict) -> None:
+    """Append one JSON object as a line-delimited record."""
+    ensure_dir(path.parent)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, sort_keys=True))
+        handle.write("\n")

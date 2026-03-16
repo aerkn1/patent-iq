@@ -17,7 +17,13 @@ from patentiq_etl.common.stats import write_stage_stats
 from patentiq_etl.common.types import StageResult
 from patentiq_etl.gold.run import run_gold
 from patentiq_etl.ml.run import run_ml
-from patentiq_etl.prebronze.run import run_prebronze
+from patentiq_etl.prebronze.run import (
+    run_prebronze,
+    run_prebronze_heritage,
+    run_prebronze_uspto_odp,
+    run_tip_chunk_plan,
+    run_tip_heritage_chunk_plan,
+)
 from patentiq_etl.semantic.run import run_semantic
 from patentiq_etl.silver.run import run_scope, run_silver
 
@@ -25,7 +31,13 @@ from patentiq_etl.silver.run import run_scope, run_silver
 STAGES: dict[str, Callable] = {
     "certify": lambda settings: [certify_sources(settings)],
     "source-certification": lambda settings: [certify_sources(settings)],
+    "plan-tip-export": run_tip_chunk_plan,
+    "tip-chunk-plan": run_tip_chunk_plan,
+    "plan-tip-heritage-export": run_tip_heritage_chunk_plan,
+    "tip-heritage-chunk-plan": run_tip_heritage_chunk_plan,
     "prebronze": run_prebronze,
+    "prebronze-heritage": run_prebronze_heritage,
+    "prebronze-uspto-odp": run_prebronze_uspto_odp,
     "bronze": run_bronze,
     "scope": run_scope,
     "silver": run_silver,

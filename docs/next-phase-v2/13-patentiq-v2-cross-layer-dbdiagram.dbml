@@ -341,6 +341,9 @@ Table silver_family_core {
   inpadoc_family_id bigint
   family_earliest_priority_date date
   family_priority_year int
+  is_main_window_family boolean
+  is_heritage_backfill_family boolean
+  is_out_of_bounds_ghost boolean
   earliest_priority_appln_id bigint [ref: > bronze_patstat_appln.appln_id]
   family_size_docdb int
   counting_unit varchar
@@ -666,6 +669,17 @@ Table gold_family_summary {
   radicalness_score double
 }
 
+Table gold_family_heritage_summary {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  harmonized_owner_id bigint
+  family_priority_year int
+  is_main_window_family boolean
+  is_heritage_backfill_family boolean
+  family_heritage_score double
+  out_of_bounds_citation_share double
+}
+
 Table gold_family_ep_register_badges {
   docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
   snapshot_date date [pk]
@@ -734,6 +748,16 @@ Table gold_portfolio_summary {
   portfolio_opposition_rate double
   portfolio_current_threat_score double
   portfolio_heritage_score double
+}
+
+Table gold_portfolio_heritage_summary {
+  harmonized_owner_id bigint [pk]
+  snapshot_date date [pk]
+  portfolio_family_count_heritage_scope int
+  portfolio_total_heritage_score double
+  portfolio_avg_heritage_score double
+  heritage_backfill_family_count int
+  main_window_family_count int
 }
 
 Table gold_portfolio_threat_matrix {

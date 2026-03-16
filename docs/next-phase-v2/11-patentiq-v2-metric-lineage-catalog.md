@@ -37,6 +37,32 @@ Used by:
 - R&D momentum anchors
 - OECD cohort definitions
 
+### `is_main_window_family`
+
+Silver producer:
+- `silver_family_core`
+
+Formula:
+- `family_priority_year between 2007 and 2026` under the current MVP scope policy
+
+Use:
+- current-state portfolio views
+- blocking power
+- forecast and semantic eligibility baselines
+
+### `is_heritage_backfill_family`
+
+Silver producer:
+- `silver_family_core`
+
+Formula:
+- `family_priority_year between 1996 and 2006` for the first historical backfill horizon
+
+Use:
+- heritage contribution
+- pioneer rankings
+- historical citation-influence support
+
 ## 2. Family Structure Metrics
 
 ### `family_size_docdb`
@@ -533,6 +559,10 @@ Gold producer:
 Formula:
 - `family_field_fraction * family_adjusted_citation_score_raw`
 
+Scope rule:
+- may use `silver_family_core.is_main_window_family = true`
+- and may additionally include `silver_family_core.is_heritage_backfill_family = true` when the historical backfill horizon is present
+
 ## 13. Attacker And Threat-Network Metrics
 
 ### `citation_lethality_score`
@@ -603,6 +633,28 @@ Gold producer:
 
 Formula:
 - sum of family field heritage contributions by harmonized owner and snapshot
+
+Scope rule:
+- heritage rollups must remain separate from current active portfolio rollups and may include the heritage backfill horizon
+
+### `family_heritage_score`
+
+Gold producer:
+- `gold_family_heritage_summary`
+
+Formula:
+- current MVP implementation uses `family_adjusted_citation_score_raw` as the family-level heritage proxy
+
+Scope rule:
+- may include both main-window and heritage-backfill families
+
+### `portfolio_total_heritage_score`
+
+Gold producer:
+- `gold_portfolio_heritage_summary`
+
+Formula:
+- sum of `family_heritage_score` across all families included in the portfolio heritage scope
 
 ## 15. Predictive Metrics
 

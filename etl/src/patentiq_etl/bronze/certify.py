@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from pathlib import Path
 
 import duckdb
@@ -9,6 +10,7 @@ from patentiq_etl.bronze.source_registry import PATSTAT_TABLES, REFERENCE_TABLES
 from patentiq_etl.common.io import candidate_files
 from patentiq_etl.common.types import BuildSettings, StageResult
 from patentiq_etl.prebronze.tip_clients import (
+    apply_year_window_filter,
     close_tip_client,
     get_epab_client,
     get_patstat_client,
@@ -56,21 +58,29 @@ def _certify_tip_patstat(settings: BuildSettings, result: StageResult) -> dict[s
         result.metrics[f"{logical_name}_tip_model_available"] = int(model is not None)
 
     try:
+        TLS201 = resolve_patstat_model(database_module, "bronze_patstat_appln")
         TLS230 = resolve_patstat_model(database_module, "bronze_patstat_appln_techn_field")
         TLS901 = resolve_patstat_model(database_module, "bronze_ref_techn_field_ipc")
-        if TLS230 is not None and TLS901 is not None:
+        if TLS201 is not None and TLS230 is not None and TLS901 is not None:
             from sqlalchemy import func
 
-            rows = (
+            coverage_query = (
                 db.query(
                     TLS901.techn_field,
                     func.count(func.distinct(TLS230.appln_id)),
                 )
+                .join(TLS201, TLS230.appln_id == TLS201.appln_id)
                 .join(TLS901, TLS230.techn_field_nr == TLS901.techn_field_nr)
                 .filter(TLS901.techn_field.in_(settings.selected_wipo_fields))
                 .group_by(TLS901.techn_field)
-                .all()
             )
+            coverage_query = apply_year_window_filter(
+                coverage_query,
+                TLS201,
+                settings.year_window_start,
+                settings.year_window_end,
+            )
+            rows = coverage_query.all()
             coverage = {row[0]: int(row[1]) for row in rows}
             for field in settings.selected_wipo_fields:
                 result.metrics[f"scope_field_appln_count__{field}"] = coverage.get(field, 0)
@@ -286,6 +296,16 @@ def certify_sources(settings: BuildSettings) -> StageResult:
     result.metrics["total_input_file_count"] = len(patstat_inputs) + len(register_inputs) + len(ref_inputs) + len(uspto_files) + len(epab_files)
     result.metrics["uspto_xml_file_count"] = len(uspto_files)
     result.metrics["epab_payload_file_count"] = len(epab_files)
+    if settings.uspto_source_mode == "odp_api":
+        api_key_env = str(settings.execution.get("uspto_odp_api_key_env", "USPTO_ODP_API_KEY"))
+        has_api_key = bool(os.environ.get(api_key_env))
+        result.metrics["uspto_odp_api_key_available"] = int(has_api_key)
+        result.metrics["uspto_externalized_from_tip"] = 1
+        result.metrics["uspto_runtime_stage_required"] = 1
+        if has_api_key:
+            result.inputs.append(f"env://{api_key_env}")
+        else:
+            result.warnings.append(f"USPTO is configured for external ODP extraction. API key env var `{api_key_env}` is not present in this runtime, so the dedicated USPTO ODP stage is deferred.")
 
     if settings.patstat_source_mode == "local_files" and not patstat_inputs:
         result.status = "failed"

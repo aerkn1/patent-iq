@@ -11,7 +11,13 @@ from patentiq_etl.common.manifest import write_stage_manifest
 from patentiq_etl.common.stats import write_stage_stats
 from patentiq_etl.common.types import StageResult
 from patentiq_etl.bronze.certify import certify_sources, certify_release
-from patentiq_etl.prebronze.run import run_prebronze
+from patentiq_etl.prebronze.run import (
+    run_prebronze,
+    run_prebronze_heritage,
+    run_prebronze_uspto_odp,
+    run_tip_chunk_plan,
+    run_tip_heritage_chunk_plan,
+)
 from patentiq_etl.bronze.run import run_bronze
 from patentiq_etl.silver.run import run_scope, run_silver
 from patentiq_etl.gold.run import run_gold
@@ -46,7 +52,15 @@ def main() -> None:
     settings = load_settings(etl_root)
     ordered_results = []
     ordered_results.extend([result.finish() for result in _execute_stage(settings, "source-certification", lambda s: [certify_sources(s)])])
+    if settings.execution.get("tip_chunked_export_enabled", False):
+        ordered_results.extend([result.finish() for result in _execute_stage(settings, "tip-chunk-plan", run_tip_chunk_plan)])
+        if settings.execution.get("heritage_backfill_enabled", False):
+            ordered_results.extend([result.finish() for result in _execute_stage(settings, "tip-heritage-chunk-plan", run_tip_heritage_chunk_plan)])
     ordered_results.extend([result.finish() for result in _execute_stage(settings, "prebronze", run_prebronze)])
+    if settings.execution.get("heritage_backfill_enabled", False):
+        ordered_results.extend([result.finish() for result in _execute_stage(settings, "prebronze-heritage", run_prebronze_heritage)])
+    if settings.uspto_source_mode == "odp_api":
+        ordered_results.extend([result.finish() for result in _execute_stage(settings, "prebronze-uspto-odp", run_prebronze_uspto_odp)])
     ordered_results.extend([result.finish() for result in _execute_stage(settings, "bronze", run_bronze)])
     ordered_results.extend([result.finish() for result in _execute_stage(settings, "scope", run_scope)])
     ordered_results.extend([result.finish() for result in _execute_stage(settings, "silver", run_silver)])

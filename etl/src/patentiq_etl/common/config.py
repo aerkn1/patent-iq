@@ -25,6 +25,7 @@ def load_settings(etl_root: Path) -> BuildSettings:
     paths = build_cfg["paths"]
     methods = build_cfg["methods"]
     sources = build_cfg.get("sources", {})
+    execution = build_cfg.get("execution", {})
     scope = scope_cfg["scope"]
 
     repo_root = (etl_root / paths["repo_root"]).resolve()
@@ -38,6 +39,8 @@ def load_settings(etl_root: Path) -> BuildSettings:
         snapshot_date=build["snapshot_date"],
         year_window_start=build["year_window_start"],
         year_window_end=build["year_window_end"],
+        heritage_backfill_start=int(build.get("heritage_backfill_start", 1996)),
+        heritage_backfill_end=int(build.get("heritage_backfill_end", build["year_window_start"] - 1)),
         azure_publish_enabled=bool(build["azure_publish_enabled"]),
         vector_sample_pct=float(build["vector_sample_pct"]),
         active_grant_only_for_semantic=bool(build["active_grant_only_for_semantic"]),
@@ -75,4 +78,5 @@ def load_settings(etl_root: Path) -> BuildSettings:
         selected_wipo_fields=list(scope["selected_wipo_fields"]),
         thresholds=threshold_cfg["thresholds"],
         azure=azure_cfg["azure"],
+        execution=execution,
     )

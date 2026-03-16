@@ -195,6 +195,15 @@ Build `seed_us_publication_numbers` from bounded PATSTAT publications where:
 Retain or parse only USPTO XML files whose publication anchor matches:
 
 1. the in-scope US publication universe
+2. in constrained TIP execution, further reduce each matched bulk XML file to only the publication-level documents that belong to the active field/year chunk before upload or Bronze handoff
+
+For the planned local ODP extraction worker, the preferred path is:
+
+1. discover ODP weekly ZIPs,
+2. download one ZIP at a time,
+3. stream-parse the single XML payload publication by publication,
+4. write direct Bronze parquet rows for matched in-scope U.S. publications,
+5. delete the ZIP and temp XML immediately after successful persistence and stats logging.
 
 Then land:
 
@@ -203,6 +212,8 @@ Then land:
 3. `bronze_uspto_ft_abstract`
 4. `bronze_uspto_ft_claims`
 5. optional link and party support tables
+
+Do not require a long-lived `raw-bounded/uspto` XML retention layer for this local ODP path.
 
 ## Stage F: EPAB Raw Extraction Rules
 

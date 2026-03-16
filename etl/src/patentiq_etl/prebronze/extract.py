@@ -15,6 +15,7 @@ from patentiq_etl.bronze.source_registry import PATSTAT_TABLES, REFERENCE_TABLES
 from patentiq_etl.common.io import candidate_files, ensure_dir, parquet_row_count, write_text_json
 from patentiq_etl.common.types import BuildSettings, StageResult
 from patentiq_etl.prebronze.tip_clients import (
+    apply_year_window_filter,
     close_tip_client,
     get_epab_client,
     get_patstat_client,
@@ -26,6 +27,7 @@ from patentiq_etl.prebronze.tip_clients import (
     result_to_dataframe,
     write_dataframe_parquet,
 )
+from patentiq_etl.prebronze.uspto_odp import extract_uspto_odp_to_bronze
 
 
 LOGGER = logging.getLogger(__name__)
@@ -758,9 +760,16 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult):
                 TLS230.appln_id.label("appln_id"),
                 TLS901.techn_field.label("wipo_field"),
             )
+            .join(TLS201, TLS230.appln_id == TLS201.appln_id)
             .join(TLS901, TLS230.techn_field_nr == TLS901.techn_field_nr)
             .filter(TLS901.techn_field.in_(settings.selected_wipo_fields))
             .distinct()
+        )
+        seed_appln_q = apply_year_window_filter(
+            seed_appln_q,
+            TLS201,
+            settings.year_window_start,
+            settings.year_window_end,
         )
         seed_appln_df = query_to_dataframe(patstat, seed_appln_q)
         result.metrics["seed_appln_count"] = write_dataframe_parquet(seed_appln_df, settings.bounded_seed_dir / "seed_appln_ids.parquet")
@@ -1120,6 +1129,7 @@ def extract_bounded_raw(settings: BuildSettings) -> StageResult:
             "Expanded the seed to bounded family, publication, person, and EP-application universes before extracting raw slices.",
             "Preserved ghost-node citation and NPL support rows by keeping all out-of-scope cited targets referenced by in-scope source publications.",
             "Selected only the in-scope USPTO XML files and EPAB records needed for Bronze text-provider parsing.",
+            "Supports a local USPTO ODP stream path that writes direct Bronze parquet outputs with immediate ZIP/XML cleanup.",
         ],
         calculations=[
             "Application seeds are restricted to the configured 10 WIPO fields.",
@@ -1140,6 +1150,7 @@ def extract_bounded_raw(settings: BuildSettings) -> StageResult:
     ensure_dir(settings.bounded_epab_dir)
     ensure_dir(settings.bounded_refs_dir)
     ensure_dir(settings.bounded_seed_dir)
+    ensure_dir(settings.bronze_dir)
 
     if settings.patstat_source_mode == "tip":
         seeds = _seed_patstat_scope_tip(settings, result)
@@ -1161,6 +1172,8 @@ def extract_bounded_raw(settings: BuildSettings) -> StageResult:
 
     if settings.uspto_source_mode == "local_files":
         _extract_uspto_bounded_raw(settings, seeds, result)
+    elif settings.uspto_source_mode == "odp_api":
+        extract_uspto_odp_to_bronze(settings, seeds["seed_us_publication_numbers"], result)
 
     if settings.epab_source_mode == "tip":
         _extract_epab_bounded_raw_tip(settings, seeds, result)

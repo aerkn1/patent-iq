@@ -60,6 +60,10 @@ This folder contains the execution plan for turning PatentIQ into a contest-read
    - Raw extraction playbook defining how the bounded mega-cluster universe should be obtained from PATSTAT, Register, USPTO, EPAB, and reference inputs before Bronze parquet landing.
 28. [27-patentiq-v2-stage-stats-and-data-consistency-audit-contract.md](./27-patentiq-v2-stage-stats-and-data-consistency-audit-contract.md)
    - Stage-level audit contract defining the JSON stats snapshots, count proofs, coverage metrics, and failure-localization signals the ETL must emit during execution.
+29. [28-patentiq-v2-tip-chunked-full-scope-execution-plan.md](./28-patentiq-v2-tip-chunked-full-scope-execution-plan.md)
+   - TIP-specific full-scope execution plan covering chunk keys, Blob-first offload, worker limits for 4 CPU / 32 GB RAM / 30 GB disk, manifest rules, and phased extraction order.
+30. [29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md](./29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md)
+   - Scope policy defining the main `2007-2026` operating window, the separate mega-cluster heritage backfill horizon, and the clean data-model split between current-state and historical analytics.
 
 ## Primary Source Inputs
 

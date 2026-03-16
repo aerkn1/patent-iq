@@ -99,6 +99,39 @@ def get_patstat_database_module():
         return patstat_database
 
 
+def apply_year_window_filter(query, model, year_window_start: int, year_window_end: int, candidate_columns: Iterable[str] | None = None):
+    """Apply a best-effort year-window filter to a TIP ORM query.
+
+    The TIP model fields may be represented as date objects or as `YYYYMMDD`-like
+    strings or integers depending on the backing table. Casting to string and
+    taking the first four characters works for both cases and keeps the filter
+    portable across the observed TIP schemas.
+    """
+    from sqlalchemy import String, cast, func
+
+    for column_name in candidate_columns or ("appln_filing_date", "earliest_filing_date", "publn_date"):
+        column = getattr(model, column_name, None)
+        if column is None:
+            continue
+        year_expr = func.substr(cast(column, String), 1, 4)
+        return query.filter(year_expr >= str(year_window_start), year_expr <= str(year_window_end))
+    return query
+
+
+def slugify_value(value: str) -> str:
+    """Return a filesystem- and blob-friendly slug for a descriptive value."""
+    return (
+        value.lower()
+        .replace("&", " and ")
+        .replace(",", " ")
+        .replace("/", " ")
+        .replace("_", " ")
+        .replace("  ", " ")
+        .strip()
+        .replace(" ", "-")
+    )
+
+
 def resolve_model(database_module, candidates: Iterable[str]):
     """Resolve the first available ORM model from a candidate name list."""
     for name in candidates:

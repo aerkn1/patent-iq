@@ -258,6 +258,132 @@
 1. The ETL codebase is easier to maintain and safer to extend while the Bronze, Silver, Gold, ML, semantic, and publish stages continue to evolve.
 2. Future implementation passes can rely on the in-code contracts in addition to the docs under `docs/new-feature-ideas` and `docs/next-phase-v2`.
 
+## USPTO ODP Streaming Extraction Design | success
+
+- Summary: Documented the preferred local USPTO acquisition path as a sequential ODP stream worker that downloads one weekly APPXML ZIP at a time, parses only bounded in-scope publications, writes direct Bronze parquet outputs, records richer file-level extraction stats, and deletes ZIP and temp XML artifacts immediately after successful persistence.
+- Started: 2026-03-16T00:00:00+00:00
+- Finished: 2026-03-16T00:00:00+00:00
+
+### Inputs
+
+1. `docs/data/uspto-full-text-schema.md`
+2. user-provided ODP API, rate-limit, and APPXML operational notes
+3. user-provided schema examples for `v40` through `v44`
+4. `etl/src/patentiq_etl/bronze/ingest_uspto_fulltext.py`
+5. `etl/src/patentiq_etl/prebronze/extract.py`
+6. `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+7. `docs/next-phase-v2/26-patentiq-v2-mega-cluster-raw-extraction-and-bronze-bounding-strategy.md`
+8. `docs/next-phase-v2/27-patentiq-v2-stage-stats-and-data-consistency-audit-contract.md`
+
+### Outputs
+
+1. `docs/data/uspto-odp-stream-extraction-pipeline.md`
+2. updated `docs/data/uspto-full-text-schema.md`
+3. updated `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+4. updated `docs/next-phase-v2/26-patentiq-v2-mega-cluster-raw-extraction-and-bronze-bounding-strategy.md`
+5. updated `docs/next-phase-v2/27-patentiq-v2-stage-stats-and-data-consistency-audit-contract.md`
+6. updated `etl/README.md`
+
+### Methods
+
+1. Aligned the planned USPTO acquisition horizon to the main `2007-2026` operating window.
+2. Chose direct Bronze parquet output instead of long-lived bounded XML retention for the local ODP path.
+3. Defined a file-at-a-time execution stream with revision pruning, schema detection, bounded publication filtering, direct Bronze persistence, and immediate cleanup.
+4. Expanded the operational logging contract to include per-file ZIP, XML, publication-match, row-count, and cleanup metrics.
+
+### Warnings
+
+1. The local ODP stream worker is documented as the preferred implementation path but is not yet fully implemented in ETL code.
+2. The current repo parser is still materially simpler than the full USPTO schema note and still needs explicit hardening across `v42-v46`.
+3. Full parser hardening still benefits from the underlying DTD files and validation against real weekly bulk payloads even though real schema samples now cover `v42-v46`.
+
+## USPTO Schema Sample Coverage Update | success
+
+- Summary: Updated the USPTO documentation assumptions to reflect that real sample coverage now exists across schema versions `v42` through `v46`, which fully spans the current `2007-2026` USPTO operating horizon.
+- Started: 2026-03-16T00:00:00+00:00
+- Finished: 2026-03-16T00:00:00+00:00
+
+### Inputs
+
+1. user-provided real schema examples for `v42`
+2. user-provided real schema examples for `v43`
+3. user-provided real schema examples for `v44`
+4. user-provided real schema examples for `v45`
+5. user-provided real schema example for `v46`
+
+### Outputs
+
+1. updated `docs/data/uspto-odp-stream-extraction-pipeline.md`
+2. updated `etl/ETL_IMPLEMENTATION_LOG.md`
+
+### Methods
+
+1. Removed the outdated assumption that `v45` and `v46` were still missing real sample coverage.
+2. Kept the more important remaining caution in place: real weekly bulk-payload validation and DTD-backed parser hardening are still needed.
+
+## USPTO ODP Stream Worker Implementation | success
+
+- Summary: Implemented the local USPTO ODP stream worker, added a dedicated `prebronze-uspto-odp` stage, integrated direct Bronze parquet output with immediate ZIP/XML cleanup, enriched per-file extraction stats, and made the Bronze USPTO stage reuse direct ODP outputs when present.
+- Started: 2026-03-16T00:00:00+00:00
+- Finished: 2026-03-16T00:00:00+00:00
+
+### Inputs
+
+1. `docs/data/uspto-odp-stream-extraction-pipeline.md`
+2. `docs/data/uspto-full-text-schema.md`
+3. `etl/src/patentiq_etl/bronze/ingest_uspto_fulltext.py`
+4. `etl/src/patentiq_etl/prebronze/extract.py`
+5. user-provided ODP API and schema-version notes
+
+### Outputs
+
+1. `etl/src/patentiq_etl/prebronze/uspto_odp.py`
+2. updated `etl/src/patentiq_etl/bronze/ingest_uspto_fulltext.py`
+3. updated `etl/src/patentiq_etl/prebronze/run.py`
+4. updated `etl/scripts/run_stage.py`
+5. updated `etl/scripts/run_full_build.py`
+6. updated `etl/src/patentiq_etl/common/io.py`
+7. updated `etl/tests/test_uspto_bulk_xml.py`
+8. updated `etl/tests/test_prebronze_extraction.py`
+
+### Methods
+
+1. Added an ODP manifest-and-download worker with revision pruning, bounded file selection, and sequential ZIP processing.
+2. Split concatenated APPXML payloads into publication-level XML documents before schema detection and bounded publication filtering.
+3. Wrote direct `bronze_uspto_ft_*` parquet outputs from the ODP stream path instead of retaining bounded XML.
+4. Logged per-file download, schema, publication-match, row-count, and cleanup metrics to manifest stats.
+5. Made the standard Bronze USPTO stage no-op successfully when the direct ODP Bronze outputs already exist.
+
+### Verification
+
+1. `python3 -m compileall etl/src etl/scripts etl/tests`
+2. `pytest etl/tests/test_uspto_bulk_xml.py etl/tests/test_prebronze_extraction.py etl/tests/test_source_certification.py -q`
+
+### Warnings
+
+1. The ODP stream worker currently assumes the bounded U.S. publication seed already exists.
+2. The parser hardening still needs broader real-world validation across `v42-v46` payloads even though the local execution path now exists.
+
+## TIP USPTO Externalization Default | success
+
+- Summary: Switched the default USPTO source mode to `odp_api`, removed the TIP-side degradation path that expected local USPTO XML files, and made the Bronze USPTO stage treat missing direct ODP outputs as a deferred external path rather than a runtime problem.
+- Started: 2026-03-16T00:00:00+00:00
+- Finished: 2026-03-16T00:00:00+00:00
+
+### Outputs
+
+1. updated `etl/conf/build.yaml`
+2. updated `etl/src/patentiq_etl/bronze/certify.py`
+3. updated `etl/src/patentiq_etl/bronze/ingest_uspto_fulltext.py`
+4. updated `etl/README.md`
+5. updated `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+
+### Methods
+
+1. Changed the default USPTO source mode from `local_files` to `odp_api`.
+2. Treated missing ODP credentials in generic source certification as a deferred external path instead of a degraded TIP runtime.
+3. Made the Bronze USPTO stage return success with a deferred summary when `odp_api` is configured but direct USPTO Bronze outputs have not yet been materialized.
+
 ## Stage Stats And Consistency Audit Pass | success
 
 - Summary: Added a reusable stage-stats snapshot writer and expanded certification, Bronze, scope, and Silver metrics so the pipeline records count proofs and consistency signals at each stage.
@@ -535,3 +661,394 @@
 1. The new TIP extraction code was implemented defensively against the observed client surface, but it was not executed against a live TIP runtime in this environment.
 2. Register ORM model names and some EPAB result-group shapes may still need final tightening once run inside TIP with the real clients.
 3. The local automated tests verify the local-file fallback path and the bulk USPTO parser, not the live TIP client calls.
+
+## 2026-03-16 | TIP Full-Scope Chunked Execution Documentation | success
+
+### Inputs
+
+1. live TIP operating constraints provided during execution:
+   - `4 CPU cores`
+   - `32 GB RAM`
+   - `30 GB local storage`
+2. observed PATSTAT technology-field counts from TIP
+3. existing ETL runbook and TIP client usage notes
+
+### Files Updated
+
+1. updated `docs/next-phase-v2/README.md`
+2. updated `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+3. new `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+4. updated `docs/data/epo-tip-client-usage.md`
+5. updated `etl/README.md`
+
+### Methods
+
+1. Documented TIP as a constrained extraction worker rather than a full warehouse runtime.
+2. Defined chunk keys as:
+   - `field`
+   - `year bucket`
+   - `table family`
+3. Defined Blob as the authoritative intermediate store for full-scope extraction.
+4. Defined safe worker guidance for TIP:
+   - `2 workers` for core/publication families
+   - `1 worker` for citation-heavy or text-heavy families
+
+### Calculations
+
+1. The chunking strategy assumes the primary constraint is:
+   - local memory
+   - local disk
+   - citation fan-out
+   not CPU alone
+2. The documented resource envelope keeps local staging bounded by:
+   - small year buckets
+   - immediate upload
+   - immediate local cleanup
+
+### Downstream Impacts
+
+1. The ETL documentation now distinguishes between:
+   - TIP extraction
+   - non-TIP consolidation
+2. Full-scope execution is now documented as a resumable multi-chunk process instead of a monolithic `prebronze` run.
+3. Azure Blob is now explicitly documented as the intermediate bounded raw store for TIP full-scope runs.
+
+### Governing Docs
+
+1. `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+2. `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+3. `docs/data/epo-tip-client-usage.md`
+
+### Warnings
+
+1. This pass is documentation-only; the current ETL code does not yet implement the full TIP chunk planner, Blob-first upload cycle, or resume scheduler described in the new execution plan.
+
+## 2026-03-16 | Azure-Oriented TIP Pipeline Revision | success
+
+### Inputs
+
+1. documented TIP runtime limits:
+   - `4 CPU cores`
+   - `32 GB RAM`
+   - `30 GB local storage`
+2. updated full-scope Blob-first execution plan in:
+   - `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+3. observed TIP PATSTAT field counts and current ETL settings
+
+### Files Updated
+
+1. updated `etl/conf/build.yaml`
+2. updated `etl/src/patentiq_etl/common/types.py`
+3. updated `etl/src/patentiq_etl/common/config.py`
+4. updated `etl/src/patentiq_etl/prebronze/tip_clients.py`
+5. updated `etl/src/patentiq_etl/bronze/certify.py`
+6. updated `etl/src/patentiq_etl/prebronze/extract.py`
+7. updated `etl/src/patentiq_etl/prebronze/run.py`
+8. new `etl/src/patentiq_etl/prebronze/plan.py`
+9. updated `etl/scripts/run_stage.py`
+10. updated `etl/scripts/run_full_build.py`
+11. updated `etl/tests/test_source_certification.py`
+12. new `etl/tests/test_tip_chunk_plan.py`
+13. updated `etl/README.md`
+14. updated `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+
+### Methods
+
+1. Added an explicit `execution` config block for TIP chunked export settings.
+2. Added a `tip-chunk-plan` stage that writes a deterministic chunk manifest under `etl/manifests/chunks/`.
+3. Added chunk planning based on:
+   - selected field
+   - year bucket
+   - table family
+4. Added best-effort year-window filtering for TIP ORM queries using string-safe year extraction from observed date-like PATSTAT fields.
+5. Inserted the chunk-plan stage into the full-build runner when TIP chunked export is enabled.
+
+### Calculations
+
+1. Chunk ids are calculated as:
+   - `field_slug__yearStart_yearEnd__table_family`
+2. Year buckets are calculated from:
+   - `year_window_start`
+   - `year_window_end`
+   - `chunk_year_span`
+3. Worker recommendations are calculated from the configured `max_workers` map and emitted into the chunk plan manifest.
+
+### Downstream Impacts
+
+1. TIP PATSTAT source certification now reflects the configured ETL time window rather than full-history field counts.
+2. The ETL now has a first concrete code path toward the Azure Blob-first TIP operating model instead of only documentation.
+3. Full chunk execution, upload-after-write orchestration, and cleanup scheduling still need implementation beyond the planner stage.
+
+### Governing Docs
+
+1. `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+2. `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+3. `etl/README.md`
+
+### Warnings
+
+1. This pass adds the chunk-planning stage and year-window enforcement, but it does not yet implement full chunk execution or immediate Azure upload per chunk.
+
+## 2026-03-16 | TIP Chunked Pre-Bronze Executor | success
+
+### Inputs
+
+1. existing TIP chunk planning configuration
+2. current monolithic TIP `prebronze` extraction logic
+3. Azure Blob-first execution requirement for constrained TIP environments
+
+### Files Updated
+
+1. new `etl/src/patentiq_etl/prebronze/chunked.py`
+2. updated `etl/src/patentiq_etl/prebronze/run.py`
+3. updated `etl/README.md`
+
+### Methods
+
+1. Added a chunk executor that iterates planned field/year/table-family chunks.
+2. Added per-chunk PATSTAT family extraction:
+   - `core`
+   - `publications`
+   - `legal`
+   - `citations`
+3. Added per-chunk Register extraction from EP application seeds.
+4. Added per-chunk EPAB extraction from chunk-local EP publication seeds.
+5. Added optional Azure Blob upload per chunk with deterministic blob prefixes.
+6. Added per-chunk manifest writing and resume-by-success semantics.
+7. Added local chunk cleanup after upload verification when enabled.
+
+### Calculations
+
+1. Each chunk derives its own bounded scope from:
+   - field
+   - year bucket
+   - table family
+2. Chunk-local PATSTAT scope is built directly from TIP rather than from one giant persisted seed universe.
+
+### Downstream Impacts
+
+1. `prebronze` can now execute in a Blob-first chunked mode for TIP instead of requiring one monolithic bounded raw export.
+2. Chunk manifests now provide resumability and local cleanup control for long-running TIP extraction campaigns.
+
+### Governing Docs
+
+1. `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+2. `etl/README.md`
+
+### Warnings
+
+1. Chunk execution is now implemented, but USPTO bulk XML export is not yet split by the same field/year chunk boundaries and remains surfaced as a chunk warning when relevant.
+
+## 2026-03-16 | USPTO Chunk-Aware Pre-Bronze Export | success
+
+### Inputs
+
+1. current TIP chunked `prebronze` executor
+2. USPTO bulk XML parser that already supports multiple publication-level documents per file
+3. TIP chunk-alignment requirement for full-scope Blob-first export
+
+### Files Updated
+
+1. updated `etl/src/patentiq_etl/bronze/ingest_uspto_fulltext.py`
+2. updated `etl/src/patentiq_etl/prebronze/chunked.py`
+3. updated `etl/tests/test_uspto_bulk_xml.py`
+4. updated `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+5. updated `docs/next-phase-v2/26-patentiq-v2-mega-cluster-raw-extraction-and-bronze-bounding-strategy.md`
+6. updated `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+7. updated `docs/new-feature-ideas/mega-cluster-dataset-scope-and-boundary-governance-requirements.md`
+8. updated `etl/README.md`
+
+### Methods
+
+1. Added a filtered bulk-XML writer that rewrites a USPTO file with only the publication-level documents requested by the active chunk.
+2. Replaced the old chunk warning path with real USPTO extraction inside the `publications` family of the TIP chunk executor.
+3. Routed filtered USPTO outputs to a chunk-aligned `raw-bounded/uspto/...` Blob prefix instead of mixing them into the PATSTAT publication path.
+4. Added a regression test proving that a multi-publication USPTO XML file can be reduced to a single in-scope publication and still be parsed by the Bronze loader.
+
+### Calculations
+
+1. USPTO chunk seeds are still derived from PATSTAT `US` publications inside the active field/year scope.
+2. Chunk metrics now record:
+   - source XML file count
+   - output XML file count
+   - matched document count
+   - matched publication count
+   - unmatched U.S. publication seed count
+
+### Downstream Impacts
+
+1. TIP chunk manifests can now represent PATSTAT publication rows and their matching USPTO text-provider payloads inside the same field/year chunk.
+2. Bronze USPTO parsing remains publication-faithful while avoiding mixed-scope bulk XML carry-through.
+3. Blob intermediate storage now holds chunk-aligned USPTO raw inputs suitable for later non-TIP Bronze consolidation.
+
+### Governing Docs
+
+1. `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+2. `docs/next-phase-v2/26-patentiq-v2-mega-cluster-raw-extraction-and-bronze-bounding-strategy.md`
+3. `docs/new-feature-ideas/mega-cluster-dataset-scope-and-boundary-governance-requirements.md`
+
+### Warnings
+
+1. This pass makes USPTO extraction chunk-aware, but live TIP-plus-Azure execution still needs to be exercised in the real target environment.
+
+## 2026-03-16 | Two-Horizon Scope Timeline Revision | success
+
+### Inputs
+
+1. current ETL year-window config
+2. mega-cluster scope and ghost-node policy notes
+3. heritage and historical-influence requirements across the March 2026 planning notes
+
+### Files Updated
+
+1. updated `etl/conf/build.yaml`
+2. new `docs/next-phase-v2/29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md`
+3. updated `docs/next-phase-v2/README.md`
+4. updated `docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md`
+5. updated `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+6. updated `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+7. updated `docs/new-feature-ideas/mega-cluster-dataset-scope-and-boundary-governance-requirements.md`
+8. updated `etl/README.md`
+
+### Methods
+
+1. Revised the main ETL operating window from the earlier `2006-2026` placeholder to the cleaner `2007-2026` 20-year window.
+2. Introduced an explicit two-horizon policy that separates the main operating warehouse horizon from an older heritage backfill horizon.
+3. Updated the scope and runbook notes so they distinguish current-state analytics from backward-looking heritage analytics.
+
+### Calculations
+
+1. The main ETL window is now defined as `2007-2026` inclusive.
+2. The first recommended heritage backfill target is `1996-2006`.
+3. TIP chunk-plan year-bucket examples were recalculated against the new main operating window.
+
+### Downstream Impacts
+
+1. Current operational marts should align to the `2007-2026` bounded mega-cluster.
+2. Heritage and historical influence logic now has a documented path to use older mega-cluster families without polluting current-state inclusion rules.
+3. The ETL and scope documentation now describe a cleaner separation between current strategic analytics and historical innovation analytics.
+
+### Governing Docs
+
+1. `docs/next-phase-v2/29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md`
+2. `docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md`
+3. `docs/new-feature-ideas/mega-cluster-dataset-scope-and-boundary-governance-requirements.md`
+
+### Warnings
+
+1. The two-horizon policy is documented and the main ETL config is aligned, but the separate heritage backfill extraction path is not yet implemented as a distinct runtime stage.
+
+## 2026-03-16 | Two-Horizon Model Alignment In Silver And Gold | success
+
+### Inputs
+
+1. two-horizon scope policy
+2. current single-horizon `silver_family_core` implementation
+3. current Gold marts that implicitly aggregated over the full in-scope family table
+
+### Files Updated
+
+1. updated `etl/src/patentiq_etl/common/types.py`
+2. updated `etl/src/patentiq_etl/common/config.py`
+3. updated `etl/conf/build.yaml`
+4. updated `etl/src/patentiq_etl/silver/build_core.py`
+5. updated `etl/src/patentiq_etl/gold/build_gold.py`
+6. updated `docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md`
+7. updated `docs/next-phase-v2/11-patentiq-v2-metric-lineage-catalog.md`
+8. updated `docs/next-phase-v2/12-patentiq-v2-database-structure-and-metric-maps.md`
+9. updated `docs/next-phase-v2/13-patentiq-v2-cross-layer-dbdiagram.dbml`
+10. updated `docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md`
+11. updated `docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md`
+12. updated `docs/next-phase-v2/29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md`
+13. updated `etl/README.md`
+
+### Methods
+
+1. Added explicit horizon configuration for the main ETL window and the heritage backfill window.
+2. Extended `silver_family_core` with scope flags:
+   - `is_main_window_family`
+   - `is_heritage_backfill_family`
+   - `is_out_of_bounds_ghost`
+3. Updated Gold current-state marts to read only `is_main_window_family = true`.
+4. Updated the main warehouse design docs so they reflect horizon flags and current-vs-heritage separation.
+
+### Calculations
+
+1. Main window flags are now computed from the configured `2007-2026` range.
+2. Heritage backfill flags are now computed from the configured `1996-2006` range.
+3. Gold current-state family, blocking, portfolio, and field-decomposition marts now explicitly filter to the main operating horizon.
+
+### Downstream Impacts
+
+1. The warehouse now has an explicit place to distinguish current operating families from historical-support families.
+2. Current operational marts are less likely to drift when the historical backfill horizon is introduced later.
+3. Heritage and historical metrics still need their own dedicated extraction/runtime path before the backfill horizon becomes populated.
+
+### Governing Docs
+
+1. `docs/next-phase-v2/29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md`
+2. `docs/next-phase-v2/13-patentiq-v2-cross-layer-dbdiagram.dbml`
+3. `docs/next-phase-v2/11-patentiq-v2-metric-lineage-catalog.md`
+
+### Warnings
+
+1. The logical model is now two-horizon-aware, but the historical backfill extraction stage itself is still pending implementation.
+
+## 2026-03-16 | Heritage Backfill Runtime And Heritage Gold Outputs | success
+
+### Inputs
+
+1. two-horizon scope policy
+2. existing TIP chunk planner and chunk executor
+3. current Gold marts lacking explicit historical-heritage summary outputs
+
+### Files Updated
+
+1. updated `etl/src/patentiq_etl/prebronze/plan.py`
+2. updated `etl/src/patentiq_etl/prebronze/run.py`
+3. updated `etl/src/patentiq_etl/prebronze/chunked.py`
+4. updated `etl/scripts/run_stage.py`
+5. updated `etl/scripts/run_full_build.py`
+6. updated `etl/conf/build.yaml`
+7. updated `etl/src/patentiq_etl/gold/build_gold.py`
+8. updated `etl/tests/test_tip_chunk_plan.py`
+9. updated `docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md`
+10. updated `docs/next-phase-v2/11-patentiq-v2-metric-lineage-catalog.md`
+11. updated `docs/next-phase-v2/12-patentiq-v2-database-structure-and-metric-maps.md`
+12. updated `docs/next-phase-v2/13-patentiq-v2-cross-layer-dbdiagram.dbml`
+13. updated `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+14. updated `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+15. updated `etl/README.md`
+
+### Methods
+
+1. Added a separate heritage chunk planner and runner for the `1996-2006` backfill horizon.
+2. Kept the heritage export lighter by default through dedicated table-family and worker defaults.
+3. Added stage aliases for:
+   - `plan-tip-heritage-export`
+   - `prebronze-heritage`
+4. Added dedicated Gold heritage marts:
+   - `gold_family_heritage_summary`
+   - `gold_portfolio_heritage_summary`
+
+### Calculations
+
+1. Heritage chunk plans now use the configured `heritage_backfill_start` and `heritage_backfill_end` bounds.
+2. Heritage chunk ids are prefixed with `heritage__` and upload to `raw-bounded-heritage/...`.
+3. Portfolio heritage summaries aggregate the family-level heritage proxy across all families in the portfolio heritage scope and count how many come from the heritage backfill horizon.
+
+### Downstream Impacts
+
+1. The ETL now has a first-class runtime stage for historical backfill extraction rather than only policy documentation.
+2. Current-state and historical heritage Gold outputs are now separated more cleanly.
+3. A later non-TIP consolidation environment can ingest main and heritage bounded raw horizons independently.
+
+### Governing Docs
+
+1. `docs/next-phase-v2/29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md`
+2. `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+3. `docs/next-phase-v2/13-patentiq-v2-cross-layer-dbdiagram.dbml`
+
+### Warnings
+
+1. The heritage extraction runtime now exists, but Bronze/Silver end-to-end consolidation from a separately materialized heritage bounded-raw horizon still needs a dedicated downstream merge path if you want one-command full historical builds.

@@ -53,14 +53,21 @@ def build_gold(settings: BuildSettings) -> StageResult:
     out_semantic = settings.gold_dir / "gold_semantic_match_context.parquet"
     out_attacker = settings.gold_dir / "gold_family_attacker_summary.parquet"
     out_portfolio_forecast = settings.gold_dir / "gold_portfolio_forecast_summary.parquet"
+    out_family_heritage = settings.gold_dir / "gold_family_heritage_summary.parquet"
+    out_portfolio_heritage = settings.gold_dir / "gold_portfolio_heritage_summary.parquet"
 
     con.execute(
         f"""
         copy (
+            with main_families as (
+                select * from read_parquet('{family_core}') where coalesce(is_main_window_family, true)
+            )
             select
                 c.docdb_family_id,
                 c.family_earliest_priority_date,
                 c.family_priority_year,
+                c.is_main_window_family,
+                c.is_heritage_backfill_family,
                 o.owner_name_harmonized,
                 o.owner_name_display,
                 f.covered_wipo_fields,
@@ -69,7 +76,7 @@ def build_gold(settings: BuildSettings) -> StageResult:
                 s.has_any_active_grant,
                 '{settings.scope_type}' as scope_type,
                 '{settings.snapshot_date}' as snapshot_date
-            from read_parquet('{family_core}') c
+            from main_families c
             left join read_parquet('{owner}') o using (docdb_family_id)
             left join read_parquet('{fields}') f using (docdb_family_id)
             left join read_parquet('{family_status}') s using (docdb_family_id)
@@ -79,6 +86,9 @@ def build_gold(settings: BuildSettings) -> StageResult:
     con.execute(
         f"""
         copy (
+            with main_families as (
+                select * from read_parquet('{family_core}') where coalesce(is_main_window_family, true)
+            )
             select
                 c.docdb_family_id,
                 coalesce(e.branch_enforceability_contribution_raw, 0.0) as family_market_threat_score_raw,
@@ -90,7 +100,7 @@ def build_gold(settings: BuildSettings) -> StageResult:
                         (coalesce(e.branch_enforceability_contribution_raw, 0.0) * 0.65) +
                         (coalesce(x.family_rcf_score, 0.0) * 0.35)
                 ) * 100.0 as family_ui_blocking_power_score
-            from read_parquet('{family_core}') c
+            from main_families c
             left join read_parquet('{enforce}') e using (docdb_family_id)
             left join read_parquet('{cite}') x using (docdb_family_id)
         ) to '{out_blocking}' (format parquet, compression zstd)
@@ -99,10 +109,14 @@ def build_gold(settings: BuildSettings) -> StageResult:
     con.execute(
         f"""
         copy (
+            with main_families as (
+                select docdb_family_id from read_parquet('{family_core}') where coalesce(is_main_window_family, true)
+            )
             select
-                docdb_family_id,
-                unnest(covered_wipo_fields) as wipo_industry_code
+                f.docdb_family_id,
+                unnest(f.covered_wipo_fields) as wipo_industry_code
             from read_parquet('{fields}')
+            join main_families using (docdb_family_id)
         ) to '{out_field}' (format parquet, compression zstd)
         """
     )
@@ -180,6 +194,49 @@ def build_gold(settings: BuildSettings) -> StageResult:
         ) to '{out_portfolio_forecast}' (format parquet, compression zstd)
         """
     )
+    con.execute(
+        f"""
+        copy (
+            select
+                c.docdb_family_id,
+                c.family_earliest_priority_date,
+                c.family_priority_year,
+                c.is_main_window_family,
+                c.is_heritage_backfill_family,
+                o.owner_name_harmonized,
+                o.owner_name_display,
+                f.covered_wipo_fields,
+                coalesce(x.family_rcf_score, 0.0) as family_heritage_score,
+                coalesce(x.raw_family_citation_count, 0) as raw_family_citation_count,
+                coalesce(x.out_of_bounds_citation_share, 0.0) as out_of_bounds_citation_share,
+                '{settings.scope_type}' as scope_type,
+                '{settings.snapshot_date}' as snapshot_date
+            from read_parquet('{family_core}') c
+            left join read_parquet('{owner}') o using (docdb_family_id)
+            left join read_parquet('{fields}') f using (docdb_family_id)
+            left join read_parquet('{cite}') x using (docdb_family_id)
+            where not coalesce(c.is_out_of_bounds_ghost, false)
+        ) to '{out_family_heritage}' (format parquet, compression zstd)
+        """
+    )
+    con.execute(
+        f"""
+        copy (
+            select
+                owner_name_harmonized,
+                any_value(owner_name_display) as owner_name_display,
+                count(distinct docdb_family_id) as portfolio_family_count_heritage_scope,
+                sum(family_heritage_score) as portfolio_total_heritage_score,
+                avg(family_heritage_score) as portfolio_avg_heritage_score,
+                sum(case when coalesce(is_heritage_backfill_family, false) then 1 else 0 end) as heritage_backfill_family_count,
+                sum(case when coalesce(is_main_window_family, false) then 1 else 0 end) as main_window_family_count,
+                '{settings.scope_type}' as scope_type,
+                '{settings.snapshot_date}' as snapshot_date
+            from read_parquet('{out_family_heritage}')
+            group by owner_name_harmonized
+        ) to '{out_portfolio_heritage}' (format parquet, compression zstd)
+        """
+    )
 
     for output in [
         out_family_summary,
@@ -192,6 +249,8 @@ def build_gold(settings: BuildSettings) -> StageResult:
         out_semantic,
         out_attacker,
         out_portfolio_forecast,
+        out_family_heritage,
+        out_portfolio_heritage,
     ]:
         result.outputs.append(str(output))
         result.metrics[f"{output.stem}_rows"] = parquet_row_count(output)

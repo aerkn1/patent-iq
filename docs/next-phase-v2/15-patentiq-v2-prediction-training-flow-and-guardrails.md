@@ -658,6 +658,10 @@ From Silver:
 7. `silver_local_tech_trends_timeseries`
 8. `silver_family_oecd_quality`
 
+Scope rule:
+- prediction tables should train and serve from the main operating window only
+- heritage-backfill families are historical support records and must not silently enter the forecast training population unless a prediction scope explicitly targets historical reconstruction
+
 Register-specific extension:
 - PATSTAT Register features are not allowed in this cross-office base scope
 - EP applications with Register enrichment should be handled through the separate EP-special scope below

@@ -1,11 +1,69 @@
 from __future__ import annotations
 
+import copy
 from datetime import date
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
-from patentiq_etl.common.io import normalize_ws, write_pylist_parquet
+from patentiq_etl.common.io import ensure_dir, normalize_ws, write_pylist_parquet
 from patentiq_etl.common.types import BuildSettings, StageResult
+
+
+USPTO_BRONZE_OUTPUT_COLUMNS = {
+    "bronze_uspto_ft_document": [
+        "publication_number_full",
+        "publication_country",
+        "publication_number",
+        "publication_kind",
+        "publication_date",
+        "application_number_full",
+        "application_date",
+        "application_type",
+        "us_application_series_code",
+        "source_file_name",
+    ],
+    "bronze_uspto_ft_biblio_application": [
+        "publication_number_full",
+        "application_number_full",
+        "application_type",
+        "us_application_series_code",
+        "filing_date",
+        "source_file_name",
+    ],
+    "bronze_uspto_ft_abstract": ["publication_number_full", "abstract_text", "source_file_name"],
+    "bronze_uspto_ft_claims": ["publication_number_full", "claim_id", "claim_num", "claim_text_plain", "source_file_name"],
+    "bronze_uspto_ft_related_documents": [
+        "publication_number_full",
+        "related_document_type",
+        "related_country",
+        "related_doc_number",
+        "related_date",
+        "source_file_name",
+    ],
+    "bronze_uspto_ft_applicants": [
+        "publication_number_full",
+        "sequence_no",
+        "party_role",
+        "designation",
+        "first_name",
+        "last_name",
+        "city",
+        "state",
+        "country",
+        "source_file_name",
+    ],
+    "bronze_uspto_ft_inventors": [
+        "publication_number_full",
+        "sequence_no",
+        "designation",
+        "first_name",
+        "last_name",
+        "city",
+        "state",
+        "country",
+        "source_file_name",
+    ],
+}
 
 
 def _text(elem: ET.Element | None) -> str | None:
@@ -163,6 +221,82 @@ def extract_publication_numbers(xml_path: Path) -> set[str]:
     return publication_numbers
 
 
+def filter_bulk_xml_to_publications(xml_path: Path, publication_numbers: set[str], out_path: Path) -> int:
+    """Write a filtered USPTO bulk XML file containing only the requested publication documents."""
+    if not publication_numbers:
+        return 0
+
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    matched_roots: list[ET.Element] = []
+    for document_root in _iter_document_roots(root):
+        doc_row, _, _, _, _, _ = _parse_document_root(document_root, xml_path.name)
+        publication_number_full = doc_row.get("publication_number_full")
+        if publication_number_full and publication_number_full in publication_numbers:
+            matched_roots.append(copy.deepcopy(document_root))
+
+    if not matched_roots:
+        return 0
+
+    direct_document_tags = {"patent-application-publication", "us-patent-application", "us-patent-grant"}
+    if _local_name(root) in direct_document_tags and len(matched_roots) == 1:
+        filtered_root = matched_roots[0]
+    else:
+        filtered_root = ET.Element(root.tag, root.attrib)
+        filtered_root.text = root.text
+        filtered_root.tail = root.tail
+        for document_root in matched_roots:
+            filtered_root.append(document_root)
+
+    ensure_dir(out_path.parent)
+    ET.ElementTree(filtered_root).write(out_path, encoding="utf-8", xml_declaration=True)
+    return len(matched_roots)
+
+
+def build_biblio_rows(documents: list[dict]) -> list[dict]:
+    """Build USPTO biblio rows from parsed document rows."""
+    return [
+        {
+            "publication_number_full": row["publication_number_full"],
+            "application_number_full": row["application_number_full"],
+            "application_type": row["application_type"],
+            "us_application_series_code": row["us_application_series_code"],
+            "filing_date": row["application_date"],
+            "source_file_name": row["source_file_name"],
+        }
+        for row in documents
+    ]
+
+
+def write_uspto_bronze_outputs(
+    bronze_dir: Path,
+    documents: list[dict],
+    abstracts: list[dict],
+    claims: list[dict],
+    related_documents: list[dict],
+    applicants: list[dict],
+    inventors: list[dict],
+) -> dict[str, int]:
+    """Write the canonical USPTO Bronze parquet outputs and return row counts by table stem."""
+    outputs = {
+        "bronze_uspto_ft_document": documents,
+        "bronze_uspto_ft_biblio_application": build_biblio_rows(documents),
+        "bronze_uspto_ft_abstract": abstracts,
+        "bronze_uspto_ft_claims": claims,
+        "bronze_uspto_ft_related_documents": related_documents,
+        "bronze_uspto_ft_applicants": applicants,
+        "bronze_uspto_ft_inventors": inventors,
+    }
+    row_counts: dict[str, int] = {}
+    for table_name, rows in outputs.items():
+        row_counts[table_name] = write_pylist_parquet(
+            rows,
+            bronze_dir / f"{table_name}.parquet",
+            columns=USPTO_BRONZE_OUTPUT_COLUMNS[table_name],
+        )
+    return row_counts
+
+
 def ingest_uspto_fulltext(settings: BuildSettings) -> StageResult:
     """Parse raw USPTO XML payloads into schema-aligned Bronze parquet text-provider tables."""
     result = StageResult(
@@ -187,6 +321,19 @@ def ingest_uspto_fulltext(settings: BuildSettings) -> StageResult:
         ],
     )
 
+    if settings.uspto_source_mode == "odp_api":
+        existing_outputs = [settings.bronze_dir / f"{table_name}.parquet" for table_name in USPTO_BRONZE_OUTPUT_COLUMNS]
+        if all(path.exists() for path in existing_outputs):
+            result.inputs.extend(str(path) for path in existing_outputs)
+            result.outputs.extend(str(path) for path in existing_outputs)
+            result.summary = "USPTO Bronze parquet was already materialized during the ODP stream extraction path."
+            result.methods.append("Skipped redundant bounded-XML parsing because direct USPTO Bronze parquet outputs already exist.")
+            return result
+        result.summary = "USPTO Bronze parsing was deferred because USPTO is configured for the external ODP stream path and no direct Bronze outputs are present in this runtime."
+        result.methods.append("Skipped bounded-XML parsing because USPTO is handled by the separate `prebronze-uspto-odp` stage when that external path is executed.")
+        result.metrics["uspto_odp_outputs_present"] = 0
+        return result
+
     documents: list[dict] = []
     abstracts: list[dict] = []
     claims: list[dict] = []
@@ -210,92 +357,19 @@ def ingest_uspto_fulltext(settings: BuildSettings) -> StageResult:
         result.status = "degraded"
         result.warnings.append("No USPTO XML source files were found for Bronze parsing.")
         return result
-
-    outputs = {
-        settings.bronze_dir / "bronze_uspto_ft_document.parquet": documents,
-        settings.bronze_dir / "bronze_uspto_ft_abstract.parquet": abstracts,
-        settings.bronze_dir / "bronze_uspto_ft_claims.parquet": claims,
-        settings.bronze_dir / "bronze_uspto_ft_related_documents.parquet": related_documents,
-        settings.bronze_dir / "bronze_uspto_ft_applicants.parquet": applicants,
-        settings.bronze_dir / "bronze_uspto_ft_inventors.parquet": inventors,
-    }
-    output_columns = {
-        settings.bronze_dir / "bronze_uspto_ft_document.parquet": [
-            "publication_number_full",
-            "publication_country",
-            "publication_number",
-            "publication_kind",
-            "publication_date",
-            "application_number_full",
-            "application_date",
-            "application_type",
-            "us_application_series_code",
-            "source_file_name",
-        ],
-        settings.bronze_dir / "bronze_uspto_ft_abstract.parquet": ["publication_number_full", "abstract_text", "source_file_name"],
-        settings.bronze_dir / "bronze_uspto_ft_claims.parquet": ["publication_number_full", "claim_id", "claim_num", "claim_text_plain", "source_file_name"],
-        settings.bronze_dir / "bronze_uspto_ft_related_documents.parquet": [
-            "publication_number_full",
-            "related_document_type",
-            "related_country",
-            "related_doc_number",
-            "related_date",
-            "source_file_name",
-        ],
-        settings.bronze_dir / "bronze_uspto_ft_applicants.parquet": [
-            "publication_number_full",
-            "sequence_no",
-            "party_role",
-            "designation",
-            "first_name",
-            "last_name",
-            "city",
-            "state",
-            "country",
-            "source_file_name",
-        ],
-        settings.bronze_dir / "bronze_uspto_ft_inventors.parquet": [
-            "publication_number_full",
-            "sequence_no",
-            "designation",
-            "first_name",
-            "last_name",
-            "city",
-            "state",
-            "country",
-            "source_file_name",
-        ],
-    }
-    for out_path, rows in outputs.items():
-        row_count = write_pylist_parquet(rows, out_path, columns=output_columns[out_path])
-        result.outputs.append(str(out_path))
-        result.metrics[f"{out_path.stem}_rows"] = row_count
-
-    biblio_path = settings.bronze_dir / "bronze_uspto_ft_biblio_application.parquet"
-    biblio_rows = [
-        {
-            "publication_number_full": row["publication_number_full"],
-            "application_number_full": row["application_number_full"],
-            "application_type": row["application_type"],
-            "us_application_series_code": row["us_application_series_code"],
-            "filing_date": row["application_date"],
-            "source_file_name": row["source_file_name"],
-        }
-        for row in documents
-    ]
-    result.metrics["bronze_uspto_ft_biblio_application_rows"] = write_pylist_parquet(
-        biblio_rows,
-        biblio_path,
-        columns=[
-            "publication_number_full",
-            "application_number_full",
-            "application_type",
-            "us_application_series_code",
-            "filing_date",
-            "source_file_name",
-        ],
+    row_counts = write_uspto_bronze_outputs(
+        settings.bronze_dir,
+        documents,
+        abstracts,
+        claims,
+        related_documents,
+        applicants,
+        inventors,
     )
-    result.outputs.append(str(biblio_path))
+    for table_name, row_count in row_counts.items():
+        out_path = settings.bronze_dir / f"{table_name}.parquet"
+        result.outputs.append(str(out_path))
+        result.metrics[f"{table_name}_rows"] = row_count
     result.metrics["uspto_total_parsed_rows"] = sum(
         value for key, value in result.metrics.items() if key.startswith("bronze_uspto_ft_") and key.endswith("_rows")
     )

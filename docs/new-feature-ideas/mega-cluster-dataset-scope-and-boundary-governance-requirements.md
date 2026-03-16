@@ -23,7 +23,12 @@ This is valid if:
 ## DSG-01: The MVP Should Use A 10-Field Convergent Mega-Cluster
 
 Requirement:
-PatentIQ should extract the global family universe for the last 20 years across the following WIPO 35 fields:
+PatentIQ should use a two-horizon scope policy:
+1. a main operating window of `2007-2026`,
+2. a separate older heritage backfill horizon when historical influence requires it,
+3. both bounded to the same 10-field mega-cluster.
+
+The main operating window should cover the following WIPO-convergent mega-cluster fields:
 1. Computer Technology,
 2. Digital Communication,
 3. Semiconductors,
@@ -39,6 +44,7 @@ Rationale:
 1. these fields create a realistic convergence zone across compute, power, sensing, and application layers,
 2. they are rich enough to stress-test citation, OECD, trend, and semantic logic,
 3. they are bounded enough to remain deliverable in a 5-week MVP.
+4. separating the operating window from the heritage backfill avoids forcing current-state analytics and deep historical influence into one inconsistent inclusion rule.
 
 ## Why This Scope Is Valid
 
@@ -89,6 +95,21 @@ Recommended layout:
 2. co-sort snapshot marts by `snapshot_year`,
 3. keep high-cardinality time-series marts partition-aware where practical,
 4. rely on columnar pruning and zone maps rather than row-store indexing assumptions.
+
+## DSG-05A: Constrained Source Extraction Must Stay Chunk-Aligned
+
+Requirement:
+When the mega-cluster is extracted from a constrained environment such as TIP, every source-specific raw export must respect the same field/year chunk boundary before it is uploaded or handed to Bronze.
+
+Examples:
+1. PATSTAT and Register rows are extracted only for the active field/year chunk,
+2. EPAB queries use only the EP publication anchors inside the active chunk,
+3. USPTO bulk XML files are reduced to only the publication-level documents whose identifiers belong to the active chunk rather than copying whole mixed-scope bulk files.
+
+Rationale:
+1. keeps RAM and local disk usage within the constrained runtime envelope,
+2. makes chunk manifests explainable and retry-safe,
+3. avoids leaking out-of-scope text-provider payloads into the bounded raw store.
 
 ## Boundary Guardrails
 
