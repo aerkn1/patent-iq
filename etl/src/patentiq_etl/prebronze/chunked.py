@@ -1,15 +1,20 @@
 from __future__ import annotations
 
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from dataclasses import replace
+import logging
 import os
 import shutil
+from threading import Lock
+from time import perf_counter
 from pathlib import Path
 from typing import Any
 
 from patentiq_etl.bronze.ingest_uspto_fulltext import extract_publication_numbers, filter_bulk_xml_to_publications
 from patentiq_etl.bronze.source_registry import PATSTAT_TABLES, REGISTER_TABLES
-from patentiq_etl.common.io import ensure_dir, write_text_json
-from patentiq_etl.common.types import BuildSettings, StageResult
+from patentiq_etl.common.io import append_jsonl, ensure_dir, write_text_json
+from patentiq_etl.common.logging_utils import configure_logger
+from patentiq_etl.common.types import BuildSettings, StageResult, utc_now_iso
 from patentiq_etl.prebronze.extract import _copy_reference_inputs
 from patentiq_etl.prebronze.plan import plan_tip_chunked_export, plan_tip_heritage_chunked_export
 from patentiq_etl.prebronze.tip_clients import (
@@ -24,6 +29,9 @@ from patentiq_etl.prebronze.tip_clients import (
     slugify_value,
     write_dataframe_parquet,
 )
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 PATSTAT_FAMILY_TABLES = {
@@ -96,7 +104,44 @@ def _get_container_client(settings: BuildSettings):
     return service.get_container_client(settings.azure["container"])
 
 
-def _upload_paths(container, files: list[Path], blob_prefix: str) -> list[str]:
+def _stage_event_log_path(settings: BuildSettings, stage_name: str) -> Path:
+    """Return the JSONL path for rich real-time stage events."""
+    return settings.manifests_dir / "stages" / f"{stage_name}.events.jsonl"
+
+
+def _scheduler_limits(settings: BuildSettings, horizon_label: str) -> tuple[int, dict[str, int]]:
+    """Return the global and family-level concurrency limits for one horizon."""
+    execution = settings.execution or {}
+    if horizon_label == "heritage":
+        global_limit = int(execution.get("heritage_max_parallel_chunks", 1))
+        raw_family_limits = execution.get("heritage_max_workers", {})
+    else:
+        global_limit = int(execution.get("tip_max_parallel_chunks", 2))
+        raw_family_limits = execution.get("max_workers", {})
+    family_limits = {str(key): max(1, int(value)) for key, value in raw_family_limits.items()}
+    return max(1, global_limit), family_limits
+
+
+def _upload_options(settings: BuildSettings) -> dict[str, int]:
+    """Return Azure upload tuning options sized for constrained TIP runtimes."""
+    execution = settings.execution or {}
+    return {
+        "max_concurrency": max(1, int(execution.get("upload_max_concurrency", 3))),
+        "max_block_size": max(1, int(execution.get("upload_max_block_size_mb", 8))) * 1024 * 1024,
+        "max_single_put_size": max(1, int(execution.get("upload_max_single_put_size_mb", 16))) * 1024 * 1024,
+    }
+
+
+def _upload_paths(
+    container,
+    files: list[Path],
+    blob_prefix: str,
+    upload_options: dict[str, int],
+    *,
+    logger: logging.Logger | None = None,
+    emit_event=None,
+    chunk_id: str | None = None,
+) -> list[str]:
     """Upload files to one blob prefix and return blob names."""
     uploaded: list[str] = []
     if container is None:
@@ -106,9 +151,35 @@ def _upload_paths(container, files: list[Path], blob_prefix: str) -> list[str]:
         if not path.is_file():
             continue
         blob_name = f"{prefix}/{path.name}"
+        size_bytes = path.stat().st_size
+        blob_client = container.get_blob_client(
+            blob_name,
+            max_block_size=upload_options["max_block_size"],
+            max_single_put_size=upload_options["max_single_put_size"],
+        )
+        if logger is not None:
+            logger.info(
+                "Uploading blob chunk_id=%s blob=%s size_bytes=%s max_concurrency=%s",
+                chunk_id or "-",
+                blob_name,
+                size_bytes,
+                upload_options["max_concurrency"],
+            )
+        if emit_event is not None:
+            emit_event(
+                "blob_upload_started",
+                chunk_id=chunk_id,
+                blob_name=blob_name,
+                size_bytes=size_bytes,
+                max_concurrency=upload_options["max_concurrency"],
+            )
         with path.open("rb") as handle:
-            container.upload_blob(blob_name, handle, overwrite=True)
+            blob_client.upload_blob(handle, overwrite=True, max_concurrency=upload_options["max_concurrency"])
         uploaded.append(blob_name)
+        if logger is not None:
+            logger.info("Uploaded blob chunk_id=%s blob=%s size_bytes=%s", chunk_id or "-", blob_name, size_bytes)
+        if emit_event is not None:
+            emit_event("blob_upload_finished", chunk_id=chunk_id, blob_name=blob_name, size_bytes=size_bytes)
     return uploaded
 
 
@@ -493,6 +564,9 @@ def _write_chunk_manifest(
     uploaded_blobs: list[str],
     metrics: dict[str, Any],
     warnings: list[str],
+    started_at: str | None = None,
+    finished_at: str | None = None,
+    duration_seconds: float | None = None,
 ) -> Path:
     """Persist one chunk manifest."""
     manifest_path = _chunk_manifest_path(settings, chunk["chunk_id"])
@@ -509,9 +583,210 @@ def _write_chunk_manifest(
             "uploaded_blobs": uploaded_blobs,
             "metrics": metrics,
             "warnings": warnings,
+            "started_at": started_at,
+            "finished_at": finished_at,
+            "duration_seconds": duration_seconds,
         },
     )
     return manifest_path
+
+
+def _execute_chunk_export(
+    settings: BuildSettings,
+    working_settings: BuildSettings,
+    chunk: dict[str, Any],
+    *,
+    horizon_label: str,
+    container,
+    upload_options: dict[str, int],
+    uspto_enabled: bool,
+    logger: logging.Logger,
+    emit_event,
+) -> dict[str, Any]:
+    """Execute one chunk, emit live logs, and return manifest payload fields."""
+    chunk_id = str(chunk["chunk_id"])
+    family = str(chunk["table_family"])
+    temp_dir = _chunk_temp_dir(settings, chunk_id)
+    ensure_dir(temp_dir)
+    local_outputs: list[Path] = []
+    uploaded_blobs: list[str] = []
+    chunk_metrics: dict[str, Any] = {}
+    chunk_warnings: list[str] = []
+    status = "success"
+    scope = None
+    started_at = utc_now_iso()
+    started_clock = perf_counter()
+    logger.info(
+        "Chunk started chunk_id=%s field=%s year_start=%s year_end=%s family=%s",
+        chunk_id,
+        chunk["field_slug"],
+        chunk["year_start"],
+        chunk["year_end"],
+        family,
+    )
+    emit_event(
+        "chunk_started",
+        chunk_id=chunk_id,
+        field=str(chunk["field"]),
+        field_slug=str(chunk["field_slug"]),
+        year_start=int(chunk["year_start"]),
+        year_end=int(chunk["year_end"]),
+        table_family=family,
+    )
+    try:
+        scope = _chunk_scope_tip(working_settings, str(chunk["field"]), int(chunk["year_start"]), int(chunk["year_end"]))
+        chunk_metrics.update(scope["counts"])
+        logger.info(
+            "Chunk scope ready chunk_id=%s appln_count=%s family_count=%s publn_count=%s",
+            chunk_id,
+            chunk_metrics.get("appln_count", 0),
+            chunk_metrics.get("family_count", 0),
+            chunk_metrics.get("publn_count", 0),
+        )
+        emit_event("chunk_scope_ready", chunk_id=chunk_id, counts=scope["counts"])
+
+        if family in PATSTAT_FAMILY_TABLES:
+            logger.info("Extracting PATSTAT family chunk_id=%s family=%s", chunk_id, family)
+            emit_event("chunk_extraction_started", chunk_id=chunk_id, source_family="patstat", table_family=family)
+            local_outputs.extend(_extract_patstat_family(scope, family, temp_dir / "patstat"))
+            if family == "publications" and uspto_enabled:
+                uspto_outputs, uspto_metrics, uspto_warnings = _extract_uspto_family(working_settings, scope, temp_dir / "uspto")
+                local_outputs.extend(uspto_outputs)
+                chunk_metrics.update(uspto_metrics)
+                chunk_warnings.extend(uspto_warnings)
+                if uspto_warnings:
+                    status = "degraded"
+            emit_event(
+                "chunk_extraction_finished",
+                chunk_id=chunk_id,
+                source_family="patstat",
+                table_family=family,
+                output_file_count=len(local_outputs),
+            )
+        elif family == "register":
+            logger.info("Extracting Register family chunk_id=%s", chunk_id)
+            emit_event("chunk_extraction_started", chunk_id=chunk_id, source_family="register", table_family=family)
+            local_outputs.extend(_extract_register_family(scope, temp_dir / "register"))
+            emit_event("chunk_extraction_finished", chunk_id=chunk_id, source_family="register", table_family=family, output_file_count=len(local_outputs))
+        elif family == "epab":
+            logger.info("Extracting EPAB family chunk_id=%s", chunk_id)
+            emit_event("chunk_extraction_started", chunk_id=chunk_id, source_family="epab", table_family=family)
+            local_outputs.extend(_extract_epab_family(working_settings, scope, temp_dir / "epab"))
+            emit_event("chunk_extraction_finished", chunk_id=chunk_id, source_family="epab", table_family=family, output_file_count=len(local_outputs))
+        else:
+            chunk_warnings.append(f"Unsupported chunk family `{family}` was skipped.")
+            status = "degraded"
+
+        local_output_bytes = sum(path.stat().st_size for path in local_outputs if path.exists())
+        chunk_metrics["local_output_file_count"] = len(local_outputs)
+        chunk_metrics["local_output_bytes"] = local_output_bytes
+        logger.info(
+            "Chunk local outputs ready chunk_id=%s files=%s bytes=%s",
+            chunk_id,
+            len(local_outputs),
+            local_output_bytes,
+        )
+        emit_event(
+            "chunk_local_outputs_ready",
+            chunk_id=chunk_id,
+            file_count=len(local_outputs),
+            size_bytes=local_output_bytes,
+        )
+
+        if container is not None and local_outputs and (settings.execution or {}).get("upload_after_chunk", True):
+            standard_outputs = [path for path in local_outputs if path.parent.name != "uspto"]
+            uspto_outputs = [path for path in local_outputs if path.parent.name == "uspto"]
+            logger.info(
+                "Uploading chunk outputs chunk_id=%s file_count=%s prefix=%s",
+                chunk_id,
+                len(local_outputs),
+                chunk["blob_prefix"],
+            )
+            emit_event(
+                "chunk_upload_started",
+                chunk_id=chunk_id,
+                file_count=len(local_outputs),
+                blob_prefix=str(chunk["blob_prefix"]),
+            )
+            if standard_outputs:
+                uploaded_blobs.extend(
+                    _upload_paths(
+                        container,
+                        standard_outputs,
+                        str(chunk["blob_prefix"]),
+                        upload_options,
+                        logger=logger,
+                        emit_event=emit_event,
+                        chunk_id=chunk_id,
+                    )
+                )
+            if uspto_outputs:
+                root_prefix = "raw-bounded-heritage" if horizon_label == "heritage" else "raw-bounded"
+                uspto_blob_prefix = (
+                    f"{root_prefix}/uspto/field={chunk['field_slug']}/"
+                    f"year={chunk['year_start']}-{chunk['year_end']}/family={chunk['table_family']}"
+                )
+                uploaded_blobs.extend(
+                    _upload_paths(
+                        container,
+                        uspto_outputs,
+                        uspto_blob_prefix,
+                        upload_options,
+                        logger=logger,
+                        emit_event=emit_event,
+                        chunk_id=chunk_id,
+                    )
+                )
+            emit_event(
+                "chunk_upload_finished",
+                chunk_id=chunk_id,
+                uploaded_blob_count=len(uploaded_blobs),
+            )
+
+        if (settings.execution or {}).get("cleanup_after_upload", False) and (
+            container is not None or not (settings.execution or {}).get("blob_intermediate_enabled", False)
+        ):
+            logger.info("Cleaning local chunk temp dir chunk_id=%s path=%s", chunk_id, temp_dir)
+            emit_event("chunk_cleanup_started", chunk_id=chunk_id, temp_dir=str(temp_dir))
+            shutil.rmtree(temp_dir, ignore_errors=True)
+            emit_event("chunk_cleanup_finished", chunk_id=chunk_id, temp_dir=str(temp_dir))
+    except Exception as exc:
+        status = "failed"
+        chunk_warnings.append(str(exc))
+        logger.exception("Chunk failed chunk_id=%s", chunk_id)
+        emit_event("chunk_failed", chunk_id=chunk_id, error=str(exc))
+    finally:
+        if scope is not None:
+            close_tip_client(scope.get("patstat"))
+
+    finished_at = utc_now_iso()
+    duration_seconds = round(perf_counter() - started_clock, 3)
+    logger.info(
+        "Chunk finished chunk_id=%s status=%s duration_seconds=%s uploaded_blob_count=%s",
+        chunk_id,
+        status,
+        duration_seconds,
+        len(uploaded_blobs),
+    )
+    emit_event(
+        "chunk_finished",
+        chunk_id=chunk_id,
+        status=status,
+        duration_seconds=duration_seconds,
+        uploaded_blob_count=len(uploaded_blobs),
+        warning_count=len(chunk_warnings),
+    )
+    return {
+        "chunk": chunk,
+        "status": status,
+        "local_outputs": local_outputs,
+        "uploaded_blobs": uploaded_blobs,
+        "metrics": chunk_metrics,
+        "warnings": chunk_warnings,
+        "started_at": started_at,
+        "finished_at": finished_at,
+        "duration_seconds": duration_seconds,
+    }
 
 
 def _run_tip_chunked_export(settings: BuildSettings, *, horizon_label: str) -> StageResult:
@@ -569,11 +844,46 @@ def _run_tip_chunked_export(settings: BuildSettings, *, horizon_label: str) -> S
     )
 
     execution = settings.execution or {}
+    stage_logger = configure_logger(stage_name, settings.manifests_dir / "stages" / f"{stage_name}.log")
+    event_log_path = _stage_event_log_path(settings, stage_name)
+    event_log_path.unlink(missing_ok=True)
+    result.artifacts["live_event_log"] = str(event_log_path)
+    event_lock = Lock()
+
+    def emit_event(event_name: str, **payload: Any) -> None:
+        if not execution.get("realtime_chunk_logging", True):
+            return
+        record = {"at": utc_now_iso(), "stage": stage_name, "event": event_name}
+        record.update(payload)
+        with event_lock:
+            append_jsonl(event_log_path, record)
+
     result.outputs.extend(plan_result.outputs)
     import json
 
     plan_payload = json.loads(plan_path.read_text(encoding="utf-8"))
     chunks: list[dict[str, Any]] = plan_payload["chunks"]
+    parallel_limit, family_limits = _scheduler_limits(settings, horizon_label)
+    upload_options = _upload_options(settings)
+    result.metrics["chunk_scheduler_parallel_limit"] = parallel_limit
+    result.metrics["chunk_upload_max_concurrency"] = upload_options["max_concurrency"]
+    result.metrics["chunk_upload_max_block_size_mb"] = upload_options["max_block_size"] // (1024 * 1024)
+    result.metrics["chunk_upload_max_single_put_size_mb"] = upload_options["max_single_put_size"] // (1024 * 1024)
+    stage_logger.info(
+        "Starting chunked export stage=%s total_chunks=%s parallel_limit=%s family_limits=%s upload_options=%s",
+        stage_name,
+        len(chunks),
+        parallel_limit,
+        family_limits,
+        upload_options,
+    )
+    emit_event(
+        "stage_started",
+        total_chunks=len(chunks),
+        parallel_limit=parallel_limit,
+        family_limits=family_limits,
+        upload_options=upload_options,
+    )
     container = None
     try:
         container = _get_container_client(settings)
@@ -581,6 +891,12 @@ def _run_tip_chunked_export(settings: BuildSettings, *, horizon_label: str) -> S
         if execution.get("blob_intermediate_enabled", False):
             result.status = "degraded"
             result.warnings.append(str(exc))
+            stage_logger.warning("Azure intermediate upload unavailable: %s", exc)
+            emit_event("blob_container_unavailable", error=str(exc))
+    else:
+        if container is not None:
+            stage_logger.info("Azure Blob intermediate upload enabled container=%s", settings.azure["container"])
+            emit_event("blob_container_ready", container=str(settings.azure["container"]))
 
     # Seed refs once if available.
     if settings.refs_source_mode == "local_files":
@@ -593,90 +909,125 @@ def _run_tip_chunked_export(settings: BuildSettings, *, horizon_label: str) -> S
         result.warnings.extend(ref_stage.warnings)
         if container is not None:
             ref_files = [Path(path) for path in ref_stage.outputs if path.endswith(".parquet")]
-            uploaded = _upload_paths(container, ref_files, refs_blob_prefix)
+            stage_logger.info("Uploading reference inputs count=%s prefix=%s", len(ref_files), refs_blob_prefix)
+            emit_event("refs_upload_started", file_count=len(ref_files), blob_prefix=refs_blob_prefix)
+            uploaded = _upload_paths(
+                container,
+                ref_files,
+                refs_blob_prefix,
+                upload_options,
+                logger=stage_logger,
+                emit_event=emit_event,
+                chunk_id="refs",
+            )
             result.metrics["refs_uploaded_blob_count"] = len(uploaded)
+            emit_event("refs_upload_finished", uploaded_blob_count=len(uploaded))
 
     total_chunks = 0
     skipped_chunks = 0
     uploaded_files = 0
     failed_chunks = 0
     degraded_chunks = 0
-
+    pending_chunks: list[dict[str, Any]] = []
     for chunk in chunks:
         total_chunks += 1
-        manifest_path = _chunk_manifest_path(settings, chunk["chunk_id"])
+        manifest_path = _chunk_manifest_path(settings, str(chunk["chunk_id"]))
         if _successfully_finished(manifest_path):
             skipped_chunks += 1
+            stage_logger.info("Skipping completed chunk chunk_id=%s", chunk["chunk_id"])
+            emit_event("chunk_skipped", chunk_id=str(chunk["chunk_id"]), reason="existing_success_manifest")
             continue
+        pending_chunks.append(chunk)
 
-        temp_dir = _chunk_temp_dir(settings, chunk["chunk_id"])
-        ensure_dir(temp_dir)
-        local_outputs: list[Path] = []
-        uploaded_blobs: list[str] = []
-        chunk_metrics: dict[str, Any] = {}
-        chunk_warnings: list[str] = []
-        status = "success"
-        scope = None
-        try:
-            scope = _chunk_scope_tip(working_settings, chunk["field"], int(chunk["year_start"]), int(chunk["year_end"]))
-            chunk_metrics.update(scope["counts"])
-            family = chunk["table_family"]
-            if family in PATSTAT_FAMILY_TABLES:
-                local_outputs.extend(_extract_patstat_family(scope, family, temp_dir / "patstat"))
-                if family == "publications" and uspto_enabled:
-                    uspto_outputs, uspto_metrics, uspto_warnings = _extract_uspto_family(working_settings, scope, temp_dir / "uspto")
-                    local_outputs.extend(uspto_outputs)
-                    chunk_metrics.update(uspto_metrics)
-                    chunk_warnings.extend(uspto_warnings)
-                    if uspto_warnings:
-                        status = "degraded"
-            elif family == "register":
-                local_outputs.extend(_extract_register_family(scope, temp_dir / "register"))
-            elif family == "epab":
-                local_outputs.extend(_extract_epab_family(working_settings, scope, temp_dir / "epab"))
-            else:
-                chunk_warnings.append(f"Unsupported chunk family `{family}` was skipped.")
-                status = "degraded"
+    family_active_counts: dict[str, int] = {}
+    active_futures: dict[Any, dict[str, Any]] = {}
 
-            if container is not None and local_outputs and execution.get("upload_after_chunk", True):
-                standard_outputs = [path for path in local_outputs if path.parent.name != "uspto"]
-                uspto_outputs = [path for path in local_outputs if path.parent.name == "uspto"]
-                if standard_outputs:
-                    uploaded_blobs.extend(_upload_paths(container, standard_outputs, chunk["blob_prefix"]))
-                if uspto_outputs:
-                    root_prefix = "raw-bounded-heritage" if horizon_label == "heritage" else "raw-bounded"
-                    uspto_blob_prefix = f"{root_prefix}/uspto/field={chunk['field_slug']}/year={chunk['year_start']}-{chunk['year_end']}/family={chunk['table_family']}"
-                    uploaded_blobs.extend(_upload_paths(container, uspto_outputs, uspto_blob_prefix))
-                uploaded_files += len(uploaded_blobs)
+    def next_schedulable_index() -> int | None:
+        for index, pending in enumerate(pending_chunks):
+            family = str(pending["table_family"])
+            family_limit = family_limits.get(family, 1)
+            if family_active_counts.get(family, 0) < family_limit:
+                return index
+        return None
 
-            if execution.get("cleanup_after_upload", False) and (container is not None or not execution.get("blob_intermediate_enabled", False)):
-                shutil.rmtree(temp_dir, ignore_errors=True)
-        except Exception as exc:
-            status = "failed"
-            failed_chunks += 1
-            chunk_warnings.append(str(exc))
-        finally:
-            if scope is not None:
-                close_tip_client(scope.get("patstat"))
+    with ThreadPoolExecutor(max_workers=parallel_limit, thread_name_prefix="tip-chunk") as executor:
+        while pending_chunks or active_futures:
+            while pending_chunks and len(active_futures) < parallel_limit:
+                next_index = next_schedulable_index()
+                if next_index is None:
+                    break
+                chunk = pending_chunks.pop(next_index)
+                family = str(chunk["table_family"])
+                family_active_counts[family] = family_active_counts.get(family, 0) + 1
+                future = executor.submit(
+                    _execute_chunk_export,
+                    settings,
+                    working_settings,
+                    chunk,
+                    horizon_label=horizon_label,
+                    container=container,
+                    upload_options=upload_options,
+                    uspto_enabled=uspto_enabled,
+                    logger=stage_logger,
+                    emit_event=emit_event,
+                )
+                active_futures[future] = chunk
+                stage_logger.info(
+                    "Submitted chunk chunk_id=%s family=%s active_total=%s active_family=%s",
+                    chunk["chunk_id"],
+                    family,
+                    len(active_futures),
+                    family_active_counts[family],
+                )
+                emit_event(
+                    "chunk_submitted",
+                    chunk_id=str(chunk["chunk_id"]),
+                    table_family=family,
+                    active_total=len(active_futures),
+                    active_family=family_active_counts[family],
+                )
 
-        if status == "degraded":
-            degraded_chunks += 1
-        manifest_path = _write_chunk_manifest(
-            settings,
-            chunk,
-            status=status,
-            local_outputs=local_outputs,
-            uploaded_blobs=uploaded_blobs,
-            metrics=chunk_metrics,
-            warnings=chunk_warnings,
-        )
-        result.outputs.append(str(manifest_path))
+            if not active_futures:
+                break
+
+            done, _ = wait(set(active_futures.keys()), return_when=FIRST_COMPLETED)
+            for future in done:
+                chunk = active_futures.pop(future)
+                family = str(chunk["table_family"])
+                family_active_counts[family] = max(family_active_counts.get(family, 1) - 1, 0)
+                payload = future.result()
+                uploaded_files += len(payload["uploaded_blobs"])
+                if payload["status"] == "failed":
+                    failed_chunks += 1
+                if payload["status"] == "degraded":
+                    degraded_chunks += 1
+                manifest_path = _write_chunk_manifest(
+                    settings,
+                    payload["chunk"],
+                    status=payload["status"],
+                    local_outputs=payload["local_outputs"],
+                    uploaded_blobs=payload["uploaded_blobs"],
+                    metrics=payload["metrics"],
+                    warnings=payload["warnings"],
+                    started_at=payload["started_at"],
+                    finished_at=payload["finished_at"],
+                    duration_seconds=payload["duration_seconds"],
+                )
+                result.outputs.append(str(manifest_path))
 
     result.metrics["chunk_total_count"] = total_chunks
     result.metrics["chunk_skipped_count"] = skipped_chunks
     result.metrics["chunk_failed_count"] = failed_chunks
     result.metrics["chunk_degraded_count"] = degraded_chunks
     result.metrics["chunk_uploaded_file_count"] = uploaded_files
+    emit_event(
+        "stage_finished",
+        chunk_total_count=total_chunks,
+        chunk_skipped_count=skipped_chunks,
+        chunk_failed_count=failed_chunks,
+        chunk_degraded_count=degraded_chunks,
+        chunk_uploaded_file_count=uploaded_files,
+    )
     if failed_chunks:
         result.status = "failed"
     elif degraded_chunks or result.status == "degraded":

@@ -1052,3 +1052,70 @@
 ### Warnings
 
 1. The heritage extraction runtime now exists, but Bronze/Silver end-to-end consolidation from a separately materialized heritage bounded-raw horizon still needs a dedicated downstream merge path if you want one-command full historical builds.
+
+## 2026-03-17 | TIP Chunk Runtime Parallelism And Live Logging | success
+
+### Inputs
+
+1. current TIP chunk planner and sequential chunk executor
+2. TIP operating constraints:
+   - `4 CPU cores`
+   - `32 GB RAM`
+   - `30 GB local disk`
+3. need for Azure upload tuning and richer runtime visibility beyond end-of-chunk manifests
+
+### Files Updated
+
+1. updated `etl/conf/build.yaml`
+2. updated `etl/src/patentiq_etl/prebronze/chunked.py`
+3. new `etl/tests/test_tip_chunked_runtime.py`
+4. updated `etl/README.md`
+5. updated `docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md`
+6. updated `docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md`
+
+### Methods
+
+1. Replaced the fully sequential chunk loop with a bounded thread-pool scheduler.
+2. Applied a global chunk concurrency cap plus family-level concurrency caps from the configured worker map.
+3. Added Azure Blob upload tuning through:
+   - `upload_max_concurrency`
+   - `upload_max_block_size_mb`
+   - `upload_max_single_put_size_mb`
+4. Added live stage logging and JSONL event emission for:
+   - chunk submission
+   - scope readiness
+   - extraction start and finish
+   - blob upload start and finish
+   - cleanup start and finish
+   - chunk completion
+5. Enriched chunk manifests with:
+   - `started_at`
+   - `finished_at`
+   - `duration_seconds`
+
+### Calculations
+
+1. Main-horizon chunk execution now defaults to `tip_max_parallel_chunks = 2`.
+2. Heritage chunk execution now defaults to `heritage_max_parallel_chunks = 1`.
+3. Upload tuning now defaults to:
+   - `upload_max_concurrency = 3`
+   - `upload_max_block_size_mb = 8`
+   - `upload_max_single_put_size_mb = 16`
+
+### Downstream Impacts
+
+1. TIP can now overlap a small number of chunk jobs without violating the intended memory and disk envelope.
+2. Azure uploads no longer rely on a purely untuned one-file-at-a-time path.
+3. Operators can watch real-time execution through:
+   - `etl/manifests/stages/pre-bronze-chunked-export.log`
+   - `etl/manifests/stages/pre-bronze-chunked-export.events.jsonl`
+
+### Verification
+
+1. `pytest etl/tests/test_tip_chunk_plan.py etl/tests/test_tip_chunked_runtime.py etl/tests/test_prebronze_extraction.py etl/tests/test_source_certification.py etl/tests/test_uspto_bulk_xml.py -q`
+2. `python3 -m compileall etl/src etl/scripts etl/tests`
+
+### Warnings
+
+1. The scheduler is intentionally conservative and should not be treated as a license to run four heavy extraction families in parallel inside TIP.
+2. Azure Blob multipart tuning is now wired into the ETL path, but final throughput still depends on the real network and storage-account characteristics of the target TIP environment.

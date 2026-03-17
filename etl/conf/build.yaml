@@ -23,6 +23,12 @@ execution:
   blob_intermediate_enabled: true
   upload_after_chunk: true
   cleanup_after_upload: true
+  tip_max_parallel_chunks: 2
+  heritage_max_parallel_chunks: 1
+  upload_max_concurrency: 3
+  upload_max_block_size_mb: 8
+  upload_max_single_put_size_mb: 16
+  realtime_chunk_logging: true
   uspto_odp_api_key_env: "USPTO_ODP_API_KEY"
   uspto_odp_delay_seconds: 2.5
   uspto_odp_timeout_seconds: 600

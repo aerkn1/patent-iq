@@ -168,6 +168,13 @@ The required execution model is:
 3. local chunk files are deleted after upload verification,
 4. full bounded raw consolidation and heavy Bronze/Silver/Gold execution happen outside TIP.
 5. the TIP seed query must apply the configured ETL year window before chunk extraction begins.
+6. runtime chunk execution should stay conservative:
+   - global chunk parallelism capped at `2` for the main horizon
+   - family-level concurrency capped by `execution.max_workers`
+   - Azure upload concurrency kept small with multipart tuning rather than broad upload fan-out
+7. stage execution should emit live operational logs, not only end-of-stage manifests:
+   - `etl/manifests/stages/pre-bronze-chunked-export.log`
+   - `etl/manifests/stages/pre-bronze-chunked-export.events.jsonl`
 
 See the dedicated TIP full-scope operating note:
 

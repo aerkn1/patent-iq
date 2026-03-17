@@ -85,7 +85,8 @@ That is enough for:
 1. source certification,
 2. seed generation,
 3. bounded chunk extraction,
-4. immediate upload to Blob.
+4. small parallel chunk execution,
+5. immediate upload to Blob.
 
 It is not enough for:
 
@@ -97,6 +98,17 @@ For the full 10-field scope, use the TIP chunked execution plan:
 
 1. [28-patentiq-v2-tip-chunked-full-scope-execution-plan.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md)
 2. [29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/next-phase-v2/29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md)
+
+The current TIP executor now applies:
+
+1. a bounded global chunk scheduler,
+2. family-level concurrency caps from `execution.max_workers`,
+3. Azure Blob upload tuning through:
+   - `upload_max_concurrency`
+   - `upload_max_block_size_mb`
+   - `upload_max_single_put_size_mb`
+4. live stage events in `etl/manifests/stages/pre-bronze-chunked-export.events.jsonl`
+5. normal chunk manifests under `etl/manifests/chunks/`
 
 ## Tracking
 

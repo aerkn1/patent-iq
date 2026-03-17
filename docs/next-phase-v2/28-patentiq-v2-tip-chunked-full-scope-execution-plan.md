@@ -41,6 +41,14 @@ The correct TIP execution model is:
 6. delete local chunk files,
 7. keep only small manifests and logs on TIP.
 
+The current ETL runtime implements this conservatively:
+
+1. global main-horizon chunk parallelism defaults to `2`,
+2. heritage chunk parallelism defaults to `1`,
+3. family-level concurrency follows the configured worker caps,
+4. Azure uploads stay file-by-file but use bounded multipart tuning and small upload concurrency,
+5. live execution emits both human-readable logs and JSONL event streams while chunks are still running.
+
 That means the true intermediate store is:
 
 `Azure Blob / ADLS`
@@ -360,6 +368,19 @@ Recommended defaults:
 6. `1 worker` for `citations`
 
 Do not run 4 heavy extraction jobs in parallel by default.
+
+The implemented runtime currently applies:
+
+1. `tip_max_parallel_chunks = 2`
+2. `heritage_max_parallel_chunks = 1`
+3. per-family caps from the configured `max_workers` map
+4. upload tuning through:
+   - `upload_max_concurrency`
+   - `upload_max_block_size_mb`
+   - `upload_max_single_put_size_mb`
+5. live runtime files:
+   - `etl/manifests/stages/pre-bronze-chunked-export.log`
+   - `etl/manifests/stages/pre-bronze-chunked-export.events.jsonl`
 
 ### Why
 

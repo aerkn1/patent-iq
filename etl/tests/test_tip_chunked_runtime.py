@@ -1,0 +1,164 @@
+from __future__ import annotations
+
+from collections import Counter
+from pathlib import Path
+from threading import Lock
+import time
+
+from patentiq_etl.common.io import ensure_dir
+from patentiq_etl.common.types import BuildSettings
+from patentiq_etl.prebronze.chunked import _upload_paths, run_tip_chunked_export
+
+
+def _settings(tmp_path: Path) -> BuildSettings:
+    root = tmp_path / "repo"
+    return BuildSettings(
+        repo_root=root,
+        release_id="test-release",
+        snapshot_date="2026-03-17",
+        year_window_start=2018,
+        year_window_end=2023,
+        heritage_backfill_start=1996,
+        heritage_backfill_end=2006,
+        azure_publish_enabled=False,
+        vector_sample_pct=0.1,
+        active_grant_only_for_semantic=True,
+        method_version="test",
+        semantic_embedding_method="hash",
+        semantic_ann_method="placeholder",
+        patstat_source_mode="tip",
+        register_source_mode="tip",
+        epab_source_mode="tip",
+        uspto_source_mode="odp_api",
+        refs_source_mode="disabled",
+        tip_env="PROD",
+        raw_patstat_dir=root / "etl/data/raw/patstat",
+        raw_register_dir=root / "etl/data/raw/register",
+        raw_uspto_dir=root / "etl/data/raw/uspto",
+        raw_epab_dir=root / "etl/data/raw/epab",
+        raw_refs_dir=root / "etl/data/raw/refs",
+        bounded_patstat_dir=root / "etl/data/raw-bounded/patstat",
+        bounded_register_dir=root / "etl/data/raw-bounded/register",
+        bounded_uspto_dir=root / "etl/data/raw-bounded/uspto",
+        bounded_epab_dir=root / "etl/data/raw-bounded/epab",
+        bounded_refs_dir=root / "etl/data/raw-bounded/refs",
+        bounded_seed_dir=root / "etl/data/raw-bounded/_seeds",
+        bronze_dir=root / "etl/data/bronze",
+        silver_dir=root / "etl/data/silver",
+        gold_dir=root / "etl/data/gold",
+        ml_dir=root / "etl/data/ml",
+        vectors_dir=root / "etl/data/vectors",
+        releases_dir=root / "etl/data/releases",
+        manifests_dir=root / "etl/manifests",
+        journal_path=root / "etl/ETL_IMPLEMENTATION_LOG.md",
+        ref_techn_field_ipc=root / "etl/data/raw/refs/wipo_techn_field_ipc.csv",
+        scope_type="mega_cluster_bounded",
+        field_source="wipo_industry_code",
+        selected_wipo_fields=["Computer technology"],
+        thresholds={},
+        azure={"container": "patentiq-data"},
+        execution={
+            "tip_chunked_export_enabled": True,
+            "blob_intermediate_enabled": False,
+            "upload_after_chunk": False,
+            "cleanup_after_upload": True,
+            "chunk_year_span": 3,
+            "table_families": ["core", "citations"],
+            "max_workers": {"core": 1, "citations": 1},
+            "tip_max_parallel_chunks": 2,
+            "realtime_chunk_logging": True,
+        },
+    )
+
+
+def test_chunked_runtime_respects_parallel_limits_and_emits_live_events(tmp_path: Path, monkeypatch) -> None:
+    settings = _settings(tmp_path)
+    active_total = 0
+    max_active_total = 0
+    family_active = Counter()
+    family_max = Counter()
+    lock = Lock()
+
+    def fake_scope(*args, **kwargs):
+        return {
+            "patstat": None,
+            "db": None,
+            "database_module": None,
+            "appln_sq": None,
+            "family_sq": None,
+            "publn_sq": None,
+            "person_sq": None,
+            "ep_appln_q": None,
+            "ep_publn_df": __import__("pandas").DataFrame(),
+            "us_publn_df": __import__("pandas").DataFrame(),
+            "counts": {"appln_count": 10, "family_count": 5, "publn_count": 7},
+        }
+
+    def fake_extract(scope, family_name: str, out_dir: Path):
+        nonlocal active_total, max_active_total
+        with lock:
+            active_total += 1
+            family_active[family_name] += 1
+            max_active_total = max(max_active_total, active_total)
+            family_max[family_name] = max(family_max[family_name], family_active[family_name])
+        try:
+            time.sleep(0.05)
+            out_path = ensure_dir(out_dir) / f"{family_name}.parquet"
+            out_path.write_text(family_name, encoding="utf-8")
+            return [out_path]
+        finally:
+            with lock:
+                active_total -= 1
+                family_active[family_name] -= 1
+
+    monkeypatch.setattr("patentiq_etl.prebronze.chunked._chunk_scope_tip", fake_scope)
+    monkeypatch.setattr("patentiq_etl.prebronze.chunked._extract_patstat_family", fake_extract)
+
+    result = run_tip_chunked_export(settings).finish()
+
+    assert result.status == "success"
+    assert result.metrics["chunk_scheduler_parallel_limit"] == 2
+    assert max_active_total <= 2
+    assert family_max["core"] <= 1
+    assert family_max["citations"] <= 1
+
+    event_log_path = Path(result.artifacts["live_event_log"])
+    assert event_log_path.exists()
+    events = event_log_path.read_text(encoding="utf-8").splitlines()
+    assert any('"event": "chunk_submitted"' in line for line in events)
+    assert any('"event": "chunk_finished"' in line for line in events)
+
+
+def test_upload_paths_apply_azure_tuning_options(tmp_path: Path) -> None:
+    path = tmp_path / "sample.parquet"
+    path.write_bytes(b"payload")
+    calls: list[tuple[str, dict, dict]] = []
+
+    class FakeBlobClient:
+        def __init__(self, blob_name: str, kwargs: dict) -> None:
+            self.blob_name = blob_name
+            self.kwargs = kwargs
+
+        def upload_blob(self, handle, **kwargs) -> None:
+            calls.append((self.blob_name, self.kwargs, {"payload": handle.read(), **kwargs}))
+
+    class FakeContainer:
+        def get_blob_client(self, blob_name: str, **kwargs):
+            return FakeBlobClient(blob_name, kwargs)
+
+    uploaded = _upload_paths(
+        FakeContainer(),
+        [path],
+        "raw-bounded/patstat/field=computer-technology/year=2018-2020/family=core",
+        {"max_concurrency": 3, "max_block_size": 8 * 1024 * 1024, "max_single_put_size": 16 * 1024 * 1024},
+        chunk_id="chunk-1",
+    )
+
+    assert uploaded == [
+        "raw-bounded/patstat/field=computer-technology/year=2018-2020/family=core/sample.parquet"
+    ]
+    assert calls[0][1]["max_block_size"] == 8 * 1024 * 1024
+    assert calls[0][1]["max_single_put_size"] == 16 * 1024 * 1024
+    assert calls[0][2]["max_concurrency"] == 3
+    assert calls[0][2]["overwrite"] is True
+    assert calls[0][2]["payload"] == b"payload"
