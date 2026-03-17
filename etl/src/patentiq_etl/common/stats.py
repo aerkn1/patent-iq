@@ -17,6 +17,12 @@ def _output_profile(path: Path) -> dict[str, Any]:
     if not path.exists():
         return profile
 
+    if path.is_dir():
+        profile["type"] = "directory"
+        profile["entry_count"] = sum(1 for _ in path.iterdir())
+        return profile
+
+    profile["type"] = "file"
     profile["size_bytes"] = path.stat().st_size
     profile["sha256"] = sha256_file(path)
     if path.suffix == ".parquet":
