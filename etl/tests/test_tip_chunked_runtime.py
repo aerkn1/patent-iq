@@ -162,3 +162,34 @@ def test_upload_paths_apply_azure_tuning_options(tmp_path: Path) -> None:
     assert calls[0][2]["max_concurrency"] == 3
     assert calls[0][2]["overwrite"] is True
     assert calls[0][2]["payload"] == b"payload"
+
+
+def test_upload_paths_fall_back_for_older_azure_blob_clients(tmp_path: Path) -> None:
+    path = tmp_path / "sample.parquet"
+    path.write_bytes(b"payload")
+    calls: list[tuple[str, dict]] = []
+
+    class FakeBlobClient:
+        def upload_blob(self, handle, **kwargs) -> None:
+            if "max_concurrency" in kwargs:
+                raise TypeError("older sdk")
+            calls.append((handle.read().decode("utf-8"), kwargs))
+
+    class OldContainer:
+        def get_blob_client(self, blob_name: str, **kwargs):
+            if kwargs:
+                raise TypeError("older sdk")
+            return FakeBlobClient()
+
+    uploaded = _upload_paths(
+        OldContainer(),
+        [path],
+        "raw-bounded/patstat/field=computer-technology/year=2018-2020/family=core",
+        {"max_concurrency": 3, "max_block_size": 8 * 1024 * 1024, "max_single_put_size": 16 * 1024 * 1024},
+        chunk_id="chunk-1",
+    )
+
+    assert uploaded == [
+        "raw-bounded/patstat/field=computer-technology/year=2018-2020/family=core/sample.parquet"
+    ]
+    assert calls == [("payload", {"overwrite": True})]

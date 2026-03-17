@@ -152,18 +152,24 @@ def _upload_paths(
             continue
         blob_name = f"{prefix}/{path.name}"
         size_bytes = path.stat().st_size
-        blob_client = container.get_blob_client(
-            blob_name,
-            max_block_size=upload_options["max_block_size"],
-            max_single_put_size=upload_options["max_single_put_size"],
-        )
+        try:
+            blob_client = container.get_blob_client(
+                blob_name,
+                max_block_size=upload_options["max_block_size"],
+                max_single_put_size=upload_options["max_single_put_size"],
+            )
+            tuning_mode = "client_and_upload"
+        except TypeError:
+            blob_client = container.get_blob_client(blob_name)
+            tuning_mode = "upload_only"
         if logger is not None:
             logger.info(
-                "Uploading blob chunk_id=%s blob=%s size_bytes=%s max_concurrency=%s",
+                "Uploading blob chunk_id=%s blob=%s size_bytes=%s max_concurrency=%s tuning_mode=%s",
                 chunk_id or "-",
                 blob_name,
                 size_bytes,
                 upload_options["max_concurrency"],
+                tuning_mode,
             )
         if emit_event is not None:
             emit_event(
@@ -172,9 +178,14 @@ def _upload_paths(
                 blob_name=blob_name,
                 size_bytes=size_bytes,
                 max_concurrency=upload_options["max_concurrency"],
+                tuning_mode=tuning_mode,
             )
         with path.open("rb") as handle:
-            blob_client.upload_blob(handle, overwrite=True, max_concurrency=upload_options["max_concurrency"])
+            try:
+                blob_client.upload_blob(handle, overwrite=True, max_concurrency=upload_options["max_concurrency"])
+            except TypeError:
+                handle.seek(0)
+                blob_client.upload_blob(handle, overwrite=True)
         uploaded.append(blob_name)
         if logger is not None:
             logger.info("Uploaded blob chunk_id=%s blob=%s size_bytes=%s", chunk_id or "-", blob_name, size_bytes)
