@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import duckdb
+import pandas as pd
 
 from patentiq_etl.common.io import ensure_dir
 
@@ -151,9 +152,53 @@ def resolve_register_model(database_module, logical_name: str):
     return resolve_model(database_module, REGISTER_MODEL_CANDIDATES.get(logical_name, []))
 
 
+def _orm_instance_to_dict(value: Any) -> dict[str, Any]:
+    """Best-effort conversion of one ORM instance into a flat dictionary."""
+    try:
+        from sqlalchemy.inspection import inspect as sa_inspect
+
+        mapper = sa_inspect(value).mapper
+        return {column.key: getattr(value, column.key) for column in mapper.column_attrs}
+    except Exception:
+        payload: dict[str, Any] = {}
+        for key, item in vars(value).items():
+            if key.startswith("_"):
+                continue
+            if callable(item):
+                continue
+            payload[key] = item
+        return payload
+
+
+def _normalize_tip_dataframe(frame: pd.DataFrame) -> pd.DataFrame:
+    """Convert ORM-object columns returned by TIP into plain scalar columns."""
+    if frame.empty:
+        return frame
+    if len(frame.columns) != 1:
+        return frame
+    column_name = frame.columns[0]
+    series = frame[column_name]
+    non_null = series.dropna()
+    if non_null.empty:
+        return frame
+    sample = non_null.iloc[0]
+    if isinstance(sample, (str, bytes, int, float, bool)):
+        return frame
+    if hasattr(sample, "isoformat"):
+        return frame
+    if not hasattr(sample, "__dict__"):
+        return frame
+
+    rows = [_orm_instance_to_dict(value) for value in series.tolist() if value is not None]
+    if not rows:
+        return pd.DataFrame()
+    normalized = pd.DataFrame.from_records(rows)
+    return normalized
+
+
 def query_to_dataframe(client, query):
     """Materialize a TIP PATSTAT ORM query as a pandas DataFrame."""
-    return client.df(query)
+    return _normalize_tip_dataframe(client.df(query))
 
 
 def result_to_dataframe(payload):
