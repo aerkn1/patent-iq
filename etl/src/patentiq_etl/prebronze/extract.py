@@ -74,6 +74,13 @@ def _find_column(columns: Iterable[str], candidates: Iterable[str]) -> str | Non
     return None
 
 
+def _citation_npl_column_from_parquet(path: Path) -> str | None:
+    """Return the citation parquet column that carries NPL publication ids."""
+    con = duckdb.connect()
+    rows = con.execute("describe select * from read_parquet(?)", [str(path)]).fetchall()
+    return _find_column([row[0] for row in rows], ["cited_npl_publn_id", "npl_publn_id"])
+
+
 def _resolve_source(directory: Path, logical_name: str, table_map: dict[str, list[str]]) -> Path | None:
     """Resolve the first matching source file for one logical table."""
     matches = candidate_files(directory, table_map[logical_name])
@@ -429,18 +436,22 @@ def _extract_patstat_bounded_raw(settings: BuildSettings, seeds: dict[str, Path]
                 result.warnings.append("Skipped bounded NPL extraction because bounded citation rows were not produced.")
                 continue
             columns = _source_columns(source_path)
-            npl_col = _find_column(columns, ["npl_publn_id"])
+            npl_col = _find_column(columns, ["cited_npl_publn_id", "npl_publn_id"])
             if npl_col is None:
-                result.warnings.append("Skipped bounded NPL extraction because npl_publn_id is unavailable.")
+                result.warnings.append("Skipped bounded NPL extraction because no NPL citation column is available.")
+                continue
+            citation_npl_col = _citation_npl_column_from_parquet(citation_out)
+            if citation_npl_col is None:
+                result.warnings.append("Skipped bounded NPL extraction because bounded citation output has no NPL citation column.")
                 continue
             row_count = _copy_query_to_parquet(
                 f"""
                 select *
                 from {_relation_sql(source_path)}
                 where cast({npl_col} as bigint) in (
-                    select distinct cast(npl_publn_id as bigint)
+                    select distinct cast({citation_npl_col} as bigint)
                     from read_parquet('{citation_out}')
-                    where npl_publn_id is not null
+                    where {citation_npl_col} is not null
                 )
                 """,
                 out_path,
@@ -931,7 +942,14 @@ def _extract_patstat_bounded_raw_tip(settings: BuildSettings, seeds: dict[str, P
         npl_model = resolve_patstat_model(database_module, "bronze_patstat_npl_publn")
         citation_path = settings.bounded_patstat_dir / f"{PATSTAT_TABLES['bronze_patstat_citation'][0]}.parquet"
         if npl_model is not None and citation_path.exists():
-            npl_ids = duckdb.connect().execute("select distinct npl_publn_id from read_parquet(?) where npl_publn_id is not null", [str(citation_path)]).df()
+            citation_npl_col = _citation_npl_column_from_parquet(citation_path)
+            if citation_npl_col is not None:
+                npl_ids = duckdb.connect().execute(
+                    f"select distinct {citation_npl_col} as npl_publn_id from read_parquet(?) where {citation_npl_col} is not null",
+                    [str(citation_path)],
+                ).df()
+            else:
+                npl_ids = duckdb.connect().execute("select null::bigint as npl_publn_id where false").df()
             if not npl_ids.empty:
                 query = db.query(npl_model).filter(getattr(npl_model, "npl_publn_id").in_(npl_ids["npl_publn_id"].tolist()))
                 df = query_to_dataframe(patstat, query)

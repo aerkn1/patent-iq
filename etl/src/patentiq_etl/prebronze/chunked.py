@@ -62,6 +62,18 @@ PATSTAT_FAMILY_TABLES = {
 }
 
 
+def _citation_npl_column(path: Path) -> str | None:
+    """Return the citation parquet column that carries NPL publication ids."""
+    import duckdb
+
+    con = duckdb.connect()
+    columns = [row[0] for row in con.execute("describe select * from read_parquet(?)", [str(path)]).fetchall()]
+    for candidate in ("cited_npl_publn_id", "npl_publn_id"):
+        if candidate in columns:
+            return candidate
+    return None
+
+
 def _chunk_manifest_path(settings: BuildSettings, chunk_id: str) -> Path:
     """Return the per-chunk manifest path."""
     return settings.manifests_dir / "chunks" / f"{chunk_id}.json"
@@ -367,10 +379,14 @@ def _extract_patstat_family(
             import duckdb
 
             con = duckdb.connect()
-            npl_ids = con.execute(
-                "select distinct npl_publn_id from read_parquet(?) where npl_publn_id is not null",
-                [str(citation_path)],
-            ).df()
+            npl_col = _citation_npl_column(citation_path)
+            if npl_col is not None:
+                npl_ids = con.execute(
+                    f"select distinct {npl_col} as npl_publn_id from read_parquet(?) where {npl_col} is not null",
+                    [str(citation_path)],
+                ).df()
+            else:
+                npl_ids = con.execute("select null::bigint as npl_publn_id where false").df()
             if not npl_ids.empty:
                 model = resolve_patstat_model(database_module, "bronze_patstat_npl_publn")
                 if model is not None:

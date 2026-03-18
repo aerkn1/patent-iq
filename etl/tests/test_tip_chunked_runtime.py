@@ -5,9 +5,10 @@ from pathlib import Path
 from threading import Lock
 import time
 
-from patentiq_etl.common.io import ensure_dir
+from patentiq_etl.common.io import ensure_dir, write_pylist_parquet
 from patentiq_etl.common.types import BuildSettings
-from patentiq_etl.prebronze.chunked import _upload_paths, run_tip_chunked_export
+from patentiq_etl.prebronze.chunked import _citation_npl_column, _upload_paths, run_tip_chunked_export
+from patentiq_etl.prebronze.extract import _citation_npl_column_from_parquet
 
 
 def _settings(tmp_path: Path) -> BuildSettings:
@@ -193,3 +194,14 @@ def test_upload_paths_fall_back_for_older_azure_blob_clients(tmp_path: Path) -> 
         "raw-bounded/patstat/field=computer-technology/year=2018-2020/family=core/sample.parquet"
     ]
     assert calls == [("payload", {"overwrite": True})]
+
+
+def test_citation_npl_column_detection_supports_tip_column_shape(tmp_path: Path) -> None:
+    citation_path = tmp_path / "tls212_citation.parquet"
+    write_pylist_parquet(
+        [{"pat_publn_id": 1, "cited_npl_publn_id": 9001}],
+        citation_path,
+    )
+
+    assert _citation_npl_column(citation_path) == "cited_npl_publn_id"
+    assert _citation_npl_column_from_parquet(citation_path) == "cited_npl_publn_id"
