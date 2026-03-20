@@ -284,6 +284,41 @@ def test_upload_paths_fall_back_for_older_azure_blob_clients(tmp_path: Path) -> 
     assert calls == [("payload", {"overwrite": True})]
 
 
+def test_upload_paths_retry_transient_timeout_then_succeed(tmp_path: Path) -> None:
+    path = tmp_path / "sample.parquet"
+    path.write_bytes(b"payload")
+    calls: list[int] = []
+
+    class FakeBlobClient:
+        def upload_blob(self, handle, **kwargs) -> None:
+            calls.append(1)
+            if len(calls) == 1:
+                raise TimeoutError("The write operation timed out")
+
+    class FakeContainer:
+        def get_blob_client(self, blob_name: str, **kwargs):
+            return FakeBlobClient()
+
+    uploaded = _upload_paths(
+        FakeContainer(),
+        [path],
+        "raw-bounded/patstat/field=computer-technology/year=2018-2020/family=core",
+        {
+            "max_concurrency": 1,
+            "max_block_size": 4 * 1024 * 1024,
+            "max_single_put_size": 8 * 1024 * 1024,
+            "retry_max_attempts": 2,
+            "retry_backoff_seconds": 1,
+        },
+        chunk_id="chunk-1",
+    )
+
+    assert uploaded == [
+        "raw-bounded/patstat/field=computer-technology/year=2018-2020/family=core/sample.parquet"
+    ]
+    assert len(calls) == 2
+
+
 def test_citation_npl_column_detection_supports_tip_column_shape(tmp_path: Path) -> None:
     citation_path = tmp_path / "tls212_citation.parquet"
     write_pylist_parquet(

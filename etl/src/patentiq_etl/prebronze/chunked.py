@@ -6,7 +6,7 @@ import logging
 import os
 import shutil
 from threading import Lock
-from time import perf_counter
+from time import perf_counter, sleep
 from pathlib import Path
 from typing import Any
 
@@ -148,7 +148,27 @@ def _upload_options(settings: BuildSettings) -> dict[str, int]:
         "max_concurrency": max(1, int(execution.get("upload_max_concurrency", 3))),
         "max_block_size": max(1, int(execution.get("upload_max_block_size_mb", 8))) * 1024 * 1024,
         "max_single_put_size": max(1, int(execution.get("upload_max_single_put_size_mb", 16))) * 1024 * 1024,
+        "retry_max_attempts": max(1, int(execution.get("upload_retry_max_attempts", 3))),
+        "retry_backoff_seconds": max(1, int(execution.get("upload_retry_backoff_seconds", 5))),
     }
+
+
+def _is_retryable_blob_error(exc: Exception) -> bool:
+    """Return whether one Blob upload exception looks transient and worth retrying."""
+    text = f"{exc.__class__.__name__}: {exc}".lower()
+    markers = (
+        "serviceresponseerror",
+        "timeout",
+        "timed out",
+        "connection aborted",
+        "connect timeout",
+        "read timeout",
+        "write operation timed out",
+        "temporarily unavailable",
+        "connection reset",
+        "remote end closed connection",
+    )
+    return any(marker in text for marker in markers)
 
 
 def _upload_paths(
@@ -199,29 +219,78 @@ def _upload_paths(
                 max_concurrency=upload_options["max_concurrency"],
                 tuning_mode=tuning_mode,
             )
-        with path.open("rb") as handle:
-            try:
-                blob_client.upload_blob(
-                    handle,
-                    overwrite=True,
-                    length=size_bytes,
-                    max_concurrency=upload_options["max_concurrency"],
-                    max_block_size=upload_options["max_block_size"],
-                    max_single_put_size=upload_options["max_single_put_size"],
-                )
-            except TypeError:
-                handle.seek(0)
+
+        def _upload_once() -> None:
+            with path.open("rb") as handle:
                 try:
                     blob_client.upload_blob(
                         handle,
                         overwrite=True,
                         length=size_bytes,
+                        max_concurrency=upload_options["max_concurrency"],
                         max_block_size=upload_options["max_block_size"],
                         max_single_put_size=upload_options["max_single_put_size"],
                     )
                 except TypeError:
                     handle.seek(0)
-                    blob_client.upload_blob(handle, overwrite=True)
+                    try:
+                        blob_client.upload_blob(
+                            handle,
+                            overwrite=True,
+                            length=size_bytes,
+                            max_block_size=upload_options["max_block_size"],
+                            max_single_put_size=upload_options["max_single_put_size"],
+                        )
+                    except TypeError:
+                        handle.seek(0)
+                        blob_client.upload_blob(handle, overwrite=True)
+
+        attempt_count = upload_options.get("retry_max_attempts", 3)
+        for attempt in range(1, attempt_count + 1):
+            try:
+                _upload_once()
+                break
+            except Exception as exc:
+                retryable = _is_retryable_blob_error(exc)
+                if logger is not None:
+                    logger.warning(
+                        "Blob upload attempt failed chunk_id=%s blob=%s attempt=%s/%s retryable=%s error=%s",
+                        chunk_id or "-",
+                        blob_name,
+                        attempt,
+                        attempt_count,
+                        retryable,
+                        exc,
+                    )
+                if emit_event is not None:
+                    emit_event(
+                        "blob_upload_attempt_failed",
+                        chunk_id=chunk_id,
+                        blob_name=blob_name,
+                        attempt=attempt,
+                        max_attempts=attempt_count,
+                        retryable=retryable,
+                        error=str(exc),
+                    )
+                if not retryable or attempt >= attempt_count:
+                    raise
+                delay_seconds = upload_options.get("retry_backoff_seconds", 5) * attempt
+                if logger is not None:
+                    logger.info(
+                        "Retrying blob upload chunk_id=%s blob=%s in %s seconds",
+                        chunk_id or "-",
+                        blob_name,
+                        delay_seconds,
+                    )
+                if emit_event is not None:
+                    emit_event(
+                        "blob_upload_retry_scheduled",
+                        chunk_id=chunk_id,
+                        blob_name=blob_name,
+                        attempt=attempt,
+                        delay_seconds=delay_seconds,
+                    )
+                sleep(delay_seconds)
         uploaded.append(blob_name)
         if logger is not None:
             logger.info("Uploaded blob chunk_id=%s blob=%s size_bytes=%s", chunk_id or "-", blob_name, size_bytes)

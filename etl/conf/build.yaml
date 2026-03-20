@@ -28,6 +28,8 @@ execution:
   upload_max_concurrency: 1
   upload_max_block_size_mb: 4
   upload_max_single_put_size_mb: 8
+  upload_retry_max_attempts: 3
+  upload_retry_backoff_seconds: 5
   realtime_chunk_logging: true
   uspto_odp_api_key_env: "USPTO_ODP_API_KEY"
   uspto_odp_delay_seconds: 2.5
