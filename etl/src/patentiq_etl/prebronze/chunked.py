@@ -201,10 +201,27 @@ def _upload_paths(
             )
         with path.open("rb") as handle:
             try:
-                blob_client.upload_blob(handle, overwrite=True, max_concurrency=upload_options["max_concurrency"])
+                blob_client.upload_blob(
+                    handle,
+                    overwrite=True,
+                    length=size_bytes,
+                    max_concurrency=upload_options["max_concurrency"],
+                    max_block_size=upload_options["max_block_size"],
+                    max_single_put_size=upload_options["max_single_put_size"],
+                )
             except TypeError:
                 handle.seek(0)
-                blob_client.upload_blob(handle, overwrite=True)
+                try:
+                    blob_client.upload_blob(
+                        handle,
+                        overwrite=True,
+                        length=size_bytes,
+                        max_block_size=upload_options["max_block_size"],
+                        max_single_put_size=upload_options["max_single_put_size"],
+                    )
+                except TypeError:
+                    handle.seek(0)
+                    blob_client.upload_blob(handle, overwrite=True)
         uploaded.append(blob_name)
         if logger is not None:
             logger.info("Uploaded blob chunk_id=%s blob=%s size_bytes=%s", chunk_id or "-", blob_name, size_bytes)

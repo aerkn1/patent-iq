@@ -246,6 +246,9 @@ def test_upload_paths_apply_azure_tuning_options(tmp_path: Path) -> None:
     assert calls[0][1]["max_block_size"] == 8 * 1024 * 1024
     assert calls[0][1]["max_single_put_size"] == 16 * 1024 * 1024
     assert calls[0][2]["max_concurrency"] == 3
+    assert calls[0][2]["max_block_size"] == 8 * 1024 * 1024
+    assert calls[0][2]["max_single_put_size"] == 16 * 1024 * 1024
+    assert calls[0][2]["length"] == len(b"payload")
     assert calls[0][2]["overwrite"] is True
     assert calls[0][2]["payload"] == b"payload"
 
@@ -257,7 +260,7 @@ def test_upload_paths_fall_back_for_older_azure_blob_clients(tmp_path: Path) -> 
 
     class FakeBlobClient:
         def upload_blob(self, handle, **kwargs) -> None:
-            if "max_concurrency" in kwargs:
+            if "max_concurrency" in kwargs or "max_block_size" in kwargs or "max_single_put_size" in kwargs:
                 raise TypeError("older sdk")
             calls.append((handle.read().decode("utf-8"), kwargs))
 
