@@ -21,6 +21,7 @@ from patentiq_etl.prebronze.run import (
     run_prebronze,
     run_prebronze_heritage,
     run_prebronze_uspto_odp,
+    run_tip_blob_recovery,
     run_tip_chunk_plan,
     run_tip_heritage_chunk_plan,
 )
@@ -35,6 +36,8 @@ STAGES: dict[str, Callable] = {
     "tip-chunk-plan": run_tip_chunk_plan,
     "plan-tip-heritage-export": run_tip_heritage_chunk_plan,
     "tip-heritage-chunk-plan": run_tip_heritage_chunk_plan,
+    "recover-tip-blob-uploads": run_tip_blob_recovery,
+    "tip-blob-recovery": run_tip_blob_recovery,
     "prebronze": run_prebronze,
     "prebronze-heritage": run_prebronze_heritage,
     "prebronze-uspto-odp": run_prebronze_uspto_odp,

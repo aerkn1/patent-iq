@@ -15,7 +15,7 @@ from patentiq_etl.bronze.source_registry import PATSTAT_TABLES, REGISTER_TABLES
 from patentiq_etl.common.io import append_jsonl, ensure_dir, write_text_json
 from patentiq_etl.common.logging_utils import configure_logger
 from patentiq_etl.common.types import BuildSettings, StageResult, utc_now_iso
-from patentiq_etl.prebronze.extract import _copy_reference_inputs
+from patentiq_etl.prebronze.extract import _copy_reference_inputs, _seed_patstat_scope_tip
 from patentiq_etl.prebronze.plan import plan_tip_chunked_export, plan_tip_heritage_chunked_export
 from patentiq_etl.prebronze.tip_clients import (
     close_tip_client,
@@ -82,6 +82,13 @@ def _chunk_manifest_path(settings: BuildSettings, chunk_id: str) -> Path:
 def _chunk_temp_dir(settings: BuildSettings, chunk_id: str) -> Path:
     """Return the local temporary directory for one chunk."""
     return settings.repo_root / "etl" / "data" / "temp" / "chunks" / chunk_id
+
+
+def _seed_dir_for_horizon(settings: BuildSettings, horizon_label: str) -> Path:
+    """Return the bounded seed directory for one extraction horizon."""
+    if horizon_label == "heritage":
+        return settings.repo_root / "etl" / "data" / "raw-bounded-heritage" / "_seeds"
+    return settings.bounded_seed_dir
 
 
 def _successfully_finished(path: Path) -> bool:
@@ -618,6 +625,130 @@ def _write_chunk_manifest(
     return manifest_path
 
 
+def _chunk_blob_prefix(chunk: dict[str, Any], *, horizon_label: str) -> str:
+    """Return the standard Blob prefix for one chunk payload."""
+    blob_root = "raw-bounded-heritage" if horizon_label == "heritage" else "raw-bounded"
+    table_family = str(chunk["table_family"])
+    family_root = "patstat" if table_family in {"core", "publications", "legal", "citations"} else table_family
+    return (
+        f"{blob_root}/{family_root}/field={chunk['field_slug']}/"
+        f"year={chunk['year_start']}-{chunk['year_end']}/family={table_family}"
+    )
+
+
+def _seed_blob_prefix(horizon_label: str) -> str:
+    """Return the Blob prefix used for global seed artifacts."""
+    return "raw-bounded-heritage/seeds" if horizon_label == "heritage" else "raw-bounded/seeds"
+
+
+def _manifest_horizon_label(payload: dict[str, Any]) -> str:
+    """Infer the horizon label from one chunk manifest payload."""
+    chunk_id = str(payload.get("chunk_id", ""))
+    return "heritage" if chunk_id.startswith("heritage__") else "main"
+
+
+def _recovery_candidate(
+    *,
+    status: str,
+    local_outputs: list[Path],
+    uploaded_blobs: list[str],
+    warnings: list[str],
+) -> bool:
+    """Return whether a chunk manifest should be considered eligible for Blob recovery."""
+    if not local_outputs:
+        return False
+    if len(uploaded_blobs) >= len(local_outputs):
+        return False
+    if status == "success":
+        return True
+    if status != "failed":
+        return False
+    warning_text = " ".join(str(item).lower() for item in warnings)
+    upload_markers = (
+        "upload",
+        "blob",
+        "azure",
+        "timeout",
+        "timed out",
+        "connection timeout",
+        "connect timeout",
+        "read timeout",
+    )
+    return bool(uploaded_blobs) or any(marker in warning_text for marker in upload_markers)
+
+
+def _required_seed_paths(settings: BuildSettings, horizon_label: str) -> dict[str, Path]:
+    """Return the expected seed parquet paths for one horizon."""
+    seed_dir = _seed_dir_for_horizon(settings, horizon_label)
+    return {
+        "seed_appln_ids": seed_dir / "seed_appln_ids.parquet",
+        "seed_family_ids": seed_dir / "seed_family_ids.parquet",
+        "seed_publn_ids": seed_dir / "seed_publn_ids.parquet",
+        "seed_person_ids": seed_dir / "seed_person_ids.parquet",
+        "seed_ep_appln_ids": seed_dir / "seed_ep_appln_ids.parquet",
+        "seed_us_publication_numbers": seed_dir / "seed_us_publication_numbers.parquet",
+        "seed_ep_publication_numbers": seed_dir / "seed_ep_publication_numbers.parquet",
+        "seed_family_field_counts": seed_dir / "seed_family_field_counts.parquet",
+    }
+
+
+def _materialize_global_tip_seeds(
+    settings: BuildSettings,
+    working_settings: BuildSettings,
+    *,
+    horizon_label: str,
+    container,
+    upload_options: dict[str, int],
+    logger: logging.Logger,
+    emit_event,
+) -> dict[str, Path]:
+    """Ensure the global TIP seed parquet set exists for the active horizon and upload it when Blob is enabled."""
+    seed_paths = _required_seed_paths(settings, horizon_label)
+    existing = {key: path for key, path in seed_paths.items() if path.exists()}
+    if len(existing) == len(seed_paths):
+        logger.info("Reusing existing global seeds horizon=%s seed_dir=%s", horizon_label, _seed_dir_for_horizon(settings, horizon_label))
+        emit_event("global_seeds_reused", horizon_label=horizon_label, seed_dir=str(_seed_dir_for_horizon(settings, horizon_label)))
+        if container is not None:
+            _upload_paths(
+                container,
+                list(seed_paths.values()),
+                _seed_blob_prefix(horizon_label),
+                upload_options,
+                logger=logger,
+                emit_event=emit_event,
+                chunk_id=f"{horizon_label}-seeds",
+            )
+        return seed_paths
+
+    seed_result = StageResult(
+        stage=f"{'heritage-' if horizon_label == 'heritage' else ''}tip-global-seed-materialization",
+        status="success",
+        summary="Materialized the global TIP seed parquet set required by chunked pre-Bronze execution.",
+    )
+    logger.info("Materializing global seeds horizon=%s seed_dir=%s", horizon_label, _seed_dir_for_horizon(settings, horizon_label))
+    emit_event("global_seeds_started", horizon_label=horizon_label, seed_dir=str(_seed_dir_for_horizon(settings, horizon_label)))
+    seeds = _seed_patstat_scope_tip(working_settings, seed_result, seed_dir=_seed_dir_for_horizon(settings, horizon_label))
+    if seed_result.status == "failed" or not seeds:
+        raise RuntimeError("Global TIP seed materialization failed before chunk execution could start.")
+    if container is not None:
+        _upload_paths(
+            container,
+            [Path(path) for path in seed_result.outputs],
+            _seed_blob_prefix(horizon_label),
+            upload_options,
+            logger=logger,
+            emit_event=emit_event,
+            chunk_id=f"{horizon_label}-seeds",
+        )
+    emit_event(
+        "global_seeds_finished",
+        horizon_label=horizon_label,
+        seed_output_count=len(seed_result.outputs),
+        seed_metrics=seed_result.metrics,
+    )
+    return {key: Path(value) for key, value in seeds.items()}
+
+
 def _execute_chunk_export(
     settings: BuildSettings,
     working_settings: BuildSettings,
@@ -816,6 +947,194 @@ def _execute_chunk_export(
     }
 
 
+def recover_tip_blob_uploads(settings: BuildSettings) -> StageResult:
+    """Upload preserved local chunk outputs for manifests that failed or completed before Blob offload finished."""
+    stage_name = "tip-blob-recovery"
+    result = StageResult(
+        stage=stage_name,
+        status="success",
+        summary="Recovered Blob uploads for TIP chunk manifests whose local outputs remained on disk after missing or failed Blob offload.",
+        methods=[
+            "Scanned chunk manifests for successful or upload-failed chunks with missing or incomplete Blob upload metadata.",
+            "Uploaded any still-present local outputs to the deterministic chunk Blob prefixes.",
+            "Updated manifests with recovered uploaded_blobs entries, restored upload-failed chunks to success when appropriate, and cleaned local temp directories when configured.",
+        ],
+        calculations=[
+            "Recovery eligibility requires still-present local outputs plus either a successful manifest with incomplete uploaded_blobs or a failed manifest whose warnings indicate Blob/upload timeout behavior.",
+            "Recovered Blob prefixes reuse the same deterministic field/year/table-family layout as the normal chunk executor.",
+        ],
+        downstream_impacts=[
+            "This stage repairs interrupted or misconfigured Blob offload without rerunning expensive TIP extraction work.",
+            "Recovered chunk manifests become consistent with later non-TIP consolidation expectations.",
+        ],
+        doc_refs=[
+            "docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md",
+            "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md",
+        ],
+    )
+    execution = settings.execution or {}
+    stage_logger = configure_logger(stage_name, settings.manifests_dir / "stages" / f"{stage_name}.log")
+    event_log_path = _stage_event_log_path(settings, stage_name)
+    event_log_path.unlink(missing_ok=True)
+    result.artifacts["live_event_log"] = str(event_log_path)
+    event_lock = Lock()
+
+    def emit_event(event_name: str, **payload: Any) -> None:
+        if not execution.get("realtime_chunk_logging", True):
+            return
+        record = {"at": utc_now_iso(), "stage": stage_name, "event": event_name}
+        record.update(payload)
+        with event_lock:
+            append_jsonl(event_log_path, record)
+
+    emit_event("stage_started")
+    upload_options = _upload_options(settings)
+    result.metrics["recovery_upload_max_concurrency"] = upload_options["max_concurrency"]
+    result.metrics["recovery_upload_max_block_size_mb"] = upload_options["max_block_size"] // (1024 * 1024)
+    result.metrics["recovery_upload_max_single_put_size_mb"] = upload_options["max_single_put_size"] // (1024 * 1024)
+
+    try:
+        container = _get_container_client(settings)
+    except Exception as exc:
+        result.status = "failed"
+        result.warnings.append(str(exc))
+        stage_logger.warning("Blob recovery unavailable: %s", exc)
+        emit_event("blob_container_unavailable", error=str(exc))
+        emit_event("stage_finished", status=result.status)
+        return result
+
+    emit_event("blob_container_ready", container=str(settings.azure["container"]))
+    chunk_manifest_dir = settings.manifests_dir / "chunks"
+    manifest_paths = sorted(chunk_manifest_dir.glob("*.json"))
+    result.metrics["recovery_manifest_count"] = len(manifest_paths)
+
+    recoverable_count = 0
+    recovered_count = 0
+    skipped_uploaded_count = 0
+    missing_output_count = 0
+    ineligible_failed_count = 0
+    uploaded_blob_count = 0
+
+    import json
+
+    for manifest_path in manifest_paths:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        status = str(payload.get("status", ""))
+        uploaded_blobs = list(payload.get("uploaded_blobs", []) or [])
+        local_outputs = [Path(path) for path in payload.get("local_outputs", [])]
+        warnings = list(payload.get("warnings", []) or [])
+        if uploaded_blobs and len(uploaded_blobs) >= len(local_outputs):
+            skipped_uploaded_count += 1
+            continue
+        if not _recovery_candidate(
+            status=status,
+            local_outputs=local_outputs,
+            uploaded_blobs=uploaded_blobs,
+            warnings=warnings,
+        ):
+            if status == "failed" and local_outputs:
+                ineligible_failed_count += 1
+            continue
+        recoverable_count += 1
+        existing_outputs = [path for path in local_outputs if path.exists() and path.is_file()]
+        if not existing_outputs:
+            missing_output_count += 1
+            result.warnings.append(f"Skipped Blob recovery for `{payload.get('chunk_id')}` because no local outputs remain.")
+            emit_event("chunk_recovery_skipped", chunk_id=str(payload.get("chunk_id")), reason="missing_local_outputs")
+            continue
+
+        chunk = {
+            "chunk_id": payload["chunk_id"],
+            "field": payload["field"],
+            "field_slug": slugify_value(str(payload["field"])),
+            "year_start": payload["year_start"],
+            "year_end": payload["year_end"],
+            "table_family": payload["table_family"],
+        }
+        horizon_label = _manifest_horizon_label(payload)
+        blob_prefix = _chunk_blob_prefix(chunk, horizon_label=horizon_label)
+        standard_outputs = [path for path in existing_outputs if path.parent.name != "uspto"]
+        uspto_outputs = [path for path in existing_outputs if path.parent.name == "uspto"]
+        recovered_blobs: list[str] = []
+
+        stage_logger.info(
+            "Recovering chunk upload chunk_id=%s file_count=%s horizon=%s",
+            chunk["chunk_id"],
+            len(existing_outputs),
+            horizon_label,
+        )
+        emit_event(
+            "chunk_recovery_started",
+            chunk_id=chunk["chunk_id"],
+            file_count=len(existing_outputs),
+            horizon_label=horizon_label,
+        )
+        if standard_outputs:
+            recovered_blobs.extend(
+                _upload_paths(
+                    container,
+                    standard_outputs,
+                    blob_prefix,
+                    upload_options,
+                    logger=stage_logger,
+                    emit_event=emit_event,
+                    chunk_id=str(chunk["chunk_id"]),
+                )
+            )
+        if uspto_outputs:
+            root_prefix = "raw-bounded-heritage" if horizon_label == "heritage" else "raw-bounded"
+            uspto_blob_prefix = (
+                f"{root_prefix}/uspto/field={chunk['field_slug']}/"
+                f"year={chunk['year_start']}-{chunk['year_end']}/family={chunk['table_family']}"
+            )
+            recovered_blobs.extend(
+                _upload_paths(
+                    container,
+                    uspto_outputs,
+                    uspto_blob_prefix,
+                    upload_options,
+                    logger=stage_logger,
+                    emit_event=emit_event,
+                    chunk_id=str(chunk["chunk_id"]),
+                )
+            )
+
+        payload["uploaded_blobs"] = recovered_blobs
+        payload["recovered_at"] = utc_now_iso()
+        if status != "success":
+            payload["recovered_from_status"] = status
+            payload["status"] = "success"
+        write_text_json(manifest_path, payload)
+        result.outputs.append(str(manifest_path))
+        recovered_count += 1
+        uploaded_blob_count += len(recovered_blobs)
+        emit_event(
+            "chunk_recovery_finished",
+            chunk_id=chunk["chunk_id"],
+            uploaded_blob_count=len(recovered_blobs),
+        )
+
+        if execution.get("cleanup_after_upload", False):
+            temp_dir = _chunk_temp_dir(settings, str(chunk["chunk_id"]))
+            shutil.rmtree(temp_dir, ignore_errors=True)
+            emit_event("chunk_cleanup_finished", chunk_id=chunk["chunk_id"], temp_dir=str(temp_dir))
+
+    result.metrics["recovery_recoverable_chunk_count"] = recoverable_count
+    result.metrics["recovery_recovered_chunk_count"] = recovered_count
+    result.metrics["recovery_skipped_uploaded_chunk_count"] = skipped_uploaded_count
+    result.metrics["recovery_missing_output_chunk_count"] = missing_output_count
+    result.metrics["recovery_ineligible_failed_chunk_count"] = ineligible_failed_count
+    result.metrics["recovery_uploaded_blob_count"] = uploaded_blob_count
+    emit_event(
+        "stage_finished",
+        status=result.status,
+        recoverable_chunk_count=recoverable_count,
+        recovered_chunk_count=recovered_count,
+        uploaded_blob_count=uploaded_blob_count,
+    )
+    return result
+
+
 def _run_tip_chunked_export(settings: BuildSettings, *, horizon_label: str) -> StageResult:
     """Execute one named TIP chunked pre-Bronze export flow and optionally upload each chunk to Blob."""
     if horizon_label == "heritage":
@@ -924,6 +1243,19 @@ def _run_tip_chunked_export(settings: BuildSettings, *, horizon_label: str) -> S
         if container is not None:
             stage_logger.info("Azure Blob intermediate upload enabled container=%s", settings.azure["container"])
             emit_event("blob_container_ready", container=str(settings.azure["container"]))
+
+    seed_paths = _materialize_global_tip_seeds(
+        settings,
+        working_settings,
+        horizon_label=horizon_label,
+        container=container,
+        upload_options=upload_options,
+        logger=stage_logger,
+        emit_event=emit_event,
+    )
+    result.outputs.extend(str(path) for path in seed_paths.values())
+    result.metrics["global_seed_file_count"] = len(seed_paths)
+    result.metrics["global_seed_dir"] = str(_seed_dir_for_horizon(settings, horizon_label))
 
     # Seed refs once if available.
     if settings.refs_source_mode == "local_files":

@@ -746,7 +746,7 @@ def _write_tip_dataframe(df, out_path: Path, metrics_key: str, result: StageResu
     result.metrics[f"{metrics_key}_bounded_count"] = row_count
 
 
-def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult):
+def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult, *, seed_dir: Path | None = None):
     """Build the bounded PATSTAT seed universe from TIP clients."""
     from sqlalchemy import func
 
@@ -765,7 +765,7 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult):
             result.warnings.append("TIP PATSTAT seed extraction requires TLS201, TLS211, TLS230, and TLS901 models.")
             return {}
 
-        ensure_dir(settings.bounded_seed_dir)
+        seed_dir = ensure_dir(seed_dir or settings.bounded_seed_dir)
         seed_appln_q = (
             db.query(
                 TLS230.appln_id.label("appln_id"),
@@ -783,8 +783,8 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult):
             settings.year_window_end,
         )
         seed_appln_df = query_to_dataframe(patstat, seed_appln_q)
-        result.metrics["seed_appln_count"] = write_dataframe_parquet(seed_appln_df, settings.bounded_seed_dir / "seed_appln_ids.parquet")
-        result.outputs.append(str(settings.bounded_seed_dir / "seed_appln_ids.parquet"))
+        result.metrics["seed_appln_count"] = write_dataframe_parquet(seed_appln_df, seed_dir / "seed_appln_ids.parquet")
+        result.outputs.append(str(seed_dir / "seed_appln_ids.parquet"))
 
         seed_appln_sq = seed_appln_q.subquery()
         seed_family_q = (
@@ -794,8 +794,8 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult):
             .distinct()
         )
         seed_family_df = query_to_dataframe(patstat, seed_family_q)
-        result.metrics["seed_family_count"] = write_dataframe_parquet(seed_family_df, settings.bounded_seed_dir / "seed_family_ids.parquet")
-        result.outputs.append(str(settings.bounded_seed_dir / "seed_family_ids.parquet"))
+        result.metrics["seed_family_count"] = write_dataframe_parquet(seed_family_df, seed_dir / "seed_family_ids.parquet")
+        result.outputs.append(str(seed_dir / "seed_family_ids.parquet"))
 
         seed_publn_q = (
             db.query(
@@ -816,8 +816,8 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult):
             .distinct()
         )
         seed_publn_df = query_to_dataframe(patstat, seed_publn_q)
-        result.metrics["seed_publn_count"] = write_dataframe_parquet(seed_publn_df, settings.bounded_seed_dir / "seed_publn_ids.parquet")
-        result.outputs.append(str(settings.bounded_seed_dir / "seed_publn_ids.parquet"))
+        result.metrics["seed_publn_count"] = write_dataframe_parquet(seed_publn_df, seed_dir / "seed_publn_ids.parquet")
+        result.outputs.append(str(seed_dir / "seed_publn_ids.parquet"))
 
         if TLS207 is not None:
             seed_person_q = (
@@ -827,8 +827,8 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult):
                 .distinct()
             )
             seed_person_df = query_to_dataframe(patstat, seed_person_q)
-            result.metrics["seed_person_count"] = write_dataframe_parquet(seed_person_df, settings.bounded_seed_dir / "seed_person_ids.parquet")
-            result.outputs.append(str(settings.bounded_seed_dir / "seed_person_ids.parquet"))
+            result.metrics["seed_person_count"] = write_dataframe_parquet(seed_person_df, seed_dir / "seed_person_ids.parquet")
+            result.outputs.append(str(seed_dir / "seed_person_ids.parquet"))
 
         seed_ep_appln_q = (
             db.query(TLS201.appln_id.label("appln_id"))
@@ -837,21 +837,21 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult):
             .distinct()
         )
         seed_ep_appln_df = query_to_dataframe(patstat, seed_ep_appln_q)
-        result.metrics["seed_ep_appln_count"] = write_dataframe_parquet(seed_ep_appln_df, settings.bounded_seed_dir / "seed_ep_appln_ids.parquet")
-        result.outputs.append(str(settings.bounded_seed_dir / "seed_ep_appln_ids.parquet"))
+        result.metrics["seed_ep_appln_count"] = write_dataframe_parquet(seed_ep_appln_df, seed_dir / "seed_ep_appln_ids.parquet")
+        result.outputs.append(str(seed_dir / "seed_ep_appln_ids.parquet"))
 
         seed_ep_publn_df = seed_publn_df[seed_publn_df["publn_auth"] == "EP"].copy()
         if not seed_ep_publn_df.empty:
-            write_dataframe_parquet(seed_ep_publn_df, settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet")
-            result.outputs.append(str(settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet"))
+            write_dataframe_parquet(seed_ep_publn_df, seed_dir / "seed_ep_publication_numbers.parquet")
+            result.outputs.append(str(seed_dir / "seed_ep_publication_numbers.parquet"))
             result.metrics["seed_ep_publication_count"] = len(seed_ep_publn_df.index)
         else:
             result.metrics["seed_ep_publication_count"] = 0
 
         seed_us_publn_df = seed_publn_df[seed_publn_df["publn_auth"] == "US"].copy()
         if not seed_us_publn_df.empty:
-            write_dataframe_parquet(seed_us_publn_df, settings.bounded_seed_dir / "seed_us_publication_numbers.parquet")
-            result.outputs.append(str(settings.bounded_seed_dir / "seed_us_publication_numbers.parquet"))
+            write_dataframe_parquet(seed_us_publn_df, seed_dir / "seed_us_publication_numbers.parquet")
+            result.outputs.append(str(seed_dir / "seed_us_publication_numbers.parquet"))
             result.metrics["seed_us_publication_count"] = len(seed_us_publn_df.index)
         else:
             result.metrics["seed_us_publication_count"] = 0
@@ -862,21 +862,22 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult):
             .nunique()
             .reset_index(name="family_count")
         )
-        write_dataframe_parquet(field_family_df, settings.bounded_seed_dir / "seed_family_field_counts.parquet")
-        result.outputs.append(str(settings.bounded_seed_dir / "seed_family_field_counts.parquet"))
+        write_dataframe_parquet(field_family_df, seed_dir / "seed_family_field_counts.parquet")
+        result.outputs.append(str(seed_dir / "seed_family_field_counts.parquet"))
         result.metrics["seed_field_family_count_rows"] = len(field_family_df.index)
         for _, row in field_family_df.iterrows():
             result.metrics[f"seed_family_count__{row['wipo_field']}"] = int(row["family_count"])
 
         result.inputs.append(f"tip://patstat/{settings.tip_env}")
         return {
-            "seed_appln_ids": settings.bounded_seed_dir / "seed_appln_ids.parquet",
-            "seed_family_ids": settings.bounded_seed_dir / "seed_family_ids.parquet",
-            "seed_publn_ids": settings.bounded_seed_dir / "seed_publn_ids.parquet",
-            "seed_person_ids": settings.bounded_seed_dir / "seed_person_ids.parquet",
-            "seed_ep_appln_ids": settings.bounded_seed_dir / "seed_ep_appln_ids.parquet",
-            "seed_us_publication_numbers": settings.bounded_seed_dir / "seed_us_publication_numbers.parquet",
-            "seed_ep_publication_numbers": settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet",
+            "seed_appln_ids": seed_dir / "seed_appln_ids.parquet",
+            "seed_family_ids": seed_dir / "seed_family_ids.parquet",
+            "seed_publn_ids": seed_dir / "seed_publn_ids.parquet",
+            "seed_person_ids": seed_dir / "seed_person_ids.parquet",
+            "seed_ep_appln_ids": seed_dir / "seed_ep_appln_ids.parquet",
+            "seed_us_publication_numbers": seed_dir / "seed_us_publication_numbers.parquet",
+            "seed_ep_publication_numbers": seed_dir / "seed_ep_publication_numbers.parquet",
+            "seed_family_field_counts": seed_dir / "seed_family_field_counts.parquet",
         }
     finally:
         close_tip_client(patstat)

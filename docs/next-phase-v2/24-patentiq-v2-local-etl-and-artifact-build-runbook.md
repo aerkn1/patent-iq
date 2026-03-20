@@ -175,6 +175,8 @@ The required execution model is:
 7. stage execution should emit live operational logs, not only end-of-stage manifests:
    - `etl/manifests/stages/pre-bronze-chunked-export.log`
    - `etl/manifests/stages/pre-bronze-chunked-export.events.jsonl`
+8. chunked TIP `prebronze` should materialize the bounded global seed parquet set before chunk submission and reuse that seed set on rerun when it already exists
+9. successful chunk manifests should still be the restart checkpoint boundary; seed reuse should not force already-successful chunks to rerun
 
 See the dedicated TIP full-scope operating note:
 

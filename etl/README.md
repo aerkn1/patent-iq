@@ -34,6 +34,7 @@ python scripts/certify_sources.py
 python scripts/run_stage.py certify
 python scripts/run_stage.py plan-tip-export
 python scripts/run_stage.py plan-tip-heritage-export
+python scripts/run_stage.py recover-tip-blob-uploads
 python scripts/run_stage.py prebronze
 python scripts/run_stage.py prebronze-heritage
 python scripts/run_stage.py prebronze-uspto-odp
@@ -109,6 +110,31 @@ The current TIP executor now applies:
    - `upload_max_single_put_size_mb`
 4. live stage events in `etl/manifests/stages/pre-bronze-chunked-export.events.jsonl`
 5. normal chunk manifests under `etl/manifests/chunks/`
+
+Before chunk execution starts, the chunked TIP path now also:
+
+1. materializes the global seed parquet set under `etl/data/raw-bounded/_seeds/`,
+2. uploads those seed artifacts to `raw-bounded/seeds/`,
+3. reuses the existing seed files on rerun when they already exist.
+
+This does not change the existing chunk restart behavior:
+
+1. chunks with a successful manifest are still skipped on rerun,
+2. only unfinished or failed chunks are retried,
+3. successful-but-not-uploaded chunks still require `recover-tip-blob-uploads`.
+
+If a run produced successful local chunk outputs but missed Blob upload metadata, use:
+
+```bash
+python scripts/run_stage.py recover-tip-blob-uploads
+```
+
+That recovery stage:
+
+1. scans successful chunk manifests with empty `uploaded_blobs` and failed chunk manifests that look like Blob/upload-timeout failures,
+2. uploads any still-present local outputs to the deterministic chunk Blob prefixes,
+3. updates the manifests and restores upload-failed chunks back to `success` when recovery completes,
+4. cleans recovered temp directories when `cleanup_after_upload = true`.
 
 ## Tracking
 

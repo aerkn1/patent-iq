@@ -1119,3 +1119,81 @@
 
 1. The scheduler is intentionally conservative and should not be treated as a license to run four heavy extraction families in parallel inside TIP.
 2. Azure Blob multipart tuning is now wired into the ETL path, but final throughput still depends on the real network and storage-account characteristics of the target TIP environment.
+
+## 2026-03-19 | TIP Blob Recovery Stage | success
+
+### Inputs
+
+1. successful chunk manifests with empty `uploaded_blobs`
+2. preserved local chunk parquet files under `etl/data/temp/chunks`
+3. deterministic chunk Blob prefix contract already used by the normal TIP executor
+
+### Files Updated
+
+1. updated `etl/src/patentiq_etl/prebronze/chunked.py`
+2. updated `etl/src/patentiq_etl/prebronze/run.py`
+3. updated `etl/scripts/run_stage.py`
+4. updated `etl/tests/test_tip_chunked_runtime.py`
+5. updated `etl/README.md`
+
+### Methods
+
+1. Added a standalone recovery stage that scans chunk manifests for:
+   - `status = success`
+   - empty `uploaded_blobs`
+   - still-present local outputs
+2. Reused the deterministic chunk Blob prefixes instead of inventing a new recovery layout.
+3. Updated recovered manifests in place with the uploaded blob names and `recovered_at` timestamp.
+4. Applied cleanup to recovered temp directories when `cleanup_after_upload` is enabled.
+
+### Downstream Impacts
+
+1. Expensive TIP chunks no longer need to be recomputed just because Blob upload was inactive during one earlier run.
+2. Resume semantics can now be repaired after the fact by aligning the manifest state with the real Blob state.
+
+### Verification
+
+1. `pytest etl/tests/test_tip_chunked_runtime.py etl/tests/test_tip_clients.py etl/tests/test_tip_chunk_plan.py -q`
+2. `python3 -m compileall etl/src etl/scripts etl/tests`
+
+### Warnings
+
+1. The normal chunk runner still skips any manifest with `status = success`, so recovery remains a separate stage rather than part of the default rerun path.
+2. Recovery now also handles chunks that failed during Blob upload after local parquet generation, but it still assumes the preserved local outputs are trustworthy bounded chunk outputs.
+
+## 2026-03-20 | Chunked TIP Global Seed Materialization | success
+
+### Inputs
+
+1. chunked TIP pre-Bronze runtime configuration
+2. existing PATSTAT TIP seed builder logic
+3. existing successful-chunk resume semantics
+
+### Files Updated
+
+1. updated `etl/src/patentiq_etl/prebronze/extract.py`
+2. updated `etl/src/patentiq_etl/prebronze/chunked.py`
+3. updated `etl/tests/test_tip_chunked_runtime.py`
+4. updated `etl/README.md`
+
+### Methods
+
+1. Added an explicit global seed materialization phase at the start of chunked TIP `prebronze`.
+2. Reused the existing TIP seed builder instead of introducing a second seed implementation.
+3. Uploaded the resulting `_seeds/*.parquet` artifacts to the deterministic Blob seed prefix for the active horizon.
+4. Reused the seed parquet set on rerun when all required seed files already exist.
+
+### Downstream Impacts
+
+1. `seed_us_publication_numbers.parquet` and the other bounded seed artifacts are now always available to later consumers such as the local USPTO ODP worker.
+2. The chunked TIP path now matches the documented execution contract more closely because seeds are generated once up front rather than only implied by per-chunk scope building.
+3. Existing restart semantics remain unchanged: already-successful chunks are still skipped on rerun.
+
+### Verification
+
+1. `pytest etl/tests/test_tip_chunked_runtime.py etl/tests/test_tip_chunk_plan.py etl/tests/test_tip_clients.py etl/tests/test_prebronze_extraction.py -q`
+2. `python3 -m compileall etl/src etl/scripts etl/tests`
+
+### Warnings
+
+1. The chunk runner still skips successful chunk manifests without checking remote Blob state, so missing historical uploads still need the separate recovery stage.

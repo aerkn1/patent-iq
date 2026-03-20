@@ -78,6 +78,12 @@ These seed artifacts are comparatively small and should remain available both:
 1. locally in TIP during the run
 2. in Blob as the authoritative scope reference
 
+Current runtime expectation:
+
+1. chunked `prebronze` should materialize these seeds before the first chunk is submitted,
+2. if all required seed parquet files already exist for the active horizon, the runtime should reuse them rather than regenerate them,
+3. this seed reuse must not change the normal chunk resume rule that already-successful chunks are skipped on rerun.
+
 ### Phase 2: Chunked Bounded Raw Export
 
 Run chunk families iteratively from TIP and upload them immediately.
