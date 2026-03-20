@@ -1,0 +1,26 @@
+{
+  "chunk_id": "audio-visual-technology__2021_2022__publications",
+  "duration_seconds": 76.099,
+  "field": "Audio-visual technology",
+  "finished_at": "2026-03-19T12:14:23+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2021_2022__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 507141,
+    "ep_appln_count": 15127,
+    "ep_publication_count": 25343,
+    "family_count": 423429,
+    "local_output_bytes": 12199899,
+    "local_output_file_count": 1,
+    "publn_count": 633803,
+    "us_publication_count": 99499
+  },
+  "started_at": "2026-03-19T12:13:07+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2022,
+  "year_start": 2021
+}

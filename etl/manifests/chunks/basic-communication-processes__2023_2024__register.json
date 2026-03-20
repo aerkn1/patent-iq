@@ -1,0 +1,38 @@
+{
+  "chunk_id": "basic-communication-processes__2023_2024__register",
+  "duration_seconds": 24.574,
+  "field": "Basic communication processes",
+  "finished_at": "2026-03-19T17:12:45+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg101_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg107_parties.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg111_licensee.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg125_appeal.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg130_opponent.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg201_proc_step.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg202_proc_step_text.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg203_proc_step_date.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg301_event_data.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg402_event_text.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg701_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg731_event_data.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2023_2024__register/register/reg742_event_text.parquet"
+  ],
+  "metrics": {
+    "appln_count": 49161,
+    "ep_appln_count": 1638,
+    "ep_publication_count": 1872,
+    "family_count": 41269,
+    "local_output_bytes": 271397,
+    "local_output_file_count": 13,
+    "publn_count": 57814,
+    "us_publication_count": 12295
+  },
+  "started_at": "2026-03-19T17:12:20+00:00",
+  "status": "success",
+  "table_family": "register",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}

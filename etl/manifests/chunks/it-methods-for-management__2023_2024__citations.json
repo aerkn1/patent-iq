@@ -1,0 +1,30 @@
+{
+  "chunk_id": "it-methods-for-management__2023_2024__citations",
+  "duration_seconds": 281.856,
+  "field": "IT methods for management",
+  "finished_at": "2026-03-20T07:40:24+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 294774,
+    "ep_appln_count": 3382,
+    "ep_publication_count": 3786,
+    "family_count": 275469,
+    "local_output_bytes": 10186708,
+    "local_output_file_count": 3,
+    "publn_count": 346562,
+    "us_publication_count": 32086
+  },
+  "started_at": "2026-03-20T07:35:42+00:00",
+  "status": "failed",
+  "table_family": "citations",
+  "uploaded_blobs": [],
+  "warnings": [
+    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  ],
+  "year_end": 2024,
+  "year_start": 2023
+}

@@ -1,0 +1,28 @@
+{
+  "chunk_id": "measurement__2017_2018__publications",
+  "duration_seconds": 294.691,
+  "field": "Measurement",
+  "finished_at": "2026-03-20T12:37:06+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2017_2018__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 674917,
+    "ep_appln_count": 26028,
+    "ep_publication_count": 52677,
+    "family_count": 560824,
+    "local_output_bytes": 17733637,
+    "local_output_file_count": 1,
+    "publn_count": 926050,
+    "us_publication_count": 122526
+  },
+  "started_at": "2026-03-20T12:32:12+00:00",
+  "status": "failed",
+  "table_family": "publications",
+  "uploaded_blobs": [],
+  "warnings": [
+    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  ],
+  "year_end": 2018,
+  "year_start": 2017
+}

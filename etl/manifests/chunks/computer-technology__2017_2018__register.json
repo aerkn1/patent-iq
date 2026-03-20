@@ -1,0 +1,38 @@
+{
+  "chunk_id": "computer-technology__2017_2018__register",
+  "duration_seconds": 169.723,
+  "field": "Computer technology",
+  "finished_at": "2026-03-19T19:17:38+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg101_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg107_parties.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg111_licensee.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg125_appeal.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg130_opponent.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg201_proc_step.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg202_proc_step_text.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg203_proc_step_date.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg301_event_data.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg402_event_text.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg701_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg731_event_data.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__register/register/reg742_event_text.parquet"
+  ],
+  "metrics": {
+    "appln_count": 736399,
+    "ep_appln_count": 33282,
+    "ep_publication_count": 65762,
+    "family_count": 564798,
+    "local_output_bytes": 5531381,
+    "local_output_file_count": 13,
+    "publn_count": 1134044,
+    "us_publication_count": 313694
+  },
+  "started_at": "2026-03-19T19:14:48+00:00",
+  "status": "success",
+  "table_family": "register",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2018,
+  "year_start": 2017
+}

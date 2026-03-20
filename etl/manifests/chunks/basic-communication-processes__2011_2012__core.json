@@ -1,0 +1,35 @@
+{
+  "chunk_id": "basic-communication-processes__2011_2012__core",
+  "duration_seconds": 105.155,
+  "field": "Basic communication processes",
+  "finished_at": "2026-03-19T16:45:48+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2011_2012__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2011_2012__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2011_2012__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2011_2012__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2011_2012__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2011_2012__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2011_2012__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2011_2012__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2011_2012__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2011_2012__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 50314,
+    "ep_appln_count": 3161,
+    "ep_publication_count": 6457,
+    "family_count": 35627,
+    "local_output_bytes": 28820271,
+    "local_output_file_count": 10,
+    "publn_count": 82094,
+    "us_publication_count": 28865
+  },
+  "started_at": "2026-03-19T16:44:03+00:00",
+  "status": "success",
+  "table_family": "core",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2012,
+  "year_start": 2011
+}

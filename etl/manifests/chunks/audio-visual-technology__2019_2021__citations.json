@@ -1,0 +1,28 @@
+{
+  "chunk_id": "audio-visual-technology__2019_2021__citations",
+  "duration_seconds": 239.338,
+  "field": "Audio-visual technology",
+  "finished_at": "2026-03-18T07:32:28+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2019_2021__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2019_2021__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2019_2021__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 775824,
+    "ep_appln_count": 24613,
+    "ep_publication_count": 46503,
+    "family_count": 613448,
+    "local_output_bytes": 19560461,
+    "local_output_file_count": 3,
+    "publn_count": 1025680,
+    "us_publication_count": 170412
+  },
+  "started_at": "2026-03-18T07:28:28+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2021,
+  "year_start": 2019
+}

@@ -1,0 +1,37 @@
+{
+  "chunk_id": "it-methods-for-management__2023_2024__core",
+  "duration_seconds": 413.514,
+  "field": "IT methods for management",
+  "finished_at": "2026-03-20T07:27:25+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 294774,
+    "ep_appln_count": 3382,
+    "ep_publication_count": 3786,
+    "family_count": 275469,
+    "local_output_bytes": 180266977,
+    "local_output_file_count": 10,
+    "publn_count": 346562,
+    "us_publication_count": 32086
+  },
+  "started_at": "2026-03-20T07:20:31+00:00",
+  "status": "failed",
+  "table_family": "core",
+  "uploaded_blobs": [],
+  "warnings": [
+    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  ],
+  "year_end": 2024,
+  "year_start": 2023
+}

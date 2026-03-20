@@ -1,0 +1,4 @@
+{"at": "2026-03-20T23:21:17+00:00", "event": "stage_started", "stage": "tip-blob-recovery"}
+{"at": "2026-03-20T23:21:17+00:00", "container": "patentiq-data", "event": "blob_container_ready", "stage": "tip-blob-recovery"}
+{"at": "2026-03-20T23:21:17+00:00", "chunk_id": "audio-visual-technology__2007_2008__core", "event": "chunk_recovery_started", "file_count": 10, "horizon_label": "main", "stage": "tip-blob-recovery"}
+{"at": "2026-03-20T23:21:17+00:00", "blob_name": "raw-bounded/patstat/field=audio-visual-technology/year=2007-2008/family=core/tls201_appln.parquet", "chunk_id": "audio-visual-technology__2007_2008__core", "event": "blob_upload_started", "max_concurrency": 1, "size_bytes": 21431199, "stage": "tip-blob-recovery", "tuning_mode": "upload_only"}

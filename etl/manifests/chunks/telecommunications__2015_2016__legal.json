@@ -1,0 +1,27 @@
+{
+  "chunk_id": "telecommunications__2015_2016__legal",
+  "duration_seconds": 174.437,
+  "field": "Telecommunications",
+  "finished_at": "2026-03-19T13:23:00+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2015_2016__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2015_2016__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 218277,
+    "ep_appln_count": 13226,
+    "ep_publication_count": 28025,
+    "family_count": 162074,
+    "local_output_bytes": 29356444,
+    "local_output_file_count": 2,
+    "publn_count": 329843,
+    "us_publication_count": 89066
+  },
+  "started_at": "2026-03-19T13:20:06+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2016,
+  "year_start": 2015
+}

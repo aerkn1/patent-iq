@@ -1,0 +1,26 @@
+{
+  "chunk_id": "audio-visual-technology__2011_2012__publications",
+  "duration_seconds": 53.148,
+  "field": "Audio-visual technology",
+  "finished_at": "2026-03-19T11:01:20+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2011_2012__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 280612,
+    "ep_appln_count": 14189,
+    "ep_publication_count": 28823,
+    "family_count": 193721,
+    "local_output_bytes": 8337504,
+    "local_output_file_count": 1,
+    "publn_count": 422073,
+    "us_publication_count": 105260
+  },
+  "started_at": "2026-03-19T11:00:27+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2012,
+  "year_start": 2011
+}

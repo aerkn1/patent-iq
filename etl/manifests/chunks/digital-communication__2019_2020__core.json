@@ -1,0 +1,35 @@
+{
+  "chunk_id": "digital-communication__2019_2020__core",
+  "duration_seconds": 398.898,
+  "field": "Digital communication",
+  "finished_at": "2026-03-19T15:49:04+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 463874,
+    "ep_appln_count": 37033,
+    "ep_publication_count": 73622,
+    "family_count": 311739,
+    "local_output_bytes": 247511722,
+    "local_output_file_count": 10,
+    "publn_count": 727788,
+    "us_publication_count": 203922
+  },
+  "started_at": "2026-03-19T15:42:25+00:00",
+  "status": "success",
+  "table_family": "core",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2020,
+  "year_start": 2019
+}

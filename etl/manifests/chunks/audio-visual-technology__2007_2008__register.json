@@ -1,0 +1,38 @@
+{
+  "chunk_id": "audio-visual-technology__2007_2008__register",
+  "duration_seconds": 149.801,
+  "field": "Audio-visual technology",
+  "finished_at": "2026-03-19T10:43:07+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg101_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg107_parties.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg111_licensee.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg125_appeal.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg130_opponent.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg201_proc_step.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg202_proc_step_text.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg203_proc_step_date.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg301_event_data.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg402_event_text.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg701_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg731_event_data.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2007_2008__register/register/reg742_event_text.parquet"
+  ],
+  "metrics": {
+    "appln_count": 276103,
+    "ep_appln_count": 15091,
+    "ep_publication_count": 28993,
+    "family_count": 195239,
+    "local_output_bytes": 2676314,
+    "local_output_file_count": 13,
+    "publn_count": 415530,
+    "us_publication_count": 96163
+  },
+  "started_at": "2026-03-19T10:40:38+00:00",
+  "status": "success",
+  "table_family": "register",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2008,
+  "year_start": 2007
+}

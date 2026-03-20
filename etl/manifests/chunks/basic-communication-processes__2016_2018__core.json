@@ -1,0 +1,46 @@
+{
+  "chunk_id": "basic-communication-processes__2016_2018__core",
+  "duration_seconds": 127.124,
+  "field": "Basic communication processes",
+  "finished_at": "2026-03-18T04:42:37+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2016_2018__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2016_2018__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2016_2018__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2016_2018__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2016_2018__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2016_2018__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2016_2018__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2016_2018__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2016_2018__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2016_2018__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 83684,
+    "ep_appln_count": 5080,
+    "ep_publication_count": 10165,
+    "family_count": 56474,
+    "local_output_bytes": 46585009,
+    "local_output_file_count": 10,
+    "publn_count": 133528,
+    "us_publication_count": 45654
+  },
+  "started_at": "2026-03-18T04:40:30+00:00",
+  "status": "success",
+  "table_family": "core",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=basic-communication-processes/year=2016-2018/family=core/tls201_appln.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2016-2018/family=core/tls202_appln_title.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2016-2018/family=core/tls203_appln_abstr.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2016-2018/family=core/tls204_appln_prior.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2016-2018/family=core/tls206_person.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2016-2018/family=core/tls207_pers_appln.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2016-2018/family=core/tls209_appln_ipc.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2016-2018/family=core/tls216_appln_contn.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2016-2018/family=core/tls224_appln_cpc.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2016-2018/family=core/tls230_appln_techn_field.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2018,
+  "year_start": 2016
+}

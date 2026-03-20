@@ -1119,6 +1119,7 @@
 
 1. The scheduler is intentionally conservative and should not be treated as a license to run four heavy extraction families in parallel inside TIP.
 2. Azure Blob multipart tuning is now wired into the ETL path, but final throughput still depends on the real network and storage-account characteristics of the target TIP environment.
+<<<<<<< Updated upstream
 
 ## 2026-03-19 | TIP Blob Recovery Stage | success
 
@@ -1197,3 +1198,52 @@
 ### Warnings
 
 1. The chunk runner still skips successful chunk manifests without checking remote Blob state, so missing historical uploads still need the separate recovery stage.
+=======
+## tip-chunk-plan | success
+
+- Summary: Generated the TIP chunked export plan for Blob-first full-scope extraction.
+- Started: 2026-03-17T22:22:16+00:00
+- Finished: 2026-03-17T22:22:16+00:00
+
+
+### Outputs
+
+1. /home/jovyan/patent-iq/etl/manifests/chunks
+2. /home/jovyan/patent-iq/etl/manifests/chunks/tip_chunk_plan.json
+
+### Artifacts
+
+- `stats_snapshot`: `/home/jovyan/patent-iq/etl/manifests/stats/tip-chunk-plan.json`
+
+### Methods
+
+1. Split the configured mega-cluster scope into field and year buckets.
+2. Assigned recommended worker counts per table family according to the documented TIP resource envelope.
+3. Prepared deterministic chunk ids and Blob prefixes for resumable export.
+
+### Calculations
+
+1. Chunk ids are built from field slug + year bucket + table family.
+2. Year buckets use the configured chunk span across the configured ETL year window.
+
+### Downstream Impacts
+
+1. This plan drives Blob-first pre-Bronze extraction instead of monolithic local bounded-raw materialization inside TIP.
+2. Chunk manifests enable resume, retry, and local cleanup after verified upload.
+
+### Governing Docs
+
+1. docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+3. docs/data/epo-tip-client-usage.md
+
+
+### Metrics
+
+- `chunk_plan_field_count`: `10`
+- `chunk_plan_year_bucket_count`: `7`
+- `chunk_plan_table_family_count`: `6`
+- `chunk_plan_total_chunk_count`: `420`
+- `chunk_plan_max_worker_sum`: `8`
+
+>>>>>>> Stashed changes

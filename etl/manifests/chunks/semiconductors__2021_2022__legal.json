@@ -1,0 +1,29 @@
+{
+  "chunk_id": "semiconductors__2021_2022__legal",
+  "duration_seconds": 334.231,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-20T09:58:50+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2021_2022__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2021_2022__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 316985,
+    "ep_appln_count": 11558,
+    "ep_publication_count": 18336,
+    "family_count": 206557,
+    "local_output_bytes": 21062041,
+    "local_output_file_count": 2,
+    "publn_count": 429693,
+    "us_publication_count": 101901
+  },
+  "started_at": "2026-03-20T09:53:16+00:00",
+  "status": "failed",
+  "table_family": "legal",
+  "uploaded_blobs": [],
+  "warnings": [
+    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  ],
+  "year_end": 2022,
+  "year_start": 2021
+}

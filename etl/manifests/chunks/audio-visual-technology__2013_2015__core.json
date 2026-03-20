@@ -1,0 +1,46 @@
+{
+  "chunk_id": "audio-visual-technology__2013_2015__core",
+  "duration_seconds": 354.573,
+  "field": "Audio-visual technology",
+  "finished_at": "2026-03-17T23:18:50+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2013_2015__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2013_2015__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2013_2015__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2013_2015__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2013_2015__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2013_2015__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2013_2015__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2013_2015__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2013_2015__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2013_2015__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 424236,
+    "ep_appln_count": 21086,
+    "ep_publication_count": 43876,
+    "family_count": 292074,
+    "local_output_bytes": 227202062,
+    "local_output_file_count": 10,
+    "publn_count": 644756,
+    "us_publication_count": 169417
+  },
+  "started_at": "2026-03-17T23:12:56+00:00",
+  "status": "success",
+  "table_family": "core",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=audio-visual-technology/year=2013-2015/family=core/tls201_appln.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2013-2015/family=core/tls202_appln_title.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2013-2015/family=core/tls203_appln_abstr.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2013-2015/family=core/tls204_appln_prior.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2013-2015/family=core/tls206_person.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2013-2015/family=core/tls207_pers_appln.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2013-2015/family=core/tls209_appln_ipc.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2013-2015/family=core/tls216_appln_contn.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2013-2015/family=core/tls224_appln_cpc.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2013-2015/family=core/tls230_appln_techn_field.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2015,
+  "year_start": 2013
+}

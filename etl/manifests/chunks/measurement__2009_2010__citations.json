@@ -1,0 +1,30 @@
+{
+  "chunk_id": "measurement__2009_2010__citations",
+  "duration_seconds": 319.417,
+  "field": "Measurement",
+  "finished_at": "2026-03-20T10:48:36+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2009_2010__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2009_2010__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2009_2010__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 267658,
+    "ep_appln_count": 17366,
+    "ep_publication_count": 34462,
+    "family_count": 199016,
+    "local_output_bytes": 11315312,
+    "local_output_file_count": 3,
+    "publn_count": 405989,
+    "us_publication_count": 75170
+  },
+  "started_at": "2026-03-20T10:43:17+00:00",
+  "status": "failed",
+  "table_family": "citations",
+  "uploaded_blobs": [],
+  "warnings": [
+    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  ],
+  "year_end": 2010,
+  "year_start": 2009
+}

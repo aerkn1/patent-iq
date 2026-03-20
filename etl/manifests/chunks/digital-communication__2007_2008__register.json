@@ -1,0 +1,38 @@
+{
+  "chunk_id": "digital-communication__2007_2008__register",
+  "duration_seconds": 108.945,
+  "field": "Digital communication",
+  "finished_at": "2026-03-19T14:17:01+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg101_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg107_parties.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg111_licensee.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg125_appeal.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg130_opponent.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg201_proc_step.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg202_proc_step_text.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg203_proc_step_date.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg301_event_data.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg402_event_text.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg701_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg731_event_data.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2007_2008__register/register/reg742_event_text.parquet"
+  ],
+  "metrics": {
+    "appln_count": 223802,
+    "ep_appln_count": 22408,
+    "ep_publication_count": 44820,
+    "family_count": 132475,
+    "local_output_bytes": 3928842,
+    "local_output_file_count": 13,
+    "publn_count": 362990,
+    "us_publication_count": 77316
+  },
+  "started_at": "2026-03-19T14:15:12+00:00",
+  "status": "success",
+  "table_family": "register",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2008,
+  "year_start": 2007
+}

@@ -1,0 +1,29 @@
+{
+  "chunk_id": "measurement__2019_2020__legal",
+  "duration_seconds": 655.502,
+  "field": "Measurement",
+  "finished_at": "2026-03-20T13:30:19+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2019_2020__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2019_2020__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 881572,
+    "ep_appln_count": 26876,
+    "ep_publication_count": 51807,
+    "family_count": 765504,
+    "local_output_bytes": 56647608,
+    "local_output_file_count": 2,
+    "publn_count": 1162341,
+    "us_publication_count": 121861
+  },
+  "started_at": "2026-03-20T13:19:24+00:00",
+  "status": "failed",
+  "table_family": "legal",
+  "uploaded_blobs": [],
+  "warnings": [
+    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  ],
+  "year_end": 2020,
+  "year_start": 2019
+}

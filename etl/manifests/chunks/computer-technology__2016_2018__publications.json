@@ -1,0 +1,26 @@
+{
+  "chunk_id": "computer-technology__2016_2018__publications",
+  "duration_seconds": 170.394,
+  "field": "Computer technology",
+  "finished_at": "2026-03-18T09:06:06+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2016_2018__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 1052987,
+    "ep_appln_count": 49406,
+    "ep_publication_count": 97690,
+    "family_count": 779448,
+    "local_output_bytes": 31646996,
+    "local_output_file_count": 1,
+    "publn_count": 1619803,
+    "us_publication_count": 461416
+  },
+  "started_at": "2026-03-18T09:03:15+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2018,
+  "year_start": 2016
+}

@@ -1,0 +1,37 @@
+{
+  "chunk_id": "semiconductors__2007_2008__core",
+  "duration_seconds": 384.225,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-20T07:50:49+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 232588,
+    "ep_appln_count": 9783,
+    "ep_publication_count": 19042,
+    "family_count": 152528,
+    "local_output_bytes": 113292511,
+    "local_output_file_count": 10,
+    "publn_count": 361783,
+    "us_publication_count": 82262
+  },
+  "started_at": "2026-03-20T07:44:24+00:00",
+  "status": "failed",
+  "table_family": "core",
+  "uploaded_blobs": [],
+  "warnings": [
+    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  ],
+  "year_end": 2008,
+  "year_start": 2007
+}

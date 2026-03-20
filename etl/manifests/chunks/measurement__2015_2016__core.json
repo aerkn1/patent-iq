@@ -1,0 +1,37 @@
+{
+  "chunk_id": "measurement__2015_2016__core",
+  "duration_seconds": 635.029,
+  "field": "Measurement",
+  "finished_at": "2026-03-20T11:55:30+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 513780,
+    "ep_appln_count": 23531,
+    "ep_publication_count": 48423,
+    "family_count": 412387,
+    "local_output_bytes": 311293185,
+    "local_output_file_count": 10,
+    "publn_count": 731910,
+    "us_publication_count": 110172
+  },
+  "started_at": "2026-03-20T11:44:55+00:00",
+  "status": "failed",
+  "table_family": "core",
+  "uploaded_blobs": [],
+  "warnings": [
+    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  ],
+  "year_end": 2016,
+  "year_start": 2015
+}

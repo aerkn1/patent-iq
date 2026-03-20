@@ -1,0 +1,35 @@
+{
+  "chunk_id": "computer-technology__2017_2018__core",
+  "duration_seconds": 562.083,
+  "field": "Computer technology",
+  "finished_at": "2026-03-19T19:04:13+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2017_2018__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 736399,
+    "ep_appln_count": 33282,
+    "ep_publication_count": 65762,
+    "family_count": 564798,
+    "local_output_bytes": 412013088,
+    "local_output_file_count": 10,
+    "publn_count": 1134044,
+    "us_publication_count": 313694
+  },
+  "started_at": "2026-03-19T18:54:51+00:00",
+  "status": "success",
+  "table_family": "core",
+  "uploaded_blobs": [],
+  "warnings": [],
+  "year_end": 2018,
+  "year_start": 2017
+}

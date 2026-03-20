@@ -1,0 +1,28 @@
+{
+  "chunk_id": "digital-communication__2013_2015__publications",
+  "duration_seconds": 102.884,
+  "field": "Digital communication",
+  "finished_at": "2026-03-18T02:44:56+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2013_2015__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 515084,
+    "ep_appln_count": 45496,
+    "ep_publication_count": 97276,
+    "family_count": 309153,
+    "local_output_bytes": 16178658,
+    "local_output_file_count": 1,
+    "publn_count": 828426,
+    "us_publication_count": 260751
+  },
+  "started_at": "2026-03-18T02:43:13+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=digital-communication/year=2013-2015/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2015,
+  "year_start": 2013
+}
