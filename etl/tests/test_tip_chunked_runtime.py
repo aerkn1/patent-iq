@@ -4,11 +4,12 @@ from collections import Counter
 from pathlib import Path
 from threading import Lock
 import json
+import sys
 import time
 
 from patentiq_etl.common.io import ensure_dir, write_pylist_parquet
 from patentiq_etl.common.types import BuildSettings
-from patentiq_etl.prebronze.chunked import _citation_npl_column, _upload_paths, recover_tip_blob_uploads, run_tip_chunked_export
+from patentiq_etl.prebronze.chunked import _citation_npl_column, _get_container_client, _upload_paths, recover_tip_blob_uploads, run_tip_chunked_export
 from patentiq_etl.prebronze.extract import _citation_npl_column_from_parquet
 
 
@@ -317,6 +318,39 @@ def test_upload_paths_retry_transient_timeout_then_succeed(tmp_path: Path) -> No
         "raw-bounded/patstat/field=computer-technology/year=2018-2020/family=core/sample.parquet"
     ]
     assert len(calls) == 2
+
+
+def test_get_container_client_applies_blob_transport_timeouts(tmp_path: Path, monkeypatch) -> None:
+    settings = _settings(tmp_path)
+    settings.execution["blob_intermediate_enabled"] = True
+    settings.execution["upload_connection_timeout_seconds"] = 45
+    settings.execution["upload_read_timeout_seconds"] = 900
+    settings.azure["connection_string_env"] = "AZURE_STORAGE_CONNECTION_STRING"
+    monkeypatch.setenv("AZURE_STORAGE_CONNECTION_STRING", "UseDevelopmentStorage=true")
+    captured: dict[str, object] = {}
+
+    class FakeService:
+        def get_container_client(self, container_name: str):
+            captured["container_name"] = container_name
+            return {"container": container_name}
+
+    class FakeBlobServiceClient:
+        @classmethod
+        def from_connection_string(cls, connection_string: str, **kwargs):
+            captured["connection_string"] = connection_string
+            captured["kwargs"] = kwargs
+            return FakeService()
+
+    fake_blob_module = type(sys)("azure.storage.blob")
+    fake_blob_module.BlobServiceClient = FakeBlobServiceClient
+    monkeypatch.setitem(sys.modules, "azure.storage.blob", fake_blob_module)
+
+    container = _get_container_client(settings)
+
+    assert container == {"container": settings.azure["container"]}
+    assert captured["connection_string"] == "UseDevelopmentStorage=true"
+    assert captured["kwargs"] == {"connection_timeout": 45, "read_timeout": 900}
+    assert captured["container_name"] == settings.azure["container"]
 
 
 def test_citation_npl_column_detection_supports_tip_column_shape(tmp_path: Path) -> None:

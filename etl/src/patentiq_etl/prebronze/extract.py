@@ -746,6 +746,22 @@ def _write_tip_dataframe(df, out_path: Path, metrics_key: str, result: StageResu
     result.metrics[f"{metrics_key}_bounded_count"] = row_count
 
 
+def _register_existing_seed(path: Path, metric_key: str, result: StageResult) -> int:
+    """Record one already-materialized seed parquet without regenerating it."""
+    row_count = tip_parquet_row_count(path)
+    result.outputs.append(str(path))
+    result.metrics[metric_key] = row_count
+    return row_count
+
+
+def _write_tip_seed_dataframe(df, path: Path, metric_key: str, result: StageResult) -> int:
+    """Write one TIP seed DataFrame and register its standard metrics/output path."""
+    row_count = write_dataframe_parquet(df, path)
+    result.outputs.append(str(path))
+    result.metrics[metric_key] = row_count
+    return row_count
+
+
 def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult, *, seed_dir: Path | None = None):
     """Build the bounded PATSTAT seed universe from TIP clients."""
     from sqlalchemy import func
@@ -766,6 +782,16 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult, *, see
             return {}
 
         seed_dir = ensure_dir(seed_dir or settings.bounded_seed_dir)
+        seed_paths = {
+            "seed_appln_ids": seed_dir / "seed_appln_ids.parquet",
+            "seed_family_ids": seed_dir / "seed_family_ids.parquet",
+            "seed_publn_ids": seed_dir / "seed_publn_ids.parquet",
+            "seed_person_ids": seed_dir / "seed_person_ids.parquet",
+            "seed_ep_appln_ids": seed_dir / "seed_ep_appln_ids.parquet",
+            "seed_us_publication_numbers": seed_dir / "seed_us_publication_numbers.parquet",
+            "seed_ep_publication_numbers": seed_dir / "seed_ep_publication_numbers.parquet",
+            "seed_family_field_counts": seed_dir / "seed_family_field_counts.parquet",
+        }
         seed_appln_q = (
             db.query(
                 TLS230.appln_id.label("appln_id"),
@@ -782,9 +808,13 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult, *, see
             settings.year_window_start,
             settings.year_window_end,
         )
-        seed_appln_df = query_to_dataframe(patstat, seed_appln_q)
-        result.metrics["seed_appln_count"] = write_dataframe_parquet(seed_appln_df, seed_dir / "seed_appln_ids.parquet")
-        result.outputs.append(str(seed_dir / "seed_appln_ids.parquet"))
+        seed_appln_path = seed_paths["seed_appln_ids"]
+        if seed_appln_path.exists():
+            _register_existing_seed(seed_appln_path, "seed_appln_count", result)
+        else:
+            seed_appln_df = query_to_dataframe(patstat, seed_appln_q)
+            _write_tip_seed_dataframe(seed_appln_df, seed_appln_path, "seed_appln_count", result)
+            del seed_appln_df
 
         seed_appln_sq = seed_appln_q.subquery()
         seed_family_q = (
@@ -793,9 +823,13 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult, *, see
             .filter(TLS201.docdb_family_id.isnot(None))
             .distinct()
         )
-        seed_family_df = query_to_dataframe(patstat, seed_family_q)
-        result.metrics["seed_family_count"] = write_dataframe_parquet(seed_family_df, seed_dir / "seed_family_ids.parquet")
-        result.outputs.append(str(seed_dir / "seed_family_ids.parquet"))
+        seed_family_path = seed_paths["seed_family_ids"]
+        if seed_family_path.exists():
+            _register_existing_seed(seed_family_path, "seed_family_count", result)
+        else:
+            seed_family_df = query_to_dataframe(patstat, seed_family_q)
+            _write_tip_seed_dataframe(seed_family_df, seed_family_path, "seed_family_count", result)
+            del seed_family_df
 
         seed_publn_q = (
             db.query(
@@ -815,11 +849,18 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult, *, see
             .filter(TLS211.pat_publn_id.isnot(None))
             .distinct()
         )
-        seed_publn_df = query_to_dataframe(patstat, seed_publn_q)
-        result.metrics["seed_publn_count"] = write_dataframe_parquet(seed_publn_df, seed_dir / "seed_publn_ids.parquet")
-        result.outputs.append(str(seed_dir / "seed_publn_ids.parquet"))
+        seed_publn_path = seed_paths["seed_publn_ids"]
+        if seed_publn_path.exists():
+            _register_existing_seed(seed_publn_path, "seed_publn_count", result)
+        else:
+            seed_publn_df = query_to_dataframe(patstat, seed_publn_q)
+            _write_tip_seed_dataframe(seed_publn_df, seed_publn_path, "seed_publn_count", result)
+            del seed_publn_df
 
-        if TLS207 is not None:
+        seed_person_path = seed_paths["seed_person_ids"]
+        if seed_person_path.exists():
+            _register_existing_seed(seed_person_path, "seed_person_count", result)
+        elif TLS207 is not None:
             seed_person_q = (
                 db.query(TLS207.person_id.label("person_id"))
                 .join(seed_appln_sq, TLS207.appln_id == seed_appln_sq.c.appln_id)
@@ -827,8 +868,10 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult, *, see
                 .distinct()
             )
             seed_person_df = query_to_dataframe(patstat, seed_person_q)
-            result.metrics["seed_person_count"] = write_dataframe_parquet(seed_person_df, seed_dir / "seed_person_ids.parquet")
-            result.outputs.append(str(seed_dir / "seed_person_ids.parquet"))
+            _write_tip_seed_dataframe(seed_person_df, seed_person_path, "seed_person_count", result)
+            del seed_person_df
+        else:
+            result.metrics["seed_person_count"] = 0
 
         seed_ep_appln_q = (
             db.query(TLS201.appln_id.label("appln_id"))
@@ -836,49 +879,61 @@ def _seed_patstat_scope_tip(settings: BuildSettings, result: StageResult, *, see
             .filter(TLS201.appln_auth == "EP")
             .distinct()
         )
-        seed_ep_appln_df = query_to_dataframe(patstat, seed_ep_appln_q)
-        result.metrics["seed_ep_appln_count"] = write_dataframe_parquet(seed_ep_appln_df, seed_dir / "seed_ep_appln_ids.parquet")
-        result.outputs.append(str(seed_dir / "seed_ep_appln_ids.parquet"))
-
-        seed_ep_publn_df = seed_publn_df[seed_publn_df["publn_auth"] == "EP"].copy()
-        if not seed_ep_publn_df.empty:
-            write_dataframe_parquet(seed_ep_publn_df, seed_dir / "seed_ep_publication_numbers.parquet")
-            result.outputs.append(str(seed_dir / "seed_ep_publication_numbers.parquet"))
-            result.metrics["seed_ep_publication_count"] = len(seed_ep_publn_df.index)
+        seed_ep_appln_path = seed_paths["seed_ep_appln_ids"]
+        if seed_ep_appln_path.exists():
+            _register_existing_seed(seed_ep_appln_path, "seed_ep_appln_count", result)
         else:
-            result.metrics["seed_ep_publication_count"] = 0
+            seed_ep_appln_df = query_to_dataframe(patstat, seed_ep_appln_q)
+            _write_tip_seed_dataframe(seed_ep_appln_df, seed_ep_appln_path, "seed_ep_appln_count", result)
+            del seed_ep_appln_df
 
-        seed_us_publn_df = seed_publn_df[seed_publn_df["publn_auth"] == "US"].copy()
-        if not seed_us_publn_df.empty:
-            write_dataframe_parquet(seed_us_publn_df, seed_dir / "seed_us_publication_numbers.parquet")
-            result.outputs.append(str(seed_dir / "seed_us_publication_numbers.parquet"))
-            result.metrics["seed_us_publication_count"] = len(seed_us_publn_df.index)
+        seed_ep_publn_q = seed_publn_q.filter(TLS211.publn_auth == "EP")
+        seed_ep_publn_path = seed_paths["seed_ep_publication_numbers"]
+        if seed_ep_publn_path.exists():
+            _register_existing_seed(seed_ep_publn_path, "seed_ep_publication_count", result)
         else:
-            result.metrics["seed_us_publication_count"] = 0
+            seed_ep_publn_df = query_to_dataframe(patstat, seed_ep_publn_q)
+            _write_tip_seed_dataframe(seed_ep_publn_df, seed_ep_publn_path, "seed_ep_publication_count", result)
+            del seed_ep_publn_df
 
-        field_family_df = (
-            seed_appln_df.merge(query_to_dataframe(patstat, db.query(TLS201.appln_id, TLS201.docdb_family_id)), on="appln_id", how="left")
-            .groupby("wipo_field", dropna=False)["docdb_family_id"]
-            .nunique()
-            .reset_index(name="family_count")
+        seed_us_publn_q = seed_publn_q.filter(TLS211.publn_auth == "US")
+        seed_us_publn_path = seed_paths["seed_us_publication_numbers"]
+        if seed_us_publn_path.exists():
+            _register_existing_seed(seed_us_publn_path, "seed_us_publication_count", result)
+        else:
+            seed_us_publn_df = query_to_dataframe(patstat, seed_us_publn_q)
+            _write_tip_seed_dataframe(seed_us_publn_df, seed_us_publn_path, "seed_us_publication_count", result)
+            del seed_us_publn_df
+
+        field_family_q = (
+            db.query(
+                seed_appln_sq.c.wipo_field.label("wipo_field"),
+                func.count(func.distinct(TLS201.docdb_family_id)).label("family_count"),
+            )
+            .join(seed_appln_sq, TLS201.appln_id == seed_appln_sq.c.appln_id)
+            .filter(TLS201.docdb_family_id.isnot(None))
+            .group_by(seed_appln_sq.c.wipo_field)
         )
-        write_dataframe_parquet(field_family_df, seed_dir / "seed_family_field_counts.parquet")
-        result.outputs.append(str(seed_dir / "seed_family_field_counts.parquet"))
-        result.metrics["seed_field_family_count_rows"] = len(field_family_df.index)
-        for _, row in field_family_df.iterrows():
-            result.metrics[f"seed_family_count__{row['wipo_field']}"] = int(row["family_count"])
+        seed_field_family_path = seed_paths["seed_family_field_counts"]
+        if seed_field_family_path.exists():
+            result.metrics["seed_field_family_count_rows"] = _register_existing_seed(seed_field_family_path, "seed_field_family_count_rows", result)
+        else:
+            field_family_df = query_to_dataframe(patstat, field_family_q)
+            row_count = write_dataframe_parquet(field_family_df, seed_field_family_path)
+            result.outputs.append(str(seed_field_family_path))
+            result.metrics["seed_field_family_count_rows"] = row_count
+            for _, row in field_family_df.iterrows():
+                result.metrics[f"seed_family_count__{row['wipo_field']}"] = int(row["family_count"])
+            del field_family_df
+
+        if seed_field_family_path.exists():
+            field_family_rows = query_to_dataframe(patstat, field_family_q)
+            for _, row in field_family_rows.iterrows():
+                result.metrics[f"seed_family_count__{row['wipo_field']}"] = int(row["family_count"])
+            del field_family_rows
 
         result.inputs.append(f"tip://patstat/{settings.tip_env}")
-        return {
-            "seed_appln_ids": seed_dir / "seed_appln_ids.parquet",
-            "seed_family_ids": seed_dir / "seed_family_ids.parquet",
-            "seed_publn_ids": seed_dir / "seed_publn_ids.parquet",
-            "seed_person_ids": seed_dir / "seed_person_ids.parquet",
-            "seed_ep_appln_ids": seed_dir / "seed_ep_appln_ids.parquet",
-            "seed_us_publication_numbers": seed_dir / "seed_us_publication_numbers.parquet",
-            "seed_ep_publication_numbers": seed_dir / "seed_ep_publication_numbers.parquet",
-            "seed_family_field_counts": seed_dir / "seed_family_field_counts.parquet",
-        }
+        return seed_paths
     finally:
         close_tip_client(patstat)
 

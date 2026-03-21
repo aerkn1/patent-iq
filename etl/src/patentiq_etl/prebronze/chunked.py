@@ -119,7 +119,11 @@ def _get_container_client(settings: BuildSettings):
         )
     from azure.storage.blob import BlobServiceClient
 
-    service = BlobServiceClient.from_connection_string(connection_string)
+    service = BlobServiceClient.from_connection_string(
+        connection_string,
+        connection_timeout=max(1, int(execution.get("upload_connection_timeout_seconds", 60))),
+        read_timeout=max(1, int(execution.get("upload_read_timeout_seconds", 1200))),
+    )
     return service.get_container_client(settings.azure["container"])
 
 
