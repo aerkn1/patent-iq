@@ -12,7 +12,7 @@ from typing import Any
 
 from patentiq_etl.bronze.ingest_uspto_fulltext import extract_publication_numbers, filter_bulk_xml_to_publications
 from patentiq_etl.bronze.source_registry import PATSTAT_TABLES, REGISTER_TABLES
-from patentiq_etl.common.io import append_jsonl, ensure_dir, write_text_json
+from patentiq_etl.common.io import append_jsonl, ensure_dir, parquet_row_count, write_text_json
 from patentiq_etl.common.logging_utils import configure_logger
 from patentiq_etl.common.types import BuildSettings, StageResult, utc_now_iso
 from patentiq_etl.prebronze.extract import _copy_reference_inputs, _seed_patstat_scope_tip
@@ -32,6 +32,31 @@ from patentiq_etl.prebronze.tip_clients import (
 
 
 LOGGER = logging.getLogger(__name__)
+
+ALL_TIP_SEED_KEYS = (
+    "seed_appln_ids",
+    "seed_family_ids",
+    "seed_publn_ids",
+    "seed_person_ids",
+    "seed_ep_appln_ids",
+    "seed_us_publication_numbers",
+    "seed_ep_publication_numbers",
+    "seed_family_field_counts",
+)
+
+CHUNK_MINIMAL_SEED_KEYS = {
+    "seed_appln_ids",
+    "seed_family_ids",
+    "seed_ep_appln_ids",
+    "seed_family_field_counts",
+}
+
+CHUNK_DERIVED_SEED_KEYS = {
+    "seed_publn_ids",
+    "seed_person_ids",
+    "seed_us_publication_numbers",
+    "seed_ep_publication_numbers",
+}
 
 
 PATSTAT_FAMILY_TABLES = {
@@ -89,6 +114,26 @@ def _seed_dir_for_horizon(settings: BuildSettings, horizon_label: str) -> Path:
     if horizon_label == "heritage":
         return settings.repo_root / "etl" / "data" / "raw-bounded-heritage" / "_seeds"
     return settings.bounded_seed_dir
+
+
+def _chunk_seed_sidecar_dir(settings: BuildSettings, horizon_label: str, seed_key: str) -> Path:
+    """Return the per-seed sidecar directory used by chunk-derived seed consolidation."""
+    return _seed_dir_for_horizon(settings, horizon_label) / "_chunk_derived" / seed_key
+
+
+def _quote_duckdb_path(path: Path) -> str:
+    """Return a single-quoted DuckDB-safe filesystem path literal."""
+    return str(path).replace("'", "''")
+
+
+def _copy_duckdb_query_to_parquet(query: str, out_path: Path) -> int:
+    """Materialize one DuckDB query to parquet and return its row count."""
+    import duckdb
+
+    ensure_dir(out_path.parent)
+    con = duckdb.connect()
+    con.execute(f"copy ({query}) to '{_quote_duckdb_path(out_path)}' (format parquet, compression zstd)")
+    return parquet_row_count(out_path)
 
 
 def _successfully_finished(path: Path) -> bool:
@@ -301,6 +346,67 @@ def _upload_paths(
         if emit_event is not None:
             emit_event("blob_upload_finished", chunk_id=chunk_id, blob_name=blob_name, size_bytes=size_bytes)
     return uploaded
+
+
+def _download_blob_to_path(
+    container,
+    blob_name: str,
+    out_path: Path,
+    transfer_options: dict[str, int],
+    *,
+    logger: logging.Logger | None = None,
+    emit_event=None,
+    chunk_id: str | None = None,
+) -> Path:
+    """Download one blob to a local path with retry/backoff support."""
+    ensure_dir(out_path.parent)
+    attempt_count = transfer_options.get("retry_max_attempts", 3)
+    for attempt in range(1, attempt_count + 1):
+        try:
+            blob_client = container.get_blob_client(blob_name)
+            if logger is not None:
+                logger.info("Downloading blob chunk_id=%s blob=%s attempt=%s/%s", chunk_id or "-", blob_name, attempt, attempt_count)
+            if emit_event is not None:
+                emit_event("blob_download_started", chunk_id=chunk_id, blob_name=blob_name, attempt=attempt, max_attempts=attempt_count)
+            downloader = blob_client.download_blob(max_concurrency=transfer_options.get("max_concurrency", 1))
+            with out_path.open("wb") as handle:
+                try:
+                    downloader.readinto(handle)
+                except Exception:
+                    handle.seek(0)
+                    handle.truncate(0)
+                    handle.write(downloader.readall())
+            if emit_event is not None:
+                emit_event("blob_download_finished", chunk_id=chunk_id, blob_name=blob_name, output=str(out_path))
+            return out_path
+        except Exception as exc:
+            retryable = _is_retryable_blob_error(exc)
+            if logger is not None:
+                logger.warning(
+                    "Blob download attempt failed chunk_id=%s blob=%s attempt=%s/%s retryable=%s error=%s",
+                    chunk_id or "-",
+                    blob_name,
+                    attempt,
+                    attempt_count,
+                    retryable,
+                    exc,
+                )
+            if emit_event is not None:
+                emit_event(
+                    "blob_download_attempt_failed",
+                    chunk_id=chunk_id,
+                    blob_name=blob_name,
+                    attempt=attempt,
+                    max_attempts=attempt_count,
+                    retryable=retryable,
+                    error=str(exc),
+                )
+            if out_path.exists():
+                out_path.unlink(missing_ok=True)
+            if attempt >= attempt_count or not retryable:
+                raise
+            sleep(transfer_options.get("retry_backoff_seconds", 5) * attempt)
+    return out_path
 
 
 def _chunk_scope_tip(settings: BuildSettings, field: str, year_start: int, year_end: int) -> dict[str, Any]:
@@ -767,10 +873,15 @@ def _recovery_candidate(
     return bool(uploaded_blobs) or any(marker in warning_text for marker in upload_markers)
 
 
-def _required_seed_paths(settings: BuildSettings, horizon_label: str) -> dict[str, Path]:
+def _required_seed_paths(
+    settings: BuildSettings,
+    horizon_label: str,
+    *,
+    seed_keys: set[str] | None = None,
+) -> dict[str, Path]:
     """Return the expected seed parquet paths for one horizon."""
     seed_dir = _seed_dir_for_horizon(settings, horizon_label)
-    return {
+    seed_paths = {
         "seed_appln_ids": seed_dir / "seed_appln_ids.parquet",
         "seed_family_ids": seed_dir / "seed_family_ids.parquet",
         "seed_publn_ids": seed_dir / "seed_publn_ids.parquet",
@@ -780,6 +891,234 @@ def _required_seed_paths(settings: BuildSettings, horizon_label: str) -> dict[st
         "seed_ep_publication_numbers": seed_dir / "seed_ep_publication_numbers.parquet",
         "seed_family_field_counts": seed_dir / "seed_family_field_counts.parquet",
     }
+    if seed_keys is None:
+        return seed_paths
+    return {key: path for key, path in seed_paths.items() if key in seed_keys}
+
+
+def _global_seed_keys_for_chunk_plan(chunks: list[dict[str, Any]]) -> set[str]:
+    """Return the seed keys that must be materialized before chunk execution starts."""
+    planned_families = {str(chunk["table_family"]) for chunk in chunks}
+    required = set(CHUNK_MINIMAL_SEED_KEYS)
+    if "publications" not in planned_families:
+        required.update({"seed_publn_ids", "seed_us_publication_numbers", "seed_ep_publication_numbers"})
+    if "core" not in planned_families:
+        required.add("seed_person_ids")
+    return required
+
+
+def _chunk_seed_sidecar_queries(chunk_path: Path, family_name: str) -> dict[str, str]:
+    """Return canonical chunk-derived seed queries keyed by target seed name."""
+    quoted_path = _quote_duckdb_path(chunk_path)
+    if family_name == "publications":
+        base_query = (
+            "select distinct "
+            "pat_publn_id, "
+            "appln_id, "
+            "publn_auth, "
+            "publn_nr as publication_number, "
+            "publn_kind as publication_kind, "
+            "publn_date as publication_date, "
+            "coalesce(cast(publn_auth as varchar), '') || "
+            "coalesce(cast(publn_nr as varchar), '') || "
+            "coalesce(cast(publn_kind as varchar), '') as publication_number_full "
+            f"from read_parquet('{quoted_path}') "
+            "where pat_publn_id is not null"
+        )
+        return {
+            "seed_publn_ids": base_query,
+            "seed_ep_publication_numbers": f"{base_query} and publn_auth = 'EP'",
+            "seed_us_publication_numbers": f"{base_query} and publn_auth = 'US'",
+        }
+    if family_name == "core":
+        return {
+            "seed_person_ids": (
+                "select distinct person_id "
+                f"from read_parquet('{quoted_path}') "
+                "where person_id is not null"
+            )
+        }
+    return {}
+
+
+def _family_seed_keys(family_name: str) -> set[str]:
+    """Return the chunk-derived seed keys produced by one chunk family."""
+    if family_name == "publications":
+        return {
+            "seed_publn_ids",
+            "seed_us_publication_numbers",
+            "seed_ep_publication_numbers",
+        }
+    if family_name == "core":
+        return {"seed_person_ids"}
+    return set()
+
+
+def _chunk_seed_sidecars_exist(settings: BuildSettings, horizon_label: str, chunk_id: str, family_name: str) -> bool:
+    """Return whether all expected chunk-derived sidecars already exist for one chunk."""
+    seed_keys = _family_seed_keys(family_name)
+    if not seed_keys:
+        return False
+    return all((_chunk_seed_sidecar_dir(settings, horizon_label, seed_key) / f"{chunk_id}.parquet").exists() for seed_key in seed_keys)
+
+
+def _expected_chunk_source_name(family_name: str) -> str | None:
+    """Return the expected primary parquet file name for one family's seed derivation."""
+    if family_name == "publications":
+        return f"{PATSTAT_TABLES['bronze_patstat_pat_publn'][0]}.parquet"
+    if family_name == "core":
+        return f"{PATSTAT_TABLES['bronze_patstat_pers_appln'][0]}.parquet"
+    return None
+
+
+def _derive_chunk_seed_sidecars_from_outputs(
+    settings: BuildSettings,
+    horizon_label: str,
+    chunk_id: str,
+    family_name: str,
+    local_outputs: list[Path],
+    *,
+    overwrite: bool,
+) -> dict[str, Path]:
+    """Materialize any chunk-derived seed sidecars for one successful chunk."""
+    target_files = {
+        "publications": f"{PATSTAT_TABLES['bronze_patstat_pat_publn'][0]}.parquet",
+        "core": f"{PATSTAT_TABLES['bronze_patstat_pers_appln'][0]}.parquet",
+    }
+    target_name = target_files.get(family_name)
+    if target_name is None:
+        return {}
+    source_path = next((path for path in local_outputs if path.name == target_name and path.exists()), None)
+    if source_path is None:
+        return {}
+
+    created: dict[str, Path] = {}
+    for seed_key, query in _chunk_seed_sidecar_queries(source_path, family_name).items():
+        sidecar_path = _chunk_seed_sidecar_dir(settings, horizon_label, seed_key) / f"{chunk_id}.parquet"
+        if sidecar_path.exists() and not overwrite:
+            created[seed_key] = sidecar_path
+            continue
+        _copy_duckdb_query_to_parquet(query, sidecar_path)
+        created[seed_key] = sidecar_path
+    return created
+
+
+def _bootstrap_chunk_seed_sidecars(
+    settings: BuildSettings,
+    horizon_label: str,
+    *,
+    logger: logging.Logger,
+    emit_event,
+) -> dict[str, Path]:
+    """Backfill missing chunk-derived seed sidecars from successful manifests whose local outputs still exist."""
+    import json
+
+    created: dict[str, Path] = {}
+    for manifest_path in sorted((settings.manifests_dir / "chunks").glob("*.json")):
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if payload.get("status") != "success":
+            continue
+        chunk_id = str(payload.get("chunk_id", ""))
+        family_name = str(payload.get("table_family", ""))
+        if not chunk_id or family_name not in {"publications", "core"}:
+            continue
+        local_outputs = [Path(path) for path in payload.get("local_outputs", [])]
+        sidecars = _derive_chunk_seed_sidecars_from_outputs(
+            settings,
+            horizon_label,
+            chunk_id,
+            family_name,
+            local_outputs,
+            overwrite=False,
+        )
+        if not sidecars:
+            continue
+        logger.info(
+            "Bootstrapped chunk-derived seeds chunk_id=%s family=%s seed_count=%s",
+            chunk_id,
+            family_name,
+            len(sidecars),
+        )
+        emit_event(
+            "chunk_seed_sidecars_bootstrapped",
+            chunk_id=chunk_id,
+            table_family=family_name,
+            seed_keys=sorted(sidecars.keys()),
+        )
+        created.update(sidecars)
+    return created
+
+
+def _consolidate_chunk_derived_seeds(
+    settings: BuildSettings,
+    *,
+    horizon_label: str,
+    canonical_seed_paths: dict[str, Path],
+    required_seed_keys: set[str] | None = None,
+    container,
+    upload_options: dict[str, int],
+    logger: logging.Logger,
+    emit_event,
+) -> dict[str, Path]:
+    """Build canonical derived seed parquet files from chunk sidecars without loading the full universe into pandas."""
+    effective_keys = set(required_seed_keys or CHUNK_DERIVED_SEED_KEYS)
+    derived_seed_paths = {key: canonical_seed_paths[key] for key in effective_keys if key in canonical_seed_paths}
+    existing = {key: path for key, path in derived_seed_paths.items() if path.exists()}
+    if len(existing) == len(derived_seed_paths):
+        emit_event("derived_seeds_reused", horizon_label=horizon_label, seed_dir=str(_seed_dir_for_horizon(settings, horizon_label)))
+        if container is not None:
+            _upload_paths(
+                container,
+                list(existing.values()),
+                _seed_blob_prefix(horizon_label),
+                upload_options,
+                logger=logger,
+                emit_event=emit_event,
+                chunk_id=f"{horizon_label}-derived-seeds",
+            )
+        return derived_seed_paths
+
+    _bootstrap_chunk_seed_sidecars(settings, horizon_label, logger=logger, emit_event=emit_event)
+
+    consolidated: dict[str, Path] = {}
+    for seed_key, out_path in derived_seed_paths.items():
+        if out_path.exists():
+            consolidated[seed_key] = out_path
+            continue
+        sidecar_dir = _chunk_seed_sidecar_dir(settings, horizon_label, seed_key)
+        sidecar_paths = sorted(sidecar_dir.glob("*.parquet"))
+        if not sidecar_paths:
+            raise RuntimeError(
+                f"Chunk-derived seed consolidation could not build `{seed_key}` because no sidecars were available in `{sidecar_dir}`."
+            )
+        quoted_inputs = ", ".join(f"'{_quote_duckdb_path(path)}'" for path in sidecar_paths)
+        _copy_duckdb_query_to_parquet(f"select distinct * from read_parquet([{quoted_inputs}])", out_path)
+        consolidated[seed_key] = out_path
+        logger.info(
+            "Consolidated derived seed seed_key=%s sidecar_count=%s output=%s",
+            seed_key,
+            len(sidecar_paths),
+            out_path,
+        )
+        emit_event(
+            "derived_seed_consolidated",
+            horizon_label=horizon_label,
+            seed_key=seed_key,
+            sidecar_count=len(sidecar_paths),
+            output=str(out_path),
+        )
+
+    if container is not None and consolidated:
+        _upload_paths(
+            container,
+            list(consolidated.values()),
+            _seed_blob_prefix(horizon_label),
+            upload_options,
+            logger=logger,
+            emit_event=emit_event,
+            chunk_id=f"{horizon_label}-derived-seeds",
+        )
+    return derived_seed_paths
 
 
 def _materialize_global_tip_seeds(
@@ -787,13 +1126,14 @@ def _materialize_global_tip_seeds(
     working_settings: BuildSettings,
     *,
     horizon_label: str,
+    required_seed_keys: set[str],
     container,
     upload_options: dict[str, int],
     logger: logging.Logger,
     emit_event,
 ) -> dict[str, Path]:
     """Ensure the global TIP seed parquet set exists for the active horizon and upload it when Blob is enabled."""
-    seed_paths = _required_seed_paths(settings, horizon_label)
+    seed_paths = _required_seed_paths(settings, horizon_label, seed_keys=required_seed_keys)
     existing = {key: path for key, path in seed_paths.items() if path.exists()}
     if len(existing) == len(seed_paths):
         logger.info("Reusing existing global seeds horizon=%s seed_dir=%s", horizon_label, _seed_dir_for_horizon(settings, horizon_label))
@@ -816,8 +1156,18 @@ def _materialize_global_tip_seeds(
         summary="Materialized the global TIP seed parquet set required by chunked pre-Bronze execution.",
     )
     logger.info("Materializing global seeds horizon=%s seed_dir=%s", horizon_label, _seed_dir_for_horizon(settings, horizon_label))
-    emit_event("global_seeds_started", horizon_label=horizon_label, seed_dir=str(_seed_dir_for_horizon(settings, horizon_label)))
-    seeds = _seed_patstat_scope_tip(working_settings, seed_result, seed_dir=_seed_dir_for_horizon(settings, horizon_label))
+    emit_event(
+        "global_seeds_started",
+        horizon_label=horizon_label,
+        seed_dir=str(_seed_dir_for_horizon(settings, horizon_label)),
+        seed_keys=sorted(required_seed_keys),
+    )
+    seeds = _seed_patstat_scope_tip(
+        working_settings,
+        seed_result,
+        seed_dir=_seed_dir_for_horizon(settings, horizon_label),
+        requested_seed_keys=required_seed_keys,
+    )
     if seed_result.status == "failed" or not seeds:
         raise RuntimeError("Global TIP seed materialization failed before chunk execution could start.")
     if container is not None:
@@ -860,6 +1210,7 @@ def _execute_chunk_export(
     uploaded_blobs: list[str] = []
     chunk_metrics: dict[str, Any] = {}
     chunk_warnings: list[str] = []
+    derived_seed_sidecars: list[Path] = []
     status = "success"
     scope = None
     started_at = utc_now_iso()
@@ -940,6 +1291,29 @@ def _execute_chunk_export(
             file_count=len(local_outputs),
             size_bytes=local_output_bytes,
         )
+
+        sidecars = _derive_chunk_seed_sidecars_from_outputs(
+            settings,
+            horizon_label,
+            chunk_id,
+            family,
+            local_outputs,
+            overwrite=True,
+        )
+        if sidecars:
+            derived_seed_sidecars.extend(sidecars.values())
+            chunk_metrics["derived_seed_sidecar_count"] = len(sidecars)
+            logger.info(
+                "Chunk-derived seeds ready chunk_id=%s seed_keys=%s",
+                chunk_id,
+                sorted(sidecars.keys()),
+            )
+            emit_event(
+                "chunk_seed_sidecars_ready",
+                chunk_id=chunk_id,
+                table_family=family,
+                seed_keys=sorted(sidecars.keys()),
+            )
 
         if container is not None and local_outputs and (settings.execution or {}).get("upload_after_chunk", True):
             standard_outputs = [path for path in local_outputs if path.parent.name != "uspto"]
@@ -1029,6 +1403,7 @@ def _execute_chunk_export(
         "status": status,
         "local_outputs": local_outputs,
         "uploaded_blobs": uploaded_blobs,
+        "derived_seed_sidecars": derived_seed_sidecars,
         "metrics": chunk_metrics,
         "warnings": chunk_warnings,
         "started_at": started_at,
@@ -1225,6 +1600,214 @@ def recover_tip_blob_uploads(settings: BuildSettings) -> StageResult:
     return result
 
 
+def backfill_tip_derived_seeds(settings: BuildSettings) -> StageResult:
+    """Rebuild derived seed parquet files from successful chunk outputs available locally or in Blob."""
+    stage_name = "tip-derived-seed-backfill"
+    result = StageResult(
+        stage=stage_name,
+        status="success",
+        summary="Backfilled canonical derived TIP seed parquet files from successful chunk outputs already present locally, already uploaded to Blob, or previously materialized as chunk-derived sidecars.",
+        methods=[
+            "Scanned successful chunk manifests for `core` and `publications` families.",
+            "Reused existing chunk-derived seed sidecars when present, otherwise derived them from local chunk parquet or downloaded Blob chunk parquet.",
+            "Consolidated all reachable chunk-derived sidecars into canonical seed parquet outputs for publication and person seeds.",
+        ],
+        calculations=[
+            "Local successful chunk outputs take precedence over Blob fallback because they avoid redundant transfer and preserve the exact local extraction result.",
+            "Canonical derived seed outputs are rebuilt via DuckDB `select distinct *` across per-chunk sidecars to avoid full-universe pandas materialization on TIP.",
+        ],
+        downstream_impacts=[
+            "This stage repairs mixed historical TIP states where some successful chunks were already cleaned after Blob upload while others remain only locally.",
+            "Rebuilt canonical seed files support later USPTO/local follow-on stages without forcing expensive chunk reruns.",
+        ],
+        doc_refs=[
+            "docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md",
+            "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md",
+        ],
+    )
+    execution = settings.execution or {}
+    stage_logger = configure_logger(stage_name, settings.manifests_dir / "stages" / f"{stage_name}.log")
+    event_log_path = _stage_event_log_path(settings, stage_name)
+    event_log_path.unlink(missing_ok=True)
+    result.artifacts["live_event_log"] = str(event_log_path)
+    event_lock = Lock()
+
+    def emit_event(event_name: str, **payload: Any) -> None:
+        if not execution.get("realtime_chunk_logging", True):
+            return
+        record = {"at": utc_now_iso(), "stage": stage_name, "event": event_name}
+        record.update(payload)
+        with event_lock:
+            append_jsonl(event_log_path, record)
+
+    emit_event("stage_started")
+    transfer_options = _upload_options(settings)
+    result.metrics["seed_backfill_transfer_max_concurrency"] = transfer_options["max_concurrency"]
+    result.metrics["seed_backfill_transfer_max_block_size_mb"] = transfer_options["max_block_size"] // (1024 * 1024)
+    result.metrics["seed_backfill_transfer_max_single_put_size_mb"] = transfer_options["max_single_put_size"] // (1024 * 1024)
+
+    import json
+
+    manifest_paths = sorted((settings.manifests_dir / "chunks").glob("*.json"))
+    result.metrics["seed_backfill_manifest_count"] = len(manifest_paths)
+
+    needs_blob_fallback = False
+    candidates: list[dict[str, Any]] = []
+    for manifest_path in manifest_paths:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if payload.get("status") != "success":
+            continue
+        family_name = str(payload.get("table_family", ""))
+        if family_name not in {"publications", "core"}:
+            continue
+        chunk_id = str(payload.get("chunk_id", ""))
+        if not chunk_id:
+            continue
+        horizon_label = _manifest_horizon_label(payload)
+        local_outputs = [Path(path) for path in payload.get("local_outputs", [])]
+        expected_name = _expected_chunk_source_name(family_name)
+        has_local = expected_name is not None and any(path.exists() and path.name == expected_name for path in local_outputs)
+        if not has_local and payload.get("uploaded_blobs"):
+            needs_blob_fallback = True
+        candidates.append(
+            {
+                "payload": payload,
+                "family_name": family_name,
+                "chunk_id": chunk_id,
+                "horizon_label": horizon_label,
+                "local_outputs": local_outputs,
+            }
+        )
+
+    container = None
+    if needs_blob_fallback:
+        try:
+            container = _get_container_client(settings)
+        except Exception as exc:
+            result.status = "failed"
+            result.warnings.append(str(exc))
+            stage_logger.warning("Derived seed backfill could not access Blob fallback: %s", exc)
+            emit_event("blob_container_unavailable", error=str(exc))
+            emit_event("stage_finished", status=result.status)
+            return result
+        emit_event("blob_container_ready", container=str(settings.azure["container"]))
+
+    local_source_count = 0
+    blob_source_count = 0
+    existing_sidecar_chunk_count = 0
+    missing_source_count = 0
+    staged_download_count = 0
+    sidecar_write_count = 0
+    affected_horizons: set[str] = set()
+    required_seed_keys_by_horizon: dict[str, set[str]] = {}
+    download_root = settings.repo_root / "etl" / "data" / "temp" / "seed-backfill"
+    shutil.rmtree(download_root, ignore_errors=True)
+
+    for item in candidates:
+        payload = item["payload"]
+        family_name = item["family_name"]
+        chunk_id = item["chunk_id"]
+        horizon_label = item["horizon_label"]
+        local_outputs = item["local_outputs"]
+        affected_horizons.add(horizon_label)
+        required_seed_keys_by_horizon.setdefault(horizon_label, set()).update(_family_seed_keys(family_name))
+
+        if _chunk_seed_sidecars_exist(settings, horizon_label, chunk_id, family_name):
+            existing_sidecar_chunk_count += 1
+            emit_event("chunk_seed_sidecars_reused", chunk_id=chunk_id, table_family=family_name)
+            continue
+
+        expected_name = _expected_chunk_source_name(family_name)
+        source_path = next((path for path in local_outputs if path.exists() and path.name == expected_name), None)
+        cleanup_download = False
+        source_mode = None
+        if source_path is not None:
+            local_source_count += 1
+            source_mode = "local"
+        else:
+            uploaded_blobs = list(payload.get("uploaded_blobs", []) or [])
+            target_blob = next((blob for blob in uploaded_blobs if Path(blob).name == expected_name), None)
+            if target_blob and container is not None:
+                download_path = download_root / horizon_label / chunk_id / expected_name
+                source_path = _download_blob_to_path(
+                    container,
+                    target_blob,
+                    download_path,
+                    transfer_options,
+                    logger=stage_logger,
+                    emit_event=emit_event,
+                    chunk_id=chunk_id,
+                )
+                cleanup_download = True
+                blob_source_count += 1
+                staged_download_count += 1
+                source_mode = "blob"
+
+        if source_path is None:
+            missing_source_count += 1
+            result.warnings.append(
+                f"Could not backfill derived seeds for `{chunk_id}` because neither local outputs nor an uploaded blob source were available."
+            )
+            emit_event("chunk_seed_backfill_missing_source", chunk_id=chunk_id, table_family=family_name)
+            continue
+
+        sidecars = _derive_chunk_seed_sidecars_from_outputs(
+            settings,
+            horizon_label,
+            chunk_id,
+            family_name,
+            [source_path],
+            overwrite=True,
+        )
+        sidecar_write_count += len(sidecars)
+        result.outputs.extend(str(path) for path in sidecars.values())
+        emit_event(
+            "chunk_seed_backfilled",
+            chunk_id=chunk_id,
+            table_family=family_name,
+            source_mode=source_mode,
+            seed_keys=sorted(sidecars.keys()),
+        )
+        if cleanup_download and source_path.exists():
+            source_path.unlink(missing_ok=True)
+
+    consolidated_seed_count = 0
+    for horizon_label in sorted(affected_horizons or {"main"}):
+        canonical_seed_paths = _required_seed_paths(settings, horizon_label)
+        derived_seed_paths = _consolidate_chunk_derived_seeds(
+            settings,
+            horizon_label=horizon_label,
+            canonical_seed_paths=canonical_seed_paths,
+            required_seed_keys=required_seed_keys_by_horizon.get(horizon_label, set()),
+            container=container,
+            upload_options=transfer_options,
+            logger=stage_logger,
+            emit_event=emit_event,
+        )
+        consolidated_seed_count += len(derived_seed_paths)
+        result.outputs.extend(str(path) for path in derived_seed_paths.values())
+
+    shutil.rmtree(download_root, ignore_errors=True)
+    result.metrics["seed_backfill_candidate_chunk_count"] = len(candidates)
+    result.metrics["seed_backfill_local_source_chunk_count"] = local_source_count
+    result.metrics["seed_backfill_blob_source_chunk_count"] = blob_source_count
+    result.metrics["seed_backfill_existing_sidecar_chunk_count"] = existing_sidecar_chunk_count
+    result.metrics["seed_backfill_missing_source_chunk_count"] = missing_source_count
+    result.metrics["seed_backfill_downloaded_blob_count"] = staged_download_count
+    result.metrics["seed_backfill_sidecar_file_count"] = sidecar_write_count
+    result.metrics["seed_backfill_consolidated_seed_file_count"] = consolidated_seed_count
+    if missing_source_count:
+        result.status = "failed"
+    emit_event(
+        "stage_finished",
+        status=result.status,
+        candidate_chunk_count=len(candidates),
+        missing_source_chunk_count=missing_source_count,
+        consolidated_seed_file_count=consolidated_seed_count,
+    )
+    return result
+
+
 def _run_tip_chunked_export(settings: BuildSettings, *, horizon_label: str) -> StageResult:
     """Execute one named TIP chunked pre-Bronze export flow and optionally upload each chunk to Blob."""
     if horizon_label == "heritage":
@@ -1320,6 +1903,7 @@ def _run_tip_chunked_export(settings: BuildSettings, *, horizon_label: str) -> S
         family_limits=family_limits,
         upload_options=upload_options,
     )
+    required_global_seed_keys = _global_seed_keys_for_chunk_plan(chunks)
     container = None
     try:
         container = _get_container_client(settings)
@@ -1338,13 +1922,14 @@ def _run_tip_chunked_export(settings: BuildSettings, *, horizon_label: str) -> S
         settings,
         working_settings,
         horizon_label=horizon_label,
+        required_seed_keys=required_global_seed_keys,
         container=container,
         upload_options=upload_options,
         logger=stage_logger,
         emit_event=emit_event,
     )
     result.outputs.extend(str(path) for path in seed_paths.values())
-    result.metrics["global_seed_file_count"] = len(seed_paths)
+    result.metrics["global_seed_initial_file_count"] = len(seed_paths)
     result.metrics["global_seed_dir"] = str(_seed_dir_for_horizon(settings, horizon_label))
 
     # Seed refs once if available.
@@ -1463,6 +2048,31 @@ def _run_tip_chunked_export(settings: BuildSettings, *, horizon_label: str) -> S
                     duration_seconds=payload["duration_seconds"],
                 )
                 result.outputs.append(str(manifest_path))
+                result.outputs.extend(str(path) for path in payload.get("derived_seed_sidecars", []))
+
+    canonical_seed_paths = _required_seed_paths(settings, horizon_label)
+    required_derived_seed_keys = CHUNK_DERIVED_SEED_KEYS.intersection(set(ALL_TIP_SEED_KEYS).difference(required_global_seed_keys))
+    try:
+        derived_seed_paths = _consolidate_chunk_derived_seeds(
+            settings,
+            horizon_label=horizon_label,
+            canonical_seed_paths=canonical_seed_paths,
+            required_seed_keys=required_derived_seed_keys,
+            container=container,
+            upload_options=upload_options,
+            logger=stage_logger,
+            emit_event=emit_event,
+        )
+    except Exception as exc:
+        result.status = "failed"
+        result.warnings.append(str(exc))
+        derived_seed_paths = {}
+        stage_logger.exception("Derived seed consolidation failed stage=%s", stage_name)
+        emit_event("derived_seed_consolidation_failed", horizon_label=horizon_label, error=str(exc))
+    else:
+        result.outputs.extend(str(path) for path in derived_seed_paths.values())
+    result.metrics["global_seed_file_count"] = len(canonical_seed_paths)
+    result.metrics["global_seed_derived_file_count"] = len(derived_seed_paths)
 
     result.metrics["chunk_total_count"] = total_chunks
     result.metrics["chunk_skipped_count"] = skipped_chunks

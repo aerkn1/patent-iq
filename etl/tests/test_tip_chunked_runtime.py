@@ -7,9 +7,17 @@ import json
 import sys
 import time
 
-from patentiq_etl.common.io import ensure_dir, write_pylist_parquet
+from patentiq_etl.bronze.source_registry import PATSTAT_TABLES
+from patentiq_etl.common.io import ensure_dir, parquet_row_count, write_pylist_parquet
 from patentiq_etl.common.types import BuildSettings
-from patentiq_etl.prebronze.chunked import _citation_npl_column, _get_container_client, _upload_paths, recover_tip_blob_uploads, run_tip_chunked_export
+from patentiq_etl.prebronze.chunked import (
+    _citation_npl_column,
+    _get_container_client,
+    _upload_paths,
+    backfill_tip_derived_seeds,
+    recover_tip_blob_uploads,
+    run_tip_chunked_export,
+)
 from patentiq_etl.prebronze.extract import _citation_npl_column_from_parquet
 
 
@@ -76,6 +84,8 @@ def _settings(tmp_path: Path) -> BuildSettings:
 
 def test_chunked_runtime_respects_parallel_limits_and_emits_live_events(tmp_path: Path, monkeypatch) -> None:
     settings = _settings(tmp_path)
+    settings.execution["table_families"] = ["core", "publications"]
+    settings.execution["max_workers"] = {"core": 1, "publications": 1}
     active_total = 0
     max_active_total = 0
     family_active = Counter()
@@ -106,15 +116,42 @@ def test_chunked_runtime_respects_parallel_limits_and_emits_live_events(tmp_path
             family_max[family_name] = max(family_max[family_name], family_active[family_name])
         try:
             time.sleep(0.05)
-            out_path = ensure_dir(out_dir) / f"{family_name}.parquet"
-            out_path.write_text(family_name, encoding="utf-8")
+            if family_name == "core":
+                out_path = ensure_dir(out_dir) / f"{PATSTAT_TABLES['bronze_patstat_pers_appln'][0]}.parquet"
+                write_pylist_parquet([{"appln_id": 10, "person_id": 99}], out_path)
+            elif family_name == "publications":
+                out_path = ensure_dir(out_dir) / f"{PATSTAT_TABLES['bronze_patstat_pat_publn'][0]}.parquet"
+                write_pylist_parquet(
+                    [
+                        {
+                            "pat_publn_id": 1,
+                            "appln_id": 10,
+                            "publn_auth": "EP",
+                            "publn_nr": "123",
+                            "publn_kind": "A1",
+                            "publn_date": "2024-01-01",
+                        },
+                        {
+                            "pat_publn_id": 2,
+                            "appln_id": 11,
+                            "publn_auth": "US",
+                            "publn_nr": "456",
+                            "publn_kind": "B1",
+                            "publn_date": "2024-01-02",
+                        },
+                    ],
+                    out_path,
+                )
+            else:
+                out_path = ensure_dir(out_dir) / f"{family_name}.parquet"
+                write_pylist_parquet([{"family_name": family_name}], out_path)
             return [out_path]
         finally:
             with lock:
                 active_total -= 1
                 family_active[family_name] -= 1
 
-    def fake_seed(settings, result, *, seed_dir=None):
+    def fake_seed(settings, result, *, seed_dir=None, requested_seed_keys=None):
         actual_seed_dir = ensure_dir(seed_dir or settings.bounded_seed_dir)
         outputs = {
             "seed_appln_ids": actual_seed_dir / "seed_appln_ids.parquet",
@@ -126,10 +163,13 @@ def test_chunked_runtime_respects_parallel_limits_and_emits_live_events(tmp_path
             "seed_ep_publication_numbers": actual_seed_dir / "seed_ep_publication_numbers.parquet",
             "seed_family_field_counts": actual_seed_dir / "seed_family_field_counts.parquet",
         }
-        for path in outputs.values():
+        requested = set(requested_seed_keys or outputs.keys())
+        for key, path in outputs.items():
+            if key not in requested:
+                continue
             path.write_text("seed", encoding="utf-8")
             result.outputs.append(str(path))
-        return outputs
+        return {key: path for key, path in outputs.items() if key in requested}
 
     monkeypatch.setattr("patentiq_etl.prebronze.chunked._chunk_scope_tip", fake_scope)
     monkeypatch.setattr("patentiq_etl.prebronze.chunked._extract_patstat_family", fake_extract)
@@ -139,10 +179,15 @@ def test_chunked_runtime_respects_parallel_limits_and_emits_live_events(tmp_path
 
     assert result.status == "success"
     assert result.metrics["chunk_scheduler_parallel_limit"] == 2
+    assert result.metrics["global_seed_initial_file_count"] == 4
     assert result.metrics["global_seed_file_count"] == 8
     assert max_active_total <= 2
     assert family_max["core"] <= 1
-    assert family_max["citations"] <= 1
+    assert family_max["publications"] <= 1
+    assert (settings.bounded_seed_dir / "seed_publn_ids.parquet").exists()
+    assert (settings.bounded_seed_dir / "seed_person_ids.parquet").exists()
+    assert (settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet").exists()
+    assert (settings.bounded_seed_dir / "seed_us_publication_numbers.parquet").exists()
 
     event_log_path = Path(result.artifacts["live_event_log"])
     assert event_log_path.exists()
@@ -150,6 +195,7 @@ def test_chunked_runtime_respects_parallel_limits_and_emits_live_events(tmp_path
     assert any('"event": "chunk_submitted"' in line for line in events)
     assert any('"event": "chunk_finished"' in line for line in events)
     assert any('"event": "global_seeds_finished"' in line for line in events)
+    assert any('"event": "derived_seed_consolidated"' in line for line in events)
 
 
 def test_chunked_runtime_reuses_existing_seeds_and_skips_successful_chunks(tmp_path: Path, monkeypatch) -> None:
@@ -481,3 +527,133 @@ def test_recover_tip_blob_uploads_restores_failed_upload_timeout_chunk(tmp_path:
         )
     ]
     assert not output_path.exists()
+
+
+def test_backfill_tip_derived_seeds_rebuilds_canonical_seeds_from_local_success_chunks(tmp_path: Path) -> None:
+    settings = _settings(tmp_path)
+    settings.execution["table_families"] = ["core", "publications"]
+
+    publications_chunk_id = "computer-technology__2018_2020__publications"
+    publications_dir = settings.repo_root / "etl" / "data" / "temp" / "chunks" / publications_chunk_id / "patstat"
+    publications_path = ensure_dir(publications_dir) / f"{PATSTAT_TABLES['bronze_patstat_pat_publn'][0]}.parquet"
+    write_pylist_parquet(
+        [
+            {"pat_publn_id": 1, "appln_id": 10, "publn_auth": "EP", "publn_nr": "123", "publn_kind": "A1", "publn_date": "2024-01-01"},
+            {"pat_publn_id": 2, "appln_id": 11, "publn_auth": "US", "publn_nr": "456", "publn_kind": "B1", "publn_date": "2024-01-02"},
+        ],
+        publications_path,
+    )
+    publications_manifest = ensure_dir(settings.manifests_dir / "chunks") / f"{publications_chunk_id}.json"
+    publications_manifest.write_text(
+        json.dumps(
+            {
+                "chunk_id": publications_chunk_id,
+                "field": "Computer technology",
+                "year_start": 2018,
+                "year_end": 2020,
+                "table_family": "publications",
+                "status": "success",
+                "local_outputs": [str(publications_path)],
+                "uploaded_blobs": [],
+                "metrics": {},
+                "warnings": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    core_chunk_id = "computer-technology__2018_2020__core"
+    core_dir = settings.repo_root / "etl" / "data" / "temp" / "chunks" / core_chunk_id / "patstat"
+    core_path = ensure_dir(core_dir) / f"{PATSTAT_TABLES['bronze_patstat_pers_appln'][0]}.parquet"
+    write_pylist_parquet(
+        [{"appln_id": 10, "person_id": 9001}, {"appln_id": 10, "person_id": 9002}],
+        core_path,
+    )
+    core_manifest = ensure_dir(settings.manifests_dir / "chunks") / f"{core_chunk_id}.json"
+    core_manifest.write_text(
+        json.dumps(
+            {
+                "chunk_id": core_chunk_id,
+                "field": "Computer technology",
+                "year_start": 2018,
+                "year_end": 2020,
+                "table_family": "core",
+                "status": "success",
+                "local_outputs": [str(core_path)],
+                "uploaded_blobs": [],
+                "metrics": {},
+                "warnings": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = backfill_tip_derived_seeds(settings).finish()
+
+    assert result.status == "success"
+    assert result.metrics["seed_backfill_local_source_chunk_count"] == 2
+    assert parquet_row_count(settings.bounded_seed_dir / "seed_publn_ids.parquet") == 2
+    assert parquet_row_count(settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet") == 1
+    assert parquet_row_count(settings.bounded_seed_dir / "seed_us_publication_numbers.parquet") == 1
+    assert parquet_row_count(settings.bounded_seed_dir / "seed_person_ids.parquet") == 2
+
+
+def test_backfill_tip_derived_seeds_falls_back_to_blob_for_cleaned_success_chunks(tmp_path: Path, monkeypatch) -> None:
+    settings = _settings(tmp_path)
+    settings.execution["blob_intermediate_enabled"] = True
+    settings.azure["connection_string_env"] = "AZURE_STORAGE_CONNECTION_STRING"
+    publications_chunk_id = "telecommunications__2018_2020__publications"
+    missing_local_path = settings.repo_root / "etl" / "data" / "temp" / "chunks" / publications_chunk_id / "patstat" / f"{PATSTAT_TABLES['bronze_patstat_pat_publn'][0]}.parquet"
+    blob_name = "raw-bounded/patstat/field=telecommunications/year=2018-2020/family=publications/tls211_pat_publn.parquet"
+    manifest_path = ensure_dir(settings.manifests_dir / "chunks") / f"{publications_chunk_id}.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "chunk_id": publications_chunk_id,
+                "field": "Telecommunications",
+                "year_start": 2018,
+                "year_end": 2020,
+                "table_family": "publications",
+                "status": "success",
+                "local_outputs": [str(missing_local_path)],
+                "uploaded_blobs": [blob_name],
+                "metrics": {},
+                "warnings": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    payload_path = tmp_path / "blob-publications.parquet"
+    write_pylist_parquet(
+        [{"pat_publn_id": 55, "appln_id": 77, "publn_auth": "EP", "publn_nr": "999", "publn_kind": "A1", "publn_date": "2024-01-03"}],
+        payload_path,
+    )
+
+    class FakeDownloader:
+        def readinto(self, handle) -> int:
+            data = payload_path.read_bytes()
+            handle.write(data)
+            return len(data)
+
+    class FakeBlobClient:
+        def download_blob(self, **kwargs):
+            return FakeDownloader()
+
+    class FakeContainer:
+        def get_blob_client(self, requested_blob_name: str, **kwargs):
+            assert requested_blob_name == blob_name
+            return FakeBlobClient()
+
+    monkeypatch.setattr("patentiq_etl.prebronze.chunked._get_container_client", lambda settings: FakeContainer())
+    monkeypatch.setattr(
+        "patentiq_etl.prebronze.chunked._upload_paths",
+        lambda container, files, blob_prefix, upload_options, **kwargs: [f"{blob_prefix}/{path.name}" for path in files],
+    )
+
+    result = backfill_tip_derived_seeds(settings).finish()
+
+    assert result.status == "success"
+    assert result.metrics["seed_backfill_blob_source_chunk_count"] == 1
+    assert parquet_row_count(settings.bounded_seed_dir / "seed_publn_ids.parquet") == 1
+    assert parquet_row_count(settings.bounded_seed_dir / "seed_ep_publication_numbers.parquet") == 1

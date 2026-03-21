@@ -3,7 +3,12 @@ from __future__ import annotations
 from dataclasses import replace
 
 from patentiq_etl.common.types import BuildSettings, StageResult
-from patentiq_etl.prebronze.chunked import recover_tip_blob_uploads, run_tip_chunked_export, run_tip_heritage_chunked_export
+from patentiq_etl.prebronze.chunked import (
+    backfill_tip_derived_seeds,
+    recover_tip_blob_uploads,
+    run_tip_chunked_export,
+    run_tip_heritage_chunked_export,
+)
 from patentiq_etl.prebronze.extract import extract_bounded_raw
 from patentiq_etl.prebronze.plan import plan_tip_chunked_export, plan_tip_heritage_chunked_export
 from patentiq_etl.prebronze.uspto_odp import extract_uspto_odp_to_bronze
@@ -44,6 +49,11 @@ def run_tip_heritage_chunk_plan(settings: BuildSettings) -> list[StageResult]:
 def run_tip_blob_recovery(settings: BuildSettings) -> list[StageResult]:
     """Recover Blob uploads for successful chunk manifests with preserved local outputs."""
     return [recover_tip_blob_uploads(settings)]
+
+
+def run_tip_derived_seed_backfill(settings: BuildSettings) -> list[StageResult]:
+    """Backfill canonical derived seed files from successful local or Blob-backed chunk outputs."""
+    return [backfill_tip_derived_seeds(settings)]
 
 
 def run_prebronze_uspto_odp(settings: BuildSettings) -> list[StageResult]:
