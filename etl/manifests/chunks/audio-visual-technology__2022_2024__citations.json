@@ -18,10 +18,15 @@
     "publn_count": 718882,
     "us_publication_count": 101992
   },
+  "recovered_at": "2026-03-23T18:08:55+00:00",
   "started_at": "2026-03-18T07:32:28+00:00",
   "status": "success",
   "table_family": "citations",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=audio-visual-technology/year=2022-2024/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2022-2024/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2022-2024/family=citations/tls214_npl_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2024,
   "year_start": 2022

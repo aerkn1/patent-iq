@@ -19,13 +19,13 @@ sources:
 
 execution:
   tip_chunked_export_enabled: true
-  heritage_backfill_enabled: false
+  heritage_backfill_enabled: true
   blob_intermediate_enabled: true
   upload_after_chunk: true
   cleanup_after_upload: true
-  tip_max_parallel_chunks: 1
-  heritage_max_parallel_chunks: 1
-  upload_max_concurrency: 1
+  tip_max_parallel_chunks: 2
+  heritage_max_parallel_chunks: 3
+  upload_max_concurrency: 2
   upload_max_block_size_mb: 4
   upload_max_single_put_size_mb: 8
   upload_connection_timeout_seconds: 60
@@ -43,7 +43,7 @@ execution:
     - "publications"
     - "legal"
     - "register"
-    - "epab"
+    #- "epab"
     - "citations"
   heritage_table_families:
     - "core"

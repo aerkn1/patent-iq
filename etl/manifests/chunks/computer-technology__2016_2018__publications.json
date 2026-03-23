@@ -16,10 +16,13 @@
     "publn_count": 1619803,
     "us_publication_count": 461416
   },
+  "recovered_at": "2026-03-23T18:10:38+00:00",
   "started_at": "2026-03-18T09:03:15+00:00",
   "status": "success",
   "table_family": "publications",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=computer-technology/year=2016-2018/family=publications/tls211_pat_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2018,
   "year_start": 2016

@@ -1,0 +1,30 @@
+{
+  "chunk_id": "electrical-machinery-apparatus-energy__2013_2014__publications",
+  "duration_seconds": 116.492,
+  "field": "Electrical machinery, apparatus, energy",
+  "finished_at": "2026-03-21T23:04:44+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/electrical-machinery-apparatus-energy__2013_2014__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 624836,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 28772,
+    "ep_publication_count": 60829,
+    "family_count": 469014,
+    "local_output_bytes": 16925974,
+    "local_output_file_count": 1,
+    "publn_count": 883502,
+    "us_publication_count": 130607
+  },
+  "recovered_at": "2026-03-23T18:14:14+00:00",
+  "started_at": "2026-03-21T23:02:47+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=electrical-machinery-apparatus-energy/year=2013-2014/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2014,
+  "year_start": 2013
+}

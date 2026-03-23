@@ -1,0 +1,31 @@
+{
+  "chunk_id": "control__2009_2010__legal",
+  "duration_seconds": 115.815,
+  "field": "Control",
+  "finished_at": "2026-03-21T20:12:40+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2009_2010__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2009_2010__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 114936,
+    "ep_appln_count": 6704,
+    "ep_publication_count": 12878,
+    "family_count": 93182,
+    "local_output_bytes": 14672374,
+    "local_output_file_count": 2,
+    "publn_count": 169372,
+    "us_publication_count": 37799
+  },
+  "recovered_at": "2026-03-23T18:12:00+00:00",
+  "started_at": "2026-03-21T20:10:44+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=control/year=2009-2010/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=control/year=2009-2010/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2010,
+  "year_start": 2009
+}

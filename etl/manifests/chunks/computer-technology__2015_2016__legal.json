@@ -17,10 +17,14 @@
     "publn_count": 930462,
     "us_publication_count": 291982
   },
+  "recovered_at": "2026-03-23T18:10:23+00:00",
   "started_at": "2026-03-19T18:39:33+00:00",
   "status": "success",
   "table_family": "legal",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=computer-technology/year=2015-2016/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=computer-technology/year=2015-2016/family=legal/tls803_legal_event_code.parquet"
+  ],
   "warnings": [],
   "year_end": 2016,
   "year_start": 2015

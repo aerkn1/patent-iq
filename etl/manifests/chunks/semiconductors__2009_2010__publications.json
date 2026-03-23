@@ -1,28 +1,30 @@
 {
   "chunk_id": "semiconductors__2009_2010__publications",
-  "duration_seconds": 234.225,
+  "duration_seconds": 60.845,
   "field": "Semiconductors",
-  "finished_at": "2026-03-20T08:09:39+00:00",
+  "finished_at": "2026-03-21T15:42:51+00:00",
   "local_outputs": [
     "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2009_2010__publications/patstat/tls211_pat_publn.parquet"
   ],
   "metrics": {
     "appln_count": 231240,
+    "derived_seed_sidecar_count": 3,
     "ep_appln_count": 10929,
     "ep_publication_count": 21492,
     "family_count": 145824,
-    "local_output_bytes": 6742360,
+    "local_output_bytes": 6734965,
     "local_output_file_count": 1,
     "publn_count": 365274,
     "us_publication_count": 79432
   },
-  "started_at": "2026-03-20T08:05:44+00:00",
-  "status": "failed",
+  "recovered_at": "2026-03-23T18:17:05+00:00",
+  "started_at": "2026-03-21T15:41:50+00:00",
+  "status": "success",
   "table_family": "publications",
-  "uploaded_blobs": [],
-  "warnings": [
-    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=semiconductors/year=2009-2010/family=publications/tls211_pat_publn.parquet"
   ],
+  "warnings": [],
   "year_end": 2010,
   "year_start": 2009
 }

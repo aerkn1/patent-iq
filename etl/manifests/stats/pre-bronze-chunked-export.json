@@ -1,0 +1,125 @@
+{
+  "downstream_impacts": [
+    "Successful chunk manifests allow resumable pre-Bronze extraction across constrained TIP sessions.",
+    "Chunk-local Blob prefixes become the authoritative bounded raw intermediate store for later non-TIP Bronze/Silver/Gold consolidation."
+  ],
+  "finished_at": "2026-03-23T18:23:48+00:00",
+  "metrics": {
+    "chunk_degraded_count": 0,
+    "chunk_failed_count": 0,
+    "chunk_scheduler_parallel_limit": 2,
+    "chunk_skipped_count": 500,
+    "chunk_total_count": 500,
+    "chunk_upload_max_block_size_mb": 4,
+    "chunk_upload_max_concurrency": 2,
+    "chunk_upload_max_single_put_size_mb": 8,
+    "chunk_uploaded_file_count": 0,
+    "global_seed_derived_file_count": 4,
+    "global_seed_dir": "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds",
+    "global_seed_file_count": 8,
+    "global_seed_initial_file_count": 4,
+    "refs_uploaded_blob_count": 0
+  },
+  "output_profiles": [
+    {
+      "entry_count": 658,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks",
+      "type": "directory"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/tip_chunk_plan.json",
+      "sha256": "f611786ff85e9d721be1f4d1104fc805f2236c3cd5c28e33f3021072c357acdd",
+      "size_bytes": 276746,
+      "type": "file"
+    },
+    {
+      "column_count": 2,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_appln_ids.parquet",
+      "row_count": 33503622,
+      "sha256": "ff1783fd7eb4ca9c68a8ea429168c799056db00dc392b7f30cd0813327487aa6",
+      "size_bytes": 143741755,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_family_ids.parquet",
+      "row_count": 19572046,
+      "sha256": "3aee6087a7291ffd65c493fc41ba641b9c8fca22bdfbf61964ce4ed34c5b6be5",
+      "size_bytes": 79985266,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_ep_appln_ids.parquet",
+      "row_count": 1138404,
+      "sha256": "cb30a5dd52b3e606c9bd11931556d130251572496c22b4dcd9034651d3e9c623",
+      "size_bytes": 5043017,
+      "type": "file"
+    },
+    {
+      "column_count": 2,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_family_field_counts.parquet",
+      "row_count": 10,
+      "sha256": "4ea5b454c14f25be254901e1ab222c9771921ea04923b12cda637f85b3ba241d",
+      "size_bytes": 2063,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_publn_ids.parquet",
+      "row_count": 20980892,
+      "sha256": "f875be99dc4975964a83bc316ee27fa4f7b409e321a306a7b7a255cf5363696b",
+      "size_bytes": 438313551,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_person_ids.parquet",
+      "row_count": 13344423,
+      "sha256": "21db4d05041dd872d33381180525560af8565239257da88db3b781e048433e45",
+      "size_bytes": 53661053,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_us_publication_numbers.parquet",
+      "row_count": 2891447,
+      "sha256": "9f36c69f78c2c4f6a9db2d03ed886b3560dbeeeab7e2926b90944eb89fa6f346",
+      "size_bytes": 55763945,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_ep_publication_numbers.parquet",
+      "row_count": 1058949,
+      "sha256": "bdd6c2798e5496ad732900e466510816798a74f6e5e32b4b18c0b80c5b33a729",
+      "size_bytes": 19172757,
+      "type": "file"
+    }
+  ],
+  "stage": "pre-bronze-chunked-export",
+  "started_at": "2026-03-23T18:23:19+00:00",
+  "status": "success",
+  "summary": "Executed chunked TIP pre-Bronze extraction with Blob-first chunk manifests and local cleanup support.",
+  "warnings": [
+    "Skipped `bronze_ref_techn_field_ipc` because no source file was found.",
+    "Skipped `bronze_ext_cpc_coverage` because no source file was found.",
+    "Skipped `bronze_ext_cpc_ipc_weights` because no source file was found.",
+    "Skipped `bronze_ext_iso_country_map` because no source file was found.",
+    "Skipped `bronze_ext_world_bank_gdp_ppp` because no source file was found.",
+    "Skipped `bronze_ext_us_chamber_ip_index` because no source file was found.",
+    "Skipped `bronze_ext_up_member_states` because no source file was found.",
+    "Skipped `bronze_ext_kind_code_normalization_seed` because no source file was found.",
+    "Skipped `bronze_ext_oecd_indicator_seed` because no source file was found."
+  ]
+}

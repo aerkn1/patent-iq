@@ -28,10 +28,25 @@
     "publn_count": 373873,
     "us_publication_count": 84054
   },
+  "recovered_at": "2026-03-23T18:12:50+00:00",
   "started_at": "2026-03-19T14:27:18+00:00",
   "status": "success",
   "table_family": "register",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg101_appln.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg107_parties.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg111_licensee.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg125_appeal.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg130_opponent.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg201_proc_step.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg202_proc_step_text.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg203_proc_step_date.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg301_event_data.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg402_event_text.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg701_appln.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg731_event_data.parquet",
+    "raw-bounded/register/field=digital-communication/year=2009-2010/family=register/reg742_event_text.parquet"
+  ],
   "warnings": [],
   "year_end": 2010,
   "year_start": 2009

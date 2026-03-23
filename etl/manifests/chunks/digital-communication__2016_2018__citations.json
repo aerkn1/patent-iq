@@ -18,10 +18,15 @@
     "publn_count": 991071,
     "us_publication_count": 287430
   },
+  "recovered_at": "2026-03-23T18:13:08+00:00",
   "started_at": "2026-03-18T07:59:22+00:00",
   "status": "success",
   "table_family": "citations",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=digital-communication/year=2016-2018/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=digital-communication/year=2016-2018/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=digital-communication/year=2016-2018/family=citations/tls214_npl_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2018,
   "year_start": 2016

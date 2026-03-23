@@ -1,8 +1,8 @@
 {
   "chunk_id": "semiconductors__2021_2022__core",
-  "duration_seconds": 438.081,
+  "duration_seconds": 327.882,
   "field": "Semiconductors",
-  "finished_at": "2026-03-20T09:49:28+00:00",
+  "finished_at": "2026-03-21T16:41:31+00:00",
   "local_outputs": [
     "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2021_2022__core/patstat/tls201_appln.parquet",
     "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2021_2022__core/patstat/tls202_appln_title.parquet",
@@ -17,21 +17,32 @@
   ],
   "metrics": {
     "appln_count": 316985,
+    "derived_seed_sidecar_count": 1,
     "ep_appln_count": 11558,
     "ep_publication_count": 18336,
     "family_count": 206557,
-    "local_output_bytes": 165273808,
+    "local_output_bytes": 163816068,
     "local_output_file_count": 10,
     "publn_count": 429693,
     "us_publication_count": 101901
   },
-  "started_at": "2026-03-20T09:42:10+00:00",
-  "status": "failed",
+  "recovered_at": "2026-03-23T18:17:26+00:00",
+  "started_at": "2026-03-21T16:36:03+00:00",
+  "status": "success",
   "table_family": "core",
-  "uploaded_blobs": [],
-  "warnings": [
-    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=core/tls201_appln.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=core/tls202_appln_title.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=core/tls203_appln_abstr.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=core/tls204_appln_prior.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=core/tls206_person.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=core/tls207_pers_appln.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=core/tls209_appln_ipc.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=core/tls216_appln_contn.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=core/tls224_appln_cpc.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=core/tls230_appln_techn_field.parquet"
   ],
+  "warnings": [],
   "year_end": 2022,
   "year_start": 2021
 }

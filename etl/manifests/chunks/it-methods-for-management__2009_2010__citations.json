@@ -18,10 +18,15 @@
     "publn_count": 97475,
     "us_publication_count": 30229
   },
+  "recovered_at": "2026-03-23T18:15:32+00:00",
   "started_at": "2026-03-19T21:16:06+00:00",
   "status": "success",
   "table_family": "citations",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=it-methods-for-management/year=2009-2010/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=it-methods-for-management/year=2009-2010/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=it-methods-for-management/year=2009-2010/family=citations/tls214_npl_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2010,
   "year_start": 2009

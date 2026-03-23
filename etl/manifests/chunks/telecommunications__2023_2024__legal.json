@@ -17,10 +17,14 @@
     "publn_count": 184771,
     "us_publication_count": 29233
   },
+  "recovered_at": "2026-03-23T18:18:14+00:00",
   "started_at": "2026-03-19T14:03:12+00:00",
   "status": "success",
   "table_family": "legal",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=telecommunications/year=2023-2024/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=telecommunications/year=2023-2024/family=legal/tls803_legal_event_code.parquet"
+  ],
   "warnings": [],
   "year_end": 2024,
   "year_start": 2023

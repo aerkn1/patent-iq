@@ -1,8 +1,8 @@
 {
   "chunk_id": "measurement__2009_2010__core",
-  "duration_seconds": 380.679,
+  "duration_seconds": 283.469,
   "field": "Measurement",
-  "finished_at": "2026-03-20T10:32:25+00:00",
+  "finished_at": "2026-03-21T17:06:10+00:00",
   "local_outputs": [
     "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2009_2010__core/patstat/tls201_appln.parquet",
     "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2009_2010__core/patstat/tls202_appln_title.parquet",
@@ -17,21 +17,32 @@
   ],
   "metrics": {
     "appln_count": 267658,
+    "derived_seed_sidecar_count": 1,
     "ep_appln_count": 17366,
     "ep_publication_count": 34462,
     "family_count": 199016,
-    "local_output_bytes": 153017351,
+    "local_output_bytes": 153112580,
     "local_output_file_count": 10,
     "publn_count": 405989,
     "us_publication_count": 75170
   },
-  "started_at": "2026-03-20T10:26:04+00:00",
-  "status": "failed",
+  "recovered_at": "2026-03-23T18:15:47+00:00",
+  "started_at": "2026-03-21T17:01:26+00:00",
+  "status": "success",
   "table_family": "core",
-  "uploaded_blobs": [],
-  "warnings": [
-    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=core/tls201_appln.parquet",
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=core/tls202_appln_title.parquet",
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=core/tls203_appln_abstr.parquet",
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=core/tls204_appln_prior.parquet",
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=core/tls206_person.parquet",
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=core/tls207_pers_appln.parquet",
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=core/tls209_appln_ipc.parquet",
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=core/tls216_appln_contn.parquet",
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=core/tls224_appln_cpc.parquet",
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=core/tls230_appln_techn_field.parquet"
   ],
+  "warnings": [],
   "year_end": 2010,
   "year_start": 2009
 }

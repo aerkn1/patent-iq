@@ -18,10 +18,15 @@
     "publn_count": 520036,
     "us_publication_count": 114767
   },
+  "recovered_at": "2026-03-23T18:18:07+00:00",
   "started_at": "2026-03-18T07:44:45+00:00",
   "status": "success",
   "table_family": "citations",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=telecommunications/year=2019-2021/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=telecommunications/year=2019-2021/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=telecommunications/year=2019-2021/family=citations/tls214_npl_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2021,
   "year_start": 2019

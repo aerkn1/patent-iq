@@ -1,0 +1,34 @@
+{
+  "downstream_impacts": [
+    "This plan drives Blob-first pre-Bronze extraction instead of monolithic local bounded-raw materialization inside TIP.",
+    "Chunk manifests enable resume, retry, and local cleanup after verified upload."
+  ],
+  "finished_at": "2026-03-23T18:32:45+00:00",
+  "metrics": {
+    "chunk_plan_field_count": 10,
+    "chunk_plan_max_worker_sum": 3,
+    "chunk_plan_table_family_count": 3,
+    "chunk_plan_total_chunk_count": 180,
+    "chunk_plan_year_bucket_count": 6
+  },
+  "output_profiles": [
+    {
+      "entry_count": 659,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks",
+      "type": "directory"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/tip_heritage_chunk_plan.json",
+      "sha256": "c8b996f8704040d4db68ce747231323a53a84acf380b9d498f23a8e84b6b96e3",
+      "size_bytes": 104595,
+      "type": "file"
+    }
+  ],
+  "stage": "tip-heritage-chunk-plan",
+  "started_at": "2026-03-23T18:32:45+00:00",
+  "status": "success",
+  "summary": "Generated the TIP heritage-backfill chunk plan for older mega-cluster family and citation support.",
+  "warnings": []
+}

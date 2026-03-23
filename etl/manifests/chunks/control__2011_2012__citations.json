@@ -1,0 +1,33 @@
+{
+  "chunk_id": "control__2011_2012__citations",
+  "duration_seconds": 91.387,
+  "field": "Control",
+  "finished_at": "2026-03-21T20:23:42+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2011_2012__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2011_2012__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2011_2012__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 144798,
+    "ep_appln_count": 7465,
+    "ep_publication_count": 15045,
+    "family_count": 118445,
+    "local_output_bytes": 5257535,
+    "local_output_file_count": 3,
+    "publn_count": 208631,
+    "us_publication_count": 42741
+  },
+  "recovered_at": "2026-03-23T18:12:01+00:00",
+  "started_at": "2026-03-21T20:22:10+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=control/year=2011-2012/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=control/year=2011-2012/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=control/year=2011-2012/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2012,
+  "year_start": 2011
+}

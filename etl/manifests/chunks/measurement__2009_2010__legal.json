@@ -1,8 +1,8 @@
 {
   "chunk_id": "measurement__2009_2010__legal",
-  "duration_seconds": 424.327,
+  "duration_seconds": 277.776,
   "field": "Measurement",
-  "finished_at": "2026-03-20T10:43:17+00:00",
+  "finished_at": "2026-03-21T17:12:05+00:00",
   "local_outputs": [
     "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2009_2010__legal/patstat/tls231_inpadoc_legal_event.parquet",
     "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2009_2010__legal/patstat/tls803_legal_event_code.parquet"
@@ -12,18 +12,20 @@
     "ep_appln_count": 17366,
     "ep_publication_count": 34462,
     "family_count": 199016,
-    "local_output_bytes": 38058277,
+    "local_output_bytes": 37945343,
     "local_output_file_count": 2,
     "publn_count": 405989,
     "us_publication_count": 75170
   },
-  "started_at": "2026-03-20T10:36:12+00:00",
-  "status": "failed",
+  "recovered_at": "2026-03-23T18:15:47+00:00",
+  "started_at": "2026-03-21T17:07:27+00:00",
+  "status": "success",
   "table_family": "legal",
-  "uploaded_blobs": [],
-  "warnings": [
-    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=measurement/year=2009-2010/family=legal/tls803_legal_event_code.parquet"
   ],
+  "warnings": [],
   "year_end": 2010,
   "year_start": 2009
 }

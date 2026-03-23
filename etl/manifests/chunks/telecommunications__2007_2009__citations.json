@@ -18,10 +18,15 @@
     "publn_count": 478443,
     "us_publication_count": 123123
   },
+  "recovered_at": "2026-03-23T18:17:35+00:00",
   "started_at": "2026-03-18T07:35:03+00:00",
   "status": "success",
   "table_family": "citations",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=telecommunications/year=2007-2009/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=telecommunications/year=2007-2009/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=telecommunications/year=2007-2009/family=citations/tls214_npl_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2009,
   "year_start": 2007

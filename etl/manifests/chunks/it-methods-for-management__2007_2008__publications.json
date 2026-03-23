@@ -16,10 +16,13 @@
     "publn_count": 96512,
     "us_publication_count": 30960
   },
+  "recovered_at": "2026-03-23T18:15:31+00:00",
   "started_at": "2026-03-19T21:09:19+00:00",
   "status": "success",
   "table_family": "publications",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=it-methods-for-management/year=2007-2008/family=publications/tls211_pat_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2008,
   "year_start": 2007

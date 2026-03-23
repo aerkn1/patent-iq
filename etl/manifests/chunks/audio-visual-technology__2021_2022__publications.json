@@ -16,10 +16,13 @@
     "publn_count": 633803,
     "us_publication_count": 99499
   },
+  "recovered_at": "2026-03-23T18:08:55+00:00",
   "started_at": "2026-03-19T12:13:07+00:00",
   "status": "success",
   "table_family": "publications",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=audio-visual-technology/year=2021-2022/family=publications/tls211_pat_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2022,
   "year_start": 2021

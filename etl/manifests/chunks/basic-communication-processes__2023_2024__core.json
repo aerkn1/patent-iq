@@ -25,10 +25,22 @@
     "publn_count": 57814,
     "us_publication_count": 12295
   },
+  "recovered_at": "2026-03-23T18:09:15+00:00",
   "started_at": "2026-03-19T17:10:12+00:00",
   "status": "success",
   "table_family": "core",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=basic-communication-processes/year=2023-2024/family=core/tls201_appln.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2023-2024/family=core/tls202_appln_title.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2023-2024/family=core/tls203_appln_abstr.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2023-2024/family=core/tls204_appln_prior.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2023-2024/family=core/tls206_person.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2023-2024/family=core/tls207_pers_appln.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2023-2024/family=core/tls209_appln_ipc.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2023-2024/family=core/tls216_appln_contn.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2023-2024/family=core/tls224_appln_cpc.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2023-2024/family=core/tls230_appln_techn_field.parquet"
+  ],
   "warnings": [],
   "year_end": 2024,
   "year_start": 2023

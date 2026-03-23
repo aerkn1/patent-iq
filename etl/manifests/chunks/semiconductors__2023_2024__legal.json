@@ -1,8 +1,8 @@
 {
   "chunk_id": "semiconductors__2023_2024__legal",
-  "duration_seconds": 261.114,
+  "duration_seconds": 98.641,
   "field": "Semiconductors",
-  "finished_at": "2026-03-20T10:09:34+00:00",
+  "finished_at": "2026-03-21T16:52:05+00:00",
   "local_outputs": [
     "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__legal/patstat/tls231_inpadoc_legal_event.parquet",
     "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__legal/patstat/tls803_legal_event_code.parquet"
@@ -12,18 +12,20 @@
     "ep_appln_count": 5758,
     "ep_publication_count": 6748,
     "family_count": 193097,
-    "local_output_bytes": 9334310,
+    "local_output_bytes": 9390706,
     "local_output_file_count": 2,
     "publn_count": 298980,
     "us_publication_count": 60098
   },
-  "started_at": "2026-03-20T10:05:13+00:00",
-  "status": "failed",
+  "recovered_at": "2026-03-23T18:17:29+00:00",
+  "started_at": "2026-03-21T16:50:27+00:00",
+  "status": "success",
   "table_family": "legal",
-  "uploaded_blobs": [],
-  "warnings": [
-    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=legal/tls803_legal_event_code.parquet"
   ],
+  "warnings": [],
   "year_end": 2024,
   "year_start": 2023
 }

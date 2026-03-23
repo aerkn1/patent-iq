@@ -1,0 +1,30 @@
+{
+  "chunk_id": "control__2023_2024__publications",
+  "duration_seconds": 56.804,
+  "field": "Control",
+  "finished_at": "2026-03-21T21:40:49+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2023_2024__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 260429,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 5412,
+    "ep_publication_count": 6161,
+    "family_count": 242026,
+    "local_output_bytes": 6129528,
+    "local_output_file_count": 1,
+    "publn_count": 296812,
+    "us_publication_count": 28701
+  },
+  "recovered_at": "2026-03-23T18:12:42+00:00",
+  "started_at": "2026-03-21T21:39:52+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=control/year=2023-2024/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}

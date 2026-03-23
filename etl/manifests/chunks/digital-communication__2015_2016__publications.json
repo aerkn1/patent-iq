@@ -16,10 +16,13 @@
     "publn_count": 607358,
     "us_publication_count": 190593
   },
+  "recovered_at": "2026-03-23T18:13:07+00:00",
   "started_at": "2026-03-19T15:08:06+00:00",
   "status": "success",
   "table_family": "publications",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=digital-communication/year=2015-2016/family=publications/tls211_pat_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2016,
   "year_start": 2015

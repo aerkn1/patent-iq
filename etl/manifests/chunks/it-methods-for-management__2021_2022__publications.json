@@ -1,28 +1,30 @@
 {
   "chunk_id": "it-methods-for-management__2021_2022__publications",
-  "duration_seconds": 238.586,
+  "duration_seconds": 99.218,
   "field": "IT methods for management",
-  "finished_at": "2026-03-20T07:09:33+00:00",
+  "finished_at": "2026-03-21T15:11:24+00:00",
   "local_outputs": [
     "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2021_2022__publications/patstat/tls211_pat_publn.parquet"
   ],
   "metrics": {
     "appln_count": 291914,
+    "derived_seed_sidecar_count": 3,
     "ep_appln_count": 7316,
     "ep_publication_count": 11325,
     "family_count": 257094,
-    "local_output_bytes": 7840550,
+    "local_output_bytes": 7839896,
     "local_output_file_count": 1,
     "publn_count": 384864,
     "us_publication_count": 53904
   },
-  "started_at": "2026-03-20T07:05:34+00:00",
-  "status": "failed",
+  "recovered_at": "2026-03-23T18:15:34+00:00",
+  "started_at": "2026-03-21T15:09:45+00:00",
+  "status": "success",
   "table_family": "publications",
-  "uploaded_blobs": [],
-  "warnings": [
-    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=it-methods-for-management/year=2021-2022/family=publications/tls211_pat_publn.parquet"
   ],
+  "warnings": [],
   "year_end": 2022,
   "year_start": 2021
 }

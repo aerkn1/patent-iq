@@ -1,0 +1,31 @@
+{
+  "chunk_id": "measurement__2021_2022__legal",
+  "duration_seconds": 379.761,
+  "field": "Measurement",
+  "finished_at": "2026-03-21T19:23:17+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2021_2022__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2021_2022__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 933998,
+    "ep_appln_count": 26727,
+    "ep_publication_count": 43190,
+    "family_count": 831639,
+    "local_output_bytes": 41816937,
+    "local_output_file_count": 2,
+    "publn_count": 1160891,
+    "us_publication_count": 94251
+  },
+  "recovered_at": "2026-03-23T18:16:45+00:00",
+  "started_at": "2026-03-21T19:16:57+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=measurement/year=2021-2022/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=measurement/year=2021-2022/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2022,
+  "year_start": 2021
+}

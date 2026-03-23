@@ -1,8 +1,8 @@
 {
   "chunk_id": "audio-visual-technology__2015_2016__epab",
-  "duration_seconds": 9696.127,
+  "duration_seconds": 6008.44,
   "field": "Audio-visual technology",
-  "finished_at": "2026-03-20T11:01:49+00:00",
+  "finished_at": "2026-03-22T00:17:50+00:00",
   "local_outputs": [
     "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2015_2016__epab/epab/epab_publication.parquet",
     "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2015_2016__epab/epab/epab_application.parquet",
@@ -22,18 +22,30 @@
     "ep_appln_count": 14103,
     "ep_publication_count": 29201,
     "family_count": 230115,
-    "local_output_bytes": 56530586,
+    "local_output_bytes": 56562064,
     "local_output_file_count": 12,
     "publn_count": 463984,
     "us_publication_count": 117290
   },
-  "started_at": "2026-03-20T08:20:13+00:00",
-  "status": "failed",
+  "recovered_at": "2026-03-23T18:08:26+00:00",
+  "started_at": "2026-03-21T22:37:41+00:00",
+  "status": "success",
   "table_family": "epab",
-  "uploaded_blobs": [],
-  "warnings": [
-    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_application.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_claims.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_pct.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_designated_states.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_priority_links.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_parent_links.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_divisional_links.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_applicants.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_inventors.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_representative.parquet"
   ],
+  "warnings": [],
   "year_end": 2016,
   "year_start": 2015
 }

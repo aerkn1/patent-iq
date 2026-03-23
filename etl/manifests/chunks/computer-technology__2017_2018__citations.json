@@ -18,10 +18,15 @@
     "publn_count": 1134044,
     "us_publication_count": 313694
   },
+  "recovered_at": "2026-03-23T18:10:39+00:00",
   "started_at": "2026-03-19T19:17:38+00:00",
   "status": "success",
   "table_family": "citations",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=computer-technology/year=2017-2018/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=computer-technology/year=2017-2018/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=computer-technology/year=2017-2018/family=citations/tls214_npl_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2018,
   "year_start": 2017

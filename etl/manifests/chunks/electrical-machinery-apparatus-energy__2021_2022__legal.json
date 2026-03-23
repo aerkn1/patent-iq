@@ -1,0 +1,31 @@
+{
+  "chunk_id": "electrical-machinery-apparatus-energy__2021_2022__legal",
+  "duration_seconds": 443.449,
+  "field": "Electrical machinery, apparatus, energy",
+  "finished_at": "2026-03-22T01:21:02+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/electrical-machinery-apparatus-energy__2021_2022__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/electrical-machinery-apparatus-energy__2021_2022__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 1119930,
+    "ep_appln_count": 37863,
+    "ep_publication_count": 61244,
+    "family_count": 943682,
+    "local_output_bytes": 51331684,
+    "local_output_file_count": 2,
+    "publn_count": 1348795,
+    "us_publication_count": 120370
+  },
+  "recovered_at": "2026-03-23T18:15:14+00:00",
+  "started_at": "2026-03-22T01:13:38+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=electrical-machinery-apparatus-energy/year=2021-2022/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=electrical-machinery-apparatus-energy/year=2021-2022/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2022,
+  "year_start": 2021
+}

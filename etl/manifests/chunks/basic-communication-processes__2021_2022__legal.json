@@ -17,10 +17,14 @@
     "publn_count": 79644,
     "us_publication_count": 23800
   },
+  "recovered_at": "2026-03-23T18:09:13+00:00",
   "started_at": "2026-03-19T17:08:23+00:00",
   "status": "success",
   "table_family": "legal",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=basic-communication-processes/year=2021-2022/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2021-2022/family=legal/tls803_legal_event_code.parquet"
+  ],
   "warnings": [],
   "year_end": 2022,
   "year_start": 2021

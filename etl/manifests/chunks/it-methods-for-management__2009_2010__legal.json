@@ -17,10 +17,14 @@
     "publn_count": 97475,
     "us_publication_count": 30229
   },
+  "recovered_at": "2026-03-23T18:15:33+00:00",
   "started_at": "2026-03-19T21:14:28+00:00",
   "status": "success",
   "table_family": "legal",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=it-methods-for-management/year=2009-2010/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=it-methods-for-management/year=2009-2010/family=legal/tls803_legal_event_code.parquet"
+  ],
   "warnings": [],
   "year_end": 2010,
   "year_start": 2009

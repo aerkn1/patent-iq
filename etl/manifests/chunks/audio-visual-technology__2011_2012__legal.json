@@ -17,10 +17,14 @@
     "publn_count": 422073,
     "us_publication_count": 105260
   },
+  "recovered_at": "2026-03-23T18:08:09+00:00",
   "started_at": "2026-03-19T11:01:20+00:00",
   "status": "success",
   "table_family": "legal",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=audio-visual-technology/year=2011-2012/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2011-2012/family=legal/tls803_legal_event_code.parquet"
+  ],
   "warnings": [],
   "year_end": 2012,
   "year_start": 2011

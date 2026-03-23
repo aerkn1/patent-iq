@@ -1247,3 +1247,732 @@
 - `chunk_plan_max_worker_sum`: `8`
 
 >>>>>>> Stashed changes
+## tip-blob-recovery | failed
+
+- Summary: Recovered Blob uploads for TIP chunk manifests whose local outputs remained on disk after missing or failed Blob offload.
+- Started: 2026-03-21T10:35:55+00:00
+- Finished: 2026-03-21T10:35:55+00:00
+
+
+
+### Artifacts
+
+- `live_event_log`: `/home/jovyan/patent-iq/etl/manifests/stages/tip-blob-recovery.events.jsonl`
+- `stats_snapshot`: `/home/jovyan/patent-iq/etl/manifests/stats/tip-blob-recovery.json`
+
+### Methods
+
+1. Scanned chunk manifests for successful or upload-failed chunks with missing or incomplete Blob upload metadata.
+2. Uploaded any still-present local outputs to the deterministic chunk Blob prefixes.
+3. Updated manifests with recovered uploaded_blobs entries, restored upload-failed chunks to success when appropriate, and cleaned local temp directories when configured.
+
+### Calculations
+
+1. Recovery eligibility requires still-present local outputs plus either a successful manifest with incomplete uploaded_blobs or a failed manifest whose warnings indicate Blob/upload timeout behavior.
+2. Recovered Blob prefixes reuse the same deterministic field/year/table-family layout as the normal chunk executor.
+
+### Downstream Impacts
+
+1. This stage repairs interrupted or misconfigured Blob offload without rerunning expensive TIP extraction work.
+2. Recovered chunk manifests become consistent with later non-TIP consolidation expectations.
+
+### Governing Docs
+
+1. docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. Azure blob intermediate upload is enabled but environment variable `AZURE_STORAGE_CONNECTION_STRING` is not set.
+
+### Metrics
+
+- `recovery_upload_max_concurrency`: `2`
+- `recovery_upload_max_block_size_mb`: `4`
+- `recovery_upload_max_single_put_size_mb`: `8`
+
+## tip-blob-recovery | failed
+
+- Summary: Recovered Blob uploads for TIP chunk manifests whose local outputs remained on disk after missing or failed Blob offload.
+- Started: 2026-03-23T18:07:11+00:00
+- Finished: 2026-03-23T18:07:11+00:00
+
+
+
+### Artifacts
+
+- `live_event_log`: `/home/jovyan/patent-iq/etl/manifests/stages/tip-blob-recovery.events.jsonl`
+- `stats_snapshot`: `/home/jovyan/patent-iq/etl/manifests/stats/tip-blob-recovery.json`
+
+### Methods
+
+1. Scanned chunk manifests for successful or upload-failed chunks with missing or incomplete Blob upload metadata.
+2. Uploaded any still-present local outputs to the deterministic chunk Blob prefixes.
+3. Updated manifests with recovered uploaded_blobs entries, restored upload-failed chunks to success when appropriate, and cleaned local temp directories when configured.
+
+### Calculations
+
+1. Recovery eligibility requires still-present local outputs plus either a successful manifest with incomplete uploaded_blobs or a failed manifest whose warnings indicate Blob/upload timeout behavior.
+2. Recovered Blob prefixes reuse the same deterministic field/year/table-family layout as the normal chunk executor.
+
+### Downstream Impacts
+
+1. This stage repairs interrupted or misconfigured Blob offload without rerunning expensive TIP extraction work.
+2. Recovered chunk manifests become consistent with later non-TIP consolidation expectations.
+
+### Governing Docs
+
+1. docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. No module named 'azure'
+
+### Metrics
+
+- `recovery_upload_max_concurrency`: `2`
+- `recovery_upload_max_block_size_mb`: `4`
+- `recovery_upload_max_single_put_size_mb`: `8`
+
+## tip-blob-recovery | success
+
+- Summary: Recovered Blob uploads for TIP chunk manifests whose local outputs remained on disk after missing or failed Blob offload.
+- Started: 2026-03-23T18:07:45+00:00
+- Finished: 2026-03-23T18:18:15+00:00
+
+
+### Outputs
+
+1. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2007_2008__core.json
+2. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2007_2008__epab.json
+3. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2007_2008__legal.json
+4. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2007_2008__publications.json
+5. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2007_2008__register.json
+6. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2007_2009__citations.json
+7. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2009_2010__citations.json
+8. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2009_2010__core.json
+9. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2009_2010__epab.json
+10. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2009_2010__legal.json
+11. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2009_2010__publications.json
+12. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2009_2010__register.json
+13. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2010_2012__citations.json
+14. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2011_2012__citations.json
+15. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2011_2012__core.json
+16. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2011_2012__epab.json
+17. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2011_2012__legal.json
+18. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2011_2012__publications.json
+19. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2011_2012__register.json
+20. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2013_2014__citations.json
+21. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2013_2014__core.json
+22. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2013_2014__epab.json
+23. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2013_2014__legal.json
+24. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2013_2014__publications.json
+25. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2013_2014__register.json
+26. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2013_2015__citations.json
+27. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2015_2016__citations.json
+28. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2015_2016__core.json
+29. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2015_2016__epab.json
+30. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2015_2016__legal.json
+31. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2015_2016__publications.json
+32. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2015_2016__register.json
+33. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2016_2018__citations.json
+34. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2017_2018__citations.json
+35. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2017_2018__core.json
+36. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2017_2018__epab.json
+37. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2017_2018__legal.json
+38. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2017_2018__publications.json
+39. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2017_2018__register.json
+40. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2019_2020__citations.json
+41. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2019_2020__core.json
+42. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2019_2020__epab.json
+43. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2019_2020__legal.json
+44. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2019_2020__publications.json
+45. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2019_2020__register.json
+46. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2019_2021__citations.json
+47. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2021_2022__citations.json
+48. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2021_2022__core.json
+49. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2021_2022__epab.json
+50. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2021_2022__legal.json
+51. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2021_2022__publications.json
+52. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2021_2022__register.json
+53. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2022_2024__citations.json
+54. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2023_2024__citations.json
+55. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2023_2024__core.json
+56. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2023_2024__epab.json
+57. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2023_2024__legal.json
+58. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2023_2024__publications.json
+59. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2023_2024__register.json
+60. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2025_2026__citations.json
+61. /home/jovyan/patent-iq/etl/manifests/chunks/audio-visual-technology__2025_2026__epab.json
+62. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2007_2008__citations.json
+63. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2007_2008__core.json
+64. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2007_2008__legal.json
+65. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2007_2008__publications.json
+66. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2007_2008__register.json
+67. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2007_2009__citations.json
+68. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2009_2010__citations.json
+69. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2009_2010__core.json
+70. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2009_2010__legal.json
+71. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2009_2010__publications.json
+72. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2009_2010__register.json
+73. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2010_2012__citations.json
+74. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2011_2012__citations.json
+75. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2011_2012__core.json
+76. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2011_2012__legal.json
+77. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2011_2012__publications.json
+78. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2011_2012__register.json
+79. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2013_2014__citations.json
+80. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2013_2014__core.json
+81. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2013_2014__legal.json
+82. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2013_2014__publications.json
+83. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2013_2014__register.json
+84. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2013_2015__citations.json
+85. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2015_2016__citations.json
+86. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2015_2016__core.json
+87. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2015_2016__legal.json
+88. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2015_2016__publications.json
+89. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2015_2016__register.json
+90. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2016_2018__citations.json
+91. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2017_2018__citations.json
+92. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2017_2018__core.json
+93. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2017_2018__legal.json
+94. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2017_2018__publications.json
+95. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2017_2018__register.json
+96. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2019_2020__citations.json
+97. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2019_2020__core.json
+98. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2019_2020__legal.json
+99. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2019_2020__publications.json
+100. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2019_2020__register.json
+101. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2019_2021__citations.json
+102. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2021_2022__citations.json
+103. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2021_2022__core.json
+104. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2021_2022__legal.json
+105. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2021_2022__publications.json
+106. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2021_2022__register.json
+107. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2022_2024__citations.json
+108. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2023_2024__citations.json
+109. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2023_2024__core.json
+110. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2023_2024__legal.json
+111. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2023_2024__publications.json
+112. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2023_2024__register.json
+113. /home/jovyan/patent-iq/etl/manifests/chunks/basic-communication-processes__2025_2026__citations.json
+114. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2007_2008__citations.json
+115. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2007_2008__core.json
+116. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2007_2008__legal.json
+117. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2007_2008__publications.json
+118. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2007_2008__register.json
+119. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2007_2009__citations.json
+120. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2009_2010__citations.json
+121. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2009_2010__core.json
+122. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2009_2010__legal.json
+123. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2009_2010__publications.json
+124. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2009_2010__register.json
+125. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2010_2012__citations.json
+126. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2011_2012__citations.json
+127. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2011_2012__core.json
+128. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2011_2012__legal.json
+129. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2011_2012__publications.json
+130. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2011_2012__register.json
+131. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2013_2014__citations.json
+132. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2013_2014__core.json
+133. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2013_2014__legal.json
+134. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2013_2014__publications.json
+135. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2013_2014__register.json
+136. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2013_2015__citations.json
+137. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2013_2015__legal.json
+138. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2013_2015__register.json
+139. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2015_2016__citations.json
+140. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2015_2016__core.json
+141. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2015_2016__legal.json
+142. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2015_2016__publications.json
+143. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2015_2016__register.json
+144. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2016_2018__core.json
+145. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2016_2018__publications.json
+146. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2017_2018__citations.json
+147. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2017_2018__core.json
+148. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2017_2018__legal.json
+149. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2017_2018__publications.json
+150. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2017_2018__register.json
+151. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2019_2020__citations.json
+152. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2019_2020__core.json
+153. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2019_2020__legal.json
+154. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2019_2020__publications.json
+155. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2019_2020__register.json
+156. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2021_2022__citations.json
+157. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2021_2022__core.json
+158. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2021_2022__legal.json
+159. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2021_2022__publications.json
+160. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2021_2022__register.json
+161. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2023_2024__citations.json
+162. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2023_2024__core.json
+163. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2023_2024__legal.json
+164. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2023_2024__publications.json
+165. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2023_2024__register.json
+166. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2025_2026__citations.json
+167. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2025_2026__core.json
+168. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2025_2026__legal.json
+169. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2025_2026__publications.json
+170. /home/jovyan/patent-iq/etl/manifests/chunks/computer-technology__2025_2026__register.json
+171. /home/jovyan/patent-iq/etl/manifests/chunks/control__2007_2008__citations.json
+172. /home/jovyan/patent-iq/etl/manifests/chunks/control__2007_2008__core.json
+173. /home/jovyan/patent-iq/etl/manifests/chunks/control__2007_2008__legal.json
+174. /home/jovyan/patent-iq/etl/manifests/chunks/control__2007_2008__publications.json
+175. /home/jovyan/patent-iq/etl/manifests/chunks/control__2007_2008__register.json
+176. /home/jovyan/patent-iq/etl/manifests/chunks/control__2009_2010__citations.json
+177. /home/jovyan/patent-iq/etl/manifests/chunks/control__2009_2010__core.json
+178. /home/jovyan/patent-iq/etl/manifests/chunks/control__2009_2010__legal.json
+179. /home/jovyan/patent-iq/etl/manifests/chunks/control__2009_2010__publications.json
+180. /home/jovyan/patent-iq/etl/manifests/chunks/control__2009_2010__register.json
+181. /home/jovyan/patent-iq/etl/manifests/chunks/control__2011_2012__citations.json
+182. /home/jovyan/patent-iq/etl/manifests/chunks/control__2011_2012__core.json
+183. /home/jovyan/patent-iq/etl/manifests/chunks/control__2011_2012__legal.json
+184. /home/jovyan/patent-iq/etl/manifests/chunks/control__2011_2012__publications.json
+185. /home/jovyan/patent-iq/etl/manifests/chunks/control__2011_2012__register.json
+186. /home/jovyan/patent-iq/etl/manifests/chunks/control__2013_2014__citations.json
+187. /home/jovyan/patent-iq/etl/manifests/chunks/control__2013_2014__core.json
+188. /home/jovyan/patent-iq/etl/manifests/chunks/control__2013_2014__legal.json
+189. /home/jovyan/patent-iq/etl/manifests/chunks/control__2013_2014__publications.json
+190. /home/jovyan/patent-iq/etl/manifests/chunks/control__2013_2014__register.json
+191. /home/jovyan/patent-iq/etl/manifests/chunks/control__2015_2016__citations.json
+192. /home/jovyan/patent-iq/etl/manifests/chunks/control__2015_2016__core.json
+193. /home/jovyan/patent-iq/etl/manifests/chunks/control__2015_2016__legal.json
+194. /home/jovyan/patent-iq/etl/manifests/chunks/control__2015_2016__publications.json
+195. /home/jovyan/patent-iq/etl/manifests/chunks/control__2015_2016__register.json
+196. /home/jovyan/patent-iq/etl/manifests/chunks/control__2017_2018__citations.json
+197. /home/jovyan/patent-iq/etl/manifests/chunks/control__2017_2018__core.json
+198. /home/jovyan/patent-iq/etl/manifests/chunks/control__2017_2018__legal.json
+199. /home/jovyan/patent-iq/etl/manifests/chunks/control__2017_2018__publications.json
+200. /home/jovyan/patent-iq/etl/manifests/chunks/control__2017_2018__register.json
+201. /home/jovyan/patent-iq/etl/manifests/chunks/control__2019_2020__citations.json
+202. /home/jovyan/patent-iq/etl/manifests/chunks/control__2019_2020__core.json
+203. /home/jovyan/patent-iq/etl/manifests/chunks/control__2019_2020__legal.json
+204. /home/jovyan/patent-iq/etl/manifests/chunks/control__2019_2020__publications.json
+205. /home/jovyan/patent-iq/etl/manifests/chunks/control__2019_2020__register.json
+206. /home/jovyan/patent-iq/etl/manifests/chunks/control__2021_2022__citations.json
+207. /home/jovyan/patent-iq/etl/manifests/chunks/control__2021_2022__core.json
+208. /home/jovyan/patent-iq/etl/manifests/chunks/control__2021_2022__legal.json
+209. /home/jovyan/patent-iq/etl/manifests/chunks/control__2021_2022__publications.json
+210. /home/jovyan/patent-iq/etl/manifests/chunks/control__2021_2022__register.json
+211. /home/jovyan/patent-iq/etl/manifests/chunks/control__2023_2024__citations.json
+212. /home/jovyan/patent-iq/etl/manifests/chunks/control__2023_2024__core.json
+213. /home/jovyan/patent-iq/etl/manifests/chunks/control__2023_2024__legal.json
+214. /home/jovyan/patent-iq/etl/manifests/chunks/control__2023_2024__publications.json
+215. /home/jovyan/patent-iq/etl/manifests/chunks/control__2023_2024__register.json
+216. /home/jovyan/patent-iq/etl/manifests/chunks/control__2025_2026__citations.json
+217. /home/jovyan/patent-iq/etl/manifests/chunks/control__2025_2026__core.json
+218. /home/jovyan/patent-iq/etl/manifests/chunks/control__2025_2026__legal.json
+219. /home/jovyan/patent-iq/etl/manifests/chunks/control__2025_2026__publications.json
+220. /home/jovyan/patent-iq/etl/manifests/chunks/control__2025_2026__register.json
+221. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2007_2008__citations.json
+222. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2007_2008__core.json
+223. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2007_2008__legal.json
+224. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2007_2008__publications.json
+225. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2007_2008__register.json
+226. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2007_2009__citations.json
+227. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2009_2010__citations.json
+228. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2009_2010__core.json
+229. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2009_2010__legal.json
+230. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2009_2010__publications.json
+231. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2009_2010__register.json
+232. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2010_2012__citations.json
+233. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2011_2012__citations.json
+234. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2011_2012__core.json
+235. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2011_2012__legal.json
+236. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2011_2012__publications.json
+237. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2011_2012__register.json
+238. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2013_2014__citations.json
+239. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2013_2014__core.json
+240. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2013_2014__legal.json
+241. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2013_2014__publications.json
+242. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2013_2014__register.json
+243. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2013_2015__citations.json
+244. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2015_2016__citations.json
+245. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2015_2016__core.json
+246. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2015_2016__legal.json
+247. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2015_2016__publications.json
+248. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2015_2016__register.json
+249. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2016_2018__citations.json
+250. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2017_2018__citations.json
+251. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2017_2018__core.json
+252. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2017_2018__legal.json
+253. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2017_2018__publications.json
+254. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2017_2018__register.json
+255. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2019_2020__citations.json
+256. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2019_2020__core.json
+257. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2019_2020__legal.json
+258. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2019_2020__publications.json
+259. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2019_2020__register.json
+260. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2019_2021__citations.json
+261. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2021_2022__citations.json
+262. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2021_2022__core.json
+263. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2021_2022__legal.json
+264. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2021_2022__publications.json
+265. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2021_2022__register.json
+266. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2022_2024__citations.json
+267. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2023_2024__citations.json
+268. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2023_2024__core.json
+269. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2023_2024__legal.json
+270. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2023_2024__publications.json
+271. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2023_2024__register.json
+272. /home/jovyan/patent-iq/etl/manifests/chunks/digital-communication__2025_2026__citations.json
+273. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2007_2008__citations.json
+274. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2007_2008__core.json
+275. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2007_2008__legal.json
+276. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2007_2008__publications.json
+277. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2007_2008__register.json
+278. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2009_2010__citations.json
+279. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2009_2010__core.json
+280. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2009_2010__legal.json
+281. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2009_2010__publications.json
+282. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2009_2010__register.json
+283. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2011_2012__citations.json
+284. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2011_2012__core.json
+285. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2011_2012__legal.json
+286. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2011_2012__publications.json
+287. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2011_2012__register.json
+288. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2013_2014__citations.json
+289. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2013_2014__core.json
+290. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2013_2014__legal.json
+291. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2013_2014__publications.json
+292. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2013_2014__register.json
+293. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2015_2016__citations.json
+294. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2015_2016__core.json
+295. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2015_2016__legal.json
+296. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2015_2016__publications.json
+297. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2015_2016__register.json
+298. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2017_2018__citations.json
+299. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2017_2018__core.json
+300. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2017_2018__legal.json
+301. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2017_2018__publications.json
+302. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2017_2018__register.json
+303. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2019_2020__citations.json
+304. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2019_2020__core.json
+305. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2019_2020__legal.json
+306. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2019_2020__publications.json
+307. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2019_2020__register.json
+308. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2021_2022__citations.json
+309. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2021_2022__core.json
+310. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2021_2022__legal.json
+311. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2021_2022__publications.json
+312. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2021_2022__register.json
+313. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2023_2024__citations.json
+314. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2023_2024__core.json
+315. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2023_2024__legal.json
+316. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2023_2024__publications.json
+317. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2023_2024__register.json
+318. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2025_2026__citations.json
+319. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2025_2026__core.json
+320. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2025_2026__legal.json
+321. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2025_2026__publications.json
+322. /home/jovyan/patent-iq/etl/manifests/chunks/electrical-machinery-apparatus-energy__2025_2026__register.json
+323. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2007_2008__citations.json
+324. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2007_2008__core.json
+325. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2007_2008__legal.json
+326. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2007_2008__publications.json
+327. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2007_2008__register.json
+328. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2009_2010__citations.json
+329. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2009_2010__core.json
+330. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2009_2010__legal.json
+331. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2009_2010__publications.json
+332. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2009_2010__register.json
+333. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2021_2022__citations.json
+334. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2021_2022__legal.json
+335. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2021_2022__publications.json
+336. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2023_2024__citations.json
+337. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2023_2024__core.json
+338. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2023_2024__legal.json
+339. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2023_2024__publications.json
+340. /home/jovyan/patent-iq/etl/manifests/chunks/it-methods-for-management__2025_2026__core.json
+341. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2007_2008__core.json
+342. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2007_2008__legal.json
+343. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2007_2008__publications.json
+344. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2009_2010__citations.json
+345. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2009_2010__core.json
+346. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2009_2010__legal.json
+347. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2009_2010__publications.json
+348. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2011_2012__citations.json
+349. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2011_2012__core.json
+350. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2011_2012__legal.json
+351. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2011_2012__publications.json
+352. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2013_2014__citations.json
+353. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2013_2014__core.json
+354. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2013_2014__legal.json
+355. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2013_2014__publications.json
+356. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2015_2016__citations.json
+357. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2015_2016__core.json
+358. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2015_2016__legal.json
+359. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2015_2016__publications.json
+360. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2017_2018__citations.json
+361. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2017_2018__core.json
+362. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2017_2018__legal.json
+363. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2017_2018__publications.json
+364. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2019_2020__citations.json
+365. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2019_2020__core.json
+366. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2019_2020__legal.json
+367. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2019_2020__publications.json
+368. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2021_2022__citations.json
+369. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2021_2022__core.json
+370. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2021_2022__legal.json
+371. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2021_2022__publications.json
+372. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2021_2022__register.json
+373. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2023_2024__citations.json
+374. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2023_2024__core.json
+375. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2023_2024__legal.json
+376. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2023_2024__publications.json
+377. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2023_2024__register.json
+378. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2025_2026__citations.json
+379. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2025_2026__core.json
+380. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2025_2026__legal.json
+381. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2025_2026__publications.json
+382. /home/jovyan/patent-iq/etl/manifests/chunks/measurement__2025_2026__register.json
+383. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2007_2008__core.json
+384. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2007_2008__legal.json
+385. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2009_2010__core.json
+386. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2009_2010__legal.json
+387. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2009_2010__publications.json
+388. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2011_2012__core.json
+389. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2011_2012__legal.json
+390. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2011_2012__publications.json
+391. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2013_2014__core.json
+392. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2013_2014__legal.json
+393. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2013_2014__publications.json
+394. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2015_2016__core.json
+395. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2015_2016__legal.json
+396. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2015_2016__publications.json
+397. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2017_2018__core.json
+398. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2017_2018__legal.json
+399. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2017_2018__publications.json
+400. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2019_2020__core.json
+401. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2019_2020__legal.json
+402. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2019_2020__publications.json
+403. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2021_2022__core.json
+404. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2021_2022__legal.json
+405. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2021_2022__publications.json
+406. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2023_2024__core.json
+407. /home/jovyan/patent-iq/etl/manifests/chunks/semiconductors__2023_2024__legal.json
+408. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2007_2008__citations.json
+409. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2007_2008__core.json
+410. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2007_2008__epab.json
+411. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2007_2008__legal.json
+412. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2007_2008__publications.json
+413. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2007_2008__register.json
+414. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2007_2009__citations.json
+415. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2009_2010__citations.json
+416. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2009_2010__core.json
+417. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2009_2010__epab.json
+418. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2009_2010__legal.json
+419. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2009_2010__publications.json
+420. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2009_2010__register.json
+421. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2010_2012__citations.json
+422. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2011_2012__citations.json
+423. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2011_2012__core.json
+424. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2011_2012__epab.json
+425. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2011_2012__legal.json
+426. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2011_2012__publications.json
+427. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2011_2012__register.json
+428. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2013_2014__citations.json
+429. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2013_2014__core.json
+430. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2013_2014__epab.json
+431. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2013_2014__legal.json
+432. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2013_2014__publications.json
+433. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2013_2014__register.json
+434. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2013_2015__citations.json
+435. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2015_2016__citations.json
+436. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2015_2016__core.json
+437. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2015_2016__epab.json
+438. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2015_2016__legal.json
+439. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2015_2016__publications.json
+440. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2015_2016__register.json
+441. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2016_2018__citations.json
+442. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2017_2018__citations.json
+443. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2017_2018__core.json
+444. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2017_2018__epab.json
+445. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2017_2018__legal.json
+446. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2017_2018__publications.json
+447. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2017_2018__register.json
+448. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2019_2020__citations.json
+449. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2019_2020__core.json
+450. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2019_2020__epab.json
+451. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2019_2020__legal.json
+452. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2019_2020__publications.json
+453. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2019_2020__register.json
+454. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2019_2021__citations.json
+455. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2021_2022__citations.json
+456. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2021_2022__core.json
+457. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2021_2022__epab.json
+458. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2021_2022__legal.json
+459. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2021_2022__publications.json
+460. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2021_2022__register.json
+461. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2022_2024__citations.json
+462. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2023_2024__citations.json
+463. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2023_2024__core.json
+464. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2023_2024__legal.json
+465. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2023_2024__publications.json
+466. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2023_2024__register.json
+467. /home/jovyan/patent-iq/etl/manifests/chunks/telecommunications__2025_2026__citations.json
+
+### Artifacts
+
+- `live_event_log`: `/home/jovyan/patent-iq/etl/manifests/stages/tip-blob-recovery.events.jsonl`
+- `stats_snapshot`: `/home/jovyan/patent-iq/etl/manifests/stats/tip-blob-recovery.json`
+
+### Methods
+
+1. Scanned chunk manifests for successful or upload-failed chunks with missing or incomplete Blob upload metadata.
+2. Uploaded any still-present local outputs to the deterministic chunk Blob prefixes.
+3. Updated manifests with recovered uploaded_blobs entries, restored upload-failed chunks to success when appropriate, and cleaned local temp directories when configured.
+
+### Calculations
+
+1. Recovery eligibility requires still-present local outputs plus either a successful manifest with incomplete uploaded_blobs or a failed manifest whose warnings indicate Blob/upload timeout behavior.
+2. Recovered Blob prefixes reuse the same deterministic field/year/table-family layout as the normal chunk executor.
+
+### Downstream Impacts
+
+1. This stage repairs interrupted or misconfigured Blob offload without rerunning expensive TIP extraction work.
+2. Recovered chunk manifests become consistent with later non-TIP consolidation expectations.
+
+### Governing Docs
+
+1. docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `recovery_upload_max_concurrency`: `2`
+- `recovery_upload_max_block_size_mb`: `4`
+- `recovery_upload_max_single_put_size_mb`: `8`
+- `recovery_manifest_count`: `657`
+- `recovery_recoverable_chunk_count`: `467`
+- `recovery_recovered_chunk_count`: `467`
+- `recovery_skipped_uploaded_chunk_count`: `189`
+- `recovery_missing_output_chunk_count`: `0`
+- `recovery_ineligible_failed_chunk_count`: `0`
+- `recovery_uploaded_blob_count`: `2647`
+
+## pre-bronze-chunked-export | success
+
+- Summary: Executed chunked TIP pre-Bronze extraction with Blob-first chunk manifests and local cleanup support.
+- Started: 2026-03-23T18:23:19+00:00
+- Finished: 2026-03-23T18:23:50+00:00
+
+
+### Outputs
+
+1. /home/jovyan/patent-iq/etl/manifests/chunks
+2. /home/jovyan/patent-iq/etl/manifests/chunks/tip_chunk_plan.json
+3. /home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_appln_ids.parquet
+4. /home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_family_ids.parquet
+5. /home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_ep_appln_ids.parquet
+6. /home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_family_field_counts.parquet
+7. /home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_publn_ids.parquet
+8. /home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_person_ids.parquet
+9. /home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_us_publication_numbers.parquet
+10. /home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_ep_publication_numbers.parquet
+
+### Artifacts
+
+- `live_event_log`: `/home/jovyan/patent-iq/etl/manifests/stages/pre-bronze-chunked-export.events.jsonl`
+- `stats_snapshot`: `/home/jovyan/patent-iq/etl/manifests/stats/pre-bronze-chunked-export.json`
+
+### Methods
+
+1. Planned field/year/table-family chunks before extraction.
+2. Built chunk-local bounded scope directly from TIP instead of materializing one monolithic bounded raw layer.
+3. Uploaded chunk artifacts to Azure Blob when configured, then optionally cleaned local chunk temp directories.
+
+### Calculations
+
+1. Chunk ids are deterministic field/year/table-family keys.
+2. Per-chunk scope is bounded by both selected WIPO field and configured year bucket.
+
+### Downstream Impacts
+
+1. Successful chunk manifests allow resumable pre-Bronze extraction across constrained TIP sessions.
+2. Chunk-local Blob prefixes become the authoritative bounded raw intermediate store for later non-TIP Bronze/Silver/Gold consolidation.
+
+### Governing Docs
+
+1. docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+3. docs/data/epo-tip-client-usage.md
+
+### Warnings
+
+1. Skipped `bronze_ref_techn_field_ipc` because no source file was found.
+2. Skipped `bronze_ext_cpc_coverage` because no source file was found.
+3. Skipped `bronze_ext_cpc_ipc_weights` because no source file was found.
+4. Skipped `bronze_ext_iso_country_map` because no source file was found.
+5. Skipped `bronze_ext_world_bank_gdp_ppp` because no source file was found.
+6. Skipped `bronze_ext_us_chamber_ip_index` because no source file was found.
+7. Skipped `bronze_ext_up_member_states` because no source file was found.
+8. Skipped `bronze_ext_kind_code_normalization_seed` because no source file was found.
+9. Skipped `bronze_ext_oecd_indicator_seed` because no source file was found.
+
+### Metrics
+
+- `chunk_scheduler_parallel_limit`: `2`
+- `chunk_upload_max_concurrency`: `2`
+- `chunk_upload_max_block_size_mb`: `4`
+- `chunk_upload_max_single_put_size_mb`: `8`
+- `global_seed_initial_file_count`: `4`
+- `global_seed_dir`: `/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds`
+- `refs_uploaded_blob_count`: `0`
+- `global_seed_file_count`: `8`
+- `global_seed_derived_file_count`: `4`
+- `chunk_total_count`: `500`
+- `chunk_skipped_count`: `500`
+- `chunk_failed_count`: `0`
+- `chunk_degraded_count`: `0`
+- `chunk_uploaded_file_count`: `0`
+
+## tip-heritage-chunk-plan | success
+
+- Summary: Generated the TIP heritage-backfill chunk plan for older mega-cluster family and citation support.
+- Started: 2026-03-23T18:32:45+00:00
+- Finished: 2026-03-23T18:32:45+00:00
+
+
+### Outputs
+
+1. /home/jovyan/patent-iq/etl/manifests/chunks
+2. /home/jovyan/patent-iq/etl/manifests/chunks/tip_heritage_chunk_plan.json
+
+### Artifacts
+
+- `stats_snapshot`: `/home/jovyan/patent-iq/etl/manifests/stats/tip-heritage-chunk-plan.json`
+
+### Methods
+
+1. Split the configured mega-cluster scope into field and year buckets.
+2. Assigned recommended worker counts per table family according to the documented TIP resource envelope.
+3. Prepared deterministic chunk ids and Blob prefixes for resumable export.
+
+### Calculations
+
+1. Chunk ids are built from field slug + year bucket + table family.
+2. Year buckets use the configured chunk span across the configured ETL year window.
+
+### Downstream Impacts
+
+1. This plan drives Blob-first pre-Bronze extraction instead of monolithic local bounded-raw materialization inside TIP.
+2. Chunk manifests enable resume, retry, and local cleanup after verified upload.
+
+### Governing Docs
+
+1. docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+3. docs/data/epo-tip-client-usage.md
+4. docs/next-phase-v2/29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md
+
+
+### Metrics
+
+- `chunk_plan_field_count`: `10`
+- `chunk_plan_year_bucket_count`: `6`
+- `chunk_plan_table_family_count`: `3`
+- `chunk_plan_total_chunk_count`: `180`
+- `chunk_plan_max_worker_sum`: `3`
+

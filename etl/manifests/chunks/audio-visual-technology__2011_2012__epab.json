@@ -27,10 +27,24 @@
     "publn_count": 422073,
     "us_publication_count": 105260
   },
+  "recovered_at": "2026-03-23T18:08:09+00:00",
   "started_at": "2026-03-19T16:54:33+00:00",
   "status": "success",
   "table_family": "epab",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_application.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_claims.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_pct.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_designated_states.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_priority_links.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_parent_links.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_divisional_links.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_applicants.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_inventors.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2011-2012/family=epab/epab_representative.parquet"
+  ],
   "warnings": [],
   "year_end": 2012,
   "year_start": 2011

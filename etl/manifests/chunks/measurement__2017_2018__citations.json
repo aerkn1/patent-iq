@@ -1,8 +1,8 @@
 {
   "chunk_id": "measurement__2017_2018__citations",
-  "duration_seconds": 473.252,
+  "duration_seconds": 315.422,
   "field": "Measurement",
-  "finished_at": "2026-03-20T12:59:09+00:00",
+  "finished_at": "2026-03-21T18:33:16+00:00",
   "local_outputs": [
     "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2017_2018__citations/patstat/tls212_citation.parquet",
     "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2017_2018__citations/patstat/tls228_docdb_fam_citn.parquet",
@@ -13,18 +13,21 @@
     "ep_appln_count": 26028,
     "ep_publication_count": 52677,
     "family_count": 560824,
-    "local_output_bytes": 31824236,
+    "local_output_bytes": 31799634,
     "local_output_file_count": 3,
     "publn_count": 926050,
     "us_publication_count": 122526
   },
-  "started_at": "2026-03-20T12:51:16+00:00",
-  "status": "failed",
+  "recovered_at": "2026-03-23T18:16:08+00:00",
+  "started_at": "2026-03-21T18:28:01+00:00",
+  "status": "success",
   "table_family": "citations",
-  "uploaded_blobs": [],
-  "warnings": [
-    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=measurement/year=2017-2018/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=measurement/year=2017-2018/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=measurement/year=2017-2018/family=citations/tls214_npl_publn.parquet"
   ],
+  "warnings": [],
   "year_end": 2018,
   "year_start": 2017
 }

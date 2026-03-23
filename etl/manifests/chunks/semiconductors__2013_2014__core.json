@@ -1,8 +1,8 @@
 {
   "chunk_id": "semiconductors__2013_2014__core",
-  "duration_seconds": 399.183,
+  "duration_seconds": 276.129,
   "field": "Semiconductors",
-  "finished_at": "2026-03-20T08:40:13+00:00",
+  "finished_at": "2026-03-21T16:01:05+00:00",
   "local_outputs": [
     "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2013_2014__core/patstat/tls201_appln.parquet",
     "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2013_2014__core/patstat/tls202_appln_title.parquet",
@@ -17,21 +17,32 @@
   ],
   "metrics": {
     "appln_count": 254823,
+    "derived_seed_sidecar_count": 1,
     "ep_appln_count": 9970,
     "ep_publication_count": 21112,
     "family_count": 157664,
-    "local_output_bytes": 130520235,
+    "local_output_bytes": 130474983,
     "local_output_file_count": 10,
     "publn_count": 410261,
     "us_publication_count": 104575
   },
-  "started_at": "2026-03-20T08:33:34+00:00",
-  "status": "failed",
+  "recovered_at": "2026-03-23T18:17:11+00:00",
+  "started_at": "2026-03-21T15:56:29+00:00",
+  "status": "success",
   "table_family": "core",
-  "uploaded_blobs": [],
-  "warnings": [
-    "('Connection aborted.', TimeoutError('The write operation timed out'))"
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=semiconductors/year=2013-2014/family=core/tls201_appln.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2013-2014/family=core/tls202_appln_title.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2013-2014/family=core/tls203_appln_abstr.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2013-2014/family=core/tls204_appln_prior.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2013-2014/family=core/tls206_person.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2013-2014/family=core/tls207_pers_appln.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2013-2014/family=core/tls209_appln_ipc.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2013-2014/family=core/tls216_appln_contn.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2013-2014/family=core/tls224_appln_cpc.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2013-2014/family=core/tls230_appln_techn_field.parquet"
   ],
+  "warnings": [],
   "year_end": 2014,
   "year_start": 2013
 }

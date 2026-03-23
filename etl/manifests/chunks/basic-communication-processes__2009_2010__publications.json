@@ -16,10 +16,13 @@
     "publn_count": 79087,
     "us_publication_count": 27106
   },
+  "recovered_at": "2026-03-23T18:09:04+00:00",
   "started_at": "2026-03-19T16:41:09+00:00",
   "status": "success",
   "table_family": "publications",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=basic-communication-processes/year=2009-2010/family=publications/tls211_pat_publn.parquet"
+  ],
   "warnings": [],
   "year_end": 2010,
   "year_start": 2009

@@ -27,10 +27,24 @@
     "publn_count": 415530,
     "us_publication_count": 96163
   },
+  "recovered_at": "2026-03-23T18:07:51+00:00",
   "started_at": "2026-03-19T12:25:03+00:00",
   "status": "success",
   "table_family": "epab",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_application.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_claims.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_pct.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_designated_states.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_priority_links.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_parent_links.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_divisional_links.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_applicants.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_inventors.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2007-2008/family=epab/epab_representative.parquet"
+  ],
   "warnings": [],
   "year_end": 2008,
   "year_start": 2007
