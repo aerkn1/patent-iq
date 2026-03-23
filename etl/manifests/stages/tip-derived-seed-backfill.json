@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "live_event_log": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stages/tip-derived-seed-backfill.events.jsonl",
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/tip-derived-seed-backfill.json"
+  },
+  "calculations": [
+    "Local successful chunk outputs take precedence over Blob fallback because they avoid redundant transfer and preserve the exact local extraction result.",
+    "Canonical derived seed outputs are rebuilt via DuckDB `select distinct *` across per-chunk sidecars to avoid full-universe pandas materialization on TIP."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md",
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md"
+  ],
+  "downstream_impacts": [
+    "This stage repairs mixed historical TIP states where some successful chunks were already cleaned after Blob upload while others remain only locally.",
+    "Rebuilt canonical seed files support later USPTO/local follow-on stages without forcing expensive chunk reruns."
+  ],
+  "finished_at": "2026-03-23T20:27:28+00:00",
+  "inputs": [],
+  "methods": [
+    "Scanned successful chunk manifests for `core` and `publications` families.",
+    "Reused existing chunk-derived seed sidecars when present, otherwise derived them from local chunk parquet or downloaded Blob chunk parquet.",
+    "Consolidated all reachable chunk-derived sidecars into canonical seed parquet outputs for publication and person seeds."
+  ],
+  "metrics": {
+    "seed_backfill_blob_source_chunk_count": 256,
+    "seed_backfill_candidate_chunk_count": 256,
+    "seed_backfill_consolidated_seed_count": 4,
+    "seed_backfill_existing_sidecar_chunk_count": 0,
+    "seed_backfill_local_source_chunk_count": 0,
+    "seed_backfill_manifest_count": 658,
+    "seed_backfill_missing_source_chunk_count": 0,
+    "seed_backfill_sidecar_write_count": 512,
+    "seed_backfill_staged_download_count": 256,
+    "seed_backfill_transfer_max_block_size_mb": 4,
+    "seed_backfill_transfer_max_concurrency": 2,
+    "seed_backfill_transfer_max_single_put_size_mb": 8
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_publn_ids.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_person_ids.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_us_publication_numbers.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_ep_publication_numbers.parquet"
+  ],
+  "stage": "tip-derived-seed-backfill",
+  "started_at": "2026-03-23T19:40:11+00:00",
+  "status": "success",
+  "summary": "Backfilled canonical derived TIP seed parquet files from successful chunk outputs already present locally, already uploaded to Blob, or previously materialized as chunk-derived sidecars.",
+  "warnings": []
+}

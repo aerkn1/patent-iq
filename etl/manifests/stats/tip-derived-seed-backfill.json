@@ -1,0 +1,64 @@
+{
+  "downstream_impacts": [
+    "This stage repairs mixed historical TIP states where some successful chunks were already cleaned after Blob upload while others remain only locally.",
+    "Rebuilt canonical seed files support later USPTO/local follow-on stages without forcing expensive chunk reruns."
+  ],
+  "finished_at": "2026-03-23T20:27:26+00:00",
+  "metrics": {
+    "seed_backfill_blob_source_chunk_count": 256,
+    "seed_backfill_candidate_chunk_count": 256,
+    "seed_backfill_consolidated_seed_count": 4,
+    "seed_backfill_existing_sidecar_chunk_count": 0,
+    "seed_backfill_local_source_chunk_count": 0,
+    "seed_backfill_manifest_count": 658,
+    "seed_backfill_missing_source_chunk_count": 0,
+    "seed_backfill_sidecar_write_count": 512,
+    "seed_backfill_staged_download_count": 256,
+    "seed_backfill_transfer_max_block_size_mb": 4,
+    "seed_backfill_transfer_max_concurrency": 2,
+    "seed_backfill_transfer_max_single_put_size_mb": 8
+  },
+  "output_profiles": [
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_publn_ids.parquet",
+      "row_count": 37572600,
+      "sha256": "02995d757af5143acdf87a33b199cc9f0e034d778e2da61a59663bca88d62860",
+      "size_bytes": 796498731,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_person_ids.parquet",
+      "row_count": 20063084,
+      "sha256": "9b8c719412974317ef882ec40eb136131c7a3d045bf111fefe12bedeb27e0d21",
+      "size_bytes": 80799776,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_us_publication_numbers.parquet",
+      "row_count": 6566669,
+      "sha256": "45638d755c97aaf93bad428dc26f818d4d0d96dde62a105ae79ae6e1122e3c80",
+      "size_bytes": 126782167,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_ep_publication_numbers.parquet",
+      "row_count": 2123123,
+      "sha256": "13fa5e1c3459d3b36d48042ea79ad1e2bee85852499b217a872f285f08ed1d51",
+      "size_bytes": 38413035,
+      "type": "file"
+    }
+  ],
+  "stage": "tip-derived-seed-backfill",
+  "started_at": "2026-03-23T19:40:11+00:00",
+  "status": "success",
+  "summary": "Backfilled canonical derived TIP seed parquet files from successful chunk outputs already present locally, already uploaded to Blob, or previously materialized as chunk-derived sidecars.",
+  "warnings": []
+}

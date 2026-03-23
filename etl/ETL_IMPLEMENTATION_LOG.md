@@ -1976,3 +1976,59 @@
 - `chunk_plan_total_chunk_count`: `180`
 - `chunk_plan_max_worker_sum`: `3`
 
+## tip-derived-seed-backfill | success
+
+- Summary: Backfilled canonical derived TIP seed parquet files from successful chunk outputs already present locally, already uploaded to Blob, or previously materialized as chunk-derived sidecars.
+- Started: 2026-03-23T19:40:11+00:00
+- Finished: 2026-03-23T20:27:28+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_publn_ids.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_person_ids.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_us_publication_numbers.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds/seed_ep_publication_numbers.parquet
+
+### Artifacts
+
+- `live_event_log`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stages/tip-derived-seed-backfill.events.jsonl`
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/tip-derived-seed-backfill.json`
+
+### Methods
+
+1. Scanned successful chunk manifests for `core` and `publications` families.
+2. Reused existing chunk-derived seed sidecars when present, otherwise derived them from local chunk parquet or downloaded Blob chunk parquet.
+3. Consolidated all reachable chunk-derived sidecars into canonical seed parquet outputs for publication and person seeds.
+
+### Calculations
+
+1. Local successful chunk outputs take precedence over Blob fallback because they avoid redundant transfer and preserve the exact local extraction result.
+2. Canonical derived seed outputs are rebuilt via DuckDB `select distinct *` across per-chunk sidecars to avoid full-universe pandas materialization on TIP.
+
+### Downstream Impacts
+
+1. This stage repairs mixed historical TIP states where some successful chunks were already cleaned after Blob upload while others remain only locally.
+2. Rebuilt canonical seed files support later USPTO/local follow-on stages without forcing expensive chunk reruns.
+
+### Governing Docs
+
+1. docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `seed_backfill_manifest_count`: `658`
+- `seed_backfill_transfer_max_concurrency`: `2`
+- `seed_backfill_transfer_max_block_size_mb`: `4`
+- `seed_backfill_transfer_max_single_put_size_mb`: `8`
+- `seed_backfill_candidate_chunk_count`: `256`
+- `seed_backfill_local_source_chunk_count`: `0`
+- `seed_backfill_blob_source_chunk_count`: `256`
+- `seed_backfill_existing_sidecar_chunk_count`: `0`
+- `seed_backfill_missing_source_chunk_count`: `0`
+- `seed_backfill_staged_download_count`: `256`
+- `seed_backfill_sidecar_write_count`: `512`
+- `seed_backfill_consolidated_seed_count`: `4`
+

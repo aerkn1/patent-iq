@@ -1055,6 +1055,7 @@ def _consolidate_chunk_derived_seeds(
     horizon_label: str,
     canonical_seed_paths: dict[str, Path],
     required_seed_keys: set[str] | None = None,
+    overwrite_existing: bool = False,
     container,
     upload_options: dict[str, int],
     logger: logging.Logger,
@@ -1065,24 +1066,30 @@ def _consolidate_chunk_derived_seeds(
     derived_seed_paths = {key: canonical_seed_paths[key] for key in effective_keys if key in canonical_seed_paths}
     existing = {key: path for key, path in derived_seed_paths.items() if path.exists()}
     if len(existing) == len(derived_seed_paths):
-        emit_event("derived_seeds_reused", horizon_label=horizon_label, seed_dir=str(_seed_dir_for_horizon(settings, horizon_label)))
-        if container is not None:
-            _upload_paths(
-                container,
-                list(existing.values()),
-                _seed_blob_prefix(horizon_label),
-                upload_options,
-                logger=logger,
-                emit_event=emit_event,
-                chunk_id=f"{horizon_label}-derived-seeds",
-            )
-        return derived_seed_paths
+        if not overwrite_existing:
+            emit_event("derived_seeds_reused", horizon_label=horizon_label, seed_dir=str(_seed_dir_for_horizon(settings, horizon_label)))
+            if container is not None:
+                _upload_paths(
+                    container,
+                    list(existing.values()),
+                    _seed_blob_prefix(horizon_label),
+                    upload_options,
+                    logger=logger,
+                    emit_event=emit_event,
+                    chunk_id=f"{horizon_label}-derived-seeds",
+                )
+            return derived_seed_paths
+        emit_event(
+            "derived_seeds_rebuild_requested",
+            horizon_label=horizon_label,
+            seed_dir=str(_seed_dir_for_horizon(settings, horizon_label)),
+        )
 
     _bootstrap_chunk_seed_sidecars(settings, horizon_label, logger=logger, emit_event=emit_event)
 
     consolidated: dict[str, Path] = {}
     for seed_key, out_path in derived_seed_paths.items():
-        if out_path.exists():
+        if out_path.exists() and not overwrite_existing:
             consolidated[seed_key] = out_path
             continue
         sidecar_dir = _chunk_seed_sidecar_dir(settings, horizon_label, seed_key)
@@ -1091,6 +1098,7 @@ def _consolidate_chunk_derived_seeds(
             raise RuntimeError(
                 f"Chunk-derived seed consolidation could not build `{seed_key}` because no sidecars were available in `{sidecar_dir}`."
             )
+        out_path.unlink(missing_ok=True)
         quoted_inputs = ", ".join(f"'{_quote_duckdb_path(path)}'" for path in sidecar_paths)
         _copy_duckdb_query_to_parquet(f"select distinct * from read_parquet([{quoted_inputs}])", out_path)
         consolidated[seed_key] = out_path
@@ -1779,6 +1787,7 @@ def backfill_tip_derived_seeds(settings: BuildSettings) -> StageResult:
             horizon_label=horizon_label,
             canonical_seed_paths=canonical_seed_paths,
             required_seed_keys=required_seed_keys_by_horizon.get(horizon_label, set()),
+            overwrite_existing=True,
             container=container,
             upload_options=transfer_options,
             logger=stage_logger,
