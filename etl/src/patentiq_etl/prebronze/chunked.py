@@ -15,7 +15,12 @@ from patentiq_etl.bronze.source_registry import PATSTAT_TABLES, REGISTER_TABLES
 from patentiq_etl.common.io import append_jsonl, ensure_dir, parquet_row_count, write_text_json
 from patentiq_etl.common.logging_utils import configure_logger
 from patentiq_etl.common.types import BuildSettings, StageResult, utc_now_iso
-from patentiq_etl.prebronze.extract import _copy_reference_inputs, _seed_patstat_scope_tip
+from patentiq_etl.prebronze.extract import (
+    EPAB_GROUP_NAME_MAP,
+    _copy_reference_inputs,
+    _extract_epab_tip_groups,
+    _seed_patstat_scope_tip,
+)
 from patentiq_etl.prebronze.plan import plan_tip_chunked_export, plan_tip_heritage_chunked_export
 from patentiq_etl.prebronze.tip_clients import (
     close_tip_client,
@@ -24,8 +29,6 @@ from patentiq_etl.prebronze.tip_clients import (
     query_to_dataframe,
     resolve_patstat_model,
     resolve_register_model,
-    result_to_dataframe,
-    get_epab_client,
     slugify_value,
     write_dataframe_parquet,
 )
@@ -665,77 +668,16 @@ def _extract_register_family(scope: dict[str, Any], out_dir: Path) -> list[Path]
 
 def _extract_epab_family(settings: BuildSettings, scope: dict[str, Any], out_dir: Path) -> list[Path]:
     """Extract bounded EPAB groups for one chunk."""
-    import pandas as pd
-
     outputs: list[Path] = []
     seed_df = scope["ep_publn_df"]
     if seed_df.empty:
         return outputs
-    epab = None
-    try:
-        epab = get_epab_client(settings.tip_env)
-        group_frames: dict[str, list[Any]] = {
-            "publication": [],
-            "application": [],
-            "abstract": [],
-            "claims": [],
-            "pct": [],
-            "designated_states": [],
-            "priority": [],
-            "parent": [],
-            "divisional": [],
-            "applicant": [],
-            "inventor": [],
-            "representative": [],
-        }
-        allowed_pairs = {
-            (str(row["publication_number"]), str(row["publication_kind"]))
-            for _, row in seed_df.iterrows()
-            if row["publication_number"] is not None and row["publication_kind"] is not None
-        }
-        batch_size = 100
-        for start in range(0, len(seed_df.index), batch_size):
-            batch = seed_df.iloc[start : start + batch_size]
-            numbers = [str(value) for value in batch["publication_number"].dropna().tolist()]
-            kinds = sorted({str(value) for value in batch["publication_kind"].dropna().tolist()})
-            if not numbers:
-                continue
-            q = epab.query_publication(number=numbers, kind_code=kinds or None)
-            for group in list(group_frames.keys()):
-                try:
-                    payload = q.get_results(group)
-                    group_frames[group].append(result_to_dataframe(payload))
-                except Exception:
-                    continue
-        group_name_map = {
-            "publication": "publication",
-            "application": "application",
-            "abstract": "abstract",
-            "claims": "claims",
-            "pct": "pct",
-            "designated_states": "designated_states",
-            "priority": "priority_links",
-            "parent": "parent_links",
-            "divisional": "divisional_links",
-            "applicant": "applicants",
-            "inventor": "inventors",
-            "representative": "representative",
-        }
-        for group, frames in group_frames.items():
-            if not frames:
-                continue
-            df = pd.concat(frames, ignore_index=True)
-            if group == "publication":
-                possible_number = next((col for col in df.columns if col.lower().endswith("publication.number") or col.lower().endswith("number")), None)
-                possible_kind = next((col for col in df.columns if col.lower().endswith("publication.kind") or col.lower().endswith("kind")), None)
-                if possible_number and possible_kind:
-                    df = df[df.apply(lambda row: (str(row[possible_number]), str(row[possible_kind])) in allowed_pairs, axis=1)]
-            out_path = ensure_dir(out_dir) / f"epab_{group_name_map[group]}.parquet"
-            write_dataframe_parquet(df, out_path)
-            outputs.append(out_path)
-        return outputs
-    finally:
-        close_tip_client(epab)
+    epab_result = StageResult(stage="epab-chunk-extract", status="success", summary="Materialized bounded EPAB chunk groups.")
+    for group, df in _extract_epab_tip_groups(settings, seed_df, epab_result).items():
+        out_path = ensure_dir(out_dir) / f"epab_{EPAB_GROUP_NAME_MAP[group]}.parquet"
+        write_dataframe_parquet(df, out_path)
+        outputs.append(out_path)
+    return outputs
 
 
 def _extract_uspto_family(settings: BuildSettings, scope: dict[str, Any], out_dir: Path) -> tuple[list[Path], dict[str, Any], list[str]]:

@@ -44,6 +44,23 @@ DOC_REFS = [
 ]
 
 
+EPAB_DEFAULT_GROUPS = ("publication", "abstract", "claims")
+EPAB_GROUP_NAME_MAP = {
+    "publication": "publication",
+    "application": "application",
+    "abstract": "abstract",
+    "claims": "claims",
+    "pct": "pct",
+    "designated_states": "designated_states",
+    "priority": "priority_links",
+    "parent": "parent_links",
+    "divisional": "divisional_links",
+    "applicant": "applicants",
+    "inventor": "inventors",
+    "representative": "representative",
+}
+
+
 def _relation_sql(source_path: Path) -> str:
     """Return the DuckDB relation SQL for a supported raw source file."""
     suffix = source_path.suffix.lower()
@@ -98,6 +115,109 @@ def _copy_query_to_parquet(query: str, out_path: Path) -> int:
 def _write_seed(query: str, out_path: Path) -> int:
     """Write one seed parquet artifact and return the row count."""
     return _copy_query_to_parquet(query, out_path)
+
+
+def _epab_selected_groups(settings: BuildSettings) -> list[str]:
+    """Return the configured EPAB groups to materialize."""
+    configured = (settings.execution or {}).get("epab_result_groups", list(EPAB_DEFAULT_GROUPS))
+    if isinstance(configured, str):
+        values = [value.strip() for value in configured.split(",") if value.strip()]
+    else:
+        values = [str(value).strip() for value in configured if str(value).strip()]
+    selected = [value for value in values if value in EPAB_GROUP_NAME_MAP]
+    return selected or list(EPAB_DEFAULT_GROUPS)
+
+
+def _epab_query_batch_size(settings: BuildSettings) -> int:
+    """Return the publication-number batch size used to build EPAB queries."""
+    return max(1, int((settings.execution or {}).get("epab_query_batch_size", 1000)))
+
+
+def _epab_iterator_batch_size(settings: BuildSettings) -> int:
+    """Return the EPAB iterator batch size used per query."""
+    return max(1, int((settings.execution or {}).get("epab_iterator_batch_size", 5000)))
+
+
+def _epab_batch_date_range(batch_df) -> str | None:
+    """Return a compact EPAB date-range filter for one batch when dates are available."""
+    import pandas as pd
+
+    if "publication_date" not in batch_df.columns:
+        return None
+    values = pd.to_datetime(batch_df["publication_date"], errors="coerce").dropna()
+    if values.empty:
+        return None
+    start = values.min().strftime("%Y%m%d")
+    end = values.max().strftime("%Y%m%d")
+    return start if start == end else f"{start}-{end}"
+
+
+def _filter_epab_publication_df(df, allowed_pairs: set[tuple[str, str]]):
+    """Return only EPAB publication rows matching the bounded publication number/kind pairs."""
+    import pandas as pd
+
+    if df.empty or not allowed_pairs:
+        return df
+    possible_number = next((col for col in df.columns if col.lower().endswith("publication.number") or col.lower().endswith("number")), None)
+    possible_kind = next((col for col in df.columns if col.lower().endswith("publication.kind") or col.lower().endswith("kind")), None)
+    if not possible_number or not possible_kind:
+        return df
+    allowed_keys = pd.Index([f"{number}|{kind}" for number, kind in sorted(allowed_pairs)])
+    keys = df[possible_number].astype(str) + "|" + df[possible_kind].astype(str)
+    return df.loc[keys.isin(allowed_keys)].reset_index(drop=True)
+
+
+def _extract_epab_tip_groups(settings: BuildSettings, seed_df, result: StageResult) -> dict[str, Any]:
+    """Materialize selected EPAB groups for the bounded publication seed using iterator-based batching."""
+    import pandas as pd
+
+    selected_groups = _epab_selected_groups(settings)
+    query_batch_size = _epab_query_batch_size(settings)
+    iterator_batch_size = _epab_iterator_batch_size(settings)
+    group_frames: dict[str, list[Any]] = {group: [] for group in selected_groups}
+    allowed_pairs = {
+        (str(row["publication_number"]), str(row["publication_kind"]))
+        for _, row in seed_df.iterrows()
+        if row["publication_number"] is not None and row["publication_kind"] is not None
+    }
+    result.metrics["epab_selected_group_count"] = len(selected_groups)
+    result.metrics["epab_query_batch_size"] = query_batch_size
+    result.metrics["epab_iterator_batch_size"] = iterator_batch_size
+
+    epab = None
+    try:
+        epab = get_epab_client(settings.tip_env)
+        for start in range(0, len(seed_df.index), query_batch_size):
+            batch = seed_df.iloc[start : start + query_batch_size]
+            numbers = [str(value) for value in batch["publication_number"].dropna().tolist()]
+            kinds = sorted({str(value) for value in batch["publication_kind"].dropna().tolist()})
+            if not numbers:
+                continue
+            q = epab.query_publication(
+                number=numbers,
+                kind_code=kinds or None,
+                date=_epab_batch_date_range(batch),
+            )
+            for group in selected_groups:
+                try:
+                    for payload in q.iterator(fields=[group], output_type="dataframe", batch_size=iterator_batch_size):
+                        frame = result_to_dataframe(payload)
+                        if not frame.empty:
+                            group_frames[group].append(frame)
+                except Exception as exc:  # pragma: no cover - requires TIP runtime
+                    result.warnings.append(f"EPAB group `{group}` could not be materialized from TIP: {exc}")
+
+        merged: dict[str, Any] = {}
+        for group, frames in group_frames.items():
+            if not frames:
+                continue
+            df = pd.concat(frames, ignore_index=True)
+            if group == "publication":
+                df = _filter_epab_publication_df(df, allowed_pairs)
+            merged[group] = df
+        return merged
+    finally:
+        close_tip_client(epab)
 
 
 def _copy_if_exists(source_path: Path | None, out_path: Path, metrics_key: str, result: StageResult) -> None:
@@ -1110,8 +1230,6 @@ def _extract_register_bounded_raw_tip(settings: BuildSettings, seeds: dict[str, 
 
 def _extract_epab_bounded_raw_tip(settings: BuildSettings, seeds: dict[str, Path], result: StageResult) -> None:
     """Extract bounded EPAB result groups from TIP EPAB queries."""
-    import pandas as pd
-
     seed_path = seeds.get("seed_ep_publication_numbers")
     if seed_path is None or not seed_path.exists():
         result.warnings.append("Skipped TIP EPAB extraction because no in-scope EP publication seed was generated.")
@@ -1126,70 +1244,10 @@ def _extract_epab_bounded_raw_tip(settings: BuildSettings, seeds: dict[str, Path
     if seed_df.empty:
         return
 
-    epab = None
-    try:
-        epab = get_epab_client(settings.tip_env)
-        group_frames: dict[str, list[Any]] = {
-            "publication": [],
-            "application": [],
-            "abstract": [],
-            "claims": [],
-            "pct": [],
-            "designated_states": [],
-            "priority": [],
-            "parent": [],
-            "divisional": [],
-            "applicant": [],
-            "inventor": [],
-            "representative": [],
-        }
-        allowed_pairs = {
-            (str(row["publication_number"]), str(row["publication_kind"]))
-            for _, row in seed_df.iterrows()
-            if row["publication_number"] is not None and row["publication_kind"] is not None
-        }
-        batch_size = 100
-        for start in range(0, len(seed_df.index), batch_size):
-            batch = seed_df.iloc[start : start + batch_size]
-            numbers = [str(value) for value in batch["publication_number"].dropna().tolist()]
-            kinds = sorted({str(value) for value in batch["publication_kind"].dropna().tolist()})
-            if not numbers:
-                continue
-            q = epab.query_publication(number=numbers, kind_code=kinds or None)
-            for group in list(group_frames.keys()):
-                try:
-                    payload = q.get_results(group)
-                    group_frames[group].append(result_to_dataframe(payload))
-                except Exception as exc:  # pragma: no cover - requires TIP runtime
-                    result.warnings.append(f"EPAB group `{group}` could not be materialized from TIP: {exc}")
-
-        group_name_map = {
-            "publication": "publication",
-            "application": "application",
-            "abstract": "abstract",
-            "claims": "claims",
-            "pct": "pct",
-            "designated_states": "designated_states",
-            "priority": "priority_links",
-            "parent": "parent_links",
-            "divisional": "divisional_links",
-            "applicant": "applicants",
-            "inventor": "inventors",
-            "representative": "representative",
-        }
-        for group, frames in group_frames.items():
-            if not frames:
-                continue
-            df = pd.concat(frames, ignore_index=True)
-            if group == "publication":
-                possible_number = next((col for col in df.columns if col.lower().endswith("publication.number") or col.lower().endswith("number")), None)
-                possible_kind = next((col for col in df.columns if col.lower().endswith("publication.kind") or col.lower().endswith("kind")), None)
-                if possible_number and possible_kind:
-                    df = df[df.apply(lambda row: (str(row[possible_number]), str(row[possible_kind])) in allowed_pairs, axis=1)]
-            out_path = settings.bounded_epab_dir / f"epab_{group_name_map[group]}.parquet"
-            _write_tip_dataframe(df, out_path, f"epab_{group_name_map[group]}", result)
-    finally:
-        close_tip_client(epab)
+    for group, df in _extract_epab_tip_groups(settings, seed_df, result).items():
+        group_name = EPAB_GROUP_NAME_MAP[group]
+        out_path = settings.bounded_epab_dir / f"epab_{group_name}.parquet"
+        _write_tip_dataframe(df, out_path, f"epab_{group_name}", result)
 
 
 def _write_extraction_summary(settings: BuildSettings, seeds: dict[str, Path], result: StageResult) -> None:
