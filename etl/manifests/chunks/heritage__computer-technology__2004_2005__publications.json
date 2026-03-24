@@ -1,0 +1,29 @@
+{
+  "chunk_id": "heritage__computer-technology__2004_2005__publications",
+  "duration_seconds": 190.927,
+  "field": "Computer technology",
+  "finished_at": "2026-03-23T22:14:41+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__computer-technology__2004_2005__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 368471,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 25214,
+    "ep_publication_count": 46563,
+    "family_count": 237417,
+    "local_output_bytes": 9323437,
+    "local_output_file_count": 1,
+    "publn_count": 570540,
+    "us_publication_count": 195010
+  },
+  "started_at": "2026-03-23T22:11:30+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=computer-technology/year=2004-2005/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2005,
+  "year_start": 2004
+}

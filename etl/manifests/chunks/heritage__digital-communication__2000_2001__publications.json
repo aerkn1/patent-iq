@@ -1,0 +1,29 @@
+{
+  "chunk_id": "heritage__digital-communication__2000_2001__publications",
+  "duration_seconds": 113.883,
+  "field": "Digital communication",
+  "finished_at": "2026-03-23T21:52:03+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__digital-communication__2000_2001__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 169057,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 16474,
+    "ep_publication_count": 31955,
+    "family_count": 84811,
+    "local_output_bytes": 4321399,
+    "local_output_file_count": 1,
+    "publn_count": 245449,
+    "us_publication_count": 47647
+  },
+  "started_at": "2026-03-23T21:50:09+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=digital-communication/year=2000-2001/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2001,
+  "year_start": 2000
+}

@@ -1,0 +1,32 @@
+{
+  "chunk_id": "heritage__measurement__1996_1997__citations",
+  "duration_seconds": 65.255,
+  "field": "Measurement",
+  "finished_at": "2026-03-23T23:17:49+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__1996_1997__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__1996_1997__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__1996_1997__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 145327,
+    "ep_appln_count": 10235,
+    "ep_publication_count": 21016,
+    "family_count": 93112,
+    "local_output_bytes": 3054511,
+    "local_output_file_count": 3,
+    "publn_count": 201679,
+    "us_publication_count": 21532
+  },
+  "started_at": "2026-03-23T23:16:44+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=measurement/year=1996-1997/family=citations/tls212_citation.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=1996-1997/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=1996-1997/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 1997,
+  "year_start": 1996
+}

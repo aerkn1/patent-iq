@@ -1,0 +1,32 @@
+{
+  "chunk_id": "heritage__telecommunications__2006_2006__citations",
+  "duration_seconds": 158.164,
+  "field": "Telecommunications",
+  "finished_at": "2026-03-23T22:02:58+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__telecommunications__2006_2006__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__telecommunications__2006_2006__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__telecommunications__2006_2006__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 113043,
+    "ep_appln_count": 7541,
+    "ep_publication_count": 14475,
+    "family_count": 83354,
+    "local_output_bytes": 3732728,
+    "local_output_file_count": 3,
+    "publn_count": 173450,
+    "us_publication_count": 42852
+  },
+  "started_at": "2026-03-23T22:00:19+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=telecommunications/year=2006-2006/family=citations/tls212_citation.parquet",
+    "raw-bounded-heritage/patstat/field=telecommunications/year=2006-2006/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded-heritage/patstat/field=telecommunications/year=2006-2006/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2006,
+  "year_start": 2006
+}

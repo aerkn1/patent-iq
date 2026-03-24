@@ -2032,3 +2032,500 @@
 - `seed_backfill_sidecar_write_count`: `512`
 - `seed_backfill_consolidated_seed_count`: `4`
 
+## pre-bronze-heritage-chunked-export | success
+
+- Summary: Executed chunked TIP heritage-backfill extraction with Blob-first chunk manifests and local cleanup support.
+- Started: 2026-03-23T21:21:38+00:00
+- Finished: 2026-03-24T01:23:02+00:00
+
+
+### Outputs
+
+1. /home/jovyan/patent-iq/etl/manifests/chunks
+2. /home/jovyan/patent-iq/etl/manifests/chunks/tip_heritage_chunk_plan.json
+3. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_appln_ids.parquet
+4. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_family_ids.parquet
+5. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_ep_appln_ids.parquet
+6. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_family_field_counts.parquet
+7. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1996_1997__publications.json
+8. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__1996_1997__publications.parquet
+9. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__1996_1997__publications.parquet
+10. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__1996_1997__publications.parquet
+11. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1996_1997__citations.json
+12. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1998_1999__publications.json
+13. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__1998_1999__publications.parquet
+14. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__1998_1999__publications.parquet
+15. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__1998_1999__publications.parquet
+16. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1998_1999__citations.json
+17. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2000_2001__publications.json
+18. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__2000_2001__publications.parquet
+19. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__2000_2001__publications.parquet
+20. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__2000_2001__publications.parquet
+21. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1996_1997__core.json
+22. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__1996_1997__core.parquet
+23. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2002_2003__publications.json
+24. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__2002_2003__publications.parquet
+25. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__2002_2003__publications.parquet
+26. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__2002_2003__publications.parquet
+27. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2000_2001__citations.json
+28. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2004_2005__publications.json
+29. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__2004_2005__publications.parquet
+30. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__2004_2005__publications.parquet
+31. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__2004_2005__publications.parquet
+32. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2006_2006__publications.json
+33. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__2006_2006__publications.parquet
+34. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__2006_2006__publications.parquet
+35. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__2006_2006__publications.parquet
+36. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1998_1999__core.json
+37. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__1998_1999__core.parquet
+38. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2002_2003__citations.json
+39. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1996_1997__publications.json
+40. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__1996_1997__publications.parquet
+41. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__1996_1997__publications.parquet
+42. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__1996_1997__publications.parquet
+43. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1998_1999__publications.json
+44. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__1998_1999__publications.parquet
+45. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__1998_1999__publications.parquet
+46. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__1998_1999__publications.parquet
+47. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2000_2001__publications.json
+48. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__2000_2001__publications.parquet
+49. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__2000_2001__publications.parquet
+50. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__2000_2001__publications.parquet
+51. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2004_2005__citations.json
+52. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2002_2003__publications.json
+53. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__2002_2003__publications.parquet
+54. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__2002_2003__publications.parquet
+55. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__2002_2003__publications.parquet
+56. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2000_2001__core.json
+57. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__2000_2001__core.parquet
+58. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2006_2006__citations.json
+59. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2004_2005__publications.json
+60. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__2004_2005__publications.parquet
+61. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__2004_2005__publications.parquet
+62. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__2004_2005__publications.parquet
+63. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1996_1997__citations.json
+64. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2006_2006__publications.json
+65. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__2006_2006__publications.parquet
+66. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__2006_2006__publications.parquet
+67. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__2006_2006__publications.parquet
+68. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1996_1997__publications.json
+69. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__1996_1997__publications.parquet
+70. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__1996_1997__publications.parquet
+71. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__1996_1997__publications.parquet
+72. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1998_1999__citations.json
+73. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1998_1999__publications.json
+74. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__1998_1999__publications.parquet
+75. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__1998_1999__publications.parquet
+76. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__1998_1999__publications.parquet
+77. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2000_2001__publications.json
+78. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__2000_2001__publications.parquet
+79. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__2000_2001__publications.parquet
+80. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__2000_2001__publications.parquet
+81. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2000_2001__citations.json
+82. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2002_2003__publications.json
+83. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__2002_2003__publications.parquet
+84. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__2002_2003__publications.parquet
+85. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__2002_2003__publications.parquet
+86. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2002_2003__core.json
+87. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__2002_2003__core.parquet
+88. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2002_2003__citations.json
+89. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2004_2005__publications.json
+90. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__2004_2005__publications.parquet
+91. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__2004_2005__publications.parquet
+92. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__2004_2005__publications.parquet
+93. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2006_2006__publications.json
+94. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__2006_2006__publications.parquet
+95. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__2006_2006__publications.parquet
+96. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__2006_2006__publications.parquet
+97. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1996_1997__publications.json
+98. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__1996_1997__publications.parquet
+99. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__1996_1997__publications.parquet
+100. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__1996_1997__publications.parquet
+101. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1998_1999__publications.json
+102. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__1998_1999__publications.parquet
+103. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__1998_1999__publications.parquet
+104. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__1998_1999__publications.parquet
+105. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2000_2001__publications.json
+106. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__2000_2001__publications.parquet
+107. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__2000_2001__publications.parquet
+108. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__2000_2001__publications.parquet
+109. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2004_2005__citations.json
+110. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2002_2003__publications.json
+111. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__2002_2003__publications.parquet
+112. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__2002_2003__publications.parquet
+113. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__2002_2003__publications.parquet
+114. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2004_2005__publications.json
+115. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__2004_2005__publications.parquet
+116. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__2004_2005__publications.parquet
+117. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__2004_2005__publications.parquet
+118. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2006_2006__publications.json
+119. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__2006_2006__publications.parquet
+120. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__2006_2006__publications.parquet
+121. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__2006_2006__publications.parquet
+122. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2006_2006__citations.json
+123. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2004_2005__core.json
+124. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__2004_2005__core.parquet
+125. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1996_1997__publications.json
+126. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__1996_1997__publications.parquet
+127. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__1996_1997__publications.parquet
+128. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__1996_1997__publications.parquet
+129. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1996_1997__citations.json
+130. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1998_1999__publications.json
+131. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__1998_1999__publications.parquet
+132. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__1998_1999__publications.parquet
+133. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__1998_1999__publications.parquet
+134. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1998_1999__citations.json
+135. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2000_2001__publications.json
+136. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__2000_2001__publications.parquet
+137. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__2000_2001__publications.parquet
+138. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__2000_2001__publications.parquet
+139. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2006_2006__core.json
+140. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__2006_2006__core.parquet
+141. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2000_2001__citations.json
+142. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2002_2003__publications.json
+143. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__2002_2003__publications.parquet
+144. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__2002_2003__publications.parquet
+145. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__2002_2003__publications.parquet
+146. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2002_2003__citations.json
+147. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2004_2005__publications.json
+148. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__2004_2005__publications.parquet
+149. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__2004_2005__publications.parquet
+150. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__2004_2005__publications.parquet
+151. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1996_1997__core.json
+152. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__1996_1997__core.parquet
+153. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2006_2006__publications.json
+154. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__2006_2006__publications.parquet
+155. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__2006_2006__publications.parquet
+156. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__2006_2006__publications.parquet
+157. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2004_2005__citations.json
+158. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1996_1997__publications.json
+159. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__1996_1997__publications.parquet
+160. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__1996_1997__publications.parquet
+161. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__1996_1997__publications.parquet
+162. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1998_1999__publications.json
+163. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__1998_1999__publications.parquet
+164. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__1998_1999__publications.parquet
+165. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__1998_1999__publications.parquet
+166. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2000_2001__publications.json
+167. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__2000_2001__publications.parquet
+168. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__2000_2001__publications.parquet
+169. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__2000_2001__publications.parquet
+170. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2006_2006__citations.json
+171. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2002_2003__publications.json
+172. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__2002_2003__publications.parquet
+173. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__2002_2003__publications.parquet
+174. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__2002_2003__publications.parquet
+175. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1996_1997__citations.json
+176. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1998_1999__core.json
+177. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__1998_1999__core.parquet
+178. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2004_2005__publications.json
+179. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__2004_2005__publications.parquet
+180. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__2004_2005__publications.parquet
+181. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__2004_2005__publications.parquet
+182. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1998_1999__citations.json
+183. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2006_2006__publications.json
+184. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__2006_2006__publications.parquet
+185. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__2006_2006__publications.parquet
+186. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__2006_2006__publications.parquet
+187. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2000_2001__citations.json
+188. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1996_1997__publications.json
+189. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__1996_1997__publications.parquet
+190. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__1996_1997__publications.parquet
+191. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__1996_1997__publications.parquet
+192. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2002_2003__citations.json
+193. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1998_1999__publications.json
+194. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__1998_1999__publications.parquet
+195. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__1998_1999__publications.parquet
+196. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__1998_1999__publications.parquet
+197. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2004_2005__citations.json
+198. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2000_2001__publications.json
+199. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__2000_2001__publications.parquet
+200. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__2000_2001__publications.parquet
+201. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__2000_2001__publications.parquet
+202. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2000_2001__core.json
+203. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__2000_2001__core.parquet
+204. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2006_2006__citations.json
+205. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2002_2003__publications.json
+206. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__2002_2003__publications.parquet
+207. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__2002_2003__publications.parquet
+208. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__2002_2003__publications.parquet
+209. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1996_1997__citations.json
+210. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2004_2005__publications.json
+211. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__2004_2005__publications.parquet
+212. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__2004_2005__publications.parquet
+213. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__2004_2005__publications.parquet
+214. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2006_2006__publications.json
+215. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__2006_2006__publications.parquet
+216. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__2006_2006__publications.parquet
+217. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__2006_2006__publications.parquet
+218. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1998_1999__citations.json
+219. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1996_1997__publications.json
+220. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__1996_1997__publications.parquet
+221. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__1996_1997__publications.parquet
+222. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__1996_1997__publications.parquet
+223. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2002_2003__core.json
+224. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__2002_2003__core.parquet
+225. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1998_1999__publications.json
+226. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__1998_1999__publications.parquet
+227. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__1998_1999__publications.parquet
+228. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__1998_1999__publications.parquet
+229. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2000_2001__publications.json
+230. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__2000_2001__publications.parquet
+231. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__2000_2001__publications.parquet
+232. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__2000_2001__publications.parquet
+233. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2000_2001__citations.json
+234. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2002_2003__publications.json
+235. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__2002_2003__publications.parquet
+236. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__2002_2003__publications.parquet
+237. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__2002_2003__publications.parquet
+238. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2004_2005__publications.json
+239. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__2004_2005__publications.parquet
+240. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__2004_2005__publications.parquet
+241. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__2004_2005__publications.parquet
+242. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2006_2006__publications.json
+243. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__2006_2006__publications.parquet
+244. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__2006_2006__publications.parquet
+245. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__2006_2006__publications.parquet
+246. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2004_2005__core.json
+247. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__2004_2005__core.parquet
+248. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2002_2003__citations.json
+249. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1996_1997__publications.json
+250. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__1996_1997__publications.parquet
+251. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__1996_1997__publications.parquet
+252. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__1996_1997__publications.parquet
+253. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1998_1999__publications.json
+254. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__1998_1999__publications.parquet
+255. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__1998_1999__publications.parquet
+256. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__1998_1999__publications.parquet
+257. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2000_2001__publications.json
+258. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__2000_2001__publications.parquet
+259. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__2000_2001__publications.parquet
+260. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__2000_2001__publications.parquet
+261. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2002_2003__publications.json
+262. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__2002_2003__publications.parquet
+263. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__2002_2003__publications.parquet
+264. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__2002_2003__publications.parquet
+265. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2006_2006__core.json
+266. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__2006_2006__core.parquet
+267. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2004_2005__publications.json
+268. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__2004_2005__publications.parquet
+269. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__2004_2005__publications.parquet
+270. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__2004_2005__publications.parquet
+271. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2006_2006__publications.json
+272. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__2006_2006__publications.parquet
+273. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__2006_2006__publications.parquet
+274. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__2006_2006__publications.parquet
+275. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2004_2005__citations.json
+276. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1996_1997__core.json
+277. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__1996_1997__core.parquet
+278. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1996_1997__publications.json
+279. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__1996_1997__publications.parquet
+280. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__1996_1997__publications.parquet
+281. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__1996_1997__publications.parquet
+282. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1998_1999__publications.json
+283. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__1998_1999__publications.parquet
+284. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__1998_1999__publications.parquet
+285. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__1998_1999__publications.parquet
+286. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2006_2006__citations.json
+287. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1998_1999__core.json
+288. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__1998_1999__core.parquet
+289. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2000_2001__publications.json
+290. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__2000_2001__publications.parquet
+291. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__2000_2001__publications.parquet
+292. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__2000_2001__publications.parquet
+293. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1996_1997__citations.json
+294. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1998_1999__citations.json
+295. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2002_2003__publications.json
+296. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__2002_2003__publications.parquet
+297. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__2002_2003__publications.parquet
+298. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__2002_2003__publications.parquet
+299. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2000_2001__citations.json
+300. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2004_2005__publications.json
+301. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__2004_2005__publications.parquet
+302. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__2004_2005__publications.parquet
+303. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__2004_2005__publications.parquet
+304. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2002_2003__citations.json
+305. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2000_2001__core.json
+306. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__2000_2001__core.parquet
+307. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2006_2006__publications.json
+308. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__2006_2006__publications.parquet
+309. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__2006_2006__publications.parquet
+310. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__2006_2006__publications.parquet
+311. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2004_2005__citations.json
+312. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2006_2006__citations.json
+313. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1996_1997__citations.json
+314. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1998_1999__citations.json
+315. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2002_2003__core.json
+316. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__2002_2003__core.parquet
+317. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2000_2001__citations.json
+318. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2002_2003__citations.json
+319. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2004_2005__core.json
+320. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__2004_2005__core.parquet
+321. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2004_2005__citations.json
+322. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2006_2006__core.json
+323. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__2006_2006__core.parquet
+324. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2006_2006__citations.json
+325. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1996_1997__citations.json
+326. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1996_1997__core.json
+327. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__1996_1997__core.parquet
+328. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1998_1999__citations.json
+329. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1998_1999__core.json
+330. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__1998_1999__core.parquet
+331. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2000_2001__citations.json
+332. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2002_2003__citations.json
+333. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2000_2001__core.json
+334. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__2000_2001__core.parquet
+335. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2004_2005__citations.json
+336. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2002_2003__core.json
+337. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__2002_2003__core.parquet
+338. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2006_2006__citations.json
+339. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1996_1997__citations.json
+340. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2004_2005__core.json
+341. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__2004_2005__core.parquet
+342. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1998_1999__citations.json
+343. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2000_2001__citations.json
+344. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2006_2006__core.json
+345. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__2006_2006__core.parquet
+346. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2002_2003__citations.json
+347. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2004_2005__citations.json
+348. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1996_1997__core.json
+349. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__1996_1997__core.parquet
+350. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2006_2006__citations.json
+351. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1996_1997__citations.json
+352. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1998_1999__citations.json
+353. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1998_1999__core.json
+354. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__1998_1999__core.parquet
+355. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2000_2001__citations.json
+356. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2002_2003__citations.json
+357. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2000_2001__core.json
+358. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__2000_2001__core.parquet
+359. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2004_2005__citations.json
+360. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2006_2006__citations.json
+361. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2002_2003__core.json
+362. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__2002_2003__core.parquet
+363. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2004_2005__core.json
+364. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__2004_2005__core.parquet
+365. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2006_2006__core.json
+366. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__2006_2006__core.parquet
+367. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1996_1997__core.json
+368. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__1996_1997__core.parquet
+369. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1998_1999__core.json
+370. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__1998_1999__core.parquet
+371. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2000_2001__core.json
+372. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__2000_2001__core.parquet
+373. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2002_2003__core.json
+374. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__2002_2003__core.parquet
+375. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2004_2005__core.json
+376. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__2004_2005__core.parquet
+377. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2006_2006__core.json
+378. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__2006_2006__core.parquet
+379. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1996_1997__core.json
+380. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__1996_1997__core.parquet
+381. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1998_1999__core.json
+382. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__1998_1999__core.parquet
+383. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2000_2001__core.json
+384. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__2000_2001__core.parquet
+385. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2002_2003__core.json
+386. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__2002_2003__core.parquet
+387. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2004_2005__core.json
+388. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__2004_2005__core.parquet
+389. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2006_2006__core.json
+390. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__2006_2006__core.parquet
+391. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1996_1997__core.json
+392. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__1996_1997__core.parquet
+393. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1998_1999__core.json
+394. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__1998_1999__core.parquet
+395. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2000_2001__core.json
+396. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__2000_2001__core.parquet
+397. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2002_2003__core.json
+398. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__2002_2003__core.parquet
+399. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2004_2005__core.json
+400. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__2004_2005__core.parquet
+401. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2006_2006__core.json
+402. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__2006_2006__core.parquet
+403. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1996_1997__core.json
+404. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__1996_1997__core.parquet
+405. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1998_1999__core.json
+406. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__1998_1999__core.parquet
+407. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2000_2001__core.json
+408. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__2000_2001__core.parquet
+409. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2002_2003__core.json
+410. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__2002_2003__core.parquet
+411. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2004_2005__core.json
+412. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__2004_2005__core.parquet
+413. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2006_2006__core.json
+414. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__2006_2006__core.parquet
+415. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1996_1997__core.json
+416. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__1996_1997__core.parquet
+417. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1998_1999__core.json
+418. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__1998_1999__core.parquet
+419. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2000_2001__core.json
+420. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__2000_2001__core.parquet
+421. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2002_2003__core.json
+422. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__2002_2003__core.parquet
+423. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2004_2005__core.json
+424. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__2004_2005__core.parquet
+425. /home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2006_2006__core.json
+426. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__2006_2006__core.parquet
+427. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_publn_ids.parquet
+428. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_ep_publication_numbers.parquet
+429. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_person_ids.parquet
+430. /home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_us_publication_numbers.parquet
+
+### Artifacts
+
+- `live_event_log`: `/home/jovyan/patent-iq/etl/manifests/stages/pre-bronze-heritage-chunked-export.events.jsonl`
+- `stats_snapshot`: `/home/jovyan/patent-iq/etl/manifests/stats/pre-bronze-heritage-chunked-export.json`
+
+### Methods
+
+1. Planned field/year/table-family chunks before extraction.
+2. Built chunk-local bounded scope directly from TIP instead of materializing one monolithic bounded raw layer.
+3. Uploaded chunk artifacts to Azure Blob when configured, then optionally cleaned local chunk temp directories.
+
+### Calculations
+
+1. Chunk ids are deterministic field/year/table-family keys.
+2. Per-chunk scope is bounded by both selected WIPO field and configured year bucket.
+
+### Downstream Impacts
+
+1. Successful chunk manifests allow resumable pre-Bronze extraction across constrained TIP sessions.
+2. Chunk-local Blob prefixes become the authoritative bounded raw intermediate store for later non-TIP Bronze/Silver/Gold consolidation.
+
+### Governing Docs
+
+1. docs/next-phase-v2/29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md
+2. docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+4. docs/data/epo-tip-client-usage.md
+
+### Warnings
+
+1. Skipped `bronze_ref_techn_field_ipc` because no source file was found.
+2. Skipped `bronze_ext_cpc_coverage` because no source file was found.
+3. Skipped `bronze_ext_cpc_ipc_weights` because no source file was found.
+4. Skipped `bronze_ext_iso_country_map` because no source file was found.
+5. Skipped `bronze_ext_world_bank_gdp_ppp` because no source file was found.
+6. Skipped `bronze_ext_us_chamber_ip_index` because no source file was found.
+7. Skipped `bronze_ext_up_member_states` because no source file was found.
+8. Skipped `bronze_ext_kind_code_normalization_seed` because no source file was found.
+9. Skipped `bronze_ext_oecd_indicator_seed` because no source file was found.
+
+### Metrics
+
+- `chunk_scheduler_parallel_limit`: `3`
+- `chunk_upload_max_concurrency`: `2`
+- `chunk_upload_max_block_size_mb`: `4`
+- `chunk_upload_max_single_put_size_mb`: `8`
+- `global_seed_initial_file_count`: `4`
+- `global_seed_dir`: `/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds`
+- `refs_uploaded_blob_count`: `0`
+- `global_seed_file_count`: `8`
+- `global_seed_derived_file_count`: `4`
+- `chunk_total_count`: `180`
+- `chunk_skipped_count`: `0`
+- `chunk_failed_count`: `0`
+- `chunk_degraded_count`: `0`
+- `chunk_uploaded_file_count`: `840`
+

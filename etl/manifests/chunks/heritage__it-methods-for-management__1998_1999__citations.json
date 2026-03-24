@@ -1,0 +1,32 @@
+{
+  "chunk_id": "heritage__it-methods-for-management__1998_1999__citations",
+  "duration_seconds": 50.836,
+  "field": "IT methods for management",
+  "finished_at": "2026-03-23T22:58:25+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__1998_1999__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__1998_1999__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__1998_1999__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 22809,
+    "ep_appln_count": 1801,
+    "ep_publication_count": 3203,
+    "family_count": 13229,
+    "local_output_bytes": 733746,
+    "local_output_file_count": 3,
+    "publn_count": 29449,
+    "us_publication_count": 4455
+  },
+  "started_at": "2026-03-23T22:57:35+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=1998-1999/family=citations/tls212_citation.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=1998-1999/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=1998-1999/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 1999,
+  "year_start": 1998
+}

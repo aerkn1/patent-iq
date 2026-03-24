@@ -1,0 +1,32 @@
+{
+  "chunk_id": "heritage__computer-technology__2006_2006__citations",
+  "duration_seconds": 304.683,
+  "field": "Computer technology",
+  "finished_at": "2026-03-23T22:56:47+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__computer-technology__2006_2006__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__computer-technology__2006_2006__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__computer-technology__2006_2006__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 185893,
+    "ep_appln_count": 11694,
+    "ep_publication_count": 21304,
+    "family_count": 137131,
+    "local_output_bytes": 8086741,
+    "local_output_file_count": 3,
+    "publn_count": 288196,
+    "us_publication_count": 101845
+  },
+  "started_at": "2026-03-23T22:51:43+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=computer-technology/year=2006-2006/family=citations/tls212_citation.parquet",
+    "raw-bounded-heritage/patstat/field=computer-technology/year=2006-2006/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded-heritage/patstat/field=computer-technology/year=2006-2006/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2006,
+  "year_start": 2006
+}

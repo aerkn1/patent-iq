@@ -1,0 +1,29 @@
+{
+  "chunk_id": "heritage__semiconductors__1998_1999__publications",
+  "duration_seconds": 96.014,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-23T22:24:45+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__semiconductors__1998_1999__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 146785,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 7580,
+    "ep_publication_count": 14888,
+    "family_count": 99732,
+    "local_output_bytes": 3432264,
+    "local_output_file_count": 1,
+    "publn_count": 198047,
+    "us_publication_count": 29912
+  },
+  "started_at": "2026-03-23T22:23:09+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=semiconductors/year=1998-1999/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 1999,
+  "year_start": 1998
+}

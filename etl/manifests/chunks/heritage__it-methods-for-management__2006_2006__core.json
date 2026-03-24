@@ -1,0 +1,47 @@
+{
+  "chunk_id": "heritage__it-methods-for-management__2006_2006__core",
+  "duration_seconds": 89.906,
+  "field": "IT methods for management",
+  "finished_at": "2026-03-24T00:11:02+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__2006_2006__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__2006_2006__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__2006_2006__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__2006_2006__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__2006_2006__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__2006_2006__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__2006_2006__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__2006_2006__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__2006_2006__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__it-methods-for-management__2006_2006__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 31501,
+    "derived_seed_sidecar_count": 1,
+    "ep_appln_count": 1833,
+    "ep_publication_count": 3075,
+    "family_count": 24239,
+    "local_output_bytes": 18501524,
+    "local_output_file_count": 10,
+    "publn_count": 44382,
+    "us_publication_count": 12849
+  },
+  "started_at": "2026-03-24T00:09:32+00:00",
+  "status": "success",
+  "table_family": "core",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=2006-2006/family=core/tls201_appln.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=2006-2006/family=core/tls202_appln_title.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=2006-2006/family=core/tls203_appln_abstr.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=2006-2006/family=core/tls204_appln_prior.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=2006-2006/family=core/tls206_person.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=2006-2006/family=core/tls207_pers_appln.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=2006-2006/family=core/tls209_appln_ipc.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=2006-2006/family=core/tls216_appln_contn.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=2006-2006/family=core/tls224_appln_cpc.parquet",
+    "raw-bounded-heritage/patstat/field=it-methods-for-management/year=2006-2006/family=core/tls230_appln_techn_field.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2006,
+  "year_start": 2006
+}

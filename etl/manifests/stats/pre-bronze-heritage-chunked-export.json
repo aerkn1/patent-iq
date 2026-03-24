@@ -1,0 +1,3545 @@
+{
+  "downstream_impacts": [
+    "Successful chunk manifests allow resumable pre-Bronze extraction across constrained TIP sessions.",
+    "Chunk-local Blob prefixes become the authoritative bounded raw intermediate store for later non-TIP Bronze/Silver/Gold consolidation."
+  ],
+  "finished_at": "2026-03-24T01:22:54+00:00",
+  "metrics": {
+    "chunk_degraded_count": 0,
+    "chunk_failed_count": 0,
+    "chunk_scheduler_parallel_limit": 3,
+    "chunk_skipped_count": 0,
+    "chunk_total_count": 180,
+    "chunk_upload_max_block_size_mb": 4,
+    "chunk_upload_max_concurrency": 2,
+    "chunk_upload_max_single_put_size_mb": 8,
+    "chunk_uploaded_file_count": 840,
+    "global_seed_derived_file_count": 4,
+    "global_seed_dir": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds",
+    "global_seed_file_count": 8,
+    "global_seed_initial_file_count": 4,
+    "refs_uploaded_blob_count": 0
+  },
+  "output_profiles": [
+    {
+      "entry_count": 839,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks",
+      "type": "directory"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/tip_heritage_chunk_plan.json",
+      "sha256": "c8b996f8704040d4db68ce747231323a53a84acf380b9d498f23a8e84b6b96e3",
+      "size_bytes": 104595,
+      "type": "file"
+    },
+    {
+      "column_count": 2,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_appln_ids.parquet",
+      "row_count": 9510587,
+      "sha256": "2de93f6237c3c1e19d6ac623e9f87da1cca1ad86effff2f02abe96d00342434b",
+      "size_bytes": 38892420,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_family_ids.parquet",
+      "row_count": 4034612,
+      "sha256": "772cbc1b427ea0f4baadaf8049cc30e160368f78fb07357f931f51f1c984295e",
+      "size_bytes": 16199631,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_ep_appln_ids.parquet",
+      "row_count": 479337,
+      "sha256": "03358fe9ef4f50e7cec697c9c460b84d4126299f9bb9a0cd386998546f90b405",
+      "size_bytes": 2000394,
+      "type": "file"
+    },
+    {
+      "column_count": 2,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_family_field_counts.parquet",
+      "row_count": 10,
+      "sha256": "5daef163a60e31d5d2b760d8ed197a782ee3953e6e5144c9b5faf0b7217bd62b",
+      "size_bytes": 2064,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1996_1997__publications.json",
+      "sha256": "b4d05b26b3591bd674a3beaf4eabe53fa627100aead5259ab1496d0ffa527333",
+      "size_bytes": 980,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__1996_1997__publications.parquet",
+      "row_count": 252815,
+      "sha256": "73f0821a58b6de6691a67fbeebd18c3ff82b4f1fd5936416d8ec8bb520da362c",
+      "size_bytes": 4724458,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__1996_1997__publications.parquet",
+      "row_count": 23640,
+      "sha256": "2db7beea4647e682bbc35e6ba29d6c401bf731c3901438125d274d0f68ab78b5",
+      "size_bytes": 374877,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__1996_1997__publications.parquet",
+      "row_count": 28793,
+      "sha256": "92b60105ba48140a8b5e6d65e4859f8526d8f44d7d12c66b3a2a8f01b23ec9be",
+      "size_bytes": 475194,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1996_1997__citations.json",
+      "sha256": "736d8a2e01cab193f53b83dd8542cde901d8b125b5b8c7d98568e7fc87a8aefe",
+      "size_bytes": 1466,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1998_1999__publications.json",
+      "sha256": "421d02584e97994ad68b411bf20b22ec4f62bc8d2afdef3053bdd76ff7a4de72",
+      "size_bytes": 981,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__1998_1999__publications.parquet",
+      "row_count": 277075,
+      "sha256": "4ca560ca7ff9863e72be14e674d59e24761f5324d8c66d87e8681f0676c66174",
+      "size_bytes": 5263650,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__1998_1999__publications.parquet",
+      "row_count": 27175,
+      "sha256": "6fb96dd198cf429dda188fcffd79eccae885c463518a281fd8940bd0bf40f1bd",
+      "size_bytes": 417623,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__1998_1999__publications.parquet",
+      "row_count": 32521,
+      "sha256": "d0d341dffe213fe9b662087dd832ed7c6e6132be463d0282bea4afe42eea7afa",
+      "size_bytes": 535207,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1998_1999__citations.json",
+      "sha256": "644687d7d0dda0b1950557a94e6b99be5b08e0b98f583bf274c30a00f7d0c488",
+      "size_bytes": 1466,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2000_2001__publications.json",
+      "sha256": "4d2c656580d23e1c721a66ce8df7398dbb3f9f7e2d36e94c2ef7dbc5b6e92367",
+      "size_bytes": 981,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__2000_2001__publications.parquet",
+      "row_count": 347043,
+      "sha256": "59063c3d37c4f467fa49f6f3ff00a017d72e0e05d89e730936f7e093aab6060d",
+      "size_bytes": 6614830,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__2000_2001__publications.parquet",
+      "row_count": 31891,
+      "sha256": "e9011c8205eda82ec51aa80cff843ae49f2cf36622f026de76e8630eee2bd82c",
+      "size_bytes": 485598,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__2000_2001__publications.parquet",
+      "row_count": 60669,
+      "sha256": "bfc8ad7a374371999d3b15204d6124ec7c84ae4a2ed15cb48beaf655d0cce7a2",
+      "size_bytes": 1027988,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1996_1997__core.json",
+      "sha256": "c460b2c36b2495ba0b5364ec35c21cc2ac7d26d6b566cfa05491e52688fbb096",
+      "size_bytes": 3248,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__1996_1997__core.parquet",
+      "row_count": 234414,
+      "sha256": "f6ee76a60ebdb6b58441ae0d5159eab11285beea3febbb3466b4d628d494a259",
+      "size_bytes": 927038,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2002_2003__publications.json",
+      "sha256": "5d0aab2de1905f930714321fcf762b29174c911a70407c3752488cfedd76b2de",
+      "size_bytes": 981,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__2002_2003__publications.parquet",
+      "row_count": 414619,
+      "sha256": "c47a5251bd53896dbbf44ac2f3bb762c80b34743aead2bd56f03c51df1ed1c26",
+      "size_bytes": 8008941,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__2002_2003__publications.parquet",
+      "row_count": 34730,
+      "sha256": "fd867d094202f643e9fbc8a639797f4d751b3034623ddbd8e67a40b8aa334155",
+      "size_bytes": 536588,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__2002_2003__publications.parquet",
+      "row_count": 87467,
+      "sha256": "d67a364a4418b220276007e8f5be47a52c94f76178ab046ddf9923f7fb0c8d92",
+      "size_bytes": 1540974,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2000_2001__citations.json",
+      "sha256": "04eb3344ff6aa4da34403d0393f499886567a877e125e4a87afdf9e26cd2cb80",
+      "size_bytes": 1466,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2004_2005__publications.json",
+      "sha256": "3971487433875dae6c05c61fdafe568b7acab2835f6d3be190238ffec81f1755",
+      "size_bytes": 982,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__2004_2005__publications.parquet",
+      "row_count": 473069,
+      "sha256": "82b9543fee8248c3268fd806a97c8651d8a3cc3784e366fb2bda88f8ce8ed4c5",
+      "size_bytes": 9140709,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__2004_2005__publications.parquet",
+      "row_count": 35571,
+      "sha256": "2690066b0b8a771f035beace2187c1eb30b0dda00653bd82e8cf9694518c9a7f",
+      "size_bytes": 550844,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__2004_2005__publications.parquet",
+      "row_count": 112113,
+      "sha256": "92e8a1e495425d214bfb24a4151a8496e23655886d547f23e463aa13c1d01861",
+      "size_bytes": 1970843,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2006_2006__publications.json",
+      "sha256": "d22c04b1d67039a8bc641e7306935eb54cb3007d43c389107f0f7531318c7b34",
+      "size_bytes": 979,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__audio-visual-technology__2006_2006__publications.parquet",
+      "row_count": 224279,
+      "sha256": "744c4ab0a4f2e1c62483718a34052043786b076465431583ac3428047b83a420",
+      "size_bytes": 4283208,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__audio-visual-technology__2006_2006__publications.parquet",
+      "row_count": 15784,
+      "sha256": "a73f45cb965d8f190b9c57894fd780194d17f8a4f8a2c4050678ec9913cf46f8",
+      "size_bytes": 250692,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__audio-visual-technology__2006_2006__publications.parquet",
+      "row_count": 50110,
+      "sha256": "212503baf5a95153905672ffd2f242509d4517f6e64e118146f1abfba022cdd4",
+      "size_bytes": 868871,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__1998_1999__core.json",
+      "sha256": "73d24961bb9c187fd4a28b902b8d8f67d59986065222deefd87b69aa5f13be53",
+      "size_bytes": 3248,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__1998_1999__core.parquet",
+      "row_count": 263723,
+      "sha256": "0b70be8b372d1a699f90d4e58d01b3f6454c321ed6be4f2f05782511e7aa3c19",
+      "size_bytes": 1040836,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2002_2003__citations.json",
+      "sha256": "626db6d2bc3c1ff3541c468f9055649345bf23657783a98c89d38a91bc13f0cc",
+      "size_bytes": 1466,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1996_1997__publications.json",
+      "sha256": "4652fb96589e01a16f0fd84fd1216299bb436f864460d47802262704477e64db",
+      "size_bytes": 959,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__1996_1997__publications.parquet",
+      "row_count": 187196,
+      "sha256": "2da16bae96e864ca5518ae3f11aba1f3e852d05c4d2b07e5cf35aeacb44b6d71",
+      "size_bytes": 3468001,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__1996_1997__publications.parquet",
+      "row_count": 20578,
+      "sha256": "686d758954b5e6a0af0121751988b953d8103ada7a5c0c99137688a6e63d6f9c",
+      "size_bytes": 324278,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__1996_1997__publications.parquet",
+      "row_count": 21479,
+      "sha256": "94502e467b3879517819e727a38a2a270e1b21526324c80af6898be5942aa2ff",
+      "size_bytes": 356991,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1998_1999__publications.json",
+      "sha256": "25e65936d43663c51ffbaf1fefc2ea173062b0b507e0673183973b038303d2bd",
+      "size_bytes": 959,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__1998_1999__publications.parquet",
+      "row_count": 235681,
+      "sha256": "e4961432a6d66e1f99509cd1cbe6f4dd9e76460b418c73e1a1981cf4af8f2409",
+      "size_bytes": 4402175,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__1998_1999__publications.parquet",
+      "row_count": 29925,
+      "sha256": "fdbee1a1b42381022f25eb698cafc934a1c4f7a7571c4859297fcf51dea7b67b",
+      "size_bytes": 479190,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__1998_1999__publications.parquet",
+      "row_count": 26488,
+      "sha256": "35b5d03813b96910c2f7797e3df095033b150086e4ac3060c756ba6962d0b4c0",
+      "size_bytes": 447148,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2000_2001__publications.json",
+      "sha256": "99bcd82ed32e5c013884588ef0a8d8ce9588973a7ffedf69ca1055528de97ea6",
+      "size_bytes": 961,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__2000_2001__publications.parquet",
+      "row_count": 298145,
+      "sha256": "0d50651e488165f6d51214ec1415f5759d0fcf20d32434ab822279d39611999c",
+      "size_bytes": 5714131,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__2000_2001__publications.parquet",
+      "row_count": 35654,
+      "sha256": "4471a52cfdc22812c69ed592127c6ca13cc22b3c812c1bb862ad049a38691a01",
+      "size_bytes": 543214,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__2000_2001__publications.parquet",
+      "row_count": 49772,
+      "sha256": "70cd25b1115491c2e4a45c91e3e763e66b1ac89a03b32afaf672454d3dadd2d2",
+      "size_bytes": 847322,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2004_2005__citations.json",
+      "sha256": "84a06e35718c494cc4d9b04c45535bbe26632489d80e8c68b4cb17b9ce403c78",
+      "size_bytes": 1467,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2002_2003__publications.json",
+      "sha256": "e840e1fe8cc49ba3740fdeba7e09a001dff38e02bd6bfc899891b376c83f163e",
+      "size_bytes": 961,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__2002_2003__publications.parquet",
+      "row_count": 326200,
+      "sha256": "bd332846f45f49fb7c0ad699c63e676d2a86f986c94b5f1a9aa09b428534ae46",
+      "size_bytes": 6321084,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__2002_2003__publications.parquet",
+      "row_count": 32863,
+      "sha256": "d892e6c71f8f1f0ea442e33940a1a1221a27894f30f218fc9f38ad0b856e13b2",
+      "size_bytes": 506663,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__2002_2003__publications.parquet",
+      "row_count": 70998,
+      "sha256": "80ac04da4efdc3d8522f3d3121a6acbb4c2113346338f2d23eaed94db256a64d",
+      "size_bytes": 1241754,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2000_2001__core.json",
+      "sha256": "462ce1d264ff16b8ba8a98952da89578d9f58db98764b0696f7ec0387cf1d474",
+      "size_bytes": 3249,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__2000_2001__core.parquet",
+      "row_count": 325882,
+      "sha256": "d87e0cf14fa007feceeba3c934d851561d3fa4184c67c7bb0b313d95c0e4435d",
+      "size_bytes": 1293949,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2006_2006__citations.json",
+      "sha256": "14ff18c0dcb7ed223e27fc4af89cc544762e475d8c2a09d196dfc88ee4a677fb",
+      "size_bytes": 1465,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2004_2005__publications.json",
+      "sha256": "0f3c85fcb156b6e417db9713c357bb6761ea40175f3ce4cf4760e0e79f795228",
+      "size_bytes": 961,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__2004_2005__publications.parquet",
+      "row_count": 355438,
+      "sha256": "0db26d073043c0a04fb9cca2dda0523e0896cea287a6721f022d8a52b679c754",
+      "size_bytes": 6912246,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__2004_2005__publications.parquet",
+      "row_count": 32392,
+      "sha256": "3dac762abd255053758e9058c9bb852338d36d55194fd8f868e362c3ab5b6831",
+      "size_bytes": 503974,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__2004_2005__publications.parquet",
+      "row_count": 90589,
+      "sha256": "e623f9353c6e6521d1ab00b88041bcde34b4b68afab0dbff11ff2f426d5b85d6",
+      "size_bytes": 1593539,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1996_1997__citations.json",
+      "sha256": "183b47db11c95a687157eb91089147ba42590347e31355c0995a55c03d3ec983",
+      "size_bytes": 1423,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2006_2006__publications.json",
+      "sha256": "5a49429f0c7b2c18b0f0d92666d960f91d2025c4758264b91e744c15c8b04b49",
+      "size_bytes": 958,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__telecommunications__2006_2006__publications.parquet",
+      "row_count": 173450,
+      "sha256": "272633e126acd7cfd4cd516803d24cf9f3b38f729b0a9cef076dda06182b9189",
+      "size_bytes": 3330145,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__telecommunications__2006_2006__publications.parquet",
+      "row_count": 14475,
+      "sha256": "85c2dcba528af8e9d3befc6fee026a6a38e4e7bca099391054e5ef4f350a8821",
+      "size_bytes": 230543,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__telecommunications__2006_2006__publications.parquet",
+      "row_count": 42852,
+      "sha256": "f678aed96cd0c9f53fd1fbe44d3ae5e84d0db6960673d5fd617c93cf318a30b3",
+      "size_bytes": 740943,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1996_1997__publications.json",
+      "sha256": "bf5c6d634038f58c5a0c3e055bd8ff7b216552a75ad491fabb5b8128e8569002",
+      "size_bytes": 969,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__1996_1997__publications.parquet",
+      "row_count": 115346,
+      "sha256": "f71d7eb161966554cd675863b45d729230361a911ad2ca559c9a27ec88254cfd",
+      "size_bytes": 2121177,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__1996_1997__publications.parquet",
+      "row_count": 13996,
+      "sha256": "388e541097fa6c2337534b0f2775787cf329b0171e4c919895d702a68a4c4474",
+      "size_bytes": 224671,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__1996_1997__publications.parquet",
+      "row_count": 15050,
+      "sha256": "7b407cb336c54df757c4a4c1382a6f2db26240cdc67800b8edd6a7b06189045b",
+      "size_bytes": 253589,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1998_1999__citations.json",
+      "sha256": "ce38dbf5cd91a170febc9730e42b0b212b440b4279eeb655394f66318441c09a",
+      "size_bytes": 1425,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1998_1999__publications.json",
+      "sha256": "548d8a5b480e4c698a1ed92f996465a115a3b7e9a9dc5f2d06ac179a5503a22d",
+      "size_bytes": 972,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__1998_1999__publications.parquet",
+      "row_count": 164603,
+      "sha256": "e6aa1929b1175e15b16f1c4e9cbab4fd17d08c269f302d94e2eee130151f550a",
+      "size_bytes": 3054472,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__1998_1999__publications.parquet",
+      "row_count": 22026,
+      "sha256": "11facc203c5e3ed044326290c889875af4db34e56c57c00ca8d9e80bd71e7d6e",
+      "size_bytes": 356798,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__1998_1999__publications.parquet",
+      "row_count": 21936,
+      "sha256": "48fca9bfc6a361198eb511313e2f805b556af8ee733912433c182ccf4394505e",
+      "size_bytes": 373626,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2000_2001__publications.json",
+      "sha256": "29108d72f6706fe5067fc4d349ed7d6c9fde1f8af66d316c8bce2c37936ab013",
+      "size_bytes": 972,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__2000_2001__publications.parquet",
+      "row_count": 245449,
+      "sha256": "0a6be8eb3d9be52fb10af6824162bb9c5b4f6f44919460ab748c951335bbed9a",
+      "size_bytes": 4678088,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__2000_2001__publications.parquet",
+      "row_count": 31955,
+      "sha256": "58c183f90b4eafb187bcb3a8656904e9ab702f508e94adfbe52b7c52d9825c7a",
+      "size_bytes": 488628,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__2000_2001__publications.parquet",
+      "row_count": 47647,
+      "sha256": "338cbdf0049c3203ef90cca024333d503251f47f114ef9fc6d558919cda745fa",
+      "size_bytes": 817128,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2000_2001__citations.json",
+      "sha256": "96a039df6ee46914bd8feefab8f985e47fb923ea6bc10fa81b11955d42c7cafe",
+      "size_bytes": 1426,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2002_2003__publications.json",
+      "sha256": "0f4dfec6fa2d7c8e51c3dfabf0c2b5b86f3c60a68b22550775194338614ebc01",
+      "size_bytes": 971,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__2002_2003__publications.parquet",
+      "row_count": 283886,
+      "sha256": "bbb680710def337f1ba2a59b83cb8e0cf46d25d7b77de6a87f654c2b02d7c654",
+      "size_bytes": 5479460,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__2002_2003__publications.parquet",
+      "row_count": 34387,
+      "sha256": "7b8ec66e55c37ee94ac380d422fcd1e150498fdb20e68de696841ed0bda6d6df",
+      "size_bytes": 530859,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__2002_2003__publications.parquet",
+      "row_count": 65889,
+      "sha256": "71fd40b9e3dc318b0a1f3f5bc77ed74e1513c5830272a7fde68a88beee971b29",
+      "size_bytes": 1148645,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2002_2003__core.json",
+      "sha256": "60747423a56fb32cacc6f9b06a6de70a3b181947c60db2b6172fa7b0778bf162",
+      "size_bytes": 3249,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__2002_2003__core.parquet",
+      "row_count": 363923,
+      "sha256": "7ae42db166d464a172396a8f6d6f0fb9bcb4e787ef4c6c3810dbb553fe1cbe72",
+      "size_bytes": 1453199,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2002_2003__citations.json",
+      "sha256": "0d1dae627ddfb8c99a2862f624ca9d6ff09d4eff1fefc1cb5202c85ea7aaec21",
+      "size_bytes": 1426,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2004_2005__publications.json",
+      "sha256": "38dbd7018103f0fe1639e09c2141b8f0b7f76fef6c6bffe8275e25c8ad5d12e1",
+      "size_bytes": 973,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__2004_2005__publications.parquet",
+      "row_count": 310642,
+      "sha256": "72dd508bb1b863b582812558e9ce79c411b1560a119ee2c01840658854e9e786",
+      "size_bytes": 6054961,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__2004_2005__publications.parquet",
+      "row_count": 37998,
+      "sha256": "b283eeb9625e7bce82081dce2bdab31bdda4590acd2bad2901acd8e33c024ffc",
+      "size_bytes": 590332,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__2004_2005__publications.parquet",
+      "row_count": 75980,
+      "sha256": "4d1f84e56cdd497979fe005a3093c94c8ee88823a799907d8894994d2e64c7c1",
+      "size_bytes": 1332389,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2006_2006__publications.json",
+      "sha256": "4853d5a4315ae23ff73ddd4b86ff8711e7bf9b27d59718dac38a7bd0993ab1d4",
+      "size_bytes": 971,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__digital-communication__2006_2006__publications.parquet",
+      "row_count": 169038,
+      "sha256": "a5b80063047db2dbf4040c9749b9cda2f47678821f3f458df79a3eee9de802b0",
+      "size_bytes": 3258439,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__digital-communication__2006_2006__publications.parquet",
+      "row_count": 20664,
+      "sha256": "3b8f169dbe3b90b672e0026fbd8c6c4ba25a19ec7b66ddadb475960a0c59916d",
+      "size_bytes": 325987,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__digital-communication__2006_2006__publications.parquet",
+      "row_count": 35994,
+      "sha256": "0113c65cfc6a654cd68f6e6c1de769bc797f7c1ff910a483fc7743d028a9a1f9",
+      "size_bytes": 622132,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1996_1997__publications.json",
+      "sha256": "a1d7cf07bb0a51c97d0fb2d13f333df340b75442dd6016c02f080942d688e660",
+      "size_bytes": 998,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__1996_1997__publications.parquet",
+      "row_count": 69129,
+      "sha256": "d9955cad2567d92e7c1f47602556390c2b35107399bf711eb0b9dde1cfa842ae",
+      "size_bytes": 1277371,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__1996_1997__publications.parquet",
+      "row_count": 8228,
+      "sha256": "39a3780453b12dae42518b48d8c9e818081d8ad39eca33cb19eb81adf8213df9",
+      "size_bytes": 128672,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__1996_1997__publications.parquet",
+      "row_count": 9575,
+      "sha256": "3de833247edb5f0b3a16934a950cd62582caf640cd9aa2da8c977610fa2def9a",
+      "size_bytes": 155740,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1998_1999__publications.json",
+      "sha256": "82ddf582152f8e9496ad183c3920aad4fb0b54b113e09d1e569605bc4ca4c132",
+      "size_bytes": 999,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__1998_1999__publications.parquet",
+      "row_count": 70747,
+      "sha256": "36c3c2499bafcf3d2367d51ba6ee92a724510ba41ea95d06d8b057720c2f24c5",
+      "size_bytes": 1317020,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__1998_1999__publications.parquet",
+      "row_count": 8754,
+      "sha256": "8cc4a471ccb72b0c8b674f7fce234121f7182e2f8d307e37bd3da71b1b893fb8",
+      "size_bytes": 141873,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__1998_1999__publications.parquet",
+      "row_count": 10366,
+      "sha256": "dd0a1e7234666c43e34f529733853e7a9f75c80d0dfe1cc33649887603d42c90",
+      "size_bytes": 176271,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2000_2001__publications.json",
+      "sha256": "3d9204fcb39cc3e78b3761ab13f066db88f22589d062d101333c6dd7321b4e23",
+      "size_bytes": 1000,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__2000_2001__publications.parquet",
+      "row_count": 86023,
+      "sha256": "d352a9993411787fcafd77f4dd6b98b5c237493657b26096f688a326cff4b51b",
+      "size_bytes": 1616095,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__2000_2001__publications.parquet",
+      "row_count": 10334,
+      "sha256": "8a2e6740f68973f2edc9a01edf590766feba2748bfc577bea045db3c8656c908",
+      "size_bytes": 159225,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__2000_2001__publications.parquet",
+      "row_count": 18574,
+      "sha256": "3c58a1a0591b62a0a6cc742a24d255a716751743bf5444e6b69553a3988e6660",
+      "size_bytes": 309599,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2004_2005__citations.json",
+      "sha256": "305ba74faec1bf175f9c9a2e7673cf900971d4f219b727661c2619cabc795b13",
+      "size_bytes": 1425,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2002_2003__publications.json",
+      "sha256": "88f95e36d54376bcdaa4d73b94141bbbc1fcf9f4b6d012233b51ba0d0afab35d",
+      "size_bytes": 1001,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__2002_2003__publications.parquet",
+      "row_count": 100045,
+      "sha256": "4c90af10bce3157cb48e17b7f22b231b87030ab1a7ae82c0288547f417b66bdf",
+      "size_bytes": 1913679,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__2002_2003__publications.parquet",
+      "row_count": 10602,
+      "sha256": "94bcb3f1cd26686e167e4ade1e1c8c0b47af696bdd9d9d9f954c210911325ca3",
+      "size_bytes": 167037,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__2002_2003__publications.parquet",
+      "row_count": 27024,
+      "sha256": "96881e3b54aaa16a9dd04da0537076c7a9d4ff1ee18eaa292c8c9acc2c2ef8a1",
+      "size_bytes": 457806,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2004_2005__publications.json",
+      "sha256": "779dcc7c7ac89332a061085330744c2b990241abe3cec64e56ff5efea56dbb28",
+      "size_bytes": 999,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__2004_2005__publications.parquet",
+      "row_count": 96509,
+      "sha256": "266d807cf2ef5e2e33e056859ec79ee1139ff293f324da858055a36dc182cce8",
+      "size_bytes": 1849308,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__2004_2005__publications.parquet",
+      "row_count": 8152,
+      "sha256": "05ff212760719af3d45607ba7fe261a96016a433519ffb57638540ca62f4aa26",
+      "size_bytes": 126243,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__2004_2005__publications.parquet",
+      "row_count": 33215,
+      "sha256": "e56d1625a9492745879f8eee50e76598e09394f2c63e06327d095def5132c451",
+      "size_bytes": 562602,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2006_2006__publications.json",
+      "sha256": "7157989947071de91b35116f9e832327ea1ee1b34a814ee0c958c0de3a4cb45f",
+      "size_bytes": 998,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__basic-communication-processes__2006_2006__publications.parquet",
+      "row_count": 43723,
+      "sha256": "1059a85c38d0d573217eeb31e711f68eb23a85ecce224249e52745c7c7983bb2",
+      "size_bytes": 824199,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__basic-communication-processes__2006_2006__publications.parquet",
+      "row_count": 3454,
+      "sha256": "df63453d5307b54ead79de64c06a0cd7d3ebb032d2f8012a84b4005f2509a5e4",
+      "size_bytes": 55000,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__basic-communication-processes__2006_2006__publications.parquet",
+      "row_count": 15047,
+      "sha256": "21c1b1fce553333fbaa13327c7bd01c00900b99ebf9600c20527c4d19426f85b",
+      "size_bytes": 260675,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2006_2006__citations.json",
+      "sha256": "c93a6805ed803e0f76ba7fc896d8594f0e1488717b775716605fde9843659a0a",
+      "size_bytes": 1424,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2004_2005__core.json",
+      "sha256": "033f9c5a3ef394f853679a808a5a63b235ffe4769acfd87519ccc0efdfdf424d",
+      "size_bytes": 3250,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__2004_2005__core.parquet",
+      "row_count": 389650,
+      "sha256": "21c5b5c5a9731dac98f929bf8bfa209149bea446a10a6e31b87a31a0395cd539",
+      "size_bytes": 1546264,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1996_1997__publications.json",
+      "sha256": "75ca4d71ceb5c5e33c3a73a5f2c87a29478236f8367b226b4bce9c984b1cf9c5",
+      "size_bytes": 964,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__1996_1997__publications.parquet",
+      "row_count": 222887,
+      "sha256": "513fd0b515d27c2d6e2a7e9577f87805725dee9a275445ecff1cc8a2019763bc",
+      "size_bytes": 4124569,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__1996_1997__publications.parquet",
+      "row_count": 23654,
+      "sha256": "0081643a2102f8be6d1c7b0e068c3d8b0a48cc312ba1ff7d94502d8746e15313",
+      "size_bytes": 373432,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__1996_1997__publications.parquet",
+      "row_count": 37309,
+      "sha256": "8eda00d32519809c354c9d2a9cafa1c1ec33f1246d540eea7530c557df480ab8",
+      "size_bytes": 614156,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1996_1997__citations.json",
+      "sha256": "c95c5eabb6243562281270b18f3044653277557839787c5c0dbdef86f28c2c28",
+      "size_bytes": 1446,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1998_1999__publications.json",
+      "sha256": "d2c704ca4d363a8149f788dc18ee911f1beadb2cc8f056cf88834e4341694bb2",
+      "size_bytes": 965,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__1998_1999__publications.parquet",
+      "row_count": 275934,
+      "sha256": "ad542def3c9a7822616234ff92a8d03f1a99ac2b7ec2bec0e90265433704ffad",
+      "size_bytes": 5158368,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__1998_1999__publications.parquet",
+      "row_count": 29921,
+      "sha256": "d54f0a8eeb4475c5172cc39176dd589d8bf3a5aafefbb2c6bf0909a86ca88b67",
+      "size_bytes": 479924,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__1998_1999__publications.parquet",
+      "row_count": 46938,
+      "sha256": "bec3d32b57610794c395046c50d330fcc54d87438c47dc2d43b338e6f3cee859",
+      "size_bytes": 795926,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1998_1999__citations.json",
+      "sha256": "3f2f29cbcb5422525d332f975c9b23029539ef50f0c6035b8f84220cccad4db9",
+      "size_bytes": 1449,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2000_2001__publications.json",
+      "sha256": "f66f57ca52b85e0da3e35e303050af497c0d3f50e8b96e5da93aa5d643602c90",
+      "size_bytes": 965,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__2000_2001__publications.parquet",
+      "row_count": 413330,
+      "sha256": "9b046eddd970b1df66baa468f1ed61f5ecb18d66cadef5a3265fcdd8741b9599",
+      "size_bytes": 7889676,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__2000_2001__publications.parquet",
+      "row_count": 39220,
+      "sha256": "3f485c020c2c734798f29eef5550ce89beb7d5c3e365cb695ea5e10fc235c637",
+      "size_bytes": 600075,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__2000_2001__publications.parquet",
+      "row_count": 95915,
+      "sha256": "a7c2233654b345e4985c2b45e93607d86fab95a0c47a2ff153154eba79d51fd9",
+      "size_bytes": 1659872,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__audio-visual-technology__2006_2006__core.json",
+      "sha256": "87e1cda0a7d8df7f932ea4daeb9b4eadcf4bb2e75dbc560d4acd566477287e74",
+      "size_bytes": 3247,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__audio-visual-technology__2006_2006__core.parquet",
+      "row_count": 217147,
+      "sha256": "f97f709ac2f939eca294d466c69d54e5d47c5276ed8169528105261b4fd1efff",
+      "size_bytes": 857612,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2000_2001__citations.json",
+      "sha256": "29c1cd1bbcdf460b2bd86ffc0b209283a26d037cb9f5364bb06923f020e5f97c",
+      "size_bytes": 1449,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2002_2003__publications.json",
+      "sha256": "f160058855f9f0bde251c6e7cccf5cf4f286ddded17b5c63ee6ab791727c0e3a",
+      "size_bytes": 966,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__2002_2003__publications.parquet",
+      "row_count": 490075,
+      "sha256": "2bb4d61506397471ea4a44b8b6679545fe46f97a53fb478bf21ab62fb64d1150",
+      "size_bytes": 9461277,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__2002_2003__publications.parquet",
+      "row_count": 42913,
+      "sha256": "267a259e47a29352002fb5b459cdb705adef3fb10ed0a1a898e95350531e1575",
+      "size_bytes": 665618,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__2002_2003__publications.parquet",
+      "row_count": 145584,
+      "sha256": "c2cd1e3188b4002de11b1e56d5573de97d65b4d8975f8e079eaf5d72ddf06368",
+      "size_bytes": 2573793,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2002_2003__citations.json",
+      "sha256": "5a72fc02cbf5fa5087391da880ebb014720f313da8134b19be4b7fbdaaa5f7b9",
+      "size_bytes": 1449,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2004_2005__publications.json",
+      "sha256": "d4fe7bc4cec61b524517f2c741e5842bba8e27612264b24173062c40a4ee9c3a",
+      "size_bytes": 966,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__2004_2005__publications.parquet",
+      "row_count": 570540,
+      "sha256": "0a9200d35dbdd60003b9c9149de19fc57c8faf98be0da1b081b403cbc3508fdc",
+      "size_bytes": 11049973,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__2004_2005__publications.parquet",
+      "row_count": 46563,
+      "sha256": "a261d032a71045c3dd06e0d90e17f00614268b08722728bbcd47a5d7630bbfe5",
+      "size_bytes": 725058,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__2004_2005__publications.parquet",
+      "row_count": 195010,
+      "sha256": "5d9a801ac3c0310a0a3454ba84f3a38b474bd5735f62f3e05afa32fbbbb614e8",
+      "size_bytes": 3449980,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1996_1997__core.json",
+      "sha256": "10905b05503cefcc557805d5ad7d0b445497f98438224ce38338d2760d23acf1",
+      "size_bytes": 3136,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__1996_1997__core.parquet",
+      "row_count": 175765,
+      "sha256": "e2278ab78b29d77149747a48a18dbfad9022b1d4e35a30b8e81cb48360663f21",
+      "size_bytes": 694575,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2006_2006__publications.json",
+      "sha256": "45e870b2e521c32c5501ae7823b6e798321cb300f905f08716a25e5ae019855e",
+      "size_bytes": 966,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__computer-technology__2006_2006__publications.parquet",
+      "row_count": 288196,
+      "sha256": "9f446c732447bfdeecc1bd7779f375e1ebbf4d96bc5c3c96721fbd280b12be13",
+      "size_bytes": 5539510,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__computer-technology__2006_2006__publications.parquet",
+      "row_count": 21304,
+      "sha256": "e49ac0daac19df928c1cceace457a7f54c1b0eacdad1b01c270f73c158878c87",
+      "size_bytes": 333079,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__computer-technology__2006_2006__publications.parquet",
+      "row_count": 101845,
+      "sha256": "0b368a2b673d09ce1f399dbaca0b733d2e5fcb4cc1b9dde313f81fcd9f99cc44",
+      "size_bytes": 1782755,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2004_2005__citations.json",
+      "sha256": "68a0fd5cd77618fe1e1bce526bb44601c6e80c080897daaf6bdc89b072cba5c8",
+      "size_bytes": 1450,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1996_1997__publications.json",
+      "sha256": "920a49e3fbec122855d2520c29a9195ca61eeb37d08799a7f66fdf30bbcac58c",
+      "size_bytes": 979,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__1996_1997__publications.parquet",
+      "row_count": 19098,
+      "sha256": "c33b2aabeae99b93de2032b7e1e31042979dccede58722d81681f7fa684e9b16",
+      "size_bytes": 353372,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__1996_1997__publications.parquet",
+      "row_count": 1980,
+      "sha256": "ed74c82d43c1ad229fa10e75183ecee82a3d8a7166f60e165e0b9aa34191e590",
+      "size_bytes": 32669,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__1996_1997__publications.parquet",
+      "row_count": 2490,
+      "sha256": "e4fa79364c0007f02846be7a566308776a6ad8f956542c702a18a1a4ee5d132e",
+      "size_bytes": 42429,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1998_1999__publications.json",
+      "sha256": "d69119a908c664253a464903b79c8246471e857350ba0c624483f33f1459fe54",
+      "size_bytes": 981,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__1998_1999__publications.parquet",
+      "row_count": 29449,
+      "sha256": "641815f3753284672dcb190e3e0b23f3ee5333ac7f93415f07839479b8ac9964",
+      "size_bytes": 557070,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__1998_1999__publications.parquet",
+      "row_count": 3203,
+      "sha256": "8dcf5f111fbb58d8230158bba756326935261301dce3c6ad094e31e5131e6bf3",
+      "size_bytes": 50900,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__1998_1999__publications.parquet",
+      "row_count": 4455,
+      "sha256": "746e5e7c19188d6f119eabd05f48ff459fdc72092125c05a6222910c36da29e7",
+      "size_bytes": 77544,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2000_2001__publications.json",
+      "sha256": "7d7ee8c18a9632ab73102e1e6c1a4397b4a6fa080da20e3f0205118051206842",
+      "size_bytes": 984,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__2000_2001__publications.parquet",
+      "row_count": 108379,
+      "sha256": "3d6b2a6a305b7ae63c918df7e827115d695c8797f297822a41a57d2770161eca",
+      "size_bytes": 2002244,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__2000_2001__publications.parquet",
+      "row_count": 8239,
+      "sha256": "b2684c989ab8d37fc75005e09c192a008b78a64d9d0a7ee23369b88e79c215dc",
+      "size_bytes": 132676,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__2000_2001__publications.parquet",
+      "row_count": 18153,
+      "sha256": "3abb06812b48b2ede83d82fae24b0cecbd571c679865969e14fc98ba44bfb997",
+      "size_bytes": 323332,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2006_2006__citations.json",
+      "sha256": "ef6253b943739da8b80952dc62f9404a71fccc1ac03f60ac2a374832421407bf",
+      "size_bytes": 1449,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2002_2003__publications.json",
+      "sha256": "6c790c537908de3ec0214e3c17a296be6016372a517668b5289a6e9253021dc4",
+      "size_bytes": 982,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__2002_2003__publications.parquet",
+      "row_count": 89349,
+      "sha256": "237d5ee4037ccfd83acd6e81fbbe1819d51953cbe2d9f926267aaf55391662cf",
+      "size_bytes": 1713081,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__2002_2003__publications.parquet",
+      "row_count": 7080,
+      "sha256": "ce9d6b947a0e27cb4928759d24cfecca204f62d710233a1c2b143ea932aa177d",
+      "size_bytes": 109495,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__2002_2003__publications.parquet",
+      "row_count": 22753,
+      "sha256": "2a6cf09bf8a94569ff04a0e4d24064a87bf045340167f1caeed1145f496655f9",
+      "size_bytes": 395904,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1996_1997__citations.json",
+      "sha256": "78bed85d3b2ff1567cc912c0d73f08b46a21861249bae97705262b0dff8f11ce",
+      "size_bytes": 1507,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__1998_1999__core.json",
+      "sha256": "bfba85ced107d0b51a1e6fca55cbeddbc2d98be1ea72927948d8b0a472a44931",
+      "size_bytes": 3137,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__1998_1999__core.parquet",
+      "row_count": 222959,
+      "sha256": "1e35c18ba8985a2dec814d42568508599e72a3af45d2ceecaac418ab022875ca",
+      "size_bytes": 880242,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2004_2005__publications.json",
+      "sha256": "014ec186a972d00ed8a2426ab06267cfff2598b8668e71de489035c04e0a2b95",
+      "size_bytes": 983,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__2004_2005__publications.parquet",
+      "row_count": 80691,
+      "sha256": "d37357a6626ce6efc36c5ac21d744f3b1ae01d9993fe137ee7604e1ca6418b00",
+      "size_bytes": 1548639,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__2004_2005__publications.parquet",
+      "row_count": 5973,
+      "sha256": "e467196e7f35df5dffc4d66e5d99076cf27e8c6a3bfa4c09f258d56cbd935b19",
+      "size_bytes": 93437,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__2004_2005__publications.parquet",
+      "row_count": 22886,
+      "sha256": "0ac1c52e80e466da85641431a39d3dfe3ae523020a217e20e07a38150b44d7b9",
+      "size_bytes": 399453,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1998_1999__citations.json",
+      "sha256": "dbf386dfd41d81150af7a834c4640468205ae605bfac5eea18bf736f332793c1",
+      "size_bytes": 1508,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2006_2006__publications.json",
+      "sha256": "c721ab2c81fc4bc1f56e9807ed0bef4dcfa99e2fdd8e82098f9091e78c027630",
+      "size_bytes": 982,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__it-methods-for-management__2006_2006__publications.parquet",
+      "row_count": 44382,
+      "sha256": "3f213412618c9f8b72bd646c700b47dec627ba58e7d4cb54329291118a3e1543",
+      "size_bytes": 843562,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__it-methods-for-management__2006_2006__publications.parquet",
+      "row_count": 3075,
+      "sha256": "619ea12ab1741c6b4097c663183818f852c11154f3d0b784a2a9d20f00309711",
+      "size_bytes": 48875,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__it-methods-for-management__2006_2006__publications.parquet",
+      "row_count": 12849,
+      "sha256": "aae91f6ef519750997e70a7f4139bdc2260cb45db738ebfc861033f8861635cc",
+      "size_bytes": 229142,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2000_2001__citations.json",
+      "sha256": "e1a285d8b75a9954f9412ee932e64501b7896909f80e20b2364c882eb243021c",
+      "size_bytes": 1509,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1996_1997__publications.json",
+      "sha256": "cacab29f081744ad49b87a9422440a3b963fac3cc906a3ada9a5180ad4f2d693",
+      "size_bytes": 942,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__1996_1997__publications.parquet",
+      "row_count": 164493,
+      "sha256": "e07502d9159aeed04f586a7057f77bc8c3993b5e46ff0035261e3451ce657203",
+      "size_bytes": 3045123,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__1996_1997__publications.parquet",
+      "row_count": 12191,
+      "sha256": "d0d0c7ca4b87a0254581bd573a07433b8e5a26ff93ef0d2ea33a3f8c2033b329",
+      "size_bytes": 194445,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__1996_1997__publications.parquet",
+      "row_count": 22641,
+      "sha256": "359693086a81c5f6869435f4dc5858ee4f6157cd4a95b598c15ac1702c7ed396",
+      "size_bytes": 372103,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2002_2003__citations.json",
+      "sha256": "13c3103b249172b076576a0e69b31a47df2299ac1317ed88bbc8b489205e07e9",
+      "size_bytes": 1510,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1998_1999__publications.json",
+      "sha256": "a06d1b24699a49064f4438481ca4ffe41080f1941d6409f0a936a99fc81646b3",
+      "size_bytes": 942,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__1998_1999__publications.parquet",
+      "row_count": 198047,
+      "sha256": "e9fd9046495025a718a672dbdd3ed7a2d1e34a5280975412da19e055989bb387",
+      "size_bytes": 3680378,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__1998_1999__publications.parquet",
+      "row_count": 14888,
+      "sha256": "e09cde9825654596e1d7915d4b922daacb80c2ab5f7a70a024a60877b247ca8b",
+      "size_bytes": 244972,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__1998_1999__publications.parquet",
+      "row_count": 29912,
+      "sha256": "b0eee08b46314bbc29137bb2aac4ef8d6039ac099a0ad9e504dce7af5da67213",
+      "size_bytes": 501346,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2004_2005__citations.json",
+      "sha256": "bc19d4cc74ee6750a6467cbce3ce586e9130d1dccf3e7608f49d8904f6545859",
+      "size_bytes": 1509,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2000_2001__publications.json",
+      "sha256": "cccb5b48364ca4221bd86ab78a2a0af9f21b8e0be32d2708371f9f68c49184c7",
+      "size_bytes": 945,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__2000_2001__publications.parquet",
+      "row_count": 257426,
+      "sha256": "7898c6e4ed2b8cfc8f6dc0a842df2b3cf6261ac423f07cfd7e71513fd366a8af",
+      "size_bytes": 4815931,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__2000_2001__publications.parquet",
+      "row_count": 19462,
+      "sha256": "b064276dae30dc9266fdc8fd2c0f5249ea5ea14dfc1a39ca7abaadba12cb2107",
+      "size_bytes": 299866,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__2000_2001__publications.parquet",
+      "row_count": 54576,
+      "sha256": "32537bbb6bc0636dfa4a51060e62943d6e8ed711c470b4e0644f408bcbe693eb",
+      "size_bytes": 903968,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2000_2001__core.json",
+      "sha256": "b14be4a922ed759214c7b6773eac623e3b97ccce0e58ed17d7c427c613b6d7b1",
+      "size_bytes": 3138,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__2000_2001__core.parquet",
+      "row_count": 286696,
+      "sha256": "5541099fe6525e12f7b4f2c34e1ec652e53263577322cf681cc92fb3320c85f4",
+      "size_bytes": 1139133,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2006_2006__citations.json",
+      "sha256": "f0dae6c9bc3831bfa6eb75182d172aef5f0df767d5953131c2129c861dba307e",
+      "size_bytes": 1508,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2002_2003__publications.json",
+      "sha256": "16652c41c4bb9363fb282420770a3dea6c259412e61ee22a54cc590de88009f5",
+      "size_bytes": 945,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__2002_2003__publications.parquet",
+      "row_count": 333949,
+      "sha256": "24ae8ff641b9de739dc9e416338d5949dad9b918488377c878eaa06d33f1589b",
+      "size_bytes": 6387314,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__2002_2003__publications.parquet",
+      "row_count": 20832,
+      "sha256": "9975d6f87e94bf5e57b18b4866a4a449f0329c71eaf302f73deb7964a86ff745",
+      "size_bytes": 326291,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__2002_2003__publications.parquet",
+      "row_count": 81733,
+      "sha256": "1e1698984d246c921499385b81257373b2d841b08e8f1594b71ef58345fb8fb3",
+      "size_bytes": 1409557,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1996_1997__citations.json",
+      "sha256": "9623b891fb67e8de08acf3297d7e1f17f4fdcb4adb2080645d328ca88ad808aa",
+      "size_bytes": 1434,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2004_2005__publications.json",
+      "sha256": "864dd9744a61bfb9dc76b4dfc6d2c059d6082d088c2700c1c36993abc444db8b",
+      "size_bytes": 945,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__2004_2005__publications.parquet",
+      "row_count": 370353,
+      "sha256": "1909d5f7761dfdf887344817b4984a6ddf9f68276e1bc468c87900404f3d5ae4",
+      "size_bytes": 7118823,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__2004_2005__publications.parquet",
+      "row_count": 21185,
+      "sha256": "6d09a834d105044f67c3a61c6b8bfe7b22352fa65cfc377681db8b192e024c6a",
+      "size_bytes": 332487,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__2004_2005__publications.parquet",
+      "row_count": 96069,
+      "sha256": "c227a750cab3fb134d48a09843fd77213b19fa76ea8347a4e8bca167665142fe",
+      "size_bytes": 1670538,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2006_2006__publications.json",
+      "sha256": "90dfe7a7718361a79fd042ee0fcc4e2fca0987bf47688e093101919f07b799ed",
+      "size_bytes": 941,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__semiconductors__2006_2006__publications.parquet",
+      "row_count": 183418,
+      "sha256": "c56ea69395561397662f795e627dc79e6b445a87af61f361c40fb5f78659306d",
+      "size_bytes": 3482281,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__semiconductors__2006_2006__publications.parquet",
+      "row_count": 9994,
+      "sha256": "fce96a70cf75132274e25aa4ff192e5f2f71d1763a0aa2bb1a15843fc2bfd4c1",
+      "size_bytes": 157116,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__semiconductors__2006_2006__publications.parquet",
+      "row_count": 43913,
+      "sha256": "e03b885b4c25617d64d0badeaa1ea12e4fc79210c167e93f4c4dc902d903a172",
+      "size_bytes": 747467,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1998_1999__citations.json",
+      "sha256": "cb45e77db3be97abd23d4d1129a288a2fbe795b9ae15fc09888e5aa5ff6b1a5b",
+      "size_bytes": 1434,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1996_1997__publications.json",
+      "sha256": "f536a0e5210f103add4ffd5a16f5deaa4a159c4e0cca568842fb9088ab3dd244",
+      "size_bytes": 931,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__1996_1997__publications.parquet",
+      "row_count": 201679,
+      "sha256": "5dbcce48fa37f63e97a9246ab61755a704feca3a499edc4468db323eabc947e1",
+      "size_bytes": 3743016,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__1996_1997__publications.parquet",
+      "row_count": 21016,
+      "sha256": "86ab1d25ff4ed539b02d4d0ca8066b765cab16ca199e11837c861a3c60b80599",
+      "size_bytes": 329942,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__1996_1997__publications.parquet",
+      "row_count": 21532,
+      "sha256": "7c422e7efe05969848f01143f260690282878feb603b967fe8d8bb6d2e76aa92",
+      "size_bytes": 351215,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2002_2003__core.json",
+      "sha256": "5d92a3f21d7c29a2630bb8ce49c8f7812df2f6fa7e2c2a825fd78e83ca06ce6b",
+      "size_bytes": 3139,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__2002_2003__core.parquet",
+      "row_count": 303733,
+      "sha256": "c43480e34656accc92aa48ec0b75d3409805e49c7094337dab5d7897d70b8690",
+      "size_bytes": 1214042,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1998_1999__publications.json",
+      "sha256": "0fd372989e7786d462725b88a4bf17bd83e73935f0328c54b5f294014a34e485",
+      "size_bytes": 931,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__1998_1999__publications.parquet",
+      "row_count": 226042,
+      "sha256": "06fe0db941eab1be80ba0c8c1dddeed3c039a70203215ed3cef246cb92169af0",
+      "size_bytes": 4278240,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__1998_1999__publications.parquet",
+      "row_count": 26503,
+      "sha256": "d971c13de3d06814d91b147ec612b40eb0cc8b27e5037bbd467921ff5e316151",
+      "size_bytes": 406565,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__1998_1999__publications.parquet",
+      "row_count": 24747,
+      "sha256": "20156da5a7abb57deb126c5be582e201d7186692865a39cbefa69ee07adc8c2f",
+      "size_bytes": 402681,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2000_2001__publications.json",
+      "sha256": "7851eb4df1f53429e2e499ea9fc0796da22086771e381d82a4340858d2c0972a",
+      "size_bytes": 933,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__2000_2001__publications.parquet",
+      "row_count": 279026,
+      "sha256": "eec5f5233136441a7ad541cbd0392c04d510ea97c93dafaccae5f6bde45889fe",
+      "size_bytes": 5298601,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__2000_2001__publications.parquet",
+      "row_count": 31839,
+      "sha256": "bd93de7083c9583f1a467d35023acd12699d0a5d71db6223ba500044ba4c77e0",
+      "size_bytes": 485720,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__2000_2001__publications.parquet",
+      "row_count": 44250,
+      "sha256": "bba838fd06b2e7ce8be553222755acc511cbb3829e23d2e417d862794fb660da",
+      "size_bytes": 740696,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2000_2001__citations.json",
+      "sha256": "fb99aacae3aabff494e0c40f0123d2b9677641b7a46796802c9396740bb4d081",
+      "size_bytes": 1434,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2002_2003__publications.json",
+      "sha256": "a80352054346cbb0c06889603d2191f3b9d3821c58d67608add6af7fe73d2662",
+      "size_bytes": 933,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__2002_2003__publications.parquet",
+      "row_count": 322462,
+      "sha256": "55a65d6bf25bb6b63075604bef591f38974aaae3dac902261c48ddfcb6fcda69",
+      "size_bytes": 6237903,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__2002_2003__publications.parquet",
+      "row_count": 33283,
+      "sha256": "0f84fbcd1193a6ebe22ebf227b950d7e37c0f708d0c81a611115218f0f2a8e96",
+      "size_bytes": 512251,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__2002_2003__publications.parquet",
+      "row_count": 67466,
+      "sha256": "defc2f4d53f91a198187cafc6711a4b1d6c8a1914a0a055079d861419ea73575",
+      "size_bytes": 1173147,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2004_2005__publications.json",
+      "sha256": "e0cecaed6015193878a550b82278d4a2fcb2186edbec7735dd89e435246b2bf9",
+      "size_bytes": 933,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__2004_2005__publications.parquet",
+      "row_count": 347728,
+      "sha256": "35abaf6221329e14b85ff437a5fa55678be460272201f32acd3e198abf52c474",
+      "size_bytes": 6765913,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__2004_2005__publications.parquet",
+      "row_count": 32626,
+      "sha256": "9f2bbe6511c0e85ad61ea9dd1dabcb29ae6a9eeb3cae76b5e250e843194e82b8",
+      "size_bytes": 507048,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__2004_2005__publications.parquet",
+      "row_count": 85160,
+      "sha256": "97896016ce8ec310426a4ad9a38452343d99a3758887bc3d29ffc8fb6ed77a50",
+      "size_bytes": 1489811,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2006_2006__publications.json",
+      "sha256": "77f2ab7eba4ee100678bb4dd85514707f35274c9a97dc5c8bace37d4b234b7ba",
+      "size_bytes": 930,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__measurement__2006_2006__publications.parquet",
+      "row_count": 175507,
+      "sha256": "d47ff6a0763e616dfe301ad8bbfe905f95e6eac3ecce27731e0bf2f7544474b5",
+      "size_bytes": 3364732,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__measurement__2006_2006__publications.parquet",
+      "row_count": 16332,
+      "sha256": "18243974737ac98ad1ff5708ba8487f088d96a24299c6111c49b8f5e27ba9cb2",
+      "size_bytes": 258837,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__measurement__2006_2006__publications.parquet",
+      "row_count": 38109,
+      "sha256": "01cd272b23a07c9f028c585c21b8a9b2715fd5a3188ba28c9924691141a44c47",
+      "size_bytes": 657959,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2004_2005__core.json",
+      "sha256": "93bce248e8f2c8070dcbceb06077df9af6f59dbf2ff514214643a66138b15903",
+      "size_bytes": 3139,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__2004_2005__core.parquet",
+      "row_count": 313659,
+      "sha256": "b753eb6a9795b98b19bacc8ef5065b5409180ad9610158fc79aedaa0936e3452",
+      "size_bytes": 1247782,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2002_2003__citations.json",
+      "sha256": "6b3c31ce387809600708fc2aa98a7ce9368b9a1fa0a54d15aba0eff0fd64d7c2",
+      "size_bytes": 1436,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1996_1997__publications.json",
+      "sha256": "66348f77b6230b340e37d0d2ea67eebfda67a6d2e6f4b471da54867794af181c",
+      "size_bytes": 910,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__1996_1997__publications.parquet",
+      "row_count": 101795,
+      "sha256": "921248e072f6ada90131fb40f1c1349639eb940f902134cb25f7d918086d8134",
+      "size_bytes": 1904506,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__1996_1997__publications.parquet",
+      "row_count": 10457,
+      "sha256": "4a4f8e38c49b8b73c8834747d5da1877abf787ab9e1be8c645cf4836aa0a6d37",
+      "size_bytes": 166228,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__1996_1997__publications.parquet",
+      "row_count": 9567,
+      "sha256": "c0eddd6218a1faf5a970c9a8192e9caacee423404640eb53255bcc93e1ddec59",
+      "size_bytes": 158333,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1998_1999__publications.json",
+      "sha256": "529446cfa7567da38c42b0be1180e5e2fb7a6e77d3eea513ce4bbd168505c5fc",
+      "size_bytes": 913,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__1998_1999__publications.parquet",
+      "row_count": 113177,
+      "sha256": "7888ee84743aa38de8af4cf59499a9fbb7434c6dfdc632e21c011acf63c72f4f",
+      "size_bytes": 2152868,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__1998_1999__publications.parquet",
+      "row_count": 12657,
+      "sha256": "2a899aea0f3437af03da5ce5974086a711638885507ea0c143d0ca59934f7428",
+      "size_bytes": 198025,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__1998_1999__publications.parquet",
+      "row_count": 10753,
+      "sha256": "c10c4fb9aa9f4d910231656424ce916634075634b3cc288a23d36c63489d02d4",
+      "size_bytes": 180186,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2000_2001__publications.json",
+      "sha256": "717185f2d2e0c34e3f10f89d2f8fe25546be393db15339f61cc1215742fb908d",
+      "size_bytes": 914,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__2000_2001__publications.parquet",
+      "row_count": 144118,
+      "sha256": "ce1bd9d3267827f01a660e7733fa2c7350aa259f3c26a80b7661dd581d13baca",
+      "size_bytes": 2750064,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__2000_2001__publications.parquet",
+      "row_count": 15477,
+      "sha256": "7d06ac1c2b5afa2601f9796a85431531d92ea58b471d6d15dc0cbab82594beb1",
+      "size_bytes": 242564,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__2000_2001__publications.parquet",
+      "row_count": 20779,
+      "sha256": "84d4319b8c5d8abc30e261bf30c5b5a4b5bcda5aa16568150ef4a92aaff81076",
+      "size_bytes": 355913,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2002_2003__publications.json",
+      "sha256": "5d401bb8951e887b7694b0a567eb61af33cff77fccd65bd8ccecffb0aa7b725e",
+      "size_bytes": 914,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__2002_2003__publications.parquet",
+      "row_count": 155367,
+      "sha256": "125742c2b948d57bcd7b0761b5eba67601f459df1d9758d3b259ccc22d0c40c7",
+      "size_bytes": 3006081,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__2002_2003__publications.parquet",
+      "row_count": 15553,
+      "sha256": "255b1ebd06f9aa30f1fed3f12712cac9e0bd786f0f65c92965779fe0f1373830",
+      "size_bytes": 245510,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__2002_2003__publications.parquet",
+      "row_count": 32364,
+      "sha256": "25281ea09cd5d8d73dbac870d44e88d3451aa3384506fe084e056bb6a60f15fb",
+      "size_bytes": 561039,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__telecommunications__2006_2006__core.json",
+      "sha256": "f3900aa4c4baad1eca8a96dab5d998cba0c00e889d79f86da60f29426e5eec51",
+      "size_bytes": 3136,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__telecommunications__2006_2006__core.parquet",
+      "row_count": 175964,
+      "sha256": "c896f1c48223196a8f74feb9fc0188b844bd891fe44356408f2c7413ccd7705f",
+      "size_bytes": 697555,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2004_2005__publications.json",
+      "sha256": "c65d9e2805b65974f1a0968220edd512e909fab8bb2449b659a5b1158afe5798",
+      "size_bytes": 914,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__2004_2005__publications.parquet",
+      "row_count": 166817,
+      "sha256": "5a14c46055a5d9f5aa6e73df0790f767ee31a4834a30b57c77d4d1b92ab06387",
+      "size_bytes": 3239209,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__2004_2005__publications.parquet",
+      "row_count": 15496,
+      "sha256": "232423aa9f37e80fee593ceadb491549501279547ef9cc254be4fb64ec4625cf",
+      "size_bytes": 246181,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__2004_2005__publications.parquet",
+      "row_count": 42457,
+      "sha256": "5cfa1b4b045fcdef8bc8f59124a13dcb97284049dc190879beb0556ebc430c9a",
+      "size_bytes": 737366,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2006_2006__publications.json",
+      "sha256": "8299ecbc7ce4d3864936f25f4e9afbc7a5d77c68647497e9971e09b19faf9f1d",
+      "size_bytes": 911,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__control__2006_2006__publications.parquet",
+      "row_count": 80316,
+      "sha256": "e6243b69506f512a1c6f556177a48c4fb0f8764c64314025d87c7d6565629de6",
+      "size_bytes": 1543708,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__control__2006_2006__publications.parquet",
+      "row_count": 6827,
+      "sha256": "5249f3c40b1ea49cae1e99b9ea98096143a94a57afb990c1b9fc2bff402e1c7f",
+      "size_bytes": 106540,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__control__2006_2006__publications.parquet",
+      "row_count": 19740,
+      "sha256": "d47525967ea008a9ebd6f2d3b7873e8c38f687d6e7388163f780645161a4a157",
+      "size_bytes": 344794,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2004_2005__citations.json",
+      "sha256": "a747eb49156590e6df7384cb565941b1943950884192b94d9f8c39574cbf8e51",
+      "size_bytes": 1435,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1996_1997__core.json",
+      "sha256": "e034f3b570efddd2796b2009ea6f2dbd931936df51ce5f14533227b7010392a8",
+      "size_bytes": 3201,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__1996_1997__core.parquet",
+      "row_count": 114567,
+      "sha256": "55c86a84790b36fd631658b757c2bde15baf676000f444c110c26b085cbd2096",
+      "size_bytes": 450827,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1996_1997__publications.json",
+      "sha256": "0b570e9ef64864874a7e5a564c82bd63064713ca4c8578831ac486c90902a343",
+      "size_bytes": 1039,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__1996_1997__publications.parquet",
+      "row_count": 271750,
+      "sha256": "9c9310706fab9896adee818d208714548f7cbc7f66cc080b5f3f85471eb7580a",
+      "size_bytes": 5051815,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__1996_1997__publications.parquet",
+      "row_count": 26539,
+      "sha256": "aeb78fcbca149158e793f06a2245762ac6934bf8ee984fd40bca3f1a03cf03d5",
+      "size_bytes": 408774,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__1996_1997__publications.parquet",
+      "row_count": 24398,
+      "sha256": "ee9de8675a048e0ce206ec9c3cd13454938c5dfb45180aadcb21e690bbcb3e99",
+      "size_bytes": 391822,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1998_1999__publications.json",
+      "sha256": "14d5bd960471e1287f46ab1423b95cfdcd7dd30809e1a4083b0cef143a2e7f5e",
+      "size_bytes": 1039,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__1998_1999__publications.parquet",
+      "row_count": 306122,
+      "sha256": "c3806d79e3f7dd66f485a01ffc91b2c1785690dc585e3fd5ed6b8e9a2047310a",
+      "size_bytes": 5816946,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__1998_1999__publications.parquet",
+      "row_count": 32564,
+      "sha256": "93bc460dfa2223ef982cc18c2f091cf824b5d0cbd88ea979588204486d6d8913",
+      "size_bytes": 497503,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__1998_1999__publications.parquet",
+      "row_count": 28689,
+      "sha256": "d55191278068896dd27dd5c7c9ba09bab2cac1612eb29afd831bf2faf4b097b9",
+      "size_bytes": 465019,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2006_2006__citations.json",
+      "sha256": "fc4423ee01e021fb23a6faa3620b93aa07b8e3e8796ef925e1911f601338e57b",
+      "size_bytes": 1435,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__1998_1999__core.json",
+      "sha256": "72dec9bbe2cfe3117c02c08775b8278abf9117148998f4ce6401895982b8e543",
+      "size_bytes": 3203,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__1998_1999__core.parquet",
+      "row_count": 162631,
+      "sha256": "790d5222901791ebe3e8af535cf1cef73d9667aebf7505480f054fa142e6c494",
+      "size_bytes": 640637,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2000_2001__publications.json",
+      "sha256": "870ff02a19fbcbf68a13fa5f8a91b80827f8f866741f73a7ad011af13a9d4951",
+      "size_bytes": 1039,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__2000_2001__publications.parquet",
+      "row_count": 373075,
+      "sha256": "3a80bfe947a5f4c465d42a06a415306a3550e1aa01a4ab315d7124bff599ebbb",
+      "size_bytes": 7088990,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__2000_2001__publications.parquet",
+      "row_count": 38730,
+      "sha256": "3c9ee04c2f03c32f9d65bb4c24008c094b442217e0d5736c2f27707a937c614f",
+      "size_bytes": 587272,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__2000_2001__publications.parquet",
+      "row_count": 51985,
+      "sha256": "0c0d6c033ad9239aceba3e968b45c4001f5b1eae2ac2c08445c464853f64cb6d",
+      "size_bytes": 860610,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1996_1997__citations.json",
+      "sha256": "eace9851aff175e0388556ad6e33bdea2c92ecf7555cc0b874d3290d6b1413e2",
+      "size_bytes": 1472,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1998_1999__citations.json",
+      "sha256": "c3419ece76b7c7a7eed358140359cbee2a6d8bc0ae6afefe4473fa3f78826619",
+      "size_bytes": 1474,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2002_2003__publications.json",
+      "sha256": "2867a06b1978f22b87efaa8e2c784bad88d93876adb6c4e30ee5496ace6fca6e",
+      "size_bytes": 1038,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__2002_2003__publications.parquet",
+      "row_count": 434016,
+      "sha256": "80935af9e5ea1b912ea1f5c78a70d1c2fcdee6c5dd799742a571006ae284832b",
+      "size_bytes": 8333545,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__2002_2003__publications.parquet",
+      "row_count": 37986,
+      "sha256": "3842502f424cf19e0e36b06873506b768d549279552a10a02763e5fe45500cb7",
+      "size_bytes": 583761,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__2002_2003__publications.parquet",
+      "row_count": 76586,
+      "sha256": "23cd3aebd8fecd037781faaef90da2fc2fd2f2abd1b89e54c35c3c93605dfb37",
+      "size_bytes": 1326832,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2000_2001__citations.json",
+      "sha256": "7923e0e3d36a8ff297bda47ee35a9be7afad5b71a1c787d6133c8a375893d72d",
+      "size_bytes": 1478,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2004_2005__publications.json",
+      "sha256": "c5da84b0290e3ec4c89ff5cbdcd06482cc41ddfa6ef7673775610edb861389eb",
+      "size_bytes": 1039,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__2004_2005__publications.parquet",
+      "row_count": 491135,
+      "sha256": "47a3b5cddc060e827e37422b51e87081515cc7a124903fe72755ae91711c47e0",
+      "size_bytes": 9491465,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__2004_2005__publications.parquet",
+      "row_count": 39538,
+      "sha256": "7b29928c872b1adcae101463edf78dd00e69a6b17add412890c1eb600e06f9f8",
+      "size_bytes": 611859,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__2004_2005__publications.parquet",
+      "row_count": 99992,
+      "sha256": "573f31f5f868c581f61a39872eec39fe97bc80c10de2990949d4f886620548b0",
+      "size_bytes": 1752009,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2002_2003__citations.json",
+      "sha256": "db32d55cdf92cfe4b3750b6c79f507afca246f7b799dab513bc52ec126514939",
+      "size_bytes": 1477,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2000_2001__core.json",
+      "sha256": "60729866e897a4c7ea5945531e9826aa55d41349e92ea3bd9c01e5a011862d76",
+      "size_bytes": 3203,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__2000_2001__core.parquet",
+      "row_count": 251228,
+      "sha256": "48f64d13d7a05f14a6c8ad4da4bf7451d72d04e79d3f92e0d30ad82fc49bfdf4",
+      "size_bytes": 995417,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2006_2006__publications.json",
+      "sha256": "e47763115058c055834eac905f5703b401984c573eb6ea41ab09f4deb83363be",
+      "size_bytes": 1037,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_publn_ids/heritage__electrical-machinery-apparatus-energy__2006_2006__publications.parquet",
+      "row_count": 249637,
+      "sha256": "5146a017bfd191a0b4b640291d438e1cd2a0a60d6e83ee90aff07be495d11d9c",
+      "size_bytes": 4757296,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_ep_publication_numbers/heritage__electrical-machinery-apparatus-energy__2006_2006__publications.parquet",
+      "row_count": 19411,
+      "sha256": "59c6d90fc789c01c5fdbb3a274e3908e92d81b392a7d5eb800aa2e81c3585eef",
+      "size_bytes": 301351,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_us_publication_numbers/heritage__electrical-machinery-apparatus-energy__2006_2006__publications.parquet",
+      "row_count": 47226,
+      "sha256": "353b01d473e9d2c2a36f5c8a5e8b27d3b3ecb1d8e21ac69595eaea0d4a8355e6",
+      "size_bytes": 814828,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2004_2005__citations.json",
+      "sha256": "89596c71693451e699e8a24e6b8f1bc9740d016a03e7fd2a8e8a684849bb6590",
+      "size_bytes": 1477,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2006_2006__citations.json",
+      "sha256": "e4aa51a1ac0b497f8153f79c810da1ad386c7c976fb22b750a6b21a05383ad17",
+      "size_bytes": 1475,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1996_1997__citations.json",
+      "sha256": "3b67d52fc8f7b4ea2cfd0452a258802d4aa46a87a799e1d1af60837bed5b000a",
+      "size_bytes": 1391,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1998_1999__citations.json",
+      "sha256": "74f6cc7f3e7bb5e02d6a053c5ec136097670e3482c5e4f476a401e3ddd5cc553",
+      "size_bytes": 1391,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2002_2003__core.json",
+      "sha256": "c9ad5ff0d77b3a040154fd8a148a3e0ef595e17cbadfdcfee52c5b4a1c44b31a",
+      "size_bytes": 3203,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__2002_2003__core.parquet",
+      "row_count": 276255,
+      "sha256": "ddcb933dbb30d5c2c7eb9d2920eff16cee151d4c0f87c639b9ce5809095c7b8d",
+      "size_bytes": 1102604,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2000_2001__citations.json",
+      "sha256": "549c9c2dd1211f31f5df87af91c43de83971f863ca989f87438677380ae017f2",
+      "size_bytes": 1394,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2002_2003__citations.json",
+      "sha256": "e3ad8a8e7e46d97a787c1f7fe245cfb1ccfd395e53daf64a21f650b28ca39bbd",
+      "size_bytes": 1394,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2004_2005__core.json",
+      "sha256": "c87eb45aa70d9ff5621bc31dc787f4f46dc2a2feb5a18c4eea1df13e0b11a012",
+      "size_bytes": 3204,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__2004_2005__core.parquet",
+      "row_count": 283360,
+      "sha256": "e7bd0d2f8cd369051db4eb5f923e7b1525eb73ace9742ef14eebe254e428a461",
+      "size_bytes": 1126847,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2004_2005__citations.json",
+      "sha256": "a9cbddead72f5a9c01dbc90f7774d97b7085409a99b0497eaf578b1f4949aad6",
+      "size_bytes": 1394,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__digital-communication__2006_2006__core.json",
+      "sha256": "ce334f316e066e3ba851b35d8d9d7f344a3cff07e5bd2806d114f6c12475e5a2",
+      "size_bytes": 3203,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__digital-communication__2006_2006__core.parquet",
+      "row_count": 165730,
+      "sha256": "586437c0aabb8de1715a06961d0c3ac794432d3d8c0970719883588ad9a0119c",
+      "size_bytes": 657612,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2006_2006__citations.json",
+      "sha256": "59ac3fc28f4d108679527ba0fb3a7999d41f594fd67ae979a957e807bb19bebb",
+      "size_bytes": 1391,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1996_1997__citations.json",
+      "sha256": "132b24abcb8467f5a2308520a9c48e1ce57c49b55e255fffca7ea288f32298e8",
+      "size_bytes": 1368,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1996_1997__core.json",
+      "sha256": "08cbd0dc1c16f4e118f483cc9bc8bf04a9f5615a7015faa63744cfa7e9e531ef",
+      "size_bytes": 3374,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__1996_1997__core.parquet",
+      "row_count": 67475,
+      "sha256": "fc4db8d9d9ab1b222533712306e0c2915074fc60ef6174c497e0c7231173a907",
+      "size_bytes": 266221,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1998_1999__citations.json",
+      "sha256": "4cf68ac87d2b3e43885381b8bea06eecd2395b17f208e1d7390d9809d29c7174",
+      "size_bytes": 1368,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__1998_1999__core.json",
+      "sha256": "c8becb8df0cd20b1ec56a435fdf346d3a550626d604a64805a2839832b4bd06c",
+      "size_bytes": 3375,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__1998_1999__core.parquet",
+      "row_count": 70706,
+      "sha256": "b65535f54461c711b858d263d25b72ee41345ea0522c4a6afe319eda76f60f74",
+      "size_bytes": 278162,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2000_2001__citations.json",
+      "sha256": "facf0169ded00940fa253569f0d8c9fbc7f46b475d3e22c5c45f888a819f0418",
+      "size_bytes": 1369,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2002_2003__citations.json",
+      "sha256": "9d9d5e34f6a795a42343fcba9d381c9cc84ed460e12a9f63199153decea22268",
+      "size_bytes": 1370,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2000_2001__core.json",
+      "sha256": "2e298d528e3e22c884046b87bf89b7091f2f0407654efe2d9495f7f2c59614c4",
+      "size_bytes": 3376,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__2000_2001__core.parquet",
+      "row_count": 84346,
+      "sha256": "dbcb6b71c43cc2245d0c16dd2119e037270c829a5261c1192711bcbd4cdee144",
+      "size_bytes": 333824,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2004_2005__citations.json",
+      "sha256": "fe867710b8ed2e9f30864811b0aa9cac18ac6b495fdb7b45ad15fed8b7e4e826",
+      "size_bytes": 1370,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2002_2003__core.json",
+      "sha256": "8d6cd269aa72ac842a01c59463046d14f008ff3f1d1bd4fed94ff62722947068",
+      "size_bytes": 3377,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__2002_2003__core.parquet",
+      "row_count": 93733,
+      "sha256": "aa99339c2decfdaf6256d0295260f5271ad132f413d90109d39909395602f4be",
+      "size_bytes": 372490,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2006_2006__citations.json",
+      "sha256": "87d9a3ce8894fef1f64df0c2a137f79c57ead6a0610c213da4ad100224062862",
+      "size_bytes": 1367,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1996_1997__citations.json",
+      "sha256": "8e1fcb892290fa5fc5f698d7bf9be44085f4efe1e8d1343e784e5390610ea120",
+      "size_bytes": 1333,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2004_2005__core.json",
+      "sha256": "08b9e5ed587a0e25febe5f5b934817f8680e7a94c1b7eba52faa8739db8ddb14",
+      "size_bytes": 3375,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__2004_2005__core.parquet",
+      "row_count": 91369,
+      "sha256": "bd7734ab2ded81503293642440b6deecbc24b9e12dc854bf048f7d59bcc0550d",
+      "size_bytes": 360662,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1998_1999__citations.json",
+      "sha256": "3766719df960e3d7b664e7657133c2e1ede0636fb8a233b996ddf23a3b78a475",
+      "size_bytes": 1334,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2000_2001__citations.json",
+      "sha256": "c44839f2cd51cfdc8c957431f61320366f10ea4f48dbb82dcfc50c0de7cbe5df",
+      "size_bytes": 1335,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__basic-communication-processes__2006_2006__core.json",
+      "sha256": "bad4e93eda6a132470e08e9adf2f8a891ccf06db3de988dedf3f7b89bdfbd401",
+      "size_bytes": 3374,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__basic-communication-processes__2006_2006__core.parquet",
+      "row_count": 47787,
+      "sha256": "e800a49236fd9919f34f9e4da9a7021b4979f878044671f50adc12187f854fd0",
+      "size_bytes": 187595,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2002_2003__citations.json",
+      "sha256": "2155c79a49752214af2f686258ae727a6f243023505cc3262621b869a7a43671",
+      "size_bytes": 1335,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2004_2005__citations.json",
+      "sha256": "d83345b5a21d75b033454498497ec6cb63d8634b4adcfb809d7061d6f56e4ac8",
+      "size_bytes": 1336,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1996_1997__core.json",
+      "sha256": "f0213342e196135a66a8686e36e148df0b0fb0dc4d39b21b1537294524e4c503",
+      "size_bytes": 3160,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__1996_1997__core.parquet",
+      "row_count": 229285,
+      "sha256": "5a64d8f78f07131b70848c049031d5c1ecf305350ace5c5a8ee22d9974b8fc04",
+      "size_bytes": 905945,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2006_2006__citations.json",
+      "sha256": "58dfec2b2fddb03c5781a7de5dcbdd14fbc40934fb170e33559a965b6d5ace6e",
+      "size_bytes": 1332,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1996_1997__citations.json",
+      "sha256": "f01ec4c9ecfd9fff0f3d4b244ccecfb43181b774813a591d90be4e0c46734dea",
+      "size_bytes": 1579,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1998_1999__citations.json",
+      "sha256": "c62a6d3a13b1d2459ac71c5f372d4a3f9e6a0a78c01241f9002836cb542cb25d",
+      "size_bytes": 1580,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__1998_1999__core.json",
+      "sha256": "f6418bd04035415bad57322b175b7fbbb3f09a8a0b150248b65c9653c9192ced",
+      "size_bytes": 3161,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__1998_1999__core.parquet",
+      "row_count": 286186,
+      "sha256": "3cf9d214e217c3fb944ea9f92908f62bc64fbc883c112e30cf2d88e784937883",
+      "size_bytes": 1126236,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2000_2001__citations.json",
+      "sha256": "5622107e5331b194ec995265c2f1cf349253e063b5563e3ab46da89bf2e8393b",
+      "size_bytes": 1580,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2002_2003__citations.json",
+      "sha256": "389d52d5fda9050d2ff2b6a620241aadcaeabbd412b7fe0b2fd9bb674793d174",
+      "size_bytes": 1580,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2000_2001__core.json",
+      "sha256": "3c08874dc1049a4fdcfac9ff87f7e10e360a63013778e04fc666e43b923bf0f4",
+      "size_bytes": 3161,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__2000_2001__core.parquet",
+      "row_count": 438042,
+      "sha256": "122f3efd21f51532293cc412c06e15147fe99c6052301a418ea22fab534bb956",
+      "size_bytes": 1736768,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2004_2005__citations.json",
+      "sha256": "16e7feff8544ce796e6f91e5547d07f0d8a09a0757590dc7e2de25b2b7a25fe6",
+      "size_bytes": 1580,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2006_2006__citations.json",
+      "sha256": "970a8278addde49f9fafcbef795143ec21405c8fae4ec1a2d54781c2af304017",
+      "size_bytes": 1579,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2002_2003__core.json",
+      "sha256": "a4f51edc6e9840d7a595903cf9002643973b7a814b806db9a4d8532773f9098f",
+      "size_bytes": 3162,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__2002_2003__core.parquet",
+      "row_count": 487982,
+      "sha256": "d027953774ed69a723a8f7043b452eec084c6260829b203ca4fa9d24c42ac14a",
+      "size_bytes": 1947905,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2004_2005__core.json",
+      "sha256": "40b24300132032aef589467452d899e10f665ebaa3b8cdde933d1d9a6b41bfd4",
+      "size_bytes": 3162,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__2004_2005__core.parquet",
+      "row_count": 552343,
+      "sha256": "94a9e694dea4652db7a0733a790bfe3ec9f8d632d2a8ba4511845d9d3e21b7c1",
+      "size_bytes": 2193049,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__computer-technology__2006_2006__core.json",
+      "sha256": "aa6958df4d15159da416d5821dd3be6020697fefab68395ede967ab56ab6527a",
+      "size_bytes": 3161,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__computer-technology__2006_2006__core.parquet",
+      "row_count": 317188,
+      "sha256": "86ec200a6f1c65f3ca45ed24a3776d86d05315d8510662ac3e2ac770b1e4d017",
+      "size_bytes": 1253722,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1996_1997__core.json",
+      "sha256": "950f0f7d33413118f71a408d6f2a2179cea1a86ada803ca0ee7846e6465d79c4",
+      "size_bytes": 3282,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__1996_1997__core.parquet",
+      "row_count": 28224,
+      "sha256": "56edc6e1e84d82a6550be0f49fb204445fc383e57459cd86aeb94a3b81a72f75",
+      "size_bytes": 108386,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__1998_1999__core.json",
+      "sha256": "dfae79aed69bf1153e0f9bbcdad73b546d5a6b70cdaefd5d19b43a43630423d5",
+      "size_bytes": 3285,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__1998_1999__core.parquet",
+      "row_count": 46409,
+      "sha256": "28c4cbdc26d900e11596607f6462d2830a5f27a742ed1fd75b67cc1af61a8fb4",
+      "size_bytes": 179496,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2000_2001__core.json",
+      "sha256": "df2fae26b528b288fec423f7b674fb40242fa6573ad01b13b01b9dfe69230ff0",
+      "size_bytes": 3288,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__2000_2001__core.parquet",
+      "row_count": 158444,
+      "sha256": "d5232a98b9ac23567381054ac5e28932087731c58be8e5ed5e99e9f547cce445",
+      "size_bytes": 617531,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2002_2003__core.json",
+      "sha256": "806a1e045de3d7cf3474ed1ac3c35d6b45336d997e428cddbfd53a6e068113df",
+      "size_bytes": 3287,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__2002_2003__core.parquet",
+      "row_count": 133204,
+      "sha256": "346b0afa5a04eb59ca6fb23c0aed9c47f47ecd26bb2b9c8eb6872543c3034091",
+      "size_bytes": 525430,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2004_2005__core.json",
+      "sha256": "80486dba5dfd23ca5f9720be94f087c863350cbdadef0dbbc90d92b2a8255b8a",
+      "size_bytes": 3287,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__2004_2005__core.parquet",
+      "row_count": 115975,
+      "sha256": "0bcb9f108195641f9395b15769453743a839fa7a626a177af739f26d4e30740f",
+      "size_bytes": 456174,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__it-methods-for-management__2006_2006__core.json",
+      "sha256": "f52e36949d9fb6847485c65b23ec54acdf373105fda04bcbc109556110c74f40",
+      "size_bytes": 3286,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__it-methods-for-management__2006_2006__core.parquet",
+      "row_count": 65154,
+      "sha256": "6005ea0a52fecefd0e8f02a3d6164c9de87ce986c5fa13683e40661047242a97",
+      "size_bytes": 253803,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1996_1997__core.json",
+      "sha256": "8449c86f8fea361bebf84e8011d466c3367fd0483eb5e4a700fcb25142f70521",
+      "size_bytes": 3048,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__1996_1997__core.parquet",
+      "row_count": 153505,
+      "sha256": "0a543e744b78de2a7270deb4a7c66c4add56ab7fec11313865e054967ad43dd5",
+      "size_bytes": 607678,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__1998_1999__core.json",
+      "sha256": "98d8e566d09a5edba6e9ccc13cb2c4ab366cfd54f1906270b1bc38f3bd921d7b",
+      "size_bytes": 3048,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__1998_1999__core.parquet",
+      "row_count": 185475,
+      "sha256": "c3d120bfcff5a1458c61273e98b0073c25ccc1ee189d70317147240a404b0fd2",
+      "size_bytes": 729634,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2000_2001__core.json",
+      "sha256": "13f586db1fd3c5c7f547a84b9efbd97a143eb87f240b38d869b771de74b8b3c7",
+      "size_bytes": 3049,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__2000_2001__core.parquet",
+      "row_count": 246857,
+      "sha256": "2a302c44aec7f4224a0202977a2065917148e63a660f3f1af0c87005ee1b40c5",
+      "size_bytes": 979515,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2002_2003__core.json",
+      "sha256": "14829f68e2942df4ef7dd65bcbd7a28f4a063c9dfcaba927d60954e248ed4e07",
+      "size_bytes": 3050,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__2002_2003__core.parquet",
+      "row_count": 295149,
+      "sha256": "0afdbb7458aa666a82c11b2eb77e6af34f4c85339fe723198602b9ab776a5c54",
+      "size_bytes": 1174011,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2004_2005__core.json",
+      "sha256": "af14830b9a61f1cb8923d2283f94f75887174fdff087666b68408fd34c598203",
+      "size_bytes": 3051,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__2004_2005__core.parquet",
+      "row_count": 305541,
+      "sha256": "0e022acc0150f40c6ccd87047a357b34bc9d95ce5dadb94cf35ac27de9e8cf7f",
+      "size_bytes": 1207765,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__semiconductors__2006_2006__core.json",
+      "sha256": "491e4419a104db9c21d9edb7a1b84a29f2e9e682a7d1241b6708272b76694bc8",
+      "size_bytes": 3047,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__semiconductors__2006_2006__core.parquet",
+      "row_count": 181459,
+      "sha256": "540a78fd8b7a6dfd1ea8721e9b3431f152a9c9074dfba36bc8a8ea5b9f551a80",
+      "size_bytes": 714459,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1996_1997__core.json",
+      "sha256": "32235cd687dfc650d15d98b9719c8479ec903bd5520dd998607e8ff9a19663f6",
+      "size_bytes": 2983,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__1996_1997__core.parquet",
+      "row_count": 242126,
+      "sha256": "52afef48d67ca55922d32f56e009a100de3f70be2a03034cabf55fe76ed66865",
+      "size_bytes": 957359,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__1998_1999__core.json",
+      "sha256": "dbb35dab576c1cd731a2db6e59bab55f4afae62d2b138daca2759482e85c8c52",
+      "size_bytes": 2983,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__1998_1999__core.parquet",
+      "row_count": 276917,
+      "sha256": "2854ca5cf91ed270fccfa22760fed2cf1913aad3faf7ed110ab73363b2353ed8",
+      "size_bytes": 1096107,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2000_2001__core.json",
+      "sha256": "5dbef667fe3c1e50032b88e5e4ee80de44e2a294861202246153632a9c1ea7f0",
+      "size_bytes": 2984,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__2000_2001__core.parquet",
+      "row_count": 338845,
+      "sha256": "2fed0a3fd2109ad9b1fb088117994af2a1a6b449980b0aa399e634c7257cd529",
+      "size_bytes": 1347746,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2002_2003__core.json",
+      "sha256": "6573cada3191385f72efebb39c8c92fd48b6b9e4af476fe6ca72658b7d55b503",
+      "size_bytes": 2985,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__2002_2003__core.parquet",
+      "row_count": 379966,
+      "sha256": "c8b7d7696e2f04d5fab27484e04540db02ec3825e704df58cc0c5fc8d24714ee",
+      "size_bytes": 1521434,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2004_2005__core.json",
+      "sha256": "899987655b1c2a3c69fa0778ee1f4e291fe1ac40a952a97ecbc6abc8b3d6a611",
+      "size_bytes": 2985,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__2004_2005__core.parquet",
+      "row_count": 401712,
+      "sha256": "c479f7459249a718d326b231d165d0a50ac95ae83d8ea9e89adb9c1eff9bdda4",
+      "size_bytes": 1607151,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__measurement__2006_2006__core.json",
+      "sha256": "a11e67e8a730101bc48772d89ff7a527c381f67d84657b66075ae8fbc6f4b909",
+      "size_bytes": 2982,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__measurement__2006_2006__core.parquet",
+      "row_count": 227408,
+      "sha256": "5dc12e7386b2671a100502bb8ec47206f384f8d345b33fbaf9fc9b9aa72f58bf",
+      "size_bytes": 907547,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1996_1997__core.json",
+      "sha256": "5f044b85fc37b9506f1d492cf4a12a26a61df5dd05d68d0f621918ab307f0a5d",
+      "size_bytes": 2892,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__1996_1997__core.parquet",
+      "row_count": 118509,
+      "sha256": "8f69a47dc341847ea63e5c543866bd164ca779fbe0dde6f6cfa6a7ba5fa32f3d",
+      "size_bytes": 466509,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__1998_1999__core.json",
+      "sha256": "7a4893616191094c3380a21976c9f5cf4b50a355390bed804c39c542050d88a6",
+      "size_bytes": 2892,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__1998_1999__core.parquet",
+      "row_count": 131538,
+      "sha256": "d13f67124e38502f36d432b725fc0658c71211791d581584b37ef2e02c180b61",
+      "size_bytes": 518778,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2000_2001__core.json",
+      "sha256": "683383fae5d4d17cfdc119c60d9a2a772d71713dc5f78efffff6eeccef1a408d",
+      "size_bytes": 2894,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__2000_2001__core.parquet",
+      "row_count": 173896,
+      "sha256": "a12fb9e270193bccf9646a4f82106747ba3ce8a9c524ee6ba7479a80cdf819e7",
+      "size_bytes": 689194,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2002_2003__core.json",
+      "sha256": "8146f0e0b2859f0ae8be91982674263c62772171b8d28902f1808d9c2b400192",
+      "size_bytes": 2894,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__2002_2003__core.parquet",
+      "row_count": 184104,
+      "sha256": "96e8b5e4bb97c30eaa3895f3993599ffe383c6e632d42a6bcb3ff1c52a026922",
+      "size_bytes": 735423,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2004_2005__core.json",
+      "sha256": "bd0d3f59398b5ad216dc893ee08b88ab7c8433c01ba0e53b6f50cfdb75d3b0d8",
+      "size_bytes": 2894,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__2004_2005__core.parquet",
+      "row_count": 194942,
+      "sha256": "f8312de6778c409c698567f25e6a465ca6f1903611ec925847b7fe1db21cdf94",
+      "size_bytes": 777777,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__control__2006_2006__core.json",
+      "sha256": "3cf6eee1adef6a1b0db22031695342fe106b51feeafb32a7ad16d6317cf3cd1b",
+      "size_bytes": 2891,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__control__2006_2006__core.parquet",
+      "row_count": 104032,
+      "sha256": "9b1a5570d87423fa99d06c1f06837f26dba1a14224c18d3ba3e5421d31fe05a8",
+      "size_bytes": 412212,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1996_1997__core.json",
+      "sha256": "ee0f05a72616c74d6dd8707d0d21484d85a74de3945464aa3a4c4cbb8dcb5fc3",
+      "size_bytes": 3558,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__1996_1997__core.parquet",
+      "row_count": 279981,
+      "sha256": "a71b047b3421bc90d7b5028c3bc23967f4fb6e8e422972c1bcfa74a988019e6b",
+      "size_bytes": 1107321,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__1998_1999__core.json",
+      "sha256": "9b11ff978060bcfec3876533d8db97149fbbdb1c2fab5ed831a37823a0f8e5b4",
+      "size_bytes": 3559,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__1998_1999__core.parquet",
+      "row_count": 311564,
+      "sha256": "44208908f612db64faa47e922b4bb7f424996ca4f3fd9ef4f46055511ae5c269",
+      "size_bytes": 1231410,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2000_2001__core.json",
+      "sha256": "fbbd57047c4b50a8347fb1daad88abdc41013f3fa1c325d18f5634a558c4d717",
+      "size_bytes": 3559,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__2000_2001__core.parquet",
+      "row_count": 376875,
+      "sha256": "76b11b0c91702b20cdc670e01cd6570ef82a84705890ded505a093ab7735c555",
+      "size_bytes": 1498234,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2002_2003__core.json",
+      "sha256": "360ed52cdedc97c60857b2cb8454fbab50df5e4c6839c4c6fd9d6e44be61ddb6",
+      "size_bytes": 3559,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__2002_2003__core.parquet",
+      "row_count": 422270,
+      "sha256": "9bdc30e012526803812721db33f5cfcbd69cd3e361a954534553bc08c82622aa",
+      "size_bytes": 1689113,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2004_2005__core.json",
+      "sha256": "f6e8c33bdeaeebebab6bbaceb92dcf5996f6abc67cb577d9bedfe75ea6b8bb4b",
+      "size_bytes": 3559,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__2004_2005__core.parquet",
+      "row_count": 457060,
+      "sha256": "a52017beb3da8bddeaae2c494aedde3622ac7588861e9a061be266b2f0772739",
+      "size_bytes": 1822004,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/manifests/chunks/heritage__electrical-machinery-apparatus-energy__2006_2006__core.json",
+      "sha256": "4a8a0258d11e94fbee1f6313c8360a39e7a7ea1b3d27dadee3de983aeb50f013",
+      "size_bytes": 3557,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/_chunk_derived/seed_person_ids/heritage__electrical-machinery-apparatus-energy__2006_2006__core.parquet",
+      "row_count": 268616,
+      "sha256": "d67cfbe40cb00f65fe1a491532d75e81918a8ea36116950db36920444dc366f6",
+      "size_bytes": 1066392,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_publn_ids.parquet",
+      "row_count": 10226243,
+      "sha256": "eca1013967f31d74050e27b24bcbfc0520373f86222377f1fe4eac83e8bf5983",
+      "size_bytes": 213140354,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_ep_publication_numbers.parquet",
+      "row_count": 926170,
+      "sha256": "cf1bfd295c967068e6bc458ab7b0cb7219c7c40c1560a8556bf7478125248a72",
+      "size_bytes": 16033823,
+      "type": "file"
+    },
+    {
+      "column_count": 1,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_person_ids.parquet",
+      "row_count": 6688488,
+      "sha256": "5561020046deeda58e514e73190e5d0a62ab00a341fff61c6745ffa472ec2100",
+      "size_bytes": 26860231,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/home/jovyan/patent-iq/etl/data/raw-bounded-heritage/_seeds/seed_us_publication_numbers.parquet",
+      "row_count": 2006450,
+      "sha256": "4d6d1dec210d57c94ca3a7af5426956f308260b2a09dd0ff8e0286ee606105e1",
+      "size_bytes": 37044521,
+      "type": "file"
+    }
+  ],
+  "stage": "pre-bronze-heritage-chunked-export",
+  "started_at": "2026-03-23T21:21:38+00:00",
+  "status": "success",
+  "summary": "Executed chunked TIP heritage-backfill extraction with Blob-first chunk manifests and local cleanup support.",
+  "warnings": [
+    "Skipped `bronze_ref_techn_field_ipc` because no source file was found.",
+    "Skipped `bronze_ext_cpc_coverage` because no source file was found.",
+    "Skipped `bronze_ext_cpc_ipc_weights` because no source file was found.",
+    "Skipped `bronze_ext_iso_country_map` because no source file was found.",
+    "Skipped `bronze_ext_world_bank_gdp_ppp` because no source file was found.",
+    "Skipped `bronze_ext_us_chamber_ip_index` because no source file was found.",
+    "Skipped `bronze_ext_up_member_states` because no source file was found.",
+    "Skipped `bronze_ext_kind_code_normalization_seed` because no source file was found.",
+    "Skipped `bronze_ext_oecd_indicator_seed` because no source file was found."
+  ]
+}
