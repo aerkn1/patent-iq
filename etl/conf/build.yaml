@@ -19,7 +19,7 @@ sources:
 
 execution:
   tip_chunked_export_enabled: true
-  heritage_backfill_enabled: true
+  heritage_backfill_enabled: false
   blob_intermediate_enabled: true
   upload_after_chunk: true
   cleanup_after_upload: true
@@ -39,12 +39,12 @@ execution:
   uspto_odp_max_retries: 5
   chunk_year_span: 2
   table_families:
-    - "core"
-    - "publications"
-    - "legal"
-    - "register"
-    #- "epab"
-    - "citations"
+    #- "core"
+    #- "publications"
+    #- "legal"
+    #- "register"
+    - "epab"
+    #- "citations"
   heritage_table_families:
     - "core"
     - "publications"
@@ -54,7 +54,7 @@ execution:
     publications: 2
     legal: 1
     register: 1
-    epab: 1
+    epab: 2
     citations: 1
   heritage_max_workers:
     core: 1

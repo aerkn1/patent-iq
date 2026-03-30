@@ -1,0 +1,32 @@
+{
+  "chunk_id": "telecommunications__2023_2024__epab",
+  "duration_seconds": 776.069,
+  "field": "Telecommunications",
+  "finished_at": "2026-03-24T13:21:59+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2023_2024__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2023_2024__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2023_2024__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 161160,
+    "ep_appln_count": 5687,
+    "ep_publication_count": 6938,
+    "family_count": 140919,
+    "local_output_bytes": 7683730,
+    "local_output_file_count": 3,
+    "publn_count": 184771,
+    "us_publication_count": 29233
+  },
+  "started_at": "2026-03-24T13:09:03+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=telecommunications/year=2023-2024/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=telecommunications/year=2023-2024/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=telecommunications/year=2023-2024/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}

@@ -1,15 +1,31 @@
 {
   "chunk_id": "audio-visual-technology__2015_2016__epab",
-  "duration_seconds": null,
+  "duration_seconds": 2641.922,
   "field": "Audio-visual technology",
-  "finished_at": null,
-  "local_outputs": [],
-  "metrics": {},
-  "recovered_at": "2026-03-23T18:08:26+00:00",
-  "started_at": null,
-  "status": null,
+  "finished_at": "2026-03-24T10:16:45+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2015_2016__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2015_2016__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2015_2016__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 312736,
+    "ep_appln_count": 14103,
+    "ep_publication_count": 29201,
+    "family_count": 230115,
+    "local_output_bytes": 55481151,
+    "local_output_file_count": 3,
+    "publn_count": 463984,
+    "us_publication_count": 117290
+  },
+  "started_at": "2026-03-24T09:32:43+00:00",
+  "status": "success",
   "table_family": "epab",
-  "uploaded_blobs": [],
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2015-2016/family=epab/epab_claims.parquet"
+  ],
   "warnings": [],
   "year_end": 2016,
   "year_start": 2015

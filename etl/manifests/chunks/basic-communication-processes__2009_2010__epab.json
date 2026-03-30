@@ -1,0 +1,32 @@
+{
+  "chunk_id": "basic-communication-processes__2009_2010__epab",
+  "duration_seconds": 1155.328,
+  "field": "Basic communication processes",
+  "finished_at": "2026-03-24T20:15:54+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2009_2010__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2009_2010__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2009_2010__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 48736,
+    "ep_appln_count": 3044,
+    "ep_publication_count": 5939,
+    "family_count": 34266,
+    "local_output_bytes": 12043575,
+    "local_output_file_count": 3,
+    "publn_count": 79087,
+    "us_publication_count": 27106
+  },
+  "started_at": "2026-03-24T19:56:39+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=basic-communication-processes/year=2009-2010/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=basic-communication-processes/year=2009-2010/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=basic-communication-processes/year=2009-2010/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2010,
+  "year_start": 2009
+}
