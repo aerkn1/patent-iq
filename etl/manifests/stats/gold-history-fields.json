@@ -1,0 +1,36 @@
+{
+  "downstream_impacts": [
+    "These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.",
+    "Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces."
+  ],
+  "finished_at": "2026-04-24T08:05:52+00:00",
+  "metrics": {
+    "gold_family_field_contributions_rows": 172223907,
+    "gold_family_field_contributions_timeseries_rows": 172223907
+  },
+  "output_profiles": [
+    {
+      "column_count": 15,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions_timeseries.parquet",
+      "row_count": 172223907,
+      "sha256": "ee4ae95f9f9d50376d178598e236ce95134aa231ddb64207110f612a7e85e177",
+      "size_bytes": 1534230647,
+      "type": "file"
+    },
+    {
+      "column_count": 15,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions.parquet",
+      "row_count": 172223907,
+      "sha256": "8b35b367277f58acde6078cf15d6764cb9b08ddc8c6ae60498eae77b2df079d1",
+      "size_bytes": 1534308108,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-history-fields",
+  "started_at": "2026-04-24T07:26:54+00:00",
+  "status": "success",
+  "summary": "Built Gold field-contribution history marts from replay-aligned Silver branch and field history.",
+  "warnings": []
+}

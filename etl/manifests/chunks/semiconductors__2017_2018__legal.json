@@ -1,0 +1,31 @@
+{
+  "chunk_id": "semiconductors__2017_2018__legal",
+  "duration_seconds": 239.637,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-21T16:25:28+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2017_2018__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2017_2018__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 283039,
+    "ep_appln_count": 10572,
+    "ep_publication_count": 21539,
+    "family_count": 173278,
+    "local_output_bytes": 31685742,
+    "local_output_file_count": 2,
+    "publn_count": 456573,
+    "us_publication_count": 119381
+  },
+  "recovered_at": "2026-03-23T18:17:18+00:00",
+  "started_at": "2026-03-21T16:21:28+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=semiconductors/year=2017-2018/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2017-2018/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2018,
+  "year_start": 2017
+}

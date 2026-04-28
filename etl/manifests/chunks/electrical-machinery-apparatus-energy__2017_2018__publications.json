@@ -1,0 +1,30 @@
+{
+  "chunk_id": "electrical-machinery-apparatus-energy__2017_2018__publications",
+  "duration_seconds": 165.072,
+  "field": "Electrical machinery, apparatus, energy",
+  "finished_at": "2026-03-22T00:03:59+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/electrical-machinery-apparatus-energy__2017_2018__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 913170,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 30071,
+    "ep_publication_count": 61268,
+    "family_count": 746551,
+    "local_output_bytes": 23731676,
+    "local_output_file_count": 1,
+    "publn_count": 1209469,
+    "us_publication_count": 145244
+  },
+  "recovered_at": "2026-03-23T18:14:39+00:00",
+  "started_at": "2026-03-22T00:01:14+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=electrical-machinery-apparatus-energy/year=2017-2018/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2018,
+  "year_start": 2017
+}

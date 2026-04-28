@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-classification-jurisdiction-pit.json"
+  },
+  "calculations": [
+    "Jurisdiction support level reuses the current office support policy map and defaults to limited where no explicit support policy exists.",
+    "Active status is read from the branch-history replay for the same family, jurisdiction, and year.",
+    "Blocking, enforceability, and pre-as-of citation columns are carried from the family compare PIT for the same family-year."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/64-patentiq-v2-citation-serving-refactor-execution-plan.md",
+    "docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md",
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md"
+  ],
+  "downstream_impacts": [
+    "This mart is the ranking-ready family evidence layer for WIPO x CPC x jurisdiction chronology and downstream portfolio and market slice rollups."
+  ],
+  "finished_at": "2026-04-24T12:01:57+00:00",
+  "inputs": [],
+  "methods": [
+    "Started from the family classification mix PIT and joined dense branch-year replay so technology and jurisdiction slices stay aligned to the same family-year grain.",
+    "Exploded WIPO-field and CPC-main-group membership into one row per family, year, field, CPC, and jurisdiction slice.",
+    "Kept replay caveats explicit by preserving classification-history support flags instead of implying dated code-mutation truth."
+  ],
+  "metrics": {
+    "gold_family_classification_jurisdiction_pit_rows": 566936693
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_jurisdiction_pit.parquet"
+  ],
+  "stage": "gold-family-classification-jurisdiction-pit",
+  "started_at": "2026-04-24T11:40:28+00:00",
+  "status": "success",
+  "summary": "Built the family WIPO-CPC-jurisdiction PIT mart from classification replay and dense branch history.",
+  "warnings": []
+}

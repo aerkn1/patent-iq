@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "This mart is the compare-oriented source for portfolio year-slice views, radar overlays, and report compare tables."
+  ],
+  "finished_at": "2026-04-24T12:07:32+00:00",
+  "metrics": {
+    "gold_portfolio_compare_pit_rows": 36127659
+  },
+  "output_profiles": [
+    {
+      "column_count": 22,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_compare_pit.parquet",
+      "row_count": 36127659,
+      "sha256": "f76d09e5cd11de9617e4732ca9ca08376d0db37480372eb0ff3597e16928860d",
+      "size_bytes": 724306804,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-portfolio-compare-pit",
+  "started_at": "2026-04-24T12:07:21+00:00",
+  "status": "success",
+  "summary": "Built the portfolio compare PIT mart from dense portfolio PIT summaries and year-safe field-mix support where available.",
+  "warnings": []
+}

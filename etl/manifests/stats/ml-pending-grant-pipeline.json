@@ -1,0 +1,124 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-08T21:48:38+00:00",
+  "metrics": {
+    "ml_feature_pending_grant_pipeline_rows": 93347403,
+    "ml_label_pending_grant_event_rows": 93347403,
+    "ml_split_registry_phase_grant_rows": 93347403,
+    "pending_grant_12m_brier_score": 0.08874634589296647,
+    "pending_grant_12m_pr_auc": 0.1669747356742301,
+    "pending_grant_12m_roc_auc": 0.6394576583398613,
+    "pending_grant_24m_brier_score": 0.1569449701451074,
+    "pending_grant_24m_pr_auc": 0.3201084678815563,
+    "pending_grant_24m_roc_auc": 0.6600185905047047,
+    "pending_grant_observed_12m_rows": 74015905,
+    "pending_grant_observed_24m_rows": 64881761
+  },
+  "output_profiles": [
+    {
+      "column_count": 12,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_pending_grant_event.parquet",
+      "row_count": 93347403,
+      "sha256": "9fb796aff9c609966b2d02e46f0ae156284260a768e8d4054901f51e534bc54a",
+      "size_bytes": 785228691,
+      "type": "file"
+    },
+    {
+      "column_count": 37,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_pending_grant_pipeline.parquet",
+      "row_count": 93347403,
+      "sha256": "9bd890df5b35f618d945456fc80bc7629ee4a10018e02bf1c958c4b9de884bd7",
+      "size_bytes": 1842274968,
+      "type": "file"
+    },
+    {
+      "column_count": 13,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet",
+      "row_count": 118333937,
+      "sha256": "5e34ea61174d84a36df59ecc05b5d54ea2f1aa71d9365e1c64cf630113be793f",
+      "size_bytes": 1136411595,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase_grant.parquet",
+      "row_count": 93347403,
+      "sha256": "3b0501817f62fe5a5a15e46896e71c0cfa76c53d1d055f2506e82a6772ce1945",
+      "size_bytes": 879791191,
+      "type": "file"
+    },
+    {
+      "column_count": 27,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet",
+      "row_count": 14,
+      "sha256": "8f22862acd836f450eaa82943428c742785546a616a406f71267d977dfe2a78e",
+      "size_bytes": 6250,
+      "type": "file"
+    },
+    {
+      "column_count": 11,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet",
+      "row_count": 8,
+      "sha256": "9fdc4999d27056a9e94c1ffe398704a0521e00663c3f1d8025c7aae7e4e99a6d",
+      "size_bytes": 3460,
+      "type": "file"
+    },
+    {
+      "column_count": 14,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet",
+      "row_count": 8,
+      "sha256": "d027be99f807dbc36f65f9c1b6ded9b4c7f7903414a8c33a3f07c914fd701ee3",
+      "size_bytes": 5408,
+      "type": "file"
+    },
+    {
+      "column_count": 8,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet",
+      "row_count": 108,
+      "sha256": "7e72526da5c18384b8964c07970430e774b89802274047fa19662d5b272998eb",
+      "size_bytes": 3770,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_pending_grant_pipeline.json",
+      "sha256": "f3f58099f507da89452043097b83b794e54bcc740bd578bbf84fa36c01d1e013",
+      "size_bytes": 1409480,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_12m_model.txt",
+      "sha256": "de63b4eb27ee77fc002d6c9d04a41cd006388757be6deee937b4ea36cdfeeae1",
+      "size_bytes": 6906646,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_24m_model.txt",
+      "sha256": "847b6b17c2286cdc117d198b1638540e97eed567626233677cd86477635eea57",
+      "size_bytes": 6891407,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_calibration.json",
+      "sha256": "61c177aa167ddcef5f8fa1667e13fef7d3288de2954819d2ee4c9590a4251640",
+      "size_bytes": 1407188,
+      "type": "file"
+    }
+  ],
+  "stage": "ml-pending-grant-pipeline",
+  "started_at": "2026-04-08T21:48:37+00:00",
+  "status": "success",
+  "summary": "Materialized pending-grant label, feature, and split artifacts and trained first baseline pending-grant classifiers when split sizes were sufficient.",
+  "warnings": []
+}

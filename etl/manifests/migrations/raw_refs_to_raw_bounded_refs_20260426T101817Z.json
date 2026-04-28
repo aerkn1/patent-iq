@@ -1,0 +1,114 @@
+{
+  "container": "patentiq-data",
+  "dry_run": true,
+  "files": [
+    {
+      "blob_name": "raw-bounded/refs/_critical_refs_manifest.json",
+      "name": "_critical_refs_manifest.json",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/_critical_refs_manifest.json",
+      "sha256": "1d2e9d6bea4c6c13db5afc9f2a96aca47318baccb9f42f5abd85d32ca2df2e57",
+      "size_bytes": 1920
+    },
+    {
+      "blob_name": "raw-bounded/refs/iso_country_map.parquet",
+      "name": "iso_country_map.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/iso_country_map.parquet",
+      "sha256": "ac808e865ca314c681286ec45e95b1f4a958c89165294e923064a999eb722bec",
+      "size_bytes": 9123
+    },
+    {
+      "blob_name": "raw-bounded/refs/kind_code_normalization.parquet",
+      "name": "kind_code_normalization.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet",
+      "sha256": "f078d6f8c651a7b6dc7a4d5b17ec8854e429451d73e8cb39b3ebb1ab4c04bfe4",
+      "size_bytes": 22224
+    },
+    {
+      "blob_name": "raw-bounded/refs/kind_code_normalization_manual_overrides.csv",
+      "name": "kind_code_normalization_manual_overrides.csv",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_manual_overrides.csv",
+      "sha256": "0ba35b6ca7cf19d3c2d698d963ca4dfe28b61b912e48fdb9d065f65df9a85e50",
+      "size_bytes": 11027
+    },
+    {
+      "blob_name": "raw-bounded/refs/kind_code_normalization_observed_pairs.parquet",
+      "name": "kind_code_normalization_observed_pairs.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet",
+      "sha256": "8454a7a2d382b5dfe9c1ec6e1a109c936ea45436c2d8f9b37f4fd46311b6fe1e",
+      "size_bytes": 8210
+    },
+    {
+      "blob_name": "raw-bounded/refs/kind_code_normalization_review_queue.parquet",
+      "name": "kind_code_normalization_review_queue.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet",
+      "sha256": "95aea9d06b9be26fe088afc3af4930e514ab7648aa59fdd65bf7c24a6547d46a",
+      "size_bytes": 5405
+    },
+    {
+      "blob_name": "raw-bounded/refs/oecd_indicator_cohort_stats.parquet",
+      "name": "oecd_indicator_cohort_stats.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_cohort_stats.parquet",
+      "sha256": "2e2463bdb9c6b4235f80e38d6f298c1ef238d3641116229186d4da78cdb27859",
+      "size_bytes": 134538
+    },
+    {
+      "blob_name": "raw-bounded/refs/oecd_indicator_longform.parquet",
+      "name": "oecd_indicator_longform.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_longform.parquet",
+      "sha256": "50e8b1e2d4903efcb8eafef03a32c65e3dacdf8cb1a4264d98d75d4b6450b198",
+      "size_bytes": 2827515976
+    },
+    {
+      "blob_name": "raw-bounded/refs/oecd_indicator_seed.parquet",
+      "name": "oecd_indicator_seed.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_seed.parquet",
+      "sha256": "f68a5d16f28322edc94e201c370ca3bcee6bc08549490499376762e356b14eb8",
+      "size_bytes": 292187384
+    },
+    {
+      "blob_name": "raw-bounded/refs/up_member_states.parquet",
+      "name": "up_member_states.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/up_member_states.parquet",
+      "sha256": "a80a35687c9cfa69c1dfc26218e551e9340f5391409d663d03d7a2e56f21c3e9",
+      "size_bytes": 2525
+    },
+    {
+      "blob_name": "raw-bounded/refs/us_chamber_ip_index.parquet",
+      "name": "us_chamber_ip_index.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/us_chamber_ip_index.parquet",
+      "sha256": "f1fdb0cff94fd77bfcef4154d23537220563b812db7d14e5497ed0e40d41be4f",
+      "size_bytes": 2888
+    },
+    {
+      "blob_name": "raw-bounded/refs/wipo_techn_field_ipc.parquet",
+      "name": "wipo_techn_field_ipc.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/wipo_techn_field_ipc.parquet",
+      "sha256": "596accd501ce36adde900c53fee7ed12e1a8b36017ffde1a108eba115548f3fc",
+      "size_bytes": 14705
+    },
+    {
+      "blob_name": "raw-bounded/refs/world_bank_gdp_ppp.parquet",
+      "name": "world_bank_gdp_ppp.parquet",
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/world_bank_gdp_ppp.parquet",
+      "sha256": "b0a7c205369e69e95b30cac662ac5c71e0ffc638f7550170483c9ee736381431",
+      "size_bytes": 85466
+    }
+  ],
+  "finished_at": "2026-04-26T10:18:18+00:00",
+  "include_temp": false,
+  "overwrite": false,
+  "planned_bytes": 3120001391,
+  "planned_file_count": 13,
+  "resume_existing": true,
+  "source_dir": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs",
+  "started_at": "2026-04-26T10:18:18+00:00",
+  "status": "dry_run",
+  "target_prefix": "raw-bounded/refs",
+  "transfer": {
+    "connection_timeout": 600,
+    "max_block_size_mib": 100,
+    "max_concurrency": 4,
+    "max_single_put_size_mib": 100,
+    "read_timeout": 600
+  }
+}

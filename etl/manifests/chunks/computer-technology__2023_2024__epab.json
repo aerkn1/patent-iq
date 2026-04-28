@@ -1,0 +1,32 @@
+{
+  "chunk_id": "computer-technology__2023_2024__epab",
+  "duration_seconds": 2105.411,
+  "field": "Computer technology",
+  "finished_at": "2026-03-25T06:26:13+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2023_2024__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2023_2024__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2023_2024__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 1119441,
+    "ep_appln_count": 20408,
+    "ep_publication_count": 23660,
+    "family_count": 1016733,
+    "local_output_bytes": 31993058,
+    "local_output_file_count": 3,
+    "publn_count": 1337060,
+    "us_publication_count": 168373
+  },
+  "started_at": "2026-03-25T05:51:08+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=computer-technology/year=2023-2024/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=computer-technology/year=2023-2024/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=computer-technology/year=2023-2024/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}

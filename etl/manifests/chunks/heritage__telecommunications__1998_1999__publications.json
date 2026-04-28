@@ -1,0 +1,29 @@
+{
+  "chunk_id": "heritage__telecommunications__1998_1999__publications",
+  "duration_seconds": 95.289,
+  "field": "Telecommunications",
+  "finished_at": "2026-03-23T21:39:39+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__telecommunications__1998_1999__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 168393,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 15070,
+    "ep_publication_count": 29925,
+    "family_count": 95402,
+    "local_output_bytes": 3893605,
+    "local_output_file_count": 1,
+    "publn_count": 235681,
+    "us_publication_count": 26488
+  },
+  "started_at": "2026-03-23T21:38:04+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=telecommunications/year=1998-1999/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 1999,
+  "year_start": 1998
+}

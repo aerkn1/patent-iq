@@ -1,0 +1,83 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-05T11:47:52+00:00",
+  "metrics": {
+    "abstract_blocking_context_completeness": null,
+    "abstract_bucket_files_present": 1,
+    "abstract_chronology_join_completeness": null,
+    "abstract_duplicate_family_rate": null,
+    "abstract_legal_status_join_completeness": null,
+    "claim_blocking_context_completeness": null,
+    "claim_bucket_files_present": 1,
+    "claim_chronology_join_completeness": null,
+    "claim_duplicate_family_rate": null,
+    "claim_legal_status_join_completeness": null,
+    "embedding_device": "mps",
+    "encoded_abstract_bucket_rows": 0,
+    "encoded_claim_bucket_rows": 2048,
+    "query_anchor_abstract_coverage": null,
+    "query_anchor_claim_coverage": null,
+    "vec_family_embeddings_abstracts_rows": 0,
+    "vec_family_embeddings_claims_rows": 0,
+    "vec_query_registry_rows": 0
+  },
+  "output_profiles": [
+    {
+      "column_count": 54,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet",
+      "row_count": 3,
+      "sha256": "404cdf775f66124c82a9f577c8aa473b459af54d60635d55a8b04fff5e9f5943",
+      "size_bytes": 13832,
+      "type": "file"
+    },
+    {
+      "column_count": 54,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet",
+      "row_count": 2004951,
+      "sha256": "cd7fc5aef39edb61c8b9b0d6a55f9b628910f11a11dde3f80b01e48d35672b89",
+      "size_bytes": 883347596,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_embedding_manifest.json",
+      "sha256": "c4a084226d4e7949e31a4628e9f3f5f5e28cf8ca380d2fdf1f31f0b9694faff4",
+      "size_bytes": 874,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json",
+      "sha256": "2ebe18e39a50f72b33290b6a6280a36aa88731e56f86ef2119d37fbafc047bc5",
+      "size_bytes": 663,
+      "type": "file"
+    },
+    {
+      "column_count": 17,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet",
+      "row_count": 600,
+      "sha256": "6edf8e33dada2503eda775220fefa7ed8302c2a8c92b984f7cf7d0ceadb954f1",
+      "size_bytes": 2888535,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.json",
+      "sha256": "c81a6c23a18982bd479b18e9ef13f36d698c07a2fc6829ce9ed69610c64b0928",
+      "size_bytes": 320,
+      "type": "file"
+    }
+  ],
+  "stage": "semantic",
+  "started_at": "2026-04-05T11:46:00+00:00",
+  "status": "success",
+  "summary": "Built family-first semantic vector artifacts and query fixtures for the promoted dual semantic runtime.",
+  "warnings": [
+    "Semantic bucket row limiting was enabled for this run, so the outputs represent a bounded smoke sample, not a full corpus release.",
+    "Semantic run was intentionally bounded to a subset of buckets, so final merged vector artifacts were not rewritten.",
+    "Semantic metadata and query registry writes were skipped for this subset worker run."
+  ]
+}

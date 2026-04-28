@@ -1,0 +1,15 @@
+{
+  "downstream_impacts": [
+    "This mart supports market CPC-by-jurisdiction leaderboards, growth views, and future UI drill-downs across field, CPC, and office slices."
+  ],
+  "finished_at": "2026-04-09T15:29:57+00:00",
+  "metrics": {},
+  "output_profiles": [],
+  "stage": "gold-market-cpc-jurisdiction-trend-pit",
+  "started_at": "2026-04-09T15:29:57+00:00",
+  "status": "failed",
+  "summary": "Built the market WIPO-CPC-jurisdiction PIT mart from family slice evidence.",
+  "warnings": [
+    "Missing required input for gold-market-cpc-jurisdiction-trend-pit: /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_jurisdiction_pit.parquet"
+  ]
+}

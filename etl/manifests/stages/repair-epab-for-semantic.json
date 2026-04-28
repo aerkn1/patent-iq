@@ -1,0 +1,54 @@
+{
+  "artifacts": {
+    "repair_temp_root": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/temp/epab-semantic-repair",
+    "staged_epab_root": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/imports/raw-bounded/epab",
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/repair-epab-for-semantic.json"
+  },
+  "calculations": [
+    "Safe EPAB repairability is measured from publication/claims row-count alignment per chunk.",
+    "Final EPAB publication rows are deduplicated by `publication_number_full`; final EPAB claims are deduplicated by a stable hash over publication, language, sequence, and text.",
+    "This stage intentionally produces a semantic-oriented EPAB subset, not a full historical EPAB restoration."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md",
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md"
+  ],
+  "downstream_impacts": [
+    "Bronze can continue using the existing TIP EPAB copy path because the repaired bounded EPAB files are already in Bronze-compatible shape.",
+    "Silver semantic representative-text generation can recover EPAB claim-1 coverage where repair is deterministic and fall back to PATSTAT abstracts elsewhere."
+  ],
+  "finished_at": "2026-03-31T19:35:15+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/temp/epab-semantic-repair/publication_chunk_001.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/temp/epab-semantic-repair/claims_chunk_001.parquet"
+  ],
+  "methods": [
+    "Used only EPAB chunk folders whose publication and claims row counts aligned exactly, which allows deterministic row-order pairing.",
+    "Derived `publication_number_full` and synthetic `epab_doc_id` keys from EP publication rows, then retained only claim-1 payloads for semantic representative-text use.",
+    "Dropped unreliable EPAB abstract payloads and kept PATSTAT abstracts as the universal semantic fallback."
+  ],
+  "metrics": {
+    "epab_chunk_count": 101,
+    "epab_repaired_abstract_row_count": 0,
+    "epab_repaired_claim1_row_count": 2763676,
+    "epab_repaired_claim1_row_count_pre_dedupe": 3429520,
+    "epab_repaired_claim_dedupe_key_count": 2763676,
+    "epab_repaired_publication_row_count": 1679816,
+    "epab_repaired_publication_row_count_pre_dedupe": 2149576,
+    "epab_safe_chunk_count": 97,
+    "epab_unsafe_chunk_count": 4
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_publication.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_claims.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_abstract.parquet"
+  ],
+  "stage": "repair-epab-for-semantic",
+  "started_at": "2026-03-31T19:18:42+00:00",
+  "status": "success",
+  "summary": "Repaired the staged EPAB chunk parquet into a deterministic semantic-support subset without rerunning raw EPAB extraction.",
+  "warnings": [
+    "Skipped 4 EPAB chunk roots whose publication/claims row counts did not align.",
+    "EPAB abstracts were intentionally neutralized; PATSTAT abstracts remain the semantic fallback."
+  ]
+}

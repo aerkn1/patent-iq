@@ -1,0 +1,73 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-07T20:06:00+00:00",
+  "metrics": {
+    "3y_balanced_accuracy": 0.6256237703897015,
+    "3y_class_accuracy": 0.5416184971098266,
+    "3y_macro_f1": 0.5421183525674148,
+    "5y_balanced_accuracy": 0.8631260277073224,
+    "5y_class_accuracy": 0.7265895953757225,
+    "5y_macro_f1": 0.5873721893570805,
+    "feature_rows": 16435,
+    "label_rows": 16435,
+    "prediction_rows": 32870,
+    "split_rows": 16435
+  },
+  "output_profiles": [
+    {
+      "column_count": 19,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_jurisdiction_field_trend_future.parquet",
+      "row_count": 16435,
+      "sha256": "b8e284cffe464a73d213a6f22edc3ae8b5b1a20097194b7d68bbd7dc7194d3e8",
+      "size_bytes": 278895,
+      "type": "file"
+    },
+    {
+      "column_count": 38,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_jurisdiction_field_trend_forecast.parquet",
+      "row_count": 16435,
+      "sha256": "595df22575ac3d431a10055edeb43c83e7ce43f02439a60d73cf5a7e89a9b235",
+      "size_bytes": 905045,
+      "type": "file"
+    },
+    {
+      "column_count": 8,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase06.parquet",
+      "row_count": 16435,
+      "sha256": "b425b7b34d4341dfe49be02d8ad338422666a1244b1b6ce7ac8a1735d8a49c96",
+      "size_bytes": 22049,
+      "type": "file"
+    },
+    {
+      "column_count": 22,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_prediction_jurisdiction_field_trend_forecast.parquet",
+      "row_count": 32870,
+      "sha256": "ba5c15beca5e06db4032ac4de3ddf74d5f574b61f93980c4ce46589fac0d1af0",
+      "size_bytes": 1663639,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/jurisdiction_field_trend_forecast_direction_calibration.json",
+      "sha256": "5b301bb4b9b25fb3eaceb594ea3b88cfd626c324735b9cbe9dd048b1672f6851",
+      "size_bytes": 1370,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_jurisdiction_field_trend_forecast.json",
+      "sha256": "6f5a5555398e5c6d69f4e0aaebec8519e09b451f6fb4d77c8d2ecee8c4c1f9cb",
+      "size_bytes": 2672,
+      "type": "file"
+    }
+  ],
+  "stage": "ml-phase06-jurisdiction-field-trend-forecast",
+  "started_at": "2026-04-07T20:05:50+00:00",
+  "status": "success",
+  "summary": "Built Phase 06 jurisdiction-field trend labels, features, split registry, direction-first baseline predictions, and band-calibration metadata.",
+  "warnings": []
+}

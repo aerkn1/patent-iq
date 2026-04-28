@@ -1,0 +1,30 @@
+{
+  "chunk_id": "semiconductors__2021_2022__publications",
+  "duration_seconds": 69.164,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-21T16:42:40+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2021_2022__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 316985,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 11558,
+    "ep_publication_count": 18336,
+    "family_count": 206557,
+    "local_output_bytes": 8737026,
+    "local_output_file_count": 1,
+    "publn_count": 429693,
+    "us_publication_count": 101901
+  },
+  "recovered_at": "2026-03-23T18:17:27+00:00",
+  "started_at": "2026-03-21T16:41:31+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=semiconductors/year=2021-2022/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2022,
+  "year_start": 2021
+}

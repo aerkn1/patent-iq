@@ -1,0 +1,31 @@
+{
+  "chunk_id": "basic-communication-processes__2013_2014__legal",
+  "duration_seconds": 61.961,
+  "field": "Basic communication processes",
+  "finished_at": "2026-03-19T16:51:54+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2013_2014__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2013_2014__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 51721,
+    "ep_appln_count": 3188,
+    "ep_publication_count": 6615,
+    "family_count": 36680,
+    "local_output_bytes": 7353967,
+    "local_output_file_count": 2,
+    "publn_count": 84153,
+    "us_publication_count": 28400
+  },
+  "recovered_at": "2026-03-23T18:09:07+00:00",
+  "started_at": "2026-03-19T16:50:52+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=basic-communication-processes/year=2013-2014/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2013-2014/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2014,
+  "year_start": 2013
+}

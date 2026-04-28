@@ -1,0 +1,33 @@
+{
+  "chunk_id": "measurement__2025_2026__citations",
+  "duration_seconds": 38.907,
+  "field": "Measurement",
+  "finished_at": "2026-03-21T19:58:29+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2025_2026__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2025_2026__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2025_2026__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 85768,
+    "ep_appln_count": 194,
+    "ep_publication_count": 198,
+    "family_count": 84896,
+    "local_output_bytes": 2108500,
+    "local_output_file_count": 3,
+    "publn_count": 96764,
+    "us_publication_count": 2803
+  },
+  "recovered_at": "2026-03-23T18:16:58+00:00",
+  "started_at": "2026-03-21T19:57:50+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=measurement/year=2025-2026/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=measurement/year=2025-2026/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=measurement/year=2025-2026/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2026,
+  "year_start": 2025
+}

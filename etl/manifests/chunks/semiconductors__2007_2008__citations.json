@@ -1,0 +1,32 @@
+{
+  "chunk_id": "semiconductors__2007_2008__citations",
+  "duration_seconds": 142.897,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-19T23:10:05+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 232588,
+    "ep_appln_count": 9783,
+    "ep_publication_count": 19042,
+    "family_count": 152528,
+    "local_output_bytes": 6474553,
+    "local_output_file_count": 3,
+    "publn_count": 361783,
+    "us_publication_count": 82262
+  },
+  "started_at": "2026-03-19T23:07:42+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=semiconductors/year=2007-2008/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2007-2008/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2007-2008/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2008,
+  "year_start": 2007
+}

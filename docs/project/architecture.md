@@ -61,7 +61,7 @@ The architecture makes it **easy to modify** individual components without casca
 ```mermaid
 graph TB
     subgraph "Presentation Layer"
-        UI[Streamlit UI]
+        UI[React SPA]
         PDF[PDF Generator]
     end
     
@@ -587,29 +587,38 @@ class AnalysisOrchestrator:
 **Responsibility:** Format data for display, handle user interaction
 
 **Components:**
-- Streamlit UI pages
-- PDF report generator
+- React pages (TypeScript + React Router)
+- Component library (atoms, molecules, organisms)
+- PDF report generator (client-side)
 - API response formatters
 
 **Key Principle:** **No business logic in presentation**
 
-```python
-# ❌ Bad: Business logic in UI
-def display_patent():
-    patent = get_patent(id)
-    
-    # BAD: Calculating score in UI
-    score = (patent.citations / patent.age) * 100
-    
-    st.write(f"Score: {score}")
+```typescript
+// ❌ Bad: Business logic in UI
+function PatentDisplay({ patentId }: { patentId: string }) {
+  const patent = getPatent(patentId);
+  
+  // BAD: Calculating score in UI
+  const score = (patent.citations / patent.age) * 100;
+  
+  return <div>Score: {score}</div>;
+}
 
-# ✅ Good: UI only formats pre-calculated data
-def display_patent():
-    analysis = api.get_analysis(id)  # Already calculated
-    
-    # Just formatting
-    st.metric("Influence Score", analysis.influence_score)
-    st.progress(analysis.influence_score / 100)
+// ✅ Good: UI only formats pre-calculated data
+function PatentAnalysisPage({ patentId }: { patentId: string }) {
+  const { data, isLoading } = usePatentAnalysis(patentId); // Already calculated
+  
+  if (isLoading) return <LoadingState />;
+  
+  // Just formatting
+  return (
+    <div>
+      <Metric label="Influence Score" value={data.influence_score} />
+      <ProgressBar value={data.influence_score} max={100} />
+    </div>
+  );
+}
 ```
 
 **Presentation Layer Responsibilities:**
@@ -633,7 +642,7 @@ def display_patent():
 
 ```mermaid
 sequenceDiagram
-    participant UI as Streamlit UI
+    participant UI as React Frontend
     participant API as FastAPI
     participant ORCH as Orchestrator
     participant INF as Influence Engine
@@ -1578,11 +1587,16 @@ else:
 **Production Environment:**
 ```
 ┌──────────────────────────────────┐
-│ Docker Container (App)           │
+│ Docker Container (Backend)       │
 │ - FastAPI                        │
-│ - Streamlit                      │
 │ - Analysis Engines               │
 │ - ML Models (loaded in memory)   │
+└──────────────┬───────────────────┘
+               │
+┌──────────────▼───────────────────┐
+│ Docker Container (Frontend)       │
+│ - React SPA (built with Vite)    │
+│ - Static assets (Nginx)          │
 └──────────────┬───────────────────┘
                │
 ┌──────────────▼───────────────────┐
@@ -1606,12 +1620,18 @@ else:
 version: '3.8'
 
 services:
-  app:
-    image: patentiq:latest
-    container_name: patentiq_app
+  backend:
+    image: patentiq-backend:latest
+    container_name: patentiq_backend
     ports:
       - "8000:8000"  # FastAPI
-      - "8501:8501"  # Streamlit
+  
+  frontend:
+    image: patentiq-frontend:latest
+    container_name: patentiq_frontend
+    ports:
+      - "5173:5173"  # Vite Dev Server (React)
+      - "80:80"      # Production (Nginx)
     volumes:
       - ./data:/data:ro  # Read-only data mount
       - ./models:/models:ro

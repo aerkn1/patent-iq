@@ -1,0 +1,33 @@
+{
+  "chunk_id": "computer-technology__2019_2020__citations",
+  "duration_seconds": 469.138,
+  "field": "Computer technology",
+  "finished_at": "2026-03-19T19:59:41+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2019_2020__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2019_2020__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2019_2020__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 970315,
+    "ep_appln_count": 40026,
+    "ep_publication_count": 73938,
+    "family_count": 767487,
+    "local_output_bytes": 39285243,
+    "local_output_file_count": 3,
+    "publn_count": 1491534,
+    "us_publication_count": 349086
+  },
+  "recovered_at": "2026-03-23T18:10:56+00:00",
+  "started_at": "2026-03-19T19:51:52+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=computer-technology/year=2019-2020/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=computer-technology/year=2019-2020/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=computer-technology/year=2019-2020/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2020,
+  "year_start": 2019
+}

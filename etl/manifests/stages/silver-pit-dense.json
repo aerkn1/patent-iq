@@ -1,0 +1,41 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-pit-dense.json"
+  },
+  "calculations": [
+    "as_of_date = MAKE_DATE(as_of_year, 12, 31) except for the current snapshot year where as_of_date = snapshot_date.",
+    "family_rcf_score_asof is normalized within the same as_of_year and primary field cohort.",
+    "data_completeness_pct_asof is the fraction of 12 tracked PIT columns that are non-null before COALESCE defaults are applied."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md",
+    "docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md",
+    "docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "gold-family-compare-pit: should use this dense PIT layer when present for current-vs-selected-year family comparisons.",
+    "Historical compare and report flows can now use family-year rows rather than one anchored checkpoint per family."
+  ],
+  "finished_at": "2026-04-24T11:36:17+00:00",
+  "inputs": [],
+  "methods": [
+    "Generated one observed PIT row per family and as_of_year from family_priority_year through snapshot_year.",
+    "For each year, legal, blocking, field, citation, and coverage metrics are taken from the latest history or event evidence available at or before that year-end.",
+    "The current snapshot year uses snapshot_date rather than synthetic year-end so current-year product views stay aligned with the actual ETL snapshot.",
+    "A persisted JSON audit is written beside the dense PIT parquet to validate uniqueness, year range, multi-year family coverage, and value sanity."
+  ],
+  "metrics": {
+    "silver_family_feature_snapshot_pit_dense_duplicate_family_year_keys": 0,
+    "silver_family_feature_snapshot_pit_dense_families_with_multiple_year_rows": 17633618,
+    "silver_family_feature_snapshot_pit_dense_rows": 164988135
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_dense.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_dense_audit.json"
+  ],
+  "stage": "silver-pit-dense",
+  "started_at": "2026-04-24T10:34:42+00:00",
+  "status": "success",
+  "summary": "Built silver_family_feature_snapshot_pit_dense.parquet with observed family-year PIT rows for historical compare, reports, and portfolio-over-time product behavior.",
+  "warnings": []
+}

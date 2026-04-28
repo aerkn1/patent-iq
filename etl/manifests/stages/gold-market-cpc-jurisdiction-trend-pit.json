@@ -1,0 +1,34 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-cpc-jurisdiction-trend-pit.json"
+  },
+  "calculations": [
+    "Family share within slice basis is measured against the same WIPO-field and jurisdiction basis for the same year.",
+    "Growth index compares current slice family count against prior-year family count in the same WIPO-CPC-jurisdiction slice.",
+    "Slice rank within year is ordered by family count, then blocking density, then slice keys."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/64-patentiq-v2-citation-serving-refactor-execution-plan.md",
+    "docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md",
+    "docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "This mart supports market CPC-by-jurisdiction leaderboards, growth views, and future UI drill-downs across field, CPC, and office slices."
+  ],
+  "finished_at": "2026-04-09T15:29:57+00:00",
+  "inputs": [],
+  "methods": [
+    "Started from the family classification-jurisdiction PIT mart so market slice rows inherit the same replay-safe family-year semantics.",
+    "Aggregated families by WIPO field, CPC main group, jurisdiction, and year, then lagged each slice for year-over-year growth.",
+    "Normalized citation pressure inside each year so slice rankings remain readable without pretending absolute comparability across years."
+  ],
+  "metrics": {},
+  "outputs": [],
+  "stage": "gold-market-cpc-jurisdiction-trend-pit",
+  "started_at": "2026-04-09T15:29:57+00:00",
+  "status": "failed",
+  "summary": "Built the market WIPO-CPC-jurisdiction PIT mart from family slice evidence.",
+  "warnings": [
+    "Missing required input for gold-market-cpc-jurisdiction-trend-pit: /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_jurisdiction_pit.parquet"
+  ]
+}

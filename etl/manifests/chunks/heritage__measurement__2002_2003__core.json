@@ -1,0 +1,47 @@
+{
+  "chunk_id": "heritage__measurement__2002_2003__core",
+  "duration_seconds": 211.734,
+  "field": "Measurement",
+  "finished_at": "2026-03-24T00:41:51+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__2002_2003__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__2002_2003__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__2002_2003__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__2002_2003__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__2002_2003__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__2002_2003__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__2002_2003__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__2002_2003__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__2002_2003__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__measurement__2002_2003__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 212692,
+    "derived_seed_sidecar_count": 1,
+    "ep_appln_count": 17253,
+    "ep_publication_count": 33283,
+    "family_count": 125764,
+    "local_output_bytes": 106982717,
+    "local_output_file_count": 10,
+    "publn_count": 322462,
+    "us_publication_count": 67466
+  },
+  "started_at": "2026-03-24T00:38:20+00:00",
+  "status": "success",
+  "table_family": "core",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=measurement/year=2002-2003/family=core/tls201_appln.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=2002-2003/family=core/tls202_appln_title.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=2002-2003/family=core/tls203_appln_abstr.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=2002-2003/family=core/tls204_appln_prior.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=2002-2003/family=core/tls206_person.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=2002-2003/family=core/tls207_pers_appln.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=2002-2003/family=core/tls209_appln_ipc.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=2002-2003/family=core/tls216_appln_contn.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=2002-2003/family=core/tls224_appln_cpc.parquet",
+    "raw-bounded-heritage/patstat/field=measurement/year=2002-2003/family=core/tls230_appln_techn_field.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2003,
+  "year_start": 2002
+}

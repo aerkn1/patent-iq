@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-legal-refresh.json"
+  },
+  "calculations": [
+    "Branch stage and field contribution values are refreshed from the current Silver kind-code normalization table without rebuilding the semantic layer."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md",
+    "docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-02T21:02:21+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet"
+  ],
+  "methods": [
+    "Reused refreshed citation metrics and existing trend support outputs.",
+    "Recomputed only family coverage, enforceability branches, field contributions, and OECD proxy outputs from the current kind-code normalization layer."
+  ],
+  "metrics": {
+    "kindcode_refresh_affected_family_rows": 6077939,
+    "silver_family_coverage_metrics_rows": 21353101,
+    "silver_family_enforceability_branches_rows": 36088232,
+    "silver_family_field_contributions_rows": 23816698,
+    "silver_family_oecd_quality_rows": 21353101
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet"
+  ],
+  "stage": "silver-enrichment-kind-legal-refresh",
+  "started_at": "2026-04-02T20:27:36+00:00",
+  "status": "success",
+  "summary": "Rebuilt only the legal-weighted Silver marts after kind-code curation using existing citation and trend support outputs.",
+  "warnings": []
+}

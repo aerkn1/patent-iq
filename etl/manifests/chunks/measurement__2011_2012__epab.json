@@ -1,0 +1,32 @@
+{
+  "chunk_id": "measurement__2011_2012__epab",
+  "duration_seconds": 1272.816,
+  "field": "Measurement",
+  "finished_at": "2026-03-25T13:26:59+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2011_2012__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2011_2012__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2011_2012__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 340843,
+    "ep_appln_count": 19650,
+    "ep_publication_count": 40150,
+    "family_count": 257861,
+    "local_output_bytes": 81843040,
+    "local_output_file_count": 3,
+    "publn_count": 504758,
+    "us_publication_count": 85872
+  },
+  "started_at": "2026-03-25T13:05:46+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=measurement/year=2011-2012/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=measurement/year=2011-2012/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=measurement/year=2011-2012/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2012,
+  "year_start": 2011
+}

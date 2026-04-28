@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "This mart supports year-slice CPC ranking cards and importance drill-downs in Market Intelligence."
+  ],
+  "finished_at": "2026-04-08T19:49:36+00:00",
+  "metrics": {
+    "gold_cpc_importance_pit_rows": 152753
+  },
+  "output_profiles": [
+    {
+      "column_count": 19,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_cpc_importance_pit.parquet",
+      "row_count": 152753,
+      "sha256": "2f7019298e2deb2e46da454be60c817ff82457b78cce7e205bc789ef1277d918",
+      "size_bytes": 6492945,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-cpc-importance-pit",
+  "started_at": "2026-04-08T19:49:35+00:00",
+  "status": "success",
+  "summary": "Built the CPC importance PIT mart from the market CPC trend layer.",
+  "warnings": []
+}

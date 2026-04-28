@@ -1,0 +1,26 @@
+{
+  "downstream_impacts": [
+    "These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.",
+    "Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces."
+  ],
+  "finished_at": "2026-04-24T10:09:10+00:00",
+  "metrics": {
+    "gold_family_blocking_power_timeseries_rows": 152145173
+  },
+  "output_profiles": [
+    {
+      "column_count": 6,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power_timeseries.parquet",
+      "row_count": 152145173,
+      "sha256": "efa9610ace1f668a671cd38b40a667d05c371db09d83badbddcab2fa74835ede",
+      "size_bytes": 917290218,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-history-blocking",
+  "started_at": "2026-04-24T10:06:24+00:00",
+  "status": "success",
+  "summary": "Built Gold blocking-power history marts from replay-aligned Silver legal and citation history.",
+  "warnings": []
+}

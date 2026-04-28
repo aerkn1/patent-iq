@@ -1,0 +1,33 @@
+{
+  "chunk_id": "electrical-machinery-apparatus-energy__2019_2020__citations",
+  "duration_seconds": 333.387,
+  "field": "Electrical machinery, apparatus, energy",
+  "finished_at": "2026-03-22T00:57:28+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/electrical-machinery-apparatus-energy__2019_2020__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/electrical-machinery-apparatus-energy__2019_2020__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/electrical-machinery-apparatus-energy__2019_2020__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 1065398,
+    "ep_appln_count": 32666,
+    "ep_publication_count": 62375,
+    "family_count": 895529,
+    "local_output_bytes": 22945539,
+    "local_output_file_count": 3,
+    "publn_count": 1367961,
+    "us_publication_count": 142293
+  },
+  "recovered_at": "2026-03-23T18:14:40+00:00",
+  "started_at": "2026-03-22T00:51:55+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=electrical-machinery-apparatus-energy/year=2019-2020/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=electrical-machinery-apparatus-energy/year=2019-2020/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=electrical-machinery-apparatus-energy/year=2019-2020/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2020,
+  "year_start": 2019
+}

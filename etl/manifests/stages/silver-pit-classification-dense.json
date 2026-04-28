@@ -1,0 +1,44 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-pit-classification-dense.json"
+  },
+  "calculations": [
+    "covered_wipo_fields_asof and primary_wipo_field_asof come from silver_family_wipo_fields and are replayed across PIT years.",
+    "cpc_main_groups_asof normalizes CPC symbols to main-group form by replacing the subgroup suffix with '/00'.",
+    "classification_visibility_policy = stable_family_classification_replay and historical_classification_truth_supported = false for this first implementation."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md",
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md",
+    "docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md",
+    "docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md",
+    "docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "gold_family_classification_mix_pit can use this as the family-year classification basis.",
+    "gold_portfolio_classification_mix_pit can aggregate this with explicit current-owner replay caveats.",
+    "gold_market_cpc_trend_pit can use the same CPC/WIPO chronology for CPC-within-field trends and PIT importance views."
+  ],
+  "finished_at": "2026-04-08T08:48:32+00:00",
+  "inputs": [],
+  "methods": [
+    "Uses silver_family_feature_snapshot_pit_dense as the family-year backbone so classification rows stay aligned with the existing PIT grain.",
+    "Replays stable family-level WIPO and CPC membership across family PIT years rather than inferring dated code mutations.",
+    "Derives CPC sections, subclasses, and main groups from canonical family CPC symbols.",
+    "Writes a persisted JSON audit beside the parquet to validate dense PIT parity, uniqueness, and classification coverage."
+  ],
+  "metrics": {
+    "silver_family_classification_pit_dense_duplicate_family_year_keys": 0,
+    "silver_family_classification_pit_dense_rows": 164988135,
+    "silver_family_classification_pit_dense_rows_with_cpc_main_groups": 93283467
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_classification_pit_dense.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_classification_pit_dense_audit.json"
+  ],
+  "stage": "silver-pit-classification-dense",
+  "started_at": "2026-04-08T08:43:57+00:00",
+  "status": "success",
+  "summary": "Built silver_family_classification_pit_dense.parquet with dense family-year WIPO/CPC classification membership for family, portfolio, and market chronology surfaces.",
+  "warnings": []
+}

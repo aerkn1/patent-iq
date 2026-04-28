@@ -1,0 +1,33 @@
+{
+  "chunk_id": "audio-visual-technology__2017_2018__citations",
+  "duration_seconds": 171.462,
+  "field": "Audio-visual technology",
+  "finished_at": "2026-03-19T11:49:35+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2017_2018__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2017_2018__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2017_2018__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 386142,
+    "ep_appln_count": 14740,
+    "ep_publication_count": 30279,
+    "family_count": 298016,
+    "local_output_bytes": 11192942,
+    "local_output_file_count": 3,
+    "publn_count": 546499,
+    "us_publication_count": 117343
+  },
+  "recovered_at": "2026-03-23T18:08:28+00:00",
+  "started_at": "2026-03-19T11:46:43+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=audio-visual-technology/year=2017-2018/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2017-2018/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=audio-visual-technology/year=2017-2018/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2018,
+  "year_start": 2017
+}

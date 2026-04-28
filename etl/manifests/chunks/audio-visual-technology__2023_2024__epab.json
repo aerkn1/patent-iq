@@ -1,0 +1,32 @@
+{
+  "chunk_id": "audio-visual-technology__2023_2024__epab",
+  "duration_seconds": 1598.333,
+  "field": "Audio-visual technology",
+  "finished_at": "2026-03-24T11:28:04+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2023_2024__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2023_2024__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/audio-visual-technology__2023_2024__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 380718,
+    "ep_appln_count": 7041,
+    "ep_publication_count": 8388,
+    "family_count": 333616,
+    "local_output_bytes": 10062047,
+    "local_output_file_count": 3,
+    "publn_count": 422812,
+    "us_publication_count": 55502
+  },
+  "started_at": "2026-03-24T11:01:26+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=audio-visual-technology/year=2023-2024/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2023-2024/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=audio-visual-technology/year=2023-2024/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}

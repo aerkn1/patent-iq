@@ -1,0 +1,33 @@
+{
+  "chunk_id": "telecommunications__2019_2021__citations",
+  "duration_seconds": 164.446,
+  "field": "Telecommunications",
+  "finished_at": "2026-03-18T07:47:29+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2019_2021__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2019_2021__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2019_2021__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 363479,
+    "ep_appln_count": 21869,
+    "ep_publication_count": 41784,
+    "family_count": 278715,
+    "local_output_bytes": 17453144,
+    "local_output_file_count": 3,
+    "publn_count": 520036,
+    "us_publication_count": 114767
+  },
+  "recovered_at": "2026-03-23T18:18:07+00:00",
+  "started_at": "2026-03-18T07:44:45+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=telecommunications/year=2019-2021/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=telecommunications/year=2019-2021/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=telecommunications/year=2019-2021/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2021,
+  "year_start": 2019
+}

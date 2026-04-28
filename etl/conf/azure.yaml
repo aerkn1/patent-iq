@@ -1,0 +1,8 @@
+azure:
+  account_url: ""
+  container: "patentiq-data"
+  connection_string_env: "AZURE_STORAGE_CONNECTION_STRING"
+  active_release_manifest_blob: "manifests/active_release.json"
+  active_models_manifest_blob: "manifests/active_models.json"
+  active_vectors_manifest_blob: "manifests/active_vectors.json"
+  data_catalog_blob: "manifests/data_catalog.json"

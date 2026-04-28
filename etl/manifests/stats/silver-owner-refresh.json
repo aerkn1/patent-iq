@@ -1,0 +1,33 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-03T20:46:55+00:00",
+  "metrics": {
+    "silver_assignee_harmonized_rows": 20894233,
+    "silver_family_owner_bridge_rows": 27840126
+  },
+  "output_profiles": [
+    {
+      "column_count": 11,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_owner_bridge.parquet",
+      "row_count": 27840126,
+      "sha256": "5fcdb6ee9302992af4a2baead1ce0f17a6c26d93d5e7a8cd8dda8461603507f7",
+      "size_bytes": 553112544,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet",
+      "row_count": 20894233,
+      "sha256": "6ca427e5fbf50e6d400c616e2c9ca206ea3c879465a6fe48e85d025b9537d178",
+      "size_bytes": 410705067,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-owner-refresh",
+  "started_at": "2026-04-03T20:43:34+00:00",
+  "status": "success",
+  "summary": "Rebuilt Silver family-owner bridge and deterministic primary-owner table from the scoped owner seed.",
+  "warnings": []
+}

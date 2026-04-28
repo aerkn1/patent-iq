@@ -1,0 +1,32 @@
+{
+  "chunk_id": "semiconductors__2025_2026__citations",
+  "duration_seconds": 18.96,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-20T01:55:04+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2025_2026__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2025_2026__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2025_2026__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 19860,
+    "ep_appln_count": 102,
+    "ep_publication_count": 104,
+    "family_count": 19021,
+    "local_output_bytes": 226616,
+    "local_output_file_count": 3,
+    "publn_count": 21308,
+    "us_publication_count": 3699
+  },
+  "started_at": "2026-03-20T01:54:45+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=semiconductors/year=2025-2026/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2025-2026/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2025-2026/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2026,
+  "year_start": 2025
+}

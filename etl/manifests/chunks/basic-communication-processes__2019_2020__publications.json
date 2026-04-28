@@ -1,0 +1,29 @@
+{
+  "chunk_id": "basic-communication-processes__2019_2020__publications",
+  "duration_seconds": 18.984,
+  "field": "Basic communication processes",
+  "finished_at": "2026-03-19T17:04:21+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2019_2020__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 59987,
+    "ep_appln_count": 3393,
+    "ep_publication_count": 6221,
+    "family_count": 43835,
+    "local_output_bytes": 2244627,
+    "local_output_file_count": 1,
+    "publn_count": 92993,
+    "us_publication_count": 30291
+  },
+  "recovered_at": "2026-03-23T18:09:12+00:00",
+  "started_at": "2026-03-19T17:04:02+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=basic-communication-processes/year=2019-2020/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2020,
+  "year_start": 2019
+}

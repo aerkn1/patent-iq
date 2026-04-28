@@ -1,0 +1,32 @@
+{
+  "chunk_id": "it-methods-for-management__2013_2014__epab",
+  "duration_seconds": 1011.889,
+  "field": "IT methods for management",
+  "finished_at": "2026-03-25T06:41:36+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2013_2014__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2013_2014__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2013_2014__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 115138,
+    "ep_appln_count": 5999,
+    "ep_publication_count": 10435,
+    "family_count": 87660,
+    "local_output_bytes": 29042938,
+    "local_output_file_count": 3,
+    "publn_count": 162437,
+    "us_publication_count": 54486
+  },
+  "started_at": "2026-03-25T06:24:44+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=it-methods-for-management/year=2013-2014/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=it-methods-for-management/year=2013-2014/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=it-methods-for-management/year=2013-2014/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2014,
+  "year_start": 2013
+}

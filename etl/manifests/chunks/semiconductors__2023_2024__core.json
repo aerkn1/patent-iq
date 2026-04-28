@@ -1,0 +1,48 @@
+{
+  "chunk_id": "semiconductors__2023_2024__core",
+  "duration_seconds": 279.892,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-21T16:50:27+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__core/patstat/tls201_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__core/patstat/tls202_appln_title.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__core/patstat/tls203_appln_abstr.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__core/patstat/tls204_appln_prior.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__core/patstat/tls206_person.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__core/patstat/tls207_pers_appln.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__core/patstat/tls209_appln_ipc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__core/patstat/tls216_appln_contn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__core/patstat/tls224_appln_cpc.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2023_2024__core/patstat/tls230_appln_techn_field.parquet"
+  ],
+  "metrics": {
+    "appln_count": 263004,
+    "derived_seed_sidecar_count": 1,
+    "ep_appln_count": 5758,
+    "ep_publication_count": 6748,
+    "family_count": 193097,
+    "local_output_bytes": 132392700,
+    "local_output_file_count": 10,
+    "publn_count": 298980,
+    "us_publication_count": 60098
+  },
+  "recovered_at": "2026-03-23T18:17:29+00:00",
+  "started_at": "2026-03-21T16:45:47+00:00",
+  "status": "success",
+  "table_family": "core",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=core/tls201_appln.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=core/tls202_appln_title.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=core/tls203_appln_abstr.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=core/tls204_appln_prior.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=core/tls206_person.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=core/tls207_pers_appln.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=core/tls209_appln_ipc.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=core/tls216_appln_contn.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=core/tls224_appln_cpc.parquet",
+    "raw-bounded/patstat/field=semiconductors/year=2023-2024/family=core/tls230_appln_techn_field.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}

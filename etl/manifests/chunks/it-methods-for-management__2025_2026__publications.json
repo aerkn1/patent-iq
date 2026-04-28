@@ -1,0 +1,28 @@
+{
+  "chunk_id": "it-methods-for-management__2025_2026__publications",
+  "duration_seconds": 19.301,
+  "field": "IT methods for management",
+  "finished_at": "2026-03-19T22:49:13+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2025_2026__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 40904,
+    "ep_appln_count": 54,
+    "ep_publication_count": 54,
+    "family_count": 40472,
+    "local_output_bytes": 908230,
+    "local_output_file_count": 1,
+    "publn_count": 45482,
+    "us_publication_count": 1946
+  },
+  "started_at": "2026-03-19T22:48:54+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=it-methods-for-management/year=2025-2026/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2026,
+  "year_start": 2025
+}

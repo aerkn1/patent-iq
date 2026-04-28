@@ -1,0 +1,838 @@
+Project PatentIQ_V2 {
+  database_type: "PostgreSQL"
+  Note: "Logical cross-layer PatentIQ V2 warehouse model for dbdiagram.io. Bronze = raw/source-preserving, Silver = normalized reusable analytics, Gold = product marts."
+}
+
+Table bronze_patstat_appln {
+  appln_id bigint [pk]
+  appln_auth varchar
+  appln_kind varchar
+  appln_filing_date date
+  appln_filing_year int
+  earliest_filing_date date
+  earliest_filing_year int
+  earliest_publn_date date
+  granted varchar
+  docdb_family_id bigint
+  inpadoc_family_id bigint
+  docdb_family_size int
+  nb_citing_docdb_fam int
+  nb_applicants int
+  nb_inventors int
+}
+
+Table bronze_patstat_appln_title {
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  appln_title_lg varchar [pk]
+  appln_title text
+}
+
+Table bronze_patstat_appln_abstr {
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  appln_abstract_lg varchar [pk]
+  appln_abstract text
+}
+
+Table bronze_patstat_appln_prior {
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  prior_appln_id bigint [pk]
+  prior_appln_seq_nr int
+}
+
+Table bronze_patstat_person {
+  person_id bigint [pk]
+  person_name varchar
+  person_ctry_code varchar
+  doc_std_name varchar
+  psn_id bigint
+  psn_name varchar
+  han_id bigint
+  han_name varchar
+  psn_sector varchar
+}
+
+Table bronze_patstat_pers_appln {
+  person_id bigint [pk, ref: > bronze_patstat_person.person_id]
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  applt_seq_nr int
+  invt_seq_nr int
+}
+
+Table bronze_patstat_appln_ipc {
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  ipc_class_symbol varchar [pk]
+  ipc_class_level varchar
+  ipc_version date
+}
+
+Table bronze_patstat_appln_cpc {
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  cpc_class_symbol varchar [pk]
+}
+
+Table bronze_patstat_pat_publn {
+  pat_publn_id bigint [pk]
+  appln_id bigint [ref: > bronze_patstat_appln.appln_id]
+  publn_auth varchar
+  publn_nr varchar
+  publn_kind varchar
+  publn_date date
+}
+
+Table bronze_patstat_citation {
+  pat_publn_id bigint [pk, ref: > bronze_patstat_pat_publn.pat_publn_id]
+  citn_id bigint [pk]
+  cited_pat_publn_id bigint [ref: > bronze_patstat_pat_publn.pat_publn_id]
+  cited_appln_id bigint [ref: > bronze_patstat_appln.appln_id]
+  cited_npl_publn_id varchar
+  citn_origin varchar
+}
+
+Table bronze_patstat_npl_publn {
+  npl_publn_id varchar [pk]
+  npl_biblio text
+}
+
+Table bronze_patstat_docdb_fam_citn {
+  docdb_family_id bigint [pk]
+  cited_docdb_family_id bigint [pk]
+}
+
+Table bronze_patstat_appln_techn_field {
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  techn_field_nr int [pk]
+  weight float
+}
+
+Table bronze_patstat_inpadoc_legal_event {
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  event_auth varchar [pk]
+  event_code varchar [pk]
+  event_date date [pk]
+}
+
+Table bronze_uspto_ft_document {
+  publication_number_full varchar [pk]
+  application_number_full varchar
+  publication_kind varchar
+  publication_date date
+  source_file_name varchar
+}
+
+Table bronze_uspto_ft_biblio_application {
+  publication_number_full varchar [pk, ref: > bronze_uspto_ft_document.publication_number_full]
+  application_number_full varchar
+  application_type varchar
+  us_application_series_code varchar
+  filing_date date
+}
+
+Table bronze_uspto_ft_abstract {
+  publication_number_full varchar [pk, ref: > bronze_uspto_ft_document.publication_number_full]
+  abstract_text text
+}
+
+Table bronze_uspto_ft_claims {
+  publication_number_full varchar [pk, ref: > bronze_uspto_ft_document.publication_number_full]
+  claim_id varchar [pk]
+  claim_num int
+  claim_text_plain text
+}
+
+Table bronze_epab_document {
+  epab_doc_id varchar [pk]
+  publication_number_full varchar
+  application_number_full varchar
+  publication_kind varchar
+  publication_date date
+}
+
+Table bronze_epab_publication {
+  epab_doc_id varchar [pk, ref: > bronze_epab_document.epab_doc_id]
+  publication_authority varchar
+  publication_number varchar
+  publication_kind varchar
+  publication_date date
+}
+
+Table bronze_epab_application {
+  epab_doc_id varchar [pk, ref: > bronze_epab_document.epab_doc_id]
+  application_authority varchar
+  application_number varchar
+  filing_date date
+}
+
+Table bronze_epab_abstract {
+  epab_doc_id varchar [pk, ref: > bronze_epab_document.epab_doc_id]
+  abstract_text text
+  language_code varchar [pk]
+}
+
+Table bronze_epab_claims {
+  epab_doc_id varchar [pk, ref: > bronze_epab_document.epab_doc_id]
+  claim_id varchar [pk]
+  claim_sequence_no int
+  language_code varchar
+  claim_text_plain text
+}
+
+Table bronze_reg101_appln {
+  id bigint [pk]
+  appln_id bigint [ref: > bronze_patstat_appln.appln_id]
+  appln_auth varchar
+  appln_nr varchar
+  appln_filing_date date
+  filing_lg varchar
+  status_code varchar
+}
+
+Table bronze_reg107_parties {
+  id bigint [pk, ref: > bronze_reg101_appln.id]
+  set_seq_nr int [pk]
+  seq_nr int [pk]
+  party_type varchar [pk]
+  is_latest boolean
+  name varchar
+  country varchar
+  customer_id bigint
+}
+
+Table bronze_reg111_licensee {
+  id bigint [pk, ref: > bronze_reg101_appln.id]
+  licensee_seq_nr int [pk]
+  type_license varchar
+  name varchar
+  country varchar
+  valid_date date
+}
+
+Table bronze_reg125_appeal {
+  id bigint [pk, ref: > bronze_reg101_appln.id]
+  appeal_nr int [pk]
+  appeal_date date [pk]
+  phase varchar [pk]
+  result varchar
+  result_date date
+}
+
+Table bronze_reg130_opponent {
+  id bigint [pk, ref: > bronze_reg101_appln.id]
+  oppt_nr int [pk]
+  is_latest boolean
+  oppt_name varchar
+  oppt_country varchar
+  date_opp_filed date
+  oppt_status varchar
+  oppt_status_date date
+  agent_name varchar
+}
+
+Table bronze_reg201_proc_step {
+  id bigint [pk, ref: > bronze_reg101_appln.id]
+  step_id bigint [pk]
+  step_phase varchar
+  step_code varchar
+  step_result varchar
+  time_limit int
+}
+
+Table bronze_reg202_proc_step_text {
+  id bigint [pk, ref: > bronze_reg101_appln.id]
+  step_id bigint [pk]
+  step_text text
+}
+
+Table bronze_reg203_proc_step_date {
+  id bigint [pk, ref: > bronze_reg101_appln.id]
+  step_id bigint [pk]
+  step_date date [pk]
+}
+
+Table bronze_reg301_event_data {
+  id bigint [pk, ref: > bronze_reg101_appln.id]
+  event_date date [pk]
+  event_code varchar [pk]
+}
+
+Table bronze_reg402_event_text {
+  event_code varchar [pk]
+  event_text text
+}
+
+Table bronze_reg701_appln {
+  id bigint [pk]
+  appln_id bigint [ref: > bronze_patstat_appln.appln_id]
+  status_code varchar
+}
+
+Table bronze_reg731_event_data {
+  id bigint [pk, ref: > bronze_reg701_appln.id]
+  event_date date [pk]
+  event_code varchar [pk]
+}
+
+Table bronze_reg741_appln_status {
+  status_code varchar [pk]
+  status_text varchar
+}
+
+Table bronze_reg742_event_text {
+  event_code varchar [pk]
+  event_text text
+}
+
+Table bronze_ref_country {
+  ctry_code varchar [pk]
+  st3_name varchar
+}
+
+Table bronze_ref_legal_event_code {
+  event_auth varchar [pk]
+  event_code varchar [pk]
+  event_text varchar
+}
+
+Table bronze_ref_techn_field_ipc {
+  ipc_maingroup_symbol varchar [pk]
+  techn_field_nr int [pk]
+  techn_sector varchar
+  techn_field varchar
+}
+
+Table bronze_ext_iso_country_map {
+  iso2 varchar [pk]
+  iso3 varchar
+  country_name varchar
+}
+
+Table bronze_ext_world_bank_gdp_ppp {
+  iso3 varchar [pk]
+  snapshot_year int [pk]
+  gdp_value double
+}
+
+Table bronze_ext_us_chamber_ip_index {
+  iso2 varchar [pk]
+  snapshot_year int [pk]
+  ip_score double
+}
+
+Table bronze_ext_up_member_states {
+  jurisdiction_code varchar [pk]
+}
+
+Table bronze_ext_kind_code_normalization_seed {
+  jurisdiction_code varchar [pk]
+  kind_code varchar [pk]
+  universal_stage varchar
+  stage_multiplier double
+  is_enforceable boolean
+  legal_status_proxy varchar
+}
+
+Table bronze_ext_oecd_indicator_seed {
+  appln_id bigint [pk]
+  indicator_name varchar [pk]
+  indicator_value double
+}
+
+Table silver_family_core {
+  docdb_family_id bigint [pk]
+  inpadoc_family_id bigint
+  family_earliest_priority_date date
+  family_priority_year int
+  is_main_window_family boolean
+  is_heritage_backfill_family boolean
+  is_out_of_bounds_ghost boolean
+  earliest_priority_appln_id bigint [ref: > bronze_patstat_appln.appln_id]
+  family_size_docdb int
+  counting_unit varchar
+}
+
+Table silver_family_member_publications {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  pat_publn_id bigint [pk, ref: > bronze_patstat_pat_publn.pat_publn_id]
+  jurisdiction_code varchar
+  publn_kind varchar
+  publn_date date
+  is_application_stage boolean
+  is_grant_stage boolean
+  is_modifier_stage boolean
+}
+
+Table silver_family_text_representative {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  representative_appln_id bigint [ref: > bronze_patstat_appln.appln_id]
+  representative_publn_id bigint [ref: > bronze_patstat_pat_publn.pat_publn_id]
+  representative_language varchar
+  representative_stage varchar
+  representative_title_en text
+  representative_abstract_en text
+  representative_claim_1_en text
+  text_provenance varchar
+  is_abstract_fallback boolean
+}
+
+Table silver_assignee_harmonized {
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  person_id bigint [pk, ref: > bronze_patstat_person.person_id]
+  owner_name_raw varchar
+  owner_name_norm varchar
+  psn_id bigint
+  psn_name varchar
+  han_id bigint
+  han_name varchar
+  harmonized_owner_id bigint
+  ultimate_parent_name varchar
+}
+
+Table silver_kind_code_normalization {
+  jurisdiction_code varchar [pk]
+  kind_code varchar [pk]
+  universal_stage varchar
+  stage_multiplier double
+  is_enforceable boolean
+  is_application_stage boolean
+  is_post_grant_modifier boolean
+  legal_status_proxy varchar
+  method_version varchar
+}
+
+Table silver_tiered_market_weighting {
+  jurisdiction_code varchar [pk]
+  snapshot_year int [pk]
+  gdp_value double
+  ip_score double
+  gdp_tier_weight double
+  final_market_multiplier double
+}
+
+Table silver_up_status {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  has_up_registration boolean
+  up_detection_method varchar
+  up_member_state_count int
+}
+
+Table silver_family_jurisdiction_unrolled {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  jurisdiction_code varchar [pk]
+  source_auth varchar
+  is_up_unrolled boolean
+  is_classic_validation boolean
+  is_global_member boolean
+}
+
+Table silver_legal_status_event_ledger {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  jurisdiction_code varchar [pk]
+  event_date date [pk]
+  event_code varchar
+  event_type varchar
+  event_severity varchar
+  is_grant_event boolean
+  is_lapse_event boolean
+  is_opposition_event boolean
+  is_expiry_event boolean
+  is_up_event boolean
+}
+
+Table silver_family_status_pt {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  family_composite_status varchar
+  active_jurisdiction_count int
+  active_grant_branch_count int
+  lapsed_jurisdiction_count int
+  opposed_branch_count int
+  has_any_active_grant boolean
+  is_dead_family boolean
+}
+
+Table silver_ep_register_core {
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  docdb_family_id bigint [ref: > silver_family_core.docdb_family_id]
+  reg101_id bigint [ref: > bronze_reg101_appln.id]
+  register_record_present boolean
+  ep_registered_license_flag boolean
+  ep_licensee_names text
+  register_snapshot_date date
+}
+
+Table silver_ep_register_agent_summary {
+  appln_id bigint [pk, ref: > silver_ep_register_core.appln_id]
+  ep_register_lead_agent_name varchar
+  ep_register_lead_agent_country varchar
+  ep_register_agent_customer_id bigint
+}
+
+Table silver_ep_register_current_opposition {
+  appln_id bigint [pk, ref: > silver_ep_register_core.appln_id]
+  ep_opposition_active boolean
+  ep_opposition_status_text varchar
+  ep_opponent_names text
+  ep_opponent_agent_names text
+  ep_appeal_active boolean
+  ep_appeal_result_text varchar
+}
+
+Table silver_ep_register_up_status {
+  appln_id bigint [pk, ref: > silver_ep_register_core.appln_id]
+  ep_register_is_unitary_patent boolean
+  ep_register_up_status_code varchar
+  ep_register_up_status_text varchar
+  ep_register_up_event_latest_date date
+}
+
+Table silver_ep_register_proc_step_features {
+  appln_id bigint [pk, ref: > silver_ep_register_core.appln_id]
+  ep_proc_step_maturity_score double
+  ep_search_report_mailed_date date
+  ep_latest_proc_phase_code varchar
+  ep_latest_proc_result_code varchar
+  ep_proc_time_limit_days int
+}
+
+Table silver_ep_register_display_ledger {
+  appln_id bigint [pk, ref: > silver_ep_register_core.appln_id]
+  docdb_family_id bigint [ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  ep_display_status_text varchar
+  status_source varchar
+  status_source_priority varchar
+  register_override_flag boolean
+}
+
+Table silver_family_ipc_cpc_canonical {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  canonical_ipc_symbol varchar [pk]
+  canonical_code_type varchar
+  source_count int
+}
+
+Table silver_family_wipo_fields {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  wipo_field varchar [pk]
+  field_presence_flag boolean
+  field_fraction double
+  family_tech_breadth_wipo_count int
+}
+
+Table silver_family_citation_edges {
+  citing_docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  cited_docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  citing_appln_id bigint [ref: > bronze_patstat_appln.appln_id]
+  cited_appln_id bigint [ref: > bronze_patstat_appln.appln_id]
+  citing_publn_date date
+  citing_publn_auth varchar
+  citing_publn_kind varchar
+}
+
+Table silver_family_citation_edges_clean {
+  citing_docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  cited_docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  is_self_citation boolean
+  is_intra_family_citation boolean
+  is_out_of_bounds boolean
+  clean_edge_weight double
+}
+
+Table silver_family_npl_backlinks {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  citing_appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  cited_npl_publn_id varchar [pk, ref: > bronze_patstat_npl_publn.npl_publn_id]
+  npl_citation_count int
+  science_linkage_flag boolean
+}
+
+Table silver_family_citation_metrics {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  forward_citations_raw int
+  forward_citations_clean int
+  forward_citations_weighted double
+  backward_citations_raw int
+  backward_citations_clean int
+  out_of_bounds_citation_count int
+  out_of_bounds_citation_share double
+  backward_npl_citation_count int
+  rcf_score double
+  fwd_cits5 int
+  fwd_cits7 int
+  adjusted_citation_score_raw double
+  science_grounding_score double
+}
+
+Table silver_enriched_citation_network {
+  cited_docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  citing_docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  citing_pat_publn_id bigint
+  cited_pat_publn_id bigint
+  citation_date date [pk]
+  citing_assignee_name varchar
+  citing_jurisdiction_code varchar
+  citing_kind_code varchar
+  citing_primary_wipo_field varchar
+  citing_stage_multiplier double
+  citing_market_multiplier double
+  clipped_trend_coefficient double
+  trend_source varchar
+  is_out_of_bounds boolean
+  is_intra_family_citation boolean
+  is_self_citation boolean
+  clean_edge_weight double
+  citation_lethality_score double
+}
+
+Table silver_global_tech_trends_timeseries {
+  snapshot_year int [pk]
+  wipo_field varchar [pk]
+  global_family_filings int
+  prior_period_global_family_filings int
+  growth_rate double
+  tech_trend_coefficient double
+}
+
+Table silver_local_tech_trends_timeseries {
+  snapshot_year int [pk]
+  jurisdiction_code varchar [pk]
+  wipo_field varchar [pk]
+  local_family_filings int
+  prior_period_local_family_filings int
+  local_growth_rate double
+  local_trend_coefficient double
+}
+
+Table silver_family_coverage_metrics {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  family_raw_breadth_jurisdiction_count int
+  family_active_breadth_jurisdiction_count int
+  family_weighted_market_reach_score double
+  family_coverage_stability_score double
+}
+
+Table silver_family_enforceability_branches {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  jurisdiction_code varchar [pk]
+  wipo_field varchar [pk]
+  max_active_stage varchar
+  stage_multiplier double
+  final_market_multiplier double
+  field_fraction double
+  local_trend_coefficient double
+  branch_enforceability_contribution_raw double
+  coefficient_mode varchar
+}
+
+Table silver_family_oecd_quality {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  priority_year int
+  primary_wipo_field varchar
+  generality_score double
+  originality_score double
+  radicalness_score double
+  backward_npl_citation_count int
+  science_grounding_score double
+  oecd_quality_percentile double
+}
+
+Table silver_grant_probability_forecast {
+  appln_id bigint [pk, ref: > bronze_patstat_appln.appln_id]
+  snapshot_date date [pk]
+  grant_probability_pct double
+  model_version varchar
+}
+
+Table silver_lapse_risk_forecast {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  jurisdiction_code varchar [pk]
+  lapse_risk_pct double
+  model_version varchar
+}
+
+Table silver_friction_risk_forecast {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  friction_risk_pct double
+  model_version varchar
+}
+
+Table silver_ep_grant_probability_forecast {
+  appln_id bigint [pk, ref: > silver_ep_register_core.appln_id]
+  snapshot_date date [pk]
+  grant_probability_pct double
+  model_version varchar
+  calibration_version varchar
+}
+
+Table gold_family_summary {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date
+  harmonized_owner_id bigint
+  family_composite_status varchar
+  family_raw_breadth_jurisdiction_count int
+  family_weighted_market_reach_score double
+  family_tech_breadth_wipo_count int
+  generality_score double
+  originality_score double
+  radicalness_score double
+}
+
+Table gold_family_heritage_summary {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  harmonized_owner_id bigint
+  family_priority_year int
+  is_main_window_family boolean
+  is_heritage_backfill_family boolean
+  family_heritage_score double
+  out_of_bounds_citation_share double
+}
+
+Table gold_family_ep_register_badges {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  ep_opposition_badge boolean
+  ep_up_badge boolean
+  ep_registered_license_badge boolean
+  ep_lead_agent_name varchar
+}
+
+Table gold_family_blocking_power {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  market_threat_score_raw double
+  adjusted_citation_score_raw double
+  raw_absolute_blocking_power double
+  ui_blocking_power_score double
+  overall_legal_enforceability_score double
+  normalization_method varchar
+  cohort_definition varchar
+  method_version varchar
+}
+
+Table gold_family_blocking_power_timeseries {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  ui_blocking_power_score double
+  overall_legal_enforceability_score double
+  adjusted_citation_score_raw double
+}
+
+Table gold_family_field_contributions_timeseries {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_year int [pk]
+  wipo_field varchar [pk]
+  base_fraction double
+  enforceability_contribution_score double
+  heritage_contribution_score double
+  active_market_weight double
+  max_active_stage varchar
+  is_active_on_snapshot boolean
+}
+
+Table gold_family_attacker_summary {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  citing_assignee_name varchar [pk]
+  citation_count int
+  citation_lethality_sum double
+}
+
+Table gold_portfolio_field_timeseries {
+  harmonized_owner_id bigint [pk]
+  snapshot_date date [pk]
+  wipo_field varchar [pk]
+  active_family_count int
+  enforceability_score double
+  heritage_score double
+}
+
+Table gold_portfolio_summary {
+  harmonized_owner_id bigint [pk]
+  snapshot_date date [pk]
+  portfolio_total_mass_score double
+  portfolio_hit_rate_top_decile double
+  portfolio_crown_jewel_index double
+  portfolio_opposition_rate double
+  portfolio_current_threat_score double
+  portfolio_heritage_score double
+}
+
+Table gold_portfolio_heritage_summary {
+  harmonized_owner_id bigint [pk]
+  snapshot_date date [pk]
+  portfolio_family_count_heritage_scope int
+  portfolio_total_heritage_score double
+  portfolio_avg_heritage_score double
+  heritage_backfill_family_count int
+  main_window_family_count int
+}
+
+Table gold_portfolio_threat_matrix {
+  harmonized_owner_id bigint [pk]
+  snapshot_date date [pk]
+  citing_assignee_name varchar [pk]
+  wipo_field varchar [pk]
+  citation_lethality_sum double
+  collided_family_count int
+}
+
+Table gold_family_forecast_summary {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  snapshot_date date [pk]
+  grant_probability_pct double
+  aggregate_lapse_risk_pct double
+  friction_risk_pct double
+}
+
+Table gold_portfolio_forecast_summary {
+  harmonized_owner_id bigint [pk]
+  snapshot_date date [pk]
+  likely_grants_count double
+  expected_lapses_count double
+  high_friction_family_count double
+}
+
+Table gold_publication_ep_register_evidence {
+  appln_id bigint [pk, ref: > silver_ep_register_core.appln_id]
+  snapshot_date date [pk]
+  ep_display_status_text varchar
+  ep_opponent_names text
+  ep_opponent_agent_names text
+  ep_register_lead_agent_name varchar
+  ep_register_up_status_text varchar
+}
+
+Table gold_semantic_match_context {
+  query_id varchar [pk]
+  matched_docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  semantic_similarity_score double
+  chronology_scope varchar
+  ui_blocking_power_score double
+  family_composite_status varchar
+}
+
+Table vec_family_embeddings {
+  docdb_family_id bigint [pk, ref: > silver_family_core.docdb_family_id]
+  vector_space varchar [pk]
+  representative_appln_id bigint
+  representative_publn_id bigint
+  text_provenance varchar
+  is_abstract_fallback boolean
+  earliest_priority_timestamp bigint
+  wipo_field varchar
+  overall_bp_percentile int
+  embedding_model varchar
+}
+
+Table ml_model_registry {
+  model_name varchar [pk]
+  model_version varchar [pk]
+  target_metric varchar
+  training_snapshot_date date
+}

@@ -1,0 +1,30 @@
+{
+  "chunk_id": "basic-communication-processes__2022_2024__legal",
+  "duration_seconds": 40.338,
+  "field": "Basic communication processes",
+  "finished_at": "2026-03-18T04:54:39+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2022_2024__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2022_2024__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 78066,
+    "ep_appln_count": 3203,
+    "ep_publication_count": 4090,
+    "family_count": 61441,
+    "local_output_bytes": 3814587,
+    "local_output_file_count": 2,
+    "publn_count": 96434,
+    "us_publication_count": 23335
+  },
+  "started_at": "2026-03-18T04:53:58+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=basic-communication-processes/year=2022-2024/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2022-2024/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2022
+}

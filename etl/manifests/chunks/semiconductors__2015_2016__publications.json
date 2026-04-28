@@ -1,0 +1,30 @@
+{
+  "chunk_id": "semiconductors__2015_2016__publications",
+  "duration_seconds": 60.086,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-21T16:11:37+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2015_2016__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 248423,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 9538,
+    "ep_publication_count": 20199,
+    "family_count": 151839,
+    "local_output_bytes": 8366038,
+    "local_output_file_count": 1,
+    "publn_count": 401483,
+    "us_publication_count": 108584
+  },
+  "recovered_at": "2026-03-23T18:17:14+00:00",
+  "started_at": "2026-03-21T16:10:37+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=semiconductors/year=2015-2016/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2016,
+  "year_start": 2015
+}

@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "This mart is the family-level classification source for chronological CPC/WIPO UI sections and later portfolio and market classification rollups."
+  ],
+  "finished_at": "2026-04-24T11:40:26+00:00",
+  "metrics": {
+    "gold_family_classification_mix_pit_rows": 164988135
+  },
+  "output_profiles": [
+    {
+      "column_count": 25,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_mix_pit.parquet",
+      "row_count": 164988135,
+      "sha256": "f6e3a63c6f51603a561a506e74f8166fb54be926357e7f0bd8406d6dc9805cc7",
+      "size_bytes": 1256611345,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-family-classification-mix-pit",
+  "started_at": "2026-04-24T11:37:42+00:00",
+  "status": "success",
+  "summary": "Built the family classification PIT summary mart from the dense family-year classification backbone.",
+  "warnings": []
+}

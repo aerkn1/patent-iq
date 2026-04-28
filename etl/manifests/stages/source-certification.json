@@ -1,0 +1,69 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/source-certification.json"
+  },
+  "calculations": [
+    "Source sufficiency is evaluated as presence plus bridge-readiness of family/application/publication identifiers.",
+    "Selected field sufficiency requires every configured WIPO field to remain representable downstream."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md",
+    "docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md",
+    "docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md"
+  ],
+  "downstream_impacts": [
+    "Failure here blocks Bronze ingestion and prevents the bounded mega-cluster seed from being generated safely.",
+    "Missing PATSTAT or weak field coverage will invalidate all downstream family, portfolio, Market Intelligence, and semantic marts.",
+    "Missing USPTO or EPAB will specifically degrade semantic claim-space selection while leaving abstract fallback available."
+  ],
+  "finished_at": "2026-03-31T20:29:20+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/wipo_techn_field_ipc.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/iso_country_map.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/world_bank_gdp_ppp.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/us_chamber_ip_index.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/up_member_states.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/data-analytics/cpc-coverage-data/ipc_to_wipo_industry.csv"
+  ],
+  "methods": [
+    "Scanned local raw-source directories or TIP clients depending on the configured source mode.",
+    "Applied release severity classification using configured thresholds and source-family-specific rules.",
+    "Recorded source availability and missing-resource warnings before Bronze generation.",
+    "Validated required raw-source columns against the schema contracts captured in docs/data and V2 warehouse docs."
+  ],
+  "metrics": {
+    "bronze_ext_iso_country_map_column_count": 3,
+    "bronze_ext_iso_country_map_file_count": 1,
+    "bronze_ext_kind_code_normalization_seed_column_count": 12,
+    "bronze_ext_kind_code_normalization_seed_file_count": 1,
+    "bronze_ext_up_member_states_column_count": 3,
+    "bronze_ext_up_member_states_file_count": 1,
+    "bronze_ext_us_chamber_ip_index_column_count": 3,
+    "bronze_ext_us_chamber_ip_index_file_count": 1,
+    "bronze_ext_world_bank_gdp_ppp_column_count": 3,
+    "bronze_ext_world_bank_gdp_ppp_file_count": 1,
+    "bronze_ref_techn_field_ipc_column_count": 6,
+    "bronze_ref_techn_field_ipc_file_count": 1,
+    "epab_payload_file_count": 0,
+    "selected_wipo_field_count": 10,
+    "total_input_file_count": 6,
+    "uspto_externalized_from_tip": 1,
+    "uspto_odp_api_key_available": 0,
+    "uspto_runtime_stage_required": 1,
+    "uspto_xml_file_count": 0
+  },
+  "outputs": [],
+  "stage": "source-certification",
+  "started_at": "2026-03-31T20:29:20+00:00",
+  "status": "failed",
+  "summary": "Certified raw source availability, bridge viability, and mega-cluster sufficiency preconditions.",
+  "warnings": [
+    "TIP PATSTAT client could not be initialized: No module named 'epo'",
+    "Missing source for `bronze_ext_cpc_coverage` in `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs`.",
+    "Missing source for `bronze_ext_cpc_ipc_weights` in `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs`.",
+    "Missing source for `bronze_ext_oecd_indicator_seed` in `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs`.",
+    "TIP EPAB client could not be initialized: No module named 'epo'",
+    "USPTO is configured for external ODP extraction. API key env var `USPTO_ODP_API_KEY` is not present in this runtime, so the dedicated USPTO ODP stage is deferred."
+  ]
+}

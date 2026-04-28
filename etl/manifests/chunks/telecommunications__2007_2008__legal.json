@@ -1,0 +1,31 @@
+{
+  "chunk_id": "telecommunications__2007_2008__legal",
+  "duration_seconds": 198.874,
+  "field": "Telecommunications",
+  "finished_at": "2026-03-19T12:42:43+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2007_2008__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2007_2008__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 212481,
+    "ep_appln_count": 14073,
+    "ep_publication_count": 27687,
+    "family_count": 150635,
+    "local_output_bytes": 33663797,
+    "local_output_file_count": 2,
+    "publn_count": 332957,
+    "us_publication_count": 83330
+  },
+  "recovered_at": "2026-03-23T18:17:35+00:00",
+  "started_at": "2026-03-19T12:39:24+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=telecommunications/year=2007-2008/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=telecommunications/year=2007-2008/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2008,
+  "year_start": 2007
+}

@@ -1,0 +1,16 @@
+*
+
+!Dockerfile
+!README.md
+!main.py
+!pyproject.toml
+!api/
+!application/
+!config/
+!domain/
+!infrastructure/
+!scripts/
+
+**/__pycache__/
+**/*.pyc
+**/.DS_Store

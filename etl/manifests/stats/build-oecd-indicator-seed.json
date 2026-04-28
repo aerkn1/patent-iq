@@ -1,0 +1,28 @@
+{
+  "downstream_impacts": [
+    "The rich seed can feed Bronze or direct Silver/Gold benchmark overlays without recomputing the citation pools.",
+    "Recent-cohort forward-window indicators remain usable but are explicitly marked as truncation-sensitive."
+  ],
+  "finished_at": "2026-04-03T08:36:49+00:00",
+  "metrics": {
+    "oecd_indicator_seed_family_count": 21353101,
+    "oecd_indicator_seed_indicator_count": 10,
+    "oecd_indicator_seed_rows": 21353101
+  },
+  "output_profiles": [
+    {
+      "column_count": 39,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_seed.parquet",
+      "row_count": 21353101,
+      "sha256": "f68a5d16f28322edc94e201c370ca3bcee6bc08549490499376762e356b14eb8",
+      "size_bytes": 292187384,
+      "type": "file"
+    }
+  ],
+  "stage": "build-oecd-indicator-seed",
+  "started_at": "2026-04-03T08:32:40+00:00",
+  "status": "success",
+  "summary": "Built a family-first OECD indicator seed in wide family-level raw form from existing Silver citation, field, family-size, and grant-lag layers without rerunning Bronze.",
+  "warnings": []
+}

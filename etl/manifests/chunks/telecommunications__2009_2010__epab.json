@@ -1,0 +1,32 @@
+{
+  "chunk_id": "telecommunications__2009_2010__epab",
+  "duration_seconds": 2556.999,
+  "field": "Telecommunications",
+  "finished_at": "2026-03-24T12:10:41+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2009_2010__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2009_2010__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2009_2010__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 181012,
+    "ep_appln_count": 12824,
+    "ep_publication_count": 26110,
+    "family_count": 127873,
+    "local_output_bytes": 48635999,
+    "local_output_file_count": 3,
+    "publn_count": 286381,
+    "us_publication_count": 76002
+  },
+  "started_at": "2026-03-24T11:28:04+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=telecommunications/year=2009-2010/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=telecommunications/year=2009-2010/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=telecommunications/year=2009-2010/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2010,
+  "year_start": 2009
+}

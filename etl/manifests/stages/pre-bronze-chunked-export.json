@@ -1,0 +1,69 @@
+{
+  "artifacts": {
+    "live_event_log": "/home/jovyan/patent-iq/etl/manifests/stages/pre-bronze-chunked-export.events.jsonl",
+    "stats_snapshot": "/home/jovyan/patent-iq/etl/manifests/stats/pre-bronze-chunked-export.json"
+  },
+  "calculations": [
+    "Chunk ids are deterministic field/year/table-family keys.",
+    "Per-chunk scope is bounded by both selected WIPO field and configured year bucket."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md",
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md",
+    "docs/data/epo-tip-client-usage.md"
+  ],
+  "downstream_impacts": [
+    "Successful chunk manifests allow resumable pre-Bronze extraction across constrained TIP sessions.",
+    "Chunk-local Blob prefixes become the authoritative bounded raw intermediate store for later non-TIP Bronze/Silver/Gold consolidation."
+  ],
+  "finished_at": "2026-03-23T18:23:50+00:00",
+  "inputs": [],
+  "methods": [
+    "Planned field/year/table-family chunks before extraction.",
+    "Built chunk-local bounded scope directly from TIP instead of materializing one monolithic bounded raw layer.",
+    "Uploaded chunk artifacts to Azure Blob when configured, then optionally cleaned local chunk temp directories."
+  ],
+  "metrics": {
+    "chunk_degraded_count": 0,
+    "chunk_failed_count": 0,
+    "chunk_scheduler_parallel_limit": 2,
+    "chunk_skipped_count": 500,
+    "chunk_total_count": 500,
+    "chunk_upload_max_block_size_mb": 4,
+    "chunk_upload_max_concurrency": 2,
+    "chunk_upload_max_single_put_size_mb": 8,
+    "chunk_uploaded_file_count": 0,
+    "global_seed_derived_file_count": 4,
+    "global_seed_dir": "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds",
+    "global_seed_file_count": 8,
+    "global_seed_initial_file_count": 4,
+    "refs_uploaded_blob_count": 0
+  },
+  "outputs": [
+    "/home/jovyan/patent-iq/etl/manifests/chunks",
+    "/home/jovyan/patent-iq/etl/manifests/chunks/tip_chunk_plan.json",
+    "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_appln_ids.parquet",
+    "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_family_ids.parquet",
+    "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_ep_appln_ids.parquet",
+    "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_family_field_counts.parquet",
+    "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_publn_ids.parquet",
+    "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_person_ids.parquet",
+    "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_us_publication_numbers.parquet",
+    "/home/jovyan/patent-iq/etl/data/raw-bounded/_seeds/seed_ep_publication_numbers.parquet"
+  ],
+  "stage": "pre-bronze-chunked-export",
+  "started_at": "2026-03-23T18:23:19+00:00",
+  "status": "success",
+  "summary": "Executed chunked TIP pre-Bronze extraction with Blob-first chunk manifests and local cleanup support.",
+  "warnings": [
+    "Skipped `bronze_ref_techn_field_ipc` because no source file was found.",
+    "Skipped `bronze_ext_cpc_coverage` because no source file was found.",
+    "Skipped `bronze_ext_cpc_ipc_weights` because no source file was found.",
+    "Skipped `bronze_ext_iso_country_map` because no source file was found.",
+    "Skipped `bronze_ext_world_bank_gdp_ppp` because no source file was found.",
+    "Skipped `bronze_ext_us_chamber_ip_index` because no source file was found.",
+    "Skipped `bronze_ext_up_member_states` because no source file was found.",
+    "Skipped `bronze_ext_kind_code_normalization_seed` because no source file was found.",
+    "Skipped `bronze_ext_oecd_indicator_seed` because no source file was found."
+  ]
+}

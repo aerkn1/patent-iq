@@ -1,0 +1,27 @@
+{
+  "downstream_impacts": [
+    "This artifact can feed Bronze/Silver OECD overlays and direct portfolio benchmarking without recomputing cohort windows.",
+    "The long-form shape supports explainable indicator drilldowns and future Bronze-compatible ingestion."
+  ],
+  "finished_at": "2026-04-03T08:51:29+00:00",
+  "metrics": {
+    "oecd_indicator_longform_indicator_count": 12,
+    "oecd_indicator_longform_rows": 240090134
+  },
+  "output_profiles": [
+    {
+      "column_count": 19,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_longform.parquet",
+      "row_count": 240090134,
+      "sha256": "50e8b1e2d4903efcb8eafef03a32c65e3dacdf8cb1a4264d98d75d4b6450b198",
+      "size_bytes": 2827515976,
+      "type": "file"
+    }
+  ],
+  "stage": "build-oecd-indicator-longform",
+  "started_at": "2026-04-03T08:40:21+00:00",
+  "status": "success",
+  "summary": "Built the normalized long-form OECD indicator projection, including explicit family-first composite variants.",
+  "warnings": []
+}

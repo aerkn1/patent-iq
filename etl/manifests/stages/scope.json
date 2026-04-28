@@ -1,0 +1,81 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/scope.json"
+  },
+  "calculations": [
+    "An in-scope application is one whose technology-field mapping falls inside the selected 10 WIPO fields.",
+    "An in-scope family is any DOCDB family reachable from the in-scope application seed.",
+    "An in-scope portfolio owner seed is derived from applicant-side application-person links only."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md",
+    "docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md",
+    "docs/new-feature-ideas/mega-cluster-dataset-scope-and-boundary-governance-requirements.md"
+  ],
+  "downstream_impacts": [
+    "These scope seeds bound every downstream family, publication, owner, and portfolio calculation in the MVP warehouse.",
+    "An over-broad or under-broad seed will contaminate blocking power, Market Intelligence, forecasts, semantic sampling, and Data Room counts."
+  ],
+  "finished_at": "2026-04-01T21:40:29+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_ipc.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_techn_field.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pers_appln.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_person.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ref_techn_field_ipc.parquet"
+  ],
+  "methods": [
+    "Resolved the in-scope family universe from selected WIPO field mappings before heavy downstream analytics.",
+    "Preferred direct PATSTAT technology-field inputs when present and fell back to IPC subclass to WIPO field concordance otherwise.",
+    "Bridged the in-scope applications to families, publications, and owners to create the canonical bounded universe."
+  ],
+  "metrics": {
+    "scope_appln_count": 32871909,
+    "scope_appln_count__Audio-visual technology": 3449359,
+    "scope_appln_count__Basic communication processes": 602460,
+    "scope_appln_count__Computer technology": 6224533,
+    "scope_appln_count__Control": 2011050,
+    "scope_appln_count__Digital communication": 3160801,
+    "scope_appln_count__Electrical machinery, apparatus, energy": 6549502,
+    "scope_appln_count__IT methods for management": 1343950,
+    "scope_appln_count__Measurement": 4800151,
+    "scope_appln_count__Semiconductors": 2551134,
+    "scope_appln_count__Telecommunications": 2178969,
+    "scope_family_count": 21353101,
+    "scope_family_count__Audio-visual technology": 2446006,
+    "scope_family_count__Basic communication processes": 384536,
+    "scope_family_count__Computer technology": 4490120,
+    "scope_family_count__Control": 1644622,
+    "scope_family_count__Digital communication": 1829831,
+    "scope_family_count__Electrical machinery, apparatus, energy": 5061217,
+    "scope_family_count__IT methods for management": 1039957,
+    "scope_family_count__Measurement": 3924046,
+    "scope_family_count__Semiconductors": 1522749,
+    "scope_family_count__Telecommunications": 1473614,
+    "scope_owner_count": 37134586,
+    "scope_publn_count": 42692835,
+    "scope_publn_count__Audio-visual technology": 4757897,
+    "scope_publn_count__Basic communication processes": 909364,
+    "scope_publn_count__Computer technology": 9007569,
+    "scope_publn_count__Control": 2673570,
+    "scope_publn_count__Digital communication": 4741516,
+    "scope_publn_count__Electrical machinery, apparatus, energy": 8536504,
+    "scope_publn_count__IT methods for management": 1770411,
+    "scope_publn_count__Measurement": 6373812,
+    "scope_publn_count__Semiconductors": 3794315,
+    "scope_publn_count__Telecommunications": 3173773
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet"
+  ],
+  "stage": "scope",
+  "started_at": "2026-04-01T21:39:42+00:00",
+  "status": "success",
+  "summary": "Built bounded-scope application, family, publication, and owner seeds for the mega-cluster universe.",
+  "warnings": []
+}

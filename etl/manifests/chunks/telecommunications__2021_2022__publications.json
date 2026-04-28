@@ -1,0 +1,29 @@
+{
+  "chunk_id": "telecommunications__2021_2022__publications",
+  "duration_seconds": 48.618,
+  "field": "Telecommunications",
+  "finished_at": "2026-03-19T13:54:16+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2021_2022__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 221390,
+    "ep_appln_count": 13996,
+    "ep_publication_count": 23458,
+    "family_count": 177989,
+    "local_output_bytes": 6279473,
+    "local_output_file_count": 1,
+    "publn_count": 299373,
+    "us_publication_count": 60266
+  },
+  "recovered_at": "2026-03-23T18:18:11+00:00",
+  "started_at": "2026-03-19T13:53:27+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=telecommunications/year=2021-2022/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2022,
+  "year_start": 2021
+}

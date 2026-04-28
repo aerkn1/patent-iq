@@ -1,0 +1,16 @@
+{
+  "downstream_impacts": [
+    "These tables feed representative claim and abstract selection in the semantic Silver stage only.",
+    "They must not be used to override PATSTAT or Register harmonized metadata layers downstream."
+  ],
+  "finished_at": "2026-04-02T10:08:39+00:00",
+  "metrics": {
+    "uspto_odp_outputs_present": 0
+  },
+  "output_profiles": [],
+  "stage": "bronze-uspto-fulltext",
+  "started_at": "2026-04-02T10:07:20+00:00",
+  "status": "success",
+  "summary": "USPTO Bronze parsing was deferred because USPTO is configured for the external ODP stream path and no direct Bronze outputs are present in this runtime.",
+  "warnings": []
+}

@@ -1,0 +1,39 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-oecd-refresh.json"
+  },
+  "calculations": [
+    "Pivoted the OECD long-form indicators back to one row per family and preserved the legacy proxy columns for compatibility.",
+    "Exposed richer raw and percentile OECD fields alongside `oecd_quality_percentile` and `oecd_quality_proxy_score`."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md",
+    "docs/new-feature-ideas/oecd-indicator-seed-build-spec.md"
+  ],
+  "downstream_impacts": [
+    "Gold, ML, and portfolio quality overlays can now consume richer OECD-style family signals without a full Silver rerun."
+  ],
+  "finished_at": "2026-04-03T17:39:33+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet"
+  ],
+  "methods": [
+    "Preferred the normalized OECD long-form projection when present and fell back to the legacy proxy formula only if the richer artifact was unavailable.",
+    "Reused existing Silver coverage, citation, and enforceability outputs rather than rerunning the full legal refresh."
+  ],
+  "metrics": {
+    "silver_family_oecd_quality_rows": 21353101
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet"
+  ],
+  "stage": "silver-oecd-refresh",
+  "started_at": "2026-04-03T17:21:11+00:00",
+  "status": "success",
+  "summary": "Rebuilt only the Silver OECD family mart from the normalized OECD long-form artifact and existing legal/citation support tables.",
+  "warnings": []
+}

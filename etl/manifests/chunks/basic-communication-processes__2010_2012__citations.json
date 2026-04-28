@@ -1,0 +1,33 @@
+{
+  "chunk_id": "basic-communication-processes__2010_2012__citations",
+  "duration_seconds": 53.146,
+  "field": "Basic communication processes",
+  "finished_at": "2026-03-18T08:16:22+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2010_2012__citations/patstat/tls212_citation.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2010_2012__citations/patstat/tls228_docdb_fam_citn.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/basic-communication-processes__2010_2012__citations/patstat/tls214_npl_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 74617,
+    "ep_appln_count": 4706,
+    "ep_publication_count": 9522,
+    "family_count": 50899,
+    "local_output_bytes": 4188498,
+    "local_output_file_count": 3,
+    "publn_count": 121749,
+    "us_publication_count": 42301
+  },
+  "recovered_at": "2026-03-23T18:09:05+00:00",
+  "started_at": "2026-03-18T08:15:29+00:00",
+  "status": "success",
+  "table_family": "citations",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=basic-communication-processes/year=2010-2012/family=citations/tls212_citation.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2010-2012/family=citations/tls228_docdb_fam_citn.parquet",
+    "raw-bounded/patstat/field=basic-communication-processes/year=2010-2012/family=citations/tls214_npl_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2012,
+  "year_start": 2010
+}

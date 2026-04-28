@@ -1,0 +1,52 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase06-jurisdiction-field-trend-forecast.json"
+  },
+  "calculations": [
+    "Labels retain raw-count, growth, and direction fields, but the promoted serving semantics are direction-first.",
+    "Prediction rows are emitted with direction, strength, and support fields plus secondary count references."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/48-patentiq-v2-post-phase-04-prioritization-and-next-execution-path.md",
+    "docs/next-phase-v2/49-patentiq-v2-phase-06-jurisdiction-field-trend-forecast-execution-plan.md",
+    "docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-07T20:06:00+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_summary_pit.parquet"
+  ],
+  "methods": [
+    "Built a dense jurisdiction-field-year grid from local and global trend timeseries.",
+    "Derived lag, acceleration, volatility, and market-context features.",
+    "Trained LightGBM multiclass direction baselines on horizon-safe grouped time splits.",
+    "Assigned direction, strength, and support bands from class probabilities and train-support thresholds."
+  ],
+  "metrics": {
+    "3y_balanced_accuracy": 0.6256237703897015,
+    "3y_class_accuracy": 0.5416184971098266,
+    "3y_macro_f1": 0.5421183525674148,
+    "5y_balanced_accuracy": 0.8631260277073224,
+    "5y_class_accuracy": 0.7265895953757225,
+    "5y_macro_f1": 0.5873721893570805,
+    "feature_rows": 16435,
+    "label_rows": 16435,
+    "prediction_rows": 32870,
+    "split_rows": 16435
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_jurisdiction_field_trend_future.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_jurisdiction_field_trend_forecast.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase06.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_prediction_jurisdiction_field_trend_forecast.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/jurisdiction_field_trend_forecast_direction_calibration.json",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_jurisdiction_field_trend_forecast.json"
+  ],
+  "stage": "ml-phase06-jurisdiction-field-trend-forecast",
+  "started_at": "2026-04-07T20:05:50+00:00",
+  "status": "success",
+  "summary": "Built Phase 06 jurisdiction-field trend labels, features, split registry, direction-first baseline predictions, and band-calibration metadata.",
+  "warnings": []
+}

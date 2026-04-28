@@ -1,0 +1,72 @@
+services:
+  artifact-init:
+    build:
+      context: ./etl
+      dockerfile: Dockerfile.bootstrap
+    environment:
+      PATENTIQ_BOOTSTRAP_SOURCE_MODE: ${PATENTIQ_BOOTSTRAP_SOURCE_MODE:-local_release}
+      PATENTIQ_BOOTSTRAP_PROFILE: ${PATENTIQ_BOOTSTRAP_PROFILE:-default}
+      PATENTIQ_BOOTSTRAP_TARGET_ROOT: /artifacts
+      PATENTIQ_BOOTSTRAP_LOG_PATH: /artifacts/logs/artifact-init.log
+      PATENTIQ_BOOTSTRAP_HF_HOME: /hf-home
+      PATENTIQ_BOOTSTRAP_PREFETCH_HF_MODELS: ${PATENTIQ_BOOTSTRAP_PREFETCH_HF_MODELS:-true}
+      PATENTIQ_BOOTSTRAP_ALLOW_UNPINNED_HF_MODELS: ${PATENTIQ_BOOTSTRAP_ALLOW_UNPINNED_HF_MODELS:-true}
+      PATENTIQ_BOOTSTRAP_OVERWRITE: ${PATENTIQ_BOOTSTRAP_OVERWRITE:-false}
+      PATENTIQ_BOOTSTRAP_HF_TOKEN_ENV: ${PATENTIQ_BOOTSTRAP_HF_TOKEN_ENV:-HF_TOKEN}
+      PATENTIQ_ACTIVE_RELEASE_PATH: ${PATENTIQ_ACTIVE_RELEASE_PATH:-/workspace/etl/manifests/releases/active_release.json}
+      PATENTIQ_RELEASE_MANIFEST_PATH: ${PATENTIQ_RELEASE_MANIFEST_PATH:-}
+      PATENTIQ_AZURE_STORAGE_ACCOUNT_URL: ${PATENTIQ_AZURE_STORAGE_ACCOUNT_URL:-}
+      PATENTIQ_AZURE_STORAGE_CONTAINER: ${PATENTIQ_AZURE_STORAGE_CONTAINER:-}
+      PATENTIQ_AZURE_ACTIVE_RELEASE_BLOB: ${PATENTIQ_AZURE_ACTIVE_RELEASE_BLOB:-manifests/active_release.json}
+      PATENTIQ_AZURE_RELEASE_MANIFEST_BLOB: ${PATENTIQ_AZURE_RELEASE_MANIFEST_BLOB:-}
+      PATENTIQ_AZURE_CONNECTION_STRING_ENV: ${PATENTIQ_AZURE_CONNECTION_STRING_ENV:-AZURE_STORAGE_CONNECTION_STRING}
+      AZURE_STORAGE_CONNECTION_STRING: ${AZURE_STORAGE_CONNECTION_STRING:-}
+      HF_TOKEN: ${HF_TOKEN:-}
+    volumes:
+      - patentiq-artifacts:/artifacts
+      - patentiq-hf-cache:/hf-home
+      - ./etl/data/releases:/workspace/etl/data/releases:ro
+      - ./etl/manifests/releases:/workspace/etl/manifests/releases:ro
+    restart: "no"
+
+  backend:
+    build:
+      context: ./backend_v2
+    depends_on:
+      artifact-init:
+        condition: service_completed_successfully
+    environment:
+      HF_HOME: /hf-home
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      PATENTIQ_BACKEND_PORT: ${PATENTIQ_BACKEND_PORT:-8000}
+      PATENTIQ_V2_RUNTIME_PROFILE: docker_compose
+      PATENTIQ_V2_REPO_ROOT: /app
+      PATENTIQ_V2_ARTIFACT_MODE: local_fs
+      PATENTIQ_V2_ETL_DATA_ROOT: /artifacts/current
+      PATENTIQ_V2_LOCAL_ARTIFACT_ROOT: /artifacts/current/serving
+      PATENTIQ_V2_SERVING_MANIFEST_PATH: /artifacts/current/serving/serving_snapshot_manifest.json
+      PATENTIQ_V2_DUCKDB_PATH: /artifacts/backend-cache/patentiq_v2.duckdb
+      PATENTIQ_V2_CACHE_DIR: /artifacts/backend-cache
+      PATENTIQ_V2_PENDING_GRANT_CACHE_DIR: /artifacts/pending-grant-cache
+      PATENTIQ_V2_RAW_PARQUET_FALLBACK_ENABLED: ${PATENTIQ_V2_RAW_PARQUET_FALLBACK_ENABLED:-false}
+    volumes:
+      - patentiq-artifacts:/artifacts
+      - patentiq-hf-cache:/hf-home
+    ports:
+      - "${PATENTIQ_BACKEND_PORT:-8000}:8000"
+
+  frontend:
+    build:
+      context: ./frontend_v2
+    depends_on:
+      backend:
+        condition: service_started
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+    ports:
+      - "3000:3000"
+
+volumes:
+  patentiq-artifacts:
+  patentiq-hf-cache:

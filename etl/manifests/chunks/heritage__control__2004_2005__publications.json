@@ -1,0 +1,29 @@
+{
+  "chunk_id": "heritage__control__2004_2005__publications",
+  "duration_seconds": 95.846,
+  "field": "Control",
+  "finished_at": "2026-03-23T22:49:52+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/heritage__control__2004_2005__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 111583,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 8244,
+    "ep_publication_count": 15496,
+    "family_count": 75751,
+    "local_output_bytes": 3058070,
+    "local_output_file_count": 1,
+    "publn_count": 166817,
+    "us_publication_count": 42457
+  },
+  "started_at": "2026-03-23T22:48:16+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded-heritage/patstat/field=control/year=2004-2005/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2005,
+  "year_start": 2004
+}

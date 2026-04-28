@@ -1,0 +1,15 @@
+{
+  "downstream_impacts": [
+    "This mart supports portfolio classification-geography leaderboards, CPC-by-jurisdiction views, and field-cluster evidence tables."
+  ],
+  "finished_at": "2026-04-09T15:29:56+00:00",
+  "metrics": {},
+  "output_profiles": [],
+  "stage": "gold-portfolio-classification-jurisdiction-pit",
+  "started_at": "2026-04-09T15:29:56+00:00",
+  "status": "failed",
+  "summary": "Built the portfolio WIPO-CPC-jurisdiction PIT mart by replaying family slice rows through the current owner bridge.",
+  "warnings": [
+    "Missing required inputs for gold-portfolio-classification-jurisdiction-pit: ['/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_jurisdiction_pit.parquet']"
+  ]
+}

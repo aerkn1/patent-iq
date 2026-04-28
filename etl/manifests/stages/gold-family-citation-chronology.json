@@ -1,0 +1,34 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-citation-chronology.json"
+  },
+  "calculations": [
+    "Cumulative forward weighted citations follow the PIT-safe clean-edge-weight definition used in family historical features.",
+    "Early-window 5y and 7y counts follow family-level first-citation timing semantics at the citing-family grain."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/81-patentiq-v2-family-citation-chronology-standalone-audit.md",
+    "docs/next-phase-v2/64-patentiq-v2-citation-serving-refactor-execution-plan.md"
+  ],
+  "downstream_impacts": [
+    "Family chronology can migrate to this mart immediately without changing portfolio citation aggregation behavior."
+  ],
+  "finished_at": "2026-04-12T17:28:39+00:00",
+  "inputs": [],
+  "methods": [
+    "Derived yearly family chronology from the clean citation event ledger rather than sparse PIT feature anchors.",
+    "Kept the existing PIT citation-timeseries mart untouched so downstream portfolio readers can migrate separately.",
+    "Anchored chronology rows to family priority year, citation years, and the current snapshot year for families with any citation activity."
+  ],
+  "metrics": {
+    "gold_family_citation_chronology_rows": 30759429
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_chronology.parquet"
+  ],
+  "stage": "gold-family-citation-chronology",
+  "started_at": "2026-04-12T17:25:00+00:00",
+  "status": "success",
+  "summary": "Built a standalone family citation chronology mart directly from the citation event ledger without rebuilding the broader family Gold bundle.",
+  "warnings": []
+}

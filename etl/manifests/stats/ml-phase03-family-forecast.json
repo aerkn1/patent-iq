@@ -1,0 +1,173 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-07T18:39:47+00:00",
+  "metrics": {
+    "ml_calibration_registry_rows": 2,
+    "ml_experiment_registry_rows": 8,
+    "ml_feature_family_future_citations_rows": 11772956,
+    "ml_label_family_future_citations_rows": 11772956,
+    "ml_model_registry_rows": 2,
+    "ml_split_registry_phase03_rows": 11772956,
+    "ml_split_registry_rows": 27944510,
+    "phase03_3y_interval_coverage_80pct": 0.80536,
+    "phase03_3y_spearman": 0.4495002937134462,
+    "phase03_5y_interval_coverage_80pct": 0.79701230228471,
+    "phase03_5y_spearman": 0.5995602733201085,
+    "phase03_sampled_training": 1.0,
+    "phase03_test_rows_raw": 2809372.0,
+    "phase03_test_rows_used": 50000.0,
+    "phase03_train_rows_raw": 6409400.0,
+    "phase03_train_rows_used": 200000.0,
+    "phase03_validation_rows_raw": 2314420.0,
+    "phase03_validation_rows_used": 50000.0
+  },
+  "output_profiles": [
+    {
+      "column_count": 11,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet",
+      "row_count": 11772956,
+      "sha256": "5083df54cb89448a170c20e0a4f14123d1795fb467727b4c8bd8b37d8484b7eb",
+      "size_bytes": 123126109,
+      "type": "file"
+    },
+    {
+      "column_count": 30,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet",
+      "row_count": 11772956,
+      "sha256": "62f585ae183e54776b976cad7f16b5aec1a7a1408c43d9cf8fe3165b97e06bfa",
+      "size_bytes": 574419370,
+      "type": "file"
+    },
+    {
+      "column_count": 8,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet",
+      "row_count": 27944510,
+      "sha256": "0432e946cc199422e4b63f354943ef17be52c2a64afc96d253c6514684b8367b",
+      "size_bytes": 285883627,
+      "type": "file"
+    },
+    {
+      "column_count": 8,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase03.parquet",
+      "row_count": 11772956,
+      "sha256": "c8ef5dfb6fe181d14fe16e7b728ac1b4ae995c6d711f29f7d7925d874574a51d",
+      "size_bytes": 115680014,
+      "type": "file"
+    },
+    {
+      "column_count": 17,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet",
+      "row_count": 8,
+      "sha256": "4264b34075433ed0552eaa01fbeeff1ca2d44cc003aa314bc1e91405d95b99dc",
+      "size_bytes": 6347,
+      "type": "file"
+    },
+    {
+      "column_count": 10,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet",
+      "row_count": 2,
+      "sha256": "61efe2be6c668a7397e02fa4f01a2780d4bc583895da709667b582919bcf3246",
+      "size_bytes": 4150,
+      "type": "file"
+    },
+    {
+      "column_count": 9,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet",
+      "row_count": 2,
+      "sha256": "6321e12f5eb72f7bf80ad5034bb8bc3a7b70337fec14f2d4e4ce72e755587d7b",
+      "size_bytes": 5621,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet",
+      "row_count": 22,
+      "sha256": "41defd85c1df9d0966b7475bc848aa46d20f81d142da92c43e865a913dac9e46",
+      "size_bytes": 3036,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json",
+      "sha256": "b15760d292d964d2fbd49c3422b3452df72aced8de548ce6d905a089490f97bc",
+      "size_bytes": 7754,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_breakout_classifier.txt",
+      "sha256": "0535ce39de21cbcf7d0e38afc9b09939e49dbb96f4c7c5150b2655fcce67272f",
+      "size_bytes": 4005394,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_breakout_tail_model.txt",
+      "sha256": "6b221eca1fd8a0937e4b6696e1a0f579a551d56a65517dc3e52bd2e0d82a38ad",
+      "size_bytes": 2017749,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt",
+      "sha256": "99eb4baccabd66f9117f58617cfd4808d081dd615dfcb252794f80fa4948bab6",
+      "size_bytes": 10386530,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_bundle.json",
+      "sha256": "dbbe72b352264944f2f56834cdcb12223d06dbcd3b4e4eaf0ebad63a758caac5",
+      "size_bytes": 748,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_breakout_classifier.txt",
+      "sha256": "b0a433129ab7a8a6f4fbe3c024c8ec86a21647de2475458e8495d477774f5599",
+      "size_bytes": 3993096,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_breakout_tail_model.txt",
+      "sha256": "7033031415c96939ba59fc46383762d85edd7ed32655375659ca1067826b5202",
+      "size_bytes": 2291232,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt",
+      "sha256": "0d335af9b586f7aa1486ca8d67da27935463d0c442faf3cb6f17664da0949538",
+      "size_bytes": 10138577,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_bundle.json",
+      "sha256": "8b044b229c4e5fd888af17ea43f9766583c6ac9450f741b2d5dcaf4f0a119a5e",
+      "size_bytes": 748,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json",
+      "sha256": "5023f0029515f66d042819d58d328b52a7d9b98c5361cbbf1608d39a24e30b2c",
+      "size_bytes": 5835,
+      "type": "file"
+    }
+  ],
+  "stage": "ml-phase03-family-forecast",
+  "started_at": "2026-04-07T18:30:38+00:00",
+  "status": "success",
+  "summary": "Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.",
+  "warnings": []
+}

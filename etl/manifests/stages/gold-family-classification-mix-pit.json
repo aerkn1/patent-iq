@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-classification-mix-pit.json"
+  },
+  "calculations": [
+    "Classification concentration HHI uses equal-share membership across CPC main groups in the first stable-replay implementation.",
+    "Classification entropy uses the natural log of the CPC main-group count under the same equal-share assumption.",
+    "Classification breadth band is derived from CPC main-group count: unknown, focused, balanced, diversified."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md",
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md",
+    "docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "This mart is the family-level classification source for chronological CPC/WIPO UI sections and later portfolio and market classification rollups."
+  ],
+  "finished_at": "2026-04-24T11:40:27+00:00",
+  "inputs": [],
+  "methods": [
+    "Started from silver_family_classification_pit_dense so the mart stays aligned with the dense family-year PIT grain.",
+    "Kept reusable WIPO and CPC arrays for UI drill-down while materializing summary fields for family cards and compare views.",
+    "Made the stable classification replay policy explicit instead of implying dated code-mutation truth."
+  ],
+  "metrics": {
+    "gold_family_classification_mix_pit_rows": 164988135
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_mix_pit.parquet"
+  ],
+  "stage": "gold-family-classification-mix-pit",
+  "started_at": "2026-04-24T11:37:42+00:00",
+  "status": "success",
+  "summary": "Built the family classification PIT summary mart from the dense family-year classification backbone.",
+  "warnings": []
+}

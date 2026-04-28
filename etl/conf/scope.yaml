@@ -1,0 +1,14 @@
+scope:
+  type: "mega_cluster_bounded"
+  field_source: "wipo_industry_code"
+  selected_wipo_fields:
+    - "Audio-visual technology"
+    - "Telecommunications"
+    - "Digital communication"
+    - "Basic communication processes"
+    - "Computer technology"
+    - "IT methods for management"
+    - "Semiconductors"
+    - "Measurement"
+    - "Control"
+    - "Electrical machinery, apparatus, energy"

@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/build-oecd-indicator-bronze-projection.json"
+  },
+  "calculations": [
+    "Projected one row per `family x indicator` with normalized value, raw value, z-score, cohort size, and component metadata."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/oecd-indicator-seed-build-spec.md",
+    "docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md"
+  ],
+  "downstream_impacts": [
+    "This closes the Bronze contract gap for the OECD indicator seed without disturbing the richer raw family-level seed artifacts."
+  ],
+  "finished_at": "2026-04-03T09:22:19+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_longform.parquet"
+  ],
+  "methods": [
+    "Read the normalized OECD long-form artifact rather than recomputing family metrics again.",
+    "Used percentile rank as the canonical `indicator_value` for the Bronze-facing contract while preserving raw and z-score companions.",
+    "Wrote both the bounded reference source file and the Bronze parquet directly so future Bronze reruns have a stable OECD input."
+  ],
+  "metrics": {
+    "oecd_indicator_bronze_projection_rows": 240090134
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/oecd_quality_indicator_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_oecd_indicator_seed.parquet"
+  ],
+  "stage": "build-oecd-indicator-bronze-projection",
+  "started_at": "2026-04-03T09:18:07+00:00",
+  "status": "success",
+  "summary": "Projected the richer OECD long-form artifact into the Bronze-facing reference contract and landed the typed Bronze parquet directly.",
+  "warnings": []
+}

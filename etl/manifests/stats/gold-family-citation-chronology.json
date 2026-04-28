@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "Family chronology can migrate to this mart immediately without changing portfolio citation aggregation behavior."
+  ],
+  "finished_at": "2026-04-12T17:28:39+00:00",
+  "metrics": {
+    "gold_family_citation_chronology_rows": 30759429
+  },
+  "output_profiles": [
+    {
+      "column_count": 26,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_chronology.parquet",
+      "row_count": 30759429,
+      "sha256": "6d3b0ca5637722992b2c8b1ac59f25a452ca90f78b02df980f21a2f0e99c400d",
+      "size_bytes": 162833174,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-family-citation-chronology",
+  "started_at": "2026-04-12T17:25:00+00:00",
+  "status": "success",
+  "summary": "Built a standalone family citation chronology mart directly from the citation event ledger without rebuilding the broader family Gold bundle.",
+  "warnings": []
+}

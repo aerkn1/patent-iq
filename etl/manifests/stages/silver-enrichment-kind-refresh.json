@@ -1,0 +1,57 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-refresh.json"
+  },
+  "calculations": [
+    "Citing-stage multipliers in the enriched citation network are refreshed from the current Silver kind-code normalization table.",
+    "Use the follow-on silver-kind-legal-refresh stage to merge refreshed branch, field-contribution, and OECD rows for the affected families."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md",
+    "docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md"
+  ],
+  "downstream_impacts": [
+    "This refresh path is intended for iterative kind-code curation where the stable support outputs have not changed.",
+    "Use the full silver-enrichment stage if citation edges, trend tables, or coverage support outputs are absent or stale for other reasons."
+  ],
+  "finished_at": "2026-04-02T21:25:04+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet"
+  ],
+  "methods": [
+    "Reused stable citation-edge, NPL, trend, and coverage support outputs from the latest Silver enrichment run.",
+    "Recomputed only the kind-code-dependent citation weighting layer and left legal-weighted marts to the dedicated incremental legal refresh stage."
+  ],
+  "metrics": {
+    "silver_enriched_citation_network_rows": 19602108,
+    "silver_family_citation_metrics_rows": 21353101
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet"
+  ],
+  "stage": "silver-enrichment-kind-refresh",
+  "started_at": "2026-04-02T21:19:27+00:00",
+  "status": "success",
+  "summary": "Rebuilt the refreshed kind-code-dependent citation weighting layer; legal-weighted marts should then be refreshed through the incremental legal refresh stage.",
+  "warnings": []
+}

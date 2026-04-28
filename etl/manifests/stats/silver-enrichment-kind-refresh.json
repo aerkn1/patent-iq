@@ -1,0 +1,36 @@
+{
+  "downstream_impacts": [
+    "This refresh path is intended for iterative kind-code curation where the stable support outputs have not changed.",
+    "Use the full silver-enrichment stage if citation edges, trend tables, or coverage support outputs are absent or stale for other reasons."
+  ],
+  "finished_at": "2026-04-02T21:25:01+00:00",
+  "metrics": {
+    "silver_enriched_citation_network_rows": 19602108,
+    "silver_family_citation_metrics_rows": 21353101
+  },
+  "output_profiles": [
+    {
+      "column_count": 20,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet",
+      "row_count": 19602108,
+      "sha256": "a7c5ccbd0cdf4176c06dcc7c4d558357f57d12d47c1b538e4ff1132f2381bf4b",
+      "size_bytes": 626220234,
+      "type": "file"
+    },
+    {
+      "column_count": 15,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet",
+      "row_count": 21353101,
+      "sha256": "b4a0ecdae38f4d96961a82534f790375e3cf1875a73e2b1d15dfc767899b9ae7",
+      "size_bytes": 204640769,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-enrichment-kind-refresh",
+  "started_at": "2026-04-02T21:19:27+00:00",
+  "status": "success",
+  "summary": "Rebuilt the refreshed kind-code-dependent citation weighting layer; legal-weighted marts should then be refreshed through the incremental legal refresh stage.",
+  "warnings": []
+}

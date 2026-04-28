@@ -1,0 +1,40 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-history-refresh.json"
+  },
+  "calculations": [
+    "Branch history remains change-point based plus current year, with a separate dense branch-year expansion artifact.",
+    "Family history is expanded yearly from the earliest observed branch-history year to the build snapshot year, with current-year rows anchored to silver_family_status_pt."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/blocking-power-lifecycle-and-point-in-time-scoring-requirements.md",
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-03T20:20:13+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet"
+  ],
+  "methods": [
+    "Partitioned families into deterministic buckets and replayed yearly branch state per bucket.",
+    "Derived dense yearly branch and family history from compact branch-state deltas rather than one monolithic all-family query."
+  ],
+  "metrics": {
+    "history_refresh_bucket_count": 16,
+    "silver_branch_status_history_dense_rows": 386481639,
+    "silver_branch_status_history_rows": 76203835,
+    "silver_family_status_history_rows": 240834180
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_branch_status_history.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_branch_status_history_dense.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_history.parquet"
+  ],
+  "stage": "silver-history-refresh",
+  "started_at": "2026-04-03T20:10:53+00:00",
+  "status": "success",
+  "summary": "Rebuilt Silver legal-history sidecars in family buckets from the replayable legal ledger.",
+  "warnings": []
+}

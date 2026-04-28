@@ -1,0 +1,31 @@
+{
+  "chunk_id": "control__2023_2024__legal",
+  "duration_seconds": 103.319,
+  "field": "Control",
+  "finished_at": "2026-03-21T21:42:32+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2023_2024__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2023_2024__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 260429,
+    "ep_appln_count": 5412,
+    "ep_publication_count": 6161,
+    "family_count": 242026,
+    "local_output_bytes": 8315051,
+    "local_output_file_count": 2,
+    "publn_count": 296812,
+    "us_publication_count": 28701
+  },
+  "recovered_at": "2026-03-23T18:12:42+00:00",
+  "started_at": "2026-03-21T21:40:49+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=control/year=2023-2024/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=control/year=2023-2024/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}

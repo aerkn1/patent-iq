@@ -1,0 +1,31 @@
+{
+  "chunk_id": "it-methods-for-management__2009_2010__legal",
+  "duration_seconds": 58.912,
+  "field": "IT methods for management",
+  "finished_at": "2026-03-19T21:15:27+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2009_2010__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2009_2010__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 68761,
+    "ep_appln_count": 3968,
+    "ep_publication_count": 6771,
+    "family_count": 51187,
+    "local_output_bytes": 8541734,
+    "local_output_file_count": 2,
+    "publn_count": 97475,
+    "us_publication_count": 30229
+  },
+  "recovered_at": "2026-03-23T18:15:33+00:00",
+  "started_at": "2026-03-19T21:14:28+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=it-methods-for-management/year=2009-2010/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=it-methods-for-management/year=2009-2010/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2010,
+  "year_start": 2009
+}

@@ -1,0 +1,61 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic.json"
+  },
+  "calculations": [
+    "Claims and abstracts remain physically separated and explicitly labeled by vector space.",
+    "Only semantic candidates already marked in the Silver eligibility mart are embedded.",
+    "Current runtime remains dense-only; ANN is still exact-scan compatible and recorded as such in manifests."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md",
+    "docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-model-selection-decision.md",
+    "docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-candidate-shortlist-and-benchmark-plan.md",
+    "docs/new-feature-ideas/semantic-and-model-development/bge-m3-and-patentsberta-local-installation-storage-and-runtime-guide.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-05T11:47:55+00:00",
+  "inputs": [],
+  "methods": [
+    "Generated separate vector_claims and vector_abstract payloads from representative family text.",
+    "Used BGE-M3 for abstract embeddings and PatentSBERTa for claim embeddings when the promoted dual runtime is enabled, otherwise kept the lexical fallback for local regression use.",
+    "Materialized one semantic base parquet first, then encoded in bucketed slices to avoid repeated large joins."
+  ],
+  "metrics": {
+    "abstract_blocking_context_completeness": null,
+    "abstract_bucket_files_present": 1,
+    "abstract_chronology_join_completeness": null,
+    "abstract_duplicate_family_rate": null,
+    "abstract_legal_status_join_completeness": null,
+    "claim_blocking_context_completeness": null,
+    "claim_bucket_files_present": 1,
+    "claim_chronology_join_completeness": null,
+    "claim_duplicate_family_rate": null,
+    "claim_legal_status_join_completeness": null,
+    "embedding_device": "mps",
+    "encoded_abstract_bucket_rows": 0,
+    "encoded_claim_bucket_rows": 2048,
+    "query_anchor_abstract_coverage": null,
+    "query_anchor_claim_coverage": null,
+    "vec_family_embeddings_abstracts_rows": 0,
+    "vec_family_embeddings_claims_rows": 0,
+    "vec_query_registry_rows": 0
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_embedding_manifest.json",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.json"
+  ],
+  "stage": "semantic",
+  "started_at": "2026-04-05T11:46:00+00:00",
+  "status": "success",
+  "summary": "Built family-first semantic vector artifacts and query fixtures for the promoted dual semantic runtime.",
+  "warnings": [
+    "Semantic bucket row limiting was enabled for this run, so the outputs represent a bounded smoke sample, not a full corpus release.",
+    "Semantic run was intentionally bounded to a subset of buckets, so final merged vector artifacts were not rewritten.",
+    "Semantic metadata and query registry writes were skipped for this subset worker run."
+  ]
+}

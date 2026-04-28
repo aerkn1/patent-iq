@@ -1,0 +1,31 @@
+{
+  "chunk_id": "computer-technology__2023_2024__legal",
+  "duration_seconds": 329.03,
+  "field": "Computer technology",
+  "finished_at": "2026-03-19T20:54:42+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2023_2024__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2023_2024__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 1119441,
+    "ep_appln_count": 20408,
+    "ep_publication_count": 23660,
+    "family_count": 1016733,
+    "local_output_bytes": 39180429,
+    "local_output_file_count": 2,
+    "publn_count": 1337060,
+    "us_publication_count": 168373
+  },
+  "recovered_at": "2026-03-23T18:11:53+00:00",
+  "started_at": "2026-03-19T20:49:13+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=computer-technology/year=2023-2024/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=computer-technology/year=2023-2024/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}

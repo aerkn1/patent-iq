@@ -1,0 +1,32 @@
+{
+  "chunk_id": "electrical-machinery-apparatus-energy__2023_2024__epab",
+  "duration_seconds": 1432.578,
+  "field": "Electrical machinery, apparatus, energy",
+  "finished_at": "2026-03-26T02:25:33+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/electrical-machinery-apparatus-energy__2023_2024__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/electrical-machinery-apparatus-energy__2023_2024__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/electrical-machinery-apparatus-energy__2023_2024__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 983812,
+    "ep_appln_count": 21263,
+    "ep_publication_count": 25170,
+    "family_count": 876830,
+    "local_output_bytes": 33289948,
+    "local_output_file_count": 3,
+    "publn_count": 1071993,
+    "us_publication_count": 69526
+  },
+  "started_at": "2026-03-26T02:01:41+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=electrical-machinery-apparatus-energy/year=2023-2024/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=electrical-machinery-apparatus-energy/year=2023-2024/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=electrical-machinery-apparatus-energy/year=2023-2024/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}

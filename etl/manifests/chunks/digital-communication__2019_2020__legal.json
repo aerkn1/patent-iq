@@ -1,0 +1,31 @@
+{
+  "chunk_id": "digital-communication__2019_2020__legal",
+  "duration_seconds": 344.609,
+  "field": "Digital communication",
+  "finished_at": "2026-03-19T15:56:14+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 463874,
+    "ep_appln_count": 37033,
+    "ep_publication_count": 73622,
+    "family_count": 311739,
+    "local_output_bytes": 57509333,
+    "local_output_file_count": 2,
+    "publn_count": 727788,
+    "us_publication_count": 203922
+  },
+  "recovered_at": "2026-03-23T18:13:23+00:00",
+  "started_at": "2026-03-19T15:50:30+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=digital-communication/year=2019-2020/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=digital-communication/year=2019-2020/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2020,
+  "year_start": 2019
+}

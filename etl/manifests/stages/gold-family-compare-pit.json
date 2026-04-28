@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-compare-pit.json"
+  },
+  "calculations": [
+    "Family active-jurisdiction share is recomputed from point-in-time jurisdiction counts.",
+    "Historical-safe metrics come from the PIT core rather than current-state summary marts."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md",
+    "docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md",
+    "docs/next-phase-v2/38-patentiq-v2-report-generation-use-cases-and-contract.md"
+  ],
+  "downstream_impacts": [
+    "This mart is the safe family-level source for historical compare, time-slice report sections, and year-aware family evidence payloads."
+  ],
+  "finished_at": "2026-04-24T11:37:40+00:00",
+  "inputs": [],
+  "methods": [
+    "Consumed the dense family-year PIT layer for multi-year historical compare behavior.",
+    "Used only observed point-in-time family rows for historical compare serving.",
+    "Kept current owner, field, and OECD metadata explicitly labeled as current-only side metadata.",
+    "Materialized one row per family and observed year with a latest-observed-year flag for compare and report flows."
+  ],
+  "metrics": {
+    "gold_family_compare_pit_rows": 164988135
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_compare_pit.parquet"
+  ],
+  "stage": "gold-family-compare-pit",
+  "started_at": "2026-04-24T11:36:19+00:00",
+  "status": "success",
+  "summary": "Built the family compare PIT serving mart from the audited family PIT core and current summary metadata.",
+  "warnings": []
+}

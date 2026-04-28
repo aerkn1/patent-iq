@@ -1,0 +1,54 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-pending-grant-pipeline.json"
+  },
+  "calculations": [
+    "Observed-horizon flags require the as-of row to have a fully observable 12m or 24m window by the ETL snapshot date.",
+    "Pending-age is measured from the last pending event date when available."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/55-patentiq-v2-pending-grant-pipeline-execution-plan.md",
+    "docs/next-phase-v2/09-forecast-v2-mvp-use-cases-and-feature-semantics.md",
+    "docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-08T21:48:41+00:00",
+  "inputs": [],
+  "methods": [
+    "Built branch-grain pending-grant labels from dense branch history by checking future grant conversion within 12m and 24m horizons.",
+    "Joined family PIT-safe context and publication-stage counts to create the first pending-grant feature scaffold.",
+    "Sampled split-aligned pending snapshots to train first 12m and 24m LightGBM baseline grant-probability models with validation-time calibration selection."
+  ],
+  "metrics": {
+    "ml_feature_pending_grant_pipeline_rows": 93347403,
+    "ml_label_pending_grant_event_rows": 93347403,
+    "ml_split_registry_phase_grant_rows": 93347403,
+    "pending_grant_12m_brier_score": 0.08874634589296647,
+    "pending_grant_12m_pr_auc": 0.1669747356742301,
+    "pending_grant_12m_roc_auc": 0.6394576583398613,
+    "pending_grant_24m_brier_score": 0.1569449701451074,
+    "pending_grant_24m_pr_auc": 0.3201084678815563,
+    "pending_grant_24m_roc_auc": 0.6600185905047047,
+    "pending_grant_observed_12m_rows": 74015905,
+    "pending_grant_observed_24m_rows": 64881761
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_pending_grant_event.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_pending_grant_pipeline.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase_grant.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_pending_grant_pipeline.json",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_12m_model.txt",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_24m_model.txt",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_calibration.json"
+  ],
+  "stage": "ml-pending-grant-pipeline",
+  "started_at": "2026-04-08T21:48:37+00:00",
+  "status": "success",
+  "summary": "Materialized pending-grant label, feature, and split artifacts and trained first baseline pending-grant classifiers when split sizes were sufficient.",
+  "warnings": []
+}

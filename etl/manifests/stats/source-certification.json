@@ -1,0 +1,42 @@
+{
+  "downstream_impacts": [
+    "Failure here blocks Bronze ingestion and prevents the bounded mega-cluster seed from being generated safely.",
+    "Missing PATSTAT or weak field coverage will invalidate all downstream family, portfolio, Market Intelligence, and semantic marts.",
+    "Missing USPTO or EPAB will specifically degrade semantic claim-space selection while leaving abstract fallback available."
+  ],
+  "finished_at": "2026-03-31T20:29:20+00:00",
+  "metrics": {
+    "bronze_ext_iso_country_map_column_count": 3,
+    "bronze_ext_iso_country_map_file_count": 1,
+    "bronze_ext_kind_code_normalization_seed_column_count": 12,
+    "bronze_ext_kind_code_normalization_seed_file_count": 1,
+    "bronze_ext_up_member_states_column_count": 3,
+    "bronze_ext_up_member_states_file_count": 1,
+    "bronze_ext_us_chamber_ip_index_column_count": 3,
+    "bronze_ext_us_chamber_ip_index_file_count": 1,
+    "bronze_ext_world_bank_gdp_ppp_column_count": 3,
+    "bronze_ext_world_bank_gdp_ppp_file_count": 1,
+    "bronze_ref_techn_field_ipc_column_count": 6,
+    "bronze_ref_techn_field_ipc_file_count": 1,
+    "epab_payload_file_count": 0,
+    "selected_wipo_field_count": 10,
+    "total_input_file_count": 6,
+    "uspto_externalized_from_tip": 1,
+    "uspto_odp_api_key_available": 0,
+    "uspto_runtime_stage_required": 1,
+    "uspto_xml_file_count": 0
+  },
+  "output_profiles": [],
+  "stage": "source-certification",
+  "started_at": "2026-03-31T20:29:20+00:00",
+  "status": "failed",
+  "summary": "Certified raw source availability, bridge viability, and mega-cluster sufficiency preconditions.",
+  "warnings": [
+    "TIP PATSTAT client could not be initialized: No module named 'epo'",
+    "Missing source for `bronze_ext_cpc_coverage` in `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs`.",
+    "Missing source for `bronze_ext_cpc_ipc_weights` in `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs`.",
+    "Missing source for `bronze_ext_oecd_indicator_seed` in `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs`.",
+    "TIP EPAB client could not be initialized: No module named 'epo'",
+    "USPTO is configured for external ODP extraction. API key env var `USPTO_ODP_API_KEY` is not present in this runtime, so the dedicated USPTO ODP stage is deferred."
+  ]
+}

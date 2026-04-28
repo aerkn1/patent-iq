@@ -1,0 +1,56 @@
+{
+  "downstream_impacts": [
+    "These Bronze tables feed EP grant claim selection, abstract fallback, and Data Room transparency outputs.",
+    "They must remain text-provider tables and not become the canonical source for classifications or parties in downstream analytics."
+  ],
+  "finished_at": "2026-04-02T10:08:39+00:00",
+  "metrics": {
+    "bronze_epab_abstract_rows": 0,
+    "bronze_epab_claims_rows": 2763676,
+    "bronze_epab_document_rows": 1679816,
+    "bronze_epab_publication_rows": 1679816
+  },
+  "output_profiles": [
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_document.parquet",
+      "row_count": 1679816,
+      "sha256": "1921482b0c3633a647b67f481f3535e3adf941e8e1511699f86acd96e4ab9c48",
+      "size_bytes": 21098101,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_publication.parquet",
+      "row_count": 1679816,
+      "sha256": "1921482b0c3633a647b67f481f3535e3adf941e8e1511699f86acd96e4ab9c48",
+      "size_bytes": 21098101,
+      "type": "file"
+    },
+    {
+      "column_count": 4,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_abstract.parquet",
+      "row_count": 0,
+      "sha256": "1d617863eecc8cf0bc106923c8cbd6456fc3d4aea13d534e74d2645f22677dd2",
+      "size_bytes": 903,
+      "type": "file"
+    },
+    {
+      "column_count": 6,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_claims.parquet",
+      "row_count": 2763676,
+      "sha256": "db934e07303e6fe892a38ec9e60b5f021f8ab945619f33fae3485c6d64b28371",
+      "size_bytes": 3090568432,
+      "type": "file"
+    }
+  ],
+  "stage": "bronze-epab-fulltext",
+  "started_at": "2026-04-02T10:07:20+00:00",
+  "status": "success",
+  "summary": "Parsed EPAB payloads into Bronze text-provider tables for semantic workflows.",
+  "warnings": []
+}

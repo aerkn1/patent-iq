@@ -1,0 +1,32 @@
+{
+  "chunk_id": "computer-technology__2009_2010__epab",
+  "duration_seconds": 4791.742,
+  "field": "Computer technology",
+  "finished_at": "2026-03-24T22:10:55+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2009_2010__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2009_2010__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2009_2010__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 372854,
+    "ep_appln_count": 21621,
+    "ep_publication_count": 41342,
+    "family_count": 267016,
+    "local_output_bytes": 74680170,
+    "local_output_file_count": 3,
+    "publn_count": 588746,
+    "us_publication_count": 218673
+  },
+  "started_at": "2026-03-24T20:51:03+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=computer-technology/year=2009-2010/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=computer-technology/year=2009-2010/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=computer-technology/year=2009-2010/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2010,
+  "year_start": 2009
+}

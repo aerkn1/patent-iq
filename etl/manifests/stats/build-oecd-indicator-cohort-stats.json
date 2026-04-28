@@ -1,0 +1,27 @@
+{
+  "downstream_impacts": [
+    "This companion enables cohort-relative interpretation and later percentile/z-score derivation without rerunning the raw OECD seed build.",
+    "Portfolio hit-rate and top-decile OECD views can now be built from the current local artifact set."
+  ],
+  "finished_at": "2026-04-03T08:37:37+00:00",
+  "metrics": {
+    "oecd_indicator_cohort_indicator_count": 10,
+    "oecd_indicator_cohort_rows": 4944
+  },
+  "output_profiles": [
+    {
+      "column_count": 14,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_cohort_stats.parquet",
+      "row_count": 4944,
+      "sha256": "2e2463bdb9c6b4235f80e38d6f298c1ef238d3641116229186d4da78cdb27859",
+      "size_bytes": 134538,
+      "type": "file"
+    }
+  ],
+  "stage": "build-oecd-indicator-cohort-stats",
+  "started_at": "2026-04-03T08:37:10+00:00",
+  "status": "success",
+  "summary": "Built the OECD cohort-stat companion from the wide raw family-level OECD seed.",
+  "warnings": []
+}

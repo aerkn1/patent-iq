@@ -1,0 +1,57 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase04-family-jurisdiction-lapse-risk.json"
+  },
+  "calculations": [
+    "12m and 24m labels are only treated as observed when the horizon closes by the ETL snapshot date.",
+    "Branch-level timing features use the lag between as_of_date and last grant/lapse/expiry events.",
+    "Current-state-only legal enrichments are intentionally excluded from the initial promotion feature set."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/45-patentiq-v2-phase-04-family-jurisdiction-lapse-risk-execution-plan.md",
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-07T18:46:01+00:00",
+  "inputs": [],
+  "methods": [
+    "Derived family-jurisdiction lapse labels from dated lapse/expiry events after each yearly active-grant branch snapshot.",
+    "Joined dense branch history with dense family PIT metrics to keep first-pass Phase 04 features year-safe.",
+    "Assigned one grouped time split per family-jurisdiction trajectory using the latest fully observed 24m year.",
+    "Trained sampled LightGBM classifier baselines and selected validation-best probability calibration per horizon."
+  ],
+  "metrics": {
+    "ml_calibration_registry_rows": 4,
+    "ml_experiment_registry_rows": 10,
+    "ml_feature_family_jurisdiction_lapse_risk_rows": 97347045,
+    "ml_label_family_jurisdiction_lapse_risk_rows": 151930838,
+    "ml_model_registry_rows": 4,
+    "ml_split_registry_phase04_rows": 13197143,
+    "ml_split_registry_rows": 24970099,
+    "phase04_12m_brier_score": 0.00303720718626948,
+    "phase04_12m_pr_auc": 0.12142728609508663,
+    "phase04_12m_roc_auc": 0.9827997855811244,
+    "phase04_24m_brier_score": 0.005308691908264898,
+    "phase04_24m_pr_auc": 0.11726776657391866,
+    "phase04_24m_roc_auc": 0.9715023234033948
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_jurisdiction_lapse_risk.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_jurisdiction_lapse_risk.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase04.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_jurisdiction_lapse_risk.json",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_12m_model.txt",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_24m_model.txt",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_calibration.json"
+  ],
+  "stage": "ml-phase04-family-jurisdiction-lapse-risk",
+  "started_at": "2026-04-07T18:45:59+00:00",
+  "status": "success",
+  "summary": "Built Phase 04 branch-aware label, feature, split, and baseline-training artifacts with registry-preserving metadata.",
+  "warnings": []
+}

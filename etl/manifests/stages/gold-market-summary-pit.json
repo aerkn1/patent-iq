@@ -1,0 +1,35 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-summary-pit.json"
+  },
+  "calculations": [
+    "Segment growth index is computed from family-count change versus the prior year when prior-year count exists.",
+    "Segment blocking density is a weighted average of family blocking power using field base fractions as segment participation weights.",
+    "Segment field balance is the average family allocation share to the segment, higher when families are more concentrated in that field."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md",
+    "docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "This mart is the safe historical source for Market Intelligence year-slice cards, league tables, and segment detail drawers."
+  ],
+  "finished_at": "2026-04-10T08:23:14+00:00",
+  "inputs": [],
+  "methods": [
+    "Started from the year-safe market-intelligence timeseries and retained one row per segment and year.",
+    "Joined dense family compare PIT with family field-contribution timeseries to derive blocking and active-family density by segment-year.",
+    "Used the current family owner from the family compare PIT as a historical owner proxy and labeled that caveat explicitly."
+  ],
+  "metrics": {
+    "gold_market_summary_pit_rows": 504
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_summary_pit.parquet"
+  ],
+  "stage": "gold-market-summary-pit",
+  "started_at": "2026-04-10T08:22:20+00:00",
+  "status": "success",
+  "summary": "Built the market PIT summary mart from year-safe market timeseries, dense family compare PIT, and current-owner caveated family membership.",
+  "warnings": []
+}

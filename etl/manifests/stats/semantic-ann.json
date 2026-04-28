@@ -1,0 +1,65 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-06T12:41:56+00:00",
+  "metrics": {
+    "abstract_corpus_sample_exact_vs_ann_recall_at_10": 0.994531,
+    "abstract_embedding_dim": 1024,
+    "abstract_exact_vs_ann_recall_at_10": 1.0,
+    "abstract_payload_count": 168924,
+    "claim_corpus_sample_exact_vs_ann_recall_at_10": 0.992188,
+    "claim_embedding_dim": 768,
+    "claim_exact_vs_ann_recall_at_10": 0.989062,
+    "claim_payload_count": 406639,
+    "query_anchor_abstract_coverage": 0.008,
+    "query_anchor_claim_coverage": 1.0
+  },
+  "output_profiles": [
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_claims_hnsw.bin",
+      "sha256": "33e9ed67775ceab678f06884e339ce0182721b16e8248f283122a51dc10626a5",
+      "size_bytes": 1361544632,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_claims_family_ids.npy",
+      "sha256": "d90157742bae060fd50ae6366dd0f3d39a961b50f1df8bb745ee87a9737a526d",
+      "size_bytes": 3253240,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_abstracts_hnsw.bin",
+      "sha256": "2dd4911275fab00fb16f3cd001406c19abd543fbf3c98445216c840a5752debf",
+      "size_bytes": 738582960,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_abstracts_family_ids.npy",
+      "sha256": "3e6a81ba7f170f3c3f08d10b6a198aff4b1f9b4bc87d6640fd8a614dd04c9ef5",
+      "size_bytes": 1351520,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json",
+      "sha256": "ee437db0eb5e34e2c6766e449bd6967c52dd46b679bcc0f78e369b41655474e9",
+      "size_bytes": 2278,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_exact_vs_ann_audit.json",
+      "sha256": "d12b272c552628ad3dda5376735cd31d0c3bcd03b6a6f5b96cc26ff62d4eb8c9",
+      "size_bytes": 827,
+      "type": "file"
+    }
+  ],
+  "stage": "semantic-ann",
+  "started_at": "2026-04-06T12:31:59+00:00",
+  "status": "success",
+  "summary": "Built HNSW ANN snapshots for the promoted semantic payloads and audited exact-vs-ANN agreement.",
+  "warnings": []
+}

@@ -1,0 +1,35 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-summary-pit.json"
+  },
+  "calculations": [
+    "Portfolio top-family dependence is measured as the maximum family blocking share within each owner-year slice.",
+    "Portfolio active-family count is derived from point-in-time active-jurisdiction presence rather than current family status."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md",
+    "docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md",
+    "docs/next-phase-v2/09-forecast-v2-mvp-use-cases-and-feature-semantics.md"
+  ],
+  "downstream_impacts": [
+    "This mart is the first safe source for portfolio over-time comparison, historical report sections, and legal-attrition context before Phase 04 predictions arrive."
+  ],
+  "finished_at": "2026-04-24T12:07:18+00:00",
+  "inputs": [],
+  "methods": [
+    "Aggregated only historical-safe family PIT rows into year-keyed portfolio summaries.",
+    "Reused the current owner bridge as a historical membership approximation and labeled that caveat explicitly.",
+    "Focused the first release on legal, blocking, coverage, and concentration signals rather than forcing unsupported historical field-mix claims."
+  ],
+  "metrics": {
+    "gold_portfolio_summary_pit_rows": 36127659
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary_pit.parquet"
+  ],
+  "stage": "gold-portfolio-summary-pit",
+  "started_at": "2026-04-24T12:01:59+00:00",
+  "status": "success",
+  "summary": "Built the portfolio PIT summary mart by aggregating family compare PIT rows through the current owner bridge with explicit historical caveats.",
+  "warnings": []
+}

@@ -1,0 +1,30 @@
+{
+  "chunk_id": "measurement__2015_2016__publications",
+  "duration_seconds": 101.454,
+  "field": "Measurement",
+  "finished_at": "2026-03-21T17:57:54+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/measurement__2015_2016__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 513780,
+    "derived_seed_sidecar_count": 3,
+    "ep_appln_count": 23531,
+    "ep_publication_count": 48423,
+    "family_count": 412387,
+    "local_output_bytes": 14291211,
+    "local_output_file_count": 1,
+    "publn_count": 731910,
+    "us_publication_count": 110172
+  },
+  "recovered_at": "2026-03-23T18:16:07+00:00",
+  "started_at": "2026-03-21T17:56:12+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=measurement/year=2015-2016/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2016,
+  "year_start": 2015
+}

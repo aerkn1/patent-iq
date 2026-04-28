@@ -1,24 +1,113 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-.venv/
-ENV/
-*.egg-info/
-dist/
-build/
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
+############################
+# OS / Editor
+############################
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.log
+
+############################
+# Node / Next.js
+############################
+node_modules/
+.next/
+out/
+dist/
+coverage/
+.npm/
+*.tsbuildinfo
+.pnpm-debug.log*
+.yarn-debug.log*
+.yarn-error.log*
+
+# Env files (keep example files committed)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+############################
+# Python
+############################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Python tooling
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.ruff_cache/
+
+############################
+# FastAPI / Uvicorn
+############################
+*.pid
+uvicorn.log
+
+############################
+# Data / Generated Artifacts
+############################
+*.parquet
+*.arrow
+*.feather
+*.csv
+*.tsv
+*.xlsx
+*.zip
+*.tar.gz
+
+# Common data folders
+data/
+datasets/
+final_parquets/
+outputs/
+artifacts/
+
+############################
+# Jupyter
+############################
+*.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+############################
+# Docker / Infra
+############################
+docker-compose.override.yml
+*.env.docker
+
+############################
+# Misc
+############################
+.cache/
+tmp/
+.tmp/
+temp/
+
+############################
+# DuckDB / Local Cache
+############################
+data_cache/
+analytics.duckdb
+analytics.duckdb.wal
+
+*.env
+*prototype
+docs/oecd-patent-quality

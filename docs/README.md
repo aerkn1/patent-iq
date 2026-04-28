@@ -1,0 +1,38 @@
+# Patent IQ Documentation
+
+**PatentIQ** is an AI-powered patent intelligence platform that combines 4D analytics (Technical Influence + Legal Strength + Financial Value + Future Potential) with licensing intelligence to deliver actionable insights for patent portfolio management.
+
+## Project Structure
+
+- **[Backend](../backend/README.md)**: Preserved legacy/reference FastAPI application.
+- **[Backend V2](../backend_v2/README.md)**: Active V2 backend implementation.
+- **[Frontend V1](../frontend_v1/README.md)**: Preserved legacy UI reference.
+- **[Frontend V2](../frontend_v2/README.md)**: Active Next.js V2 frontend implementation.
+
+## Documentation Index
+
+The `docs/project` directory contains detailed architectural and design specifications:
+
+- **[Documentation Dossier](project/jury-evaluation/README.md)**: Sectioned documentation beginning with business scope framing and continuing through data lineage, architecture, models, API wiring, UI traceability, and submission-ready evidence.
+- **[Main PRD](project/main_project.md)**: Product vision, objectives, and high-level requirements.
+- **[Architecture](project/architecture.md)**: System design and component interaction.
+- **[Service Layers](project/service_layers.md)**: Detailed breakdown of the backend service layers.
+- **[UI/UX Design](project/ui_ux_design.md)**: Design system and user interface guidelines.
+- **[UI/UX Implementation](project/ui_ux_implementation.md)**: Implementation details for the frontend.
+- **[Use Cases](project/use_cases.md)**: Detailed user stories and flows.
+- **[ML Guidelines](project/ml_guideline.md)**: Machine learning model details and strategy.
+- **[Citation Prediction Models](project/citation_prediction_models.md)**: Technical documentation for the 3Y & 5Y LightGBM citation prediction models.
+- **[Testing Strategy](project/testing_strategy.md)**: Quality assurance plans.
+- **[Error Log Debugging](project/error_log_debugging.md)**: Debugging procedures.
+
+Additional planning and UI strategy material:
+
+- **[Next Phase V2](next-phase-v2/README.md)**: V2 execution plan, release shape, workstreams, and guardrails.
+- **[UI Hub](UI-Hub/README.md)**: UI inspiration notes and proposed page/workspace structure for the next product version.
+
+## Quick Start
+
+Please refer to the README files in the active V2 directories for specific setup instructions:
+
+- `backend_v2/README.md`
+- `frontend_v2/README.md`

@@ -1,0 +1,142 @@
+# Azure Container Apps definition for PatentIQ backend v2.
+#
+# Usage:
+# 1. Create Azure Files environment storages named `patentiq-artifacts` and
+#    `patentiq-hf-cache` on the target Container Apps environment.
+# 2. Replace placeholder values below.
+# 3. Create or update with:
+#      az containerapp create --resource-group <rg> --environment <env> --yaml azure/backend.app.yaml
+#    or
+#      az containerapp update --resource-group <rg> --name <app> --yaml azure/backend.app.yaml
+#
+# Current runtime contract:
+# - artifact-init materializes the active release into /artifacts/current
+# - backend reads only mounted local paths
+# - publication_serving remains a directory artifact under /artifacts/current/serving
+
+location: germanywestcentral
+name: patentiq-backend-v2
+type: Microsoft.App/containerApps
+
+properties:
+  managedEnvironmentId: /subscriptions/a12b6d27-11d3-4400-a4e7-4baba2e389be/resourceGroups/patent-data/providers/Microsoft.App/managedEnvironments/patentiq-env
+  configuration:
+    activeRevisionsMode: Single
+    ingress:
+      external: true
+      targetPort: 8000
+      transport: auto
+      allowInsecure: false
+    secrets:
+      - name: acr-password
+        value: <acr-password>
+      - name: azure-storage-connection-string
+        value: <azure-storage-connection-string>
+    registries:
+      - server: patentiqacr.azurecr.io
+        username: patentiqacr
+        passwordSecretRef: acr-password
+  template:
+    containers:
+      - name: backend
+        image: patentiqacr.azurecr.io/patentiq-backend-v2:2026-04-28-aca4
+        resources:
+          cpu: 2.0
+          memory: 4Gi
+        env:
+          - name: HF_HOME
+            value: /hf-home
+          - name: HF_HUB_CACHE
+            value: /hf-home/hub
+          - name: HF_HUB_OFFLINE
+            value: "1"
+          - name: TRANSFORMERS_OFFLINE
+            value: "1"
+          - name: PATENTIQ_BACKEND_PORT
+            value: "8000"
+          - name: PATENTIQ_V2_RUNTIME_PROFILE
+            value: azure_container_apps
+          - name: PATENTIQ_V2_REPO_ROOT
+            value: /app
+          - name: PATENTIQ_V2_ARTIFACT_MODE
+            value: local_fs
+          - name: PATENTIQ_V2_ETL_DATA_ROOT
+            value: /artifacts/releases/2026-04-25-runtime-current
+          - name: PATENTIQ_V2_LOCAL_ARTIFACT_ROOT
+            value: /artifacts/releases/2026-04-25-runtime-current/serving
+          - name: PATENTIQ_V2_SERVING_MANIFEST_PATH
+            value: /artifacts/releases/2026-04-25-runtime-current/serving/serving_snapshot_manifest.json
+          - name: PATENTIQ_V2_DUCKDB_PATH
+            value: /tmp/patentiq_v2.duckdb
+          - name: PATENTIQ_V2_CACHE_DIR
+            value: /tmp/backend-cache
+          - name: PATENTIQ_V2_PENDING_GRANT_CACHE_DIR
+            value: /tmp/pending-grant-cache
+          - name: PATENTIQ_V2_RAW_PARQUET_FALLBACK_ENABLED
+            value: "false"
+        volumeMounts:
+          - volumeName: artifacts-volume
+            mountPath: /artifacts
+          - volumeName: hf-cache-volume
+            mountPath: /hf-home
+        probes:
+          - type: Liveness
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          - type: Readiness
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+    initContainers:
+      - name: artifact-init
+        image: patentiqacr.azurecr.io/patentiq-bootstrap:2026-04-28-aca4
+        resources:
+          cpu: 1.0
+          memory: 2Gi
+        env:
+          - name: PATENTIQ_BOOTSTRAP_SOURCE_MODE
+            value: azure_blob
+          - name: PATENTIQ_BOOTSTRAP_PROFILE
+            value: full
+          - name: PATENTIQ_BOOTSTRAP_TARGET_ROOT
+            value: /artifacts
+          - name: PATENTIQ_BOOTSTRAP_LOG_PATH
+            value: /artifacts/logs/artifact-init.log
+          - name: PATENTIQ_BOOTSTRAP_HF_HOME
+            value: /hf-home
+          - name: PATENTIQ_BOOTSTRAP_PREFETCH_HF_MODELS
+            value: "true"
+          - name: PATENTIQ_BOOTSTRAP_ALLOW_UNPINNED_HF_MODELS
+            value: "true"
+          - name: PATENTIQ_BOOTSTRAP_OVERWRITE
+            value: "false"
+          - name: PATENTIQ_AZURE_STORAGE_ACCOUNT_URL
+            value: https://patentiq.blob.core.windows.net
+          - name: PATENTIQ_AZURE_STORAGE_CONTAINER
+            value: patentiq-data
+          - name: PATENTIQ_AZURE_ACTIVE_RELEASE_BLOB
+            value: manifests/active_release.json
+          - name: PATENTIQ_AZURE_CONNECTION_STRING_ENV
+            value: AZURE_STORAGE_CONNECTION_STRING
+          - name: AZURE_STORAGE_CONNECTION_STRING
+            secretRef: azure-storage-connection-string
+        volumeMounts:
+          - volumeName: artifacts-volume
+            mountPath: /artifacts
+          - volumeName: hf-cache-volume
+            mountPath: /hf-home
+    scale:
+      minReplicas: 1
+      maxReplicas: 1
+    volumes:
+      - name: artifacts-volume
+        storageType: AzureFile
+        storageName: patentiq-artifacts
+      - name: hf-cache-volume
+        storageType: AzureFile
+        storageName: patentiq-hf-cache

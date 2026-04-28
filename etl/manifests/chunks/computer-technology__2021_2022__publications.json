@@ -1,0 +1,29 @@
+{
+  "chunk_id": "computer-technology__2021_2022__publications",
+  "duration_seconds": 171.425,
+  "field": "Computer technology",
+  "finished_at": "2026-03-19T20:15:30+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/computer-technology__2021_2022__publications/patstat/tls211_pat_publn.parquet"
+  ],
+  "metrics": {
+    "appln_count": 1136817,
+    "ep_appln_count": 41389,
+    "ep_publication_count": 65457,
+    "family_count": 948729,
+    "local_output_bytes": 30107547,
+    "local_output_file_count": 1,
+    "publn_count": 1585436,
+    "us_publication_count": 300738
+  },
+  "recovered_at": "2026-03-23T18:11:35+00:00",
+  "started_at": "2026-03-19T20:12:39+00:00",
+  "status": "success",
+  "table_family": "publications",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=computer-technology/year=2021-2022/family=publications/tls211_pat_publn.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2022,
+  "year_start": 2021
+}

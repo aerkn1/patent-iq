@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-classification-mix-pit.json"
+  },
+  "calculations": [
+    "Portfolio family share within a classification is the fraction of owner-year families carrying that classification membership.",
+    "Portfolio active-family share within a classification is measured against owner-year active-family count.",
+    "Classification rank within owner-year is ordered by family count, then active-family share, then code."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md",
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md",
+    "docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "This mart supports chronological portfolio CPC/WIPO exposure, gain/loss views, and later market-classification rollups."
+  ],
+  "finished_at": "2026-04-24T13:29:11+00:00",
+  "inputs": [],
+  "methods": [
+    "Started from the family classification mix PIT and family compare PIT so owner-year classification rows stay aligned with historical-safe family-year context.",
+    "Aggregated WIPO-field and CPC-main-group membership separately into one owner-year classification mart.",
+    "Kept current-owner replay caveats explicit rather than implying true historical ownership."
+  ],
+  "metrics": {
+    "gold_portfolio_classification_mix_pit_rows": 158766274
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_classification_mix_pit.parquet"
+  ],
+  "stage": "gold-portfolio-classification-mix-pit",
+  "started_at": "2026-04-24T12:07:34+00:00",
+  "status": "success",
+  "summary": "Built the portfolio classification PIT mart by aggregating family-year classification membership through the current owner bridge.",
+  "warnings": []
+}

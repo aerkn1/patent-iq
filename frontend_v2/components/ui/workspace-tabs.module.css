@@ -1,0 +1,97 @@
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 28px;
+  padding: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(246, 249, 252, 0.78)),
+    var(--panel);
+  box-shadow:
+    var(--shadow-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86);
+}
+
+.tabButton {
+  flex: 1 1 180px;
+  min-height: 78px;
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 16px 18px;
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  color: var(--text-body);
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease;
+}
+
+.tabButton:hover,
+.tabButton:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(63, 110, 150, 0.18);
+  background: rgba(248, 251, 253, 0.96);
+  color: var(--text-strong);
+}
+
+.tabButtonActive {
+  background:
+    linear-gradient(135deg, rgba(161, 79, 49, 0.96), rgba(122, 53, 32, 0.96)),
+    rgba(161, 79, 49, 0.94);
+  border-color: rgba(122, 53, 32, 0.42);
+  color: #fff;
+  box-shadow:
+    0 18px 30px rgba(122, 53, 32, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tabButtonActive :global(.portfolio-metric-tooltip) {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tabButtonActive .hint {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+@media (max-width: 1100px) {
+  .tabs {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 720px) {
+  .tabs {
+    padding: 10px;
+  }
+
+  .tabButton {
+    flex-basis: 100%;
+    min-height: 72px;
+    padding: 14px 16px;
+  }
+}

@@ -1,0 +1,56 @@
+# Azure Container Apps definition for PatentIQ frontend v2.
+#
+# Replace placeholder values below, then create or update with:
+#   az containerapp create --resource-group <rg> --environment <env> --yaml azure/frontend.app.yaml
+# or
+#   az containerapp update --resource-group <rg> --name <app> --yaml azure/frontend.app.yaml
+#
+# The frontend image writes public/runtime-config.js on startup from
+# NEXT_PUBLIC_API_BASE_URL, so the same image works for local and Azure.
+
+location: germanywestcentral
+name: patentiq-frontend-v2
+type: Microsoft.App/containerApps
+
+properties:
+  managedEnvironmentId: /subscriptions/a12b6d27-11d3-4400-a4e7-4baba2e389be/resourceGroups/patent-data/providers/Microsoft.App/managedEnvironments/patentiq-env
+  configuration:
+    activeRevisionsMode: Single
+    ingress:
+      external: true
+      targetPort: 3000
+      transport: auto
+      allowInsecure: false
+    secrets:
+      - name: acr-password
+        value: <acr-password>
+    registries:
+      - server: patentiqacr.azurecr.io
+        username: patentiqacr
+        passwordSecretRef: acr-password
+  template:
+    containers:
+      - name: frontend
+        image: patentiqacr.azurecr.io/patentiq-frontend-v2:2026-04-28-aca2
+        resources:
+          cpu: 1.0
+          memory: 2Gi
+        env:
+          - name: NEXT_PUBLIC_API_BASE_URL
+            value: https://api.patentiq.apps
+        probes:
+          - type: Liveness
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 20
+          - type: Readiness
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+    scale:
+      minReplicas: 1
+      maxReplicas: 1

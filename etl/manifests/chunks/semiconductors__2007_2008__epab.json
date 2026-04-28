@@ -1,0 +1,32 @@
+{
+  "chunk_id": "semiconductors__2007_2008__epab",
+  "duration_seconds": 2054.654,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-25T07:28:39+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2007_2008__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 232588,
+    "ep_appln_count": 9783,
+    "ep_publication_count": 19042,
+    "family_count": 152528,
+    "local_output_bytes": 62378356,
+    "local_output_file_count": 3,
+    "publn_count": 361783,
+    "us_publication_count": 82262
+  },
+  "started_at": "2026-03-25T06:54:25+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=semiconductors/year=2007-2008/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=semiconductors/year=2007-2008/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=semiconductors/year=2007-2008/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2008,
+  "year_start": 2007
+}

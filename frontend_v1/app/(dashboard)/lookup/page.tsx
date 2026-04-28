@@ -1,0 +1,1370 @@
+"use client"
+
+import type React from "react"
+
+import { useState, useEffect, useMemo, useCallback } from "react"
+import { useSearchParams } from "next/navigation"
+import { Input } from "@/components/ui/input"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { fetchJson, getPatentUrl, getPatentAnalysisUrl, getPatentCitationMetricsUrl, getPatentCitationTimeSeriesUrl } from "@/lib/api"
+import type { PatentPageResponse, PatentAnalysisResponse, TechnologyProfile, MarketProfile } from "@/lib/types/patent"
+import type { CitationMetricsResponse, CitationTimeSeriesResponse } from "@/lib/types/citation"
+
+import { cn, formatLabel } from "@/lib/utils"
+import { getTechnologyInsights, getMarketInsights } from "@/lib/insight-rules"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  Calendar,
+  Award,
+  TrendingUp,
+  Target,
+  Shield,
+  Activity,
+  Sparkles,
+  BarChart3,
+  CheckCircle2,
+  XCircle,
+  Info,
+  Zap,
+  Layers,
+  Users,
+  GitBranch,
+  Clock,
+  Scale,
+  FileWarning,
+  Wrench,
+  Eye,
+  Gauge,
+  Link2,
+  MapPinned,
+  Search,
+  FileText,
+  Settings,
+  Gem,
+  Crown,
+} from "lucide-react"
+import { RadarChart } from "@/components/radar-chart"
+import { ResponsivePie } from "@nivo/pie"
+import { motion, AnimatePresence } from "motion/react"
+import { CitationEvolutionChart, type CitationYearData } from "@/components/citation-evolution-chart"
+import { TrajectoryLifecycleCards, type LifecycleMetrics } from "@/components/trajectory-lifecycle-cards"
+import { ForecastCard } from "@/components/forecast-card"
+import { CitationForecastChart } from "@/components/citation-forecast-chart"
+
+import { MetricWithTooltip } from "@/components/metric-with-tooltip"
+import { TierBadge } from "@/components/tier-badge"
+import { RED_PALETTE } from "@/lib/chart-config"
+import { tabVariants, tabTransition, cardContainerVariants, cardItemVariants } from "@/lib/motion-variants"
+
+import { PatentSearch } from "@/components/patent-search"
+import { Skeleton } from "@/components/ui/skeleton"
+
+export default function PatentLookupPage() {
+  const searchParams = useSearchParams()
+  const [activeTab, setActiveTab] = useState("overview")
+  const [patentId, setPatentId] = useState(() => {
+    return searchParams?.get("patentId") || ""
+  })
+  const [loading, setLoading] = useState(false)
+  const [analysisLoading, setAnalysisLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [analysisError, setAnalysisError] = useState<string | null>(null)
+
+
+  const [patentData, setPatentData] = useState<PatentPageResponse | null>(null)
+  const [analysisData, setAnalysisData] = useState<PatentAnalysisResponse | null>(null)
+  const [citationMetrics, setCitationMetrics] = useState<CitationMetricsResponse | null>(null)
+  const [metricsLoading, setMetricsLoading] = useState(false)
+  const [citationTimeSeries, setCitationTimeSeries] = useState<CitationTimeSeriesResponse | null>(null)
+  const [timeSeriesLoading, setTimeSeriesLoading] = useState(false)
+
+  // Sync patentId with URL params
+  useEffect(() => {
+    const urlPatentId = searchParams?.get("patentId")
+    if (urlPatentId && urlPatentId !== patentId) {
+      setPatentId(urlPatentId)
+    }
+  }, [searchParams])
+
+  // Fetch patent data
+  useEffect(() => {
+    if (patentId.trim()) {
+      setLoading(true)
+      setError(null)
+      setPatentData(null)
+      setAnalysisData(null)
+      setAnalysisError(null)
+
+
+      fetchJson<PatentPageResponse>(getPatentUrl(patentId))
+        .then((data) => {
+          setPatentData(data)
+        })
+        .catch((e: Error) => {
+          setError(e.message || "Failed to fetch patent data")
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
+  }, [patentId])
+
+  // Fetch citation metrics and time series in parallel
+  useEffect(() => {
+    if (patentData?.patent.appln_id) {
+      const applnId = patentData.patent.appln_id.toString()
+      setMetricsLoading(true)
+      setTimeSeriesLoading(true)
+      setCitationMetrics(null)
+      setCitationTimeSeries(null)
+
+      Promise.all([
+        fetchJson<CitationMetricsResponse>(getPatentCitationMetricsUrl(applnId)),
+        fetchJson<CitationTimeSeriesResponse>(getPatentCitationTimeSeriesUrl(applnId)),
+      ])
+        .then(([metrics, timeSeries]) => {
+          setCitationMetrics(metrics)
+          setCitationTimeSeries(timeSeries)
+        })
+        .catch(e => {
+          console.error("Failed to fetch citation data:", e)
+        })
+        .finally(() => {
+          setMetricsLoading(false)
+          setTimeSeriesLoading(false)
+        })
+    }
+  }, [patentData?.patent.appln_id])
+
+  // Fetch analysis data when advanced tab is active
+  useEffect(() => {
+    if (activeTab === "advanced" && patentData && !analysisData && !analysisLoading && !analysisError) {
+      setAnalysisLoading(true)
+      setAnalysisError(null)
+
+      fetchJson<PatentAnalysisResponse>(getPatentAnalysisUrl(patentData.patent.appln_id.toString()))
+        .then((data) => {
+          setAnalysisData(data)
+        })
+        .catch((e: Error) => {
+          setAnalysisError(e.message || "Failed to fetch analysis data")
+        })
+        .finally(() => {
+          setAnalysisLoading(false)
+        })
+    }
+  }, [activeTab, patentData, analysisData, analysisLoading, analysisError])
+
+  // Automatic advisory fetching removed in favor of granular on-demand generation
+
+
+  // Use real data from API
+  const overviewData = patentData
+
+  // Use real analysis data from API
+  const advancedData = analysisData
+
+  // Prepare radar chart data — memoized to avoid reconstructing on every render
+  const radarData = useMemo(() => overviewData
+    ? [
+      { category: "Technology", value: overviewData.technology.percentile_global, max: 100, description: "Composite measure of technical novelty, citation quality, CPC diversity, and technological impact. Normalized against global patent database." },
+      { category: "Market", value: overviewData.market.percentile_global, max: 100, description: "Measures market breadth through industry coverage, jurisdictional reach, and economic sector alignment. Higher scores indicate broader commercial applicability." },
+      { category: "Blocking", value: overviewData.scores.blocking_power.percentile, max: 100, description: "Blocking Power Index measures a patent's ability to prevent competitors from operating in its technology space. Higher percentiles indicate stronger blocking potential." },
+      { category: "Licensing", value: overviewData.scores.licensing_readiness.percentile, max: 100, description: "Licensing Readiness indicates how well-positioned this patent is for commercial licensing. Considers legal strength, market relevance, and citation impact." },
+      { category: "Legal", value: overviewData.scores.legal_strength.percentile, max: 100, description: "Legal Strength assesses enforceability based on claim scope, prosecution history, oppositions, and legal events. Higher scores indicate more defensible patents." },
+    ]
+    : [], [overviewData])
+
+  // Prepare pie chart data for advanced view (Nivo uses id/value)
+  const cpcPieData =
+    advancedData?.technology?.distribution?.cpc_subclasses?.map((cpc) => ({
+      id: cpc.code,
+      value: cpc.weight * 100,
+    })) || []
+
+  const industryPieData =
+    advancedData?.market?.distribution?.industries?.slice(0, 10).map((ind) => ({
+      id: ind.code.replace(/_/g, " "),
+      value: ind.weight * 100,
+    })) || []
+
+  // Transform API data for chart — memoized to avoid reconstructing on every render
+  const citationEvolutionData: CitationYearData[] = useMemo(() =>
+    citationTimeSeries?.series.map(point => ({
+      year: citationTimeSeries.filing_date + point.age_year,
+      early: 0, // Not available in API yet
+      mid: point.new_forward_cites, // Treat all as mid/total for now to show color
+      late: 0, // Not available in API yet
+      total: point.new_forward_cites
+    })) || [],
+    [citationTimeSeries]
+  )
+
+  // Transform API data to LifecycleMetrics
+  const lifecycleMetrics: LifecycleMetrics = citationMetrics ? {
+    trajectory: {
+      score: Number(citationMetrics.trajectory_score.toFixed(1)),
+      percentile: Number((citationMetrics.trajectory_score_pct * 100).toFixed(0)),
+      label: citationMetrics.trajectory_score >= 80 ? "Rising" : citationMetrics.trajectory_score <= 40 ? "Falling" : "Flat"
+    },
+    durability: {
+      score: Number(citationMetrics.durability_score.toFixed(1)),
+      percentile: Number((citationMetrics.durability_score_pct * 100).toFixed(0)),
+      spanYears: citationMetrics.citation_span_years
+    },
+    sustainability: {
+      score: Number(citationMetrics.sustainability_score_ui.toFixed(0)),
+      percentile: Number((citationMetrics.sustainability_score_pct * 100).toFixed(0)),
+      isSustaining: citationMetrics.is_sustaining
+    },
+    timing: {
+      score: Number(citationMetrics.timing_score.toFixed(1)),
+      percentile: Number((citationMetrics.timing_score_pct * 100).toFixed(0)),
+      class: citationMetrics.timing_class as "EARLY" | "MID" | "LATE"
+    },
+    peakAge: citationMetrics.peak_age,
+    // Per user request: sum of parts
+    totalCitations: citationMetrics.early_cites + citationMetrics.mid_cites + citationMetrics.late_cites
+  } : {
+    // Fallback/Loading state placeholder
+    trajectory: { score: 0, percentile: 0, label: "Flat" },
+    durability: { score: 0, percentile: 0, spanYears: 0 },
+    sustainability: { score: 0, percentile: 0, isSustaining: false },
+    timing: { score: 0, percentile: 0, class: "MID" },
+    peakAge: 0,
+    totalCitations: 0
+  }
+
+  const COLORS = RED_PALETTE
+
+  const handlePatentSelect = useCallback((applnId: string) => setPatentId(applnId), [])
+
+  return (
+    <>
+      {/* Search Input */}
+      <Card className="mb-8">
+        <CardContent className="pt-6">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <PatentSearch
+                onSelect={handlePatentSelect}
+                placeholder="Search by publication ID (e.g., EP1234567A1)"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Error Display */}
+      {error && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {/* Loading State — shape-matched skeletons */}
+      {loading && (
+        <div className="space-y-6">
+          {/* Metadata card skeleton */}
+          <Card className="mb-6">
+            <CardHeader>
+              <Skeleton className="h-7 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-1/2" />
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-4 gap-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="space-y-2">
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-5 w-24" />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          {/* KPI card row skeleton */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i} className="p-6">
+                <Skeleton className="h-3 w-20 mb-3" />
+                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="h-2 w-full" />
+              </Card>
+            ))}
+          </div>
+          {/* Chart skeleton */}
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-5 w-48" />
+              <Skeleton className="h-3 w-64 mt-1" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-[350px] w-full rounded-md" />
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Patent Data Display */}
+      {!loading && !error && overviewData && (
+        <div className="space-y-6">
+          {/* Patent Metadata */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-2xl mb-2">{overviewData.patent.title}</CardTitle>
+              <div className="flex flex-wrap items-center gap-4 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Application ID:</span>
+                  <span className="font-semibold font-mono">{overviewData.patent.appln_id}</span>
+                </div>
+                {overviewData.patent.owners.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">Owners:</span>
+                    <div className="flex flex-wrap gap-1">
+                      {overviewData.patent.owners.map((o, idx) => (
+                        <Badge key={idx} variant="outline" className="font-normal">
+                          {o.name} {o.country && `(${o.country})`}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {overviewData.patent.ep_publn_id_full && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground">Publication ID:</span>
+                    <span className="font-semibold font-mono">{overviewData.patent.ep_publn_id_full}</span>
+                  </div>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-4 gap-4">
+
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Filing Date</div>
+                    <div className="font-medium">{overviewData.patent.application_date.split(" ")[0]}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Publication Date</div>
+                    <div className="font-medium">{overviewData.patent.publication_date.split(" ")[0]}</div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Jurisdiction</div>
+                    <Badge variant="outline">{overviewData.patent.jurisdiction}</Badge>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Status</div>
+                    <Badge
+                      variant="outline"
+                      className={
+                        overviewData.patent.status?.toUpperCase().includes("GRANTED") ||
+                          overviewData.patent.status?.toUpperCase().includes("ACTIVE")
+                          ? "bg-green-100 text-green-800 border-green-300 font-medium"
+                          : overviewData.patent.status?.toUpperCase().includes("ABANDONED") ||
+                            overviewData.patent.status?.toUpperCase().includes("LAPSED") ||
+                            overviewData.patent.status?.toUpperCase().includes("EXPIRED")
+                            ? "bg-red-100 text-red-800 border-red-300 font-medium"
+                            : "bg-gray-100 text-gray-700 border-gray-300 font-medium"
+                      }
+                    >
+                      {overviewData.patent.status}
+                    </Badge>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Family Size</div>
+                    <div className="font-medium">{overviewData.family.family_members_count}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Family Jurisdictions</div>
+                    <div className="font-medium">{overviewData.family.family_jurisdiction_count}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Tech Breadth</div>
+                    <div className="font-medium">{overviewData.family.family_cpc_subclass_count} <span className="text-xs font-normal text-muted-foreground">CPC Subs</span></div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">Major Grants</div>
+                    <div className="flex items-center gap-1">
+                      {["EP", "US", "CN", "JP", "KR"].map((office) => {
+                        const isGranted = overviewData.family.major_office_grant_auths?.includes(office)
+                        return (
+                          <Badge
+                            key={office}
+                            variant={isGranted ? "default" : "outline"}
+                            className={cn(
+                              "w-7 h-5 flex items-center justify-center p-0 text-[10px]",
+                              !isGranted && "text-muted-foreground/40 border-dashed"
+                            )}
+                          >
+                            {office}
+                          </Badge>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Patent Category Card */}
+          {overviewData.patent.patent_category && (
+            (() => {
+              const PATENT_CATEGORY_UI_MAP = {
+                DEADWOOD: {
+                  label: "Deadwood",
+                  shortDescription: "Low strategic and commercial relevance",
+                  longDescription:
+                    "This patent shows limited technological impact, weak market relevance, and low blocking or licensing potential. It is unlikely to justify maintenance or monetization costs.",
+                  color: "gray",
+                  badgeVariant: "neutral",
+                  icon: "log",
+                  riskLevel: "LOW_UPSIDE",
+                  recommendedActions: [
+                    "Consider abandonment",
+                    "Exclude from licensing strategy",
+                    "Use only for defensive coverage if bundled",
+                  ],
+                },
+                CORE_ASSET: {
+                  label: "Core Asset",
+                  shortDescription: "Solid, defensible portfolio component",
+                  longDescription:
+                    "This patent plays a stable and meaningful role in the portfolio. It contributes to technology coverage and legal strength but is not a singular market or blocking leader.",
+                  color: "blue",
+                  badgeVariant: "primary",
+                  icon: "settings",
+                  riskLevel: "STABLE",
+                  recommendedActions: [
+                    "Maintain protection",
+                    "Include in portfolio licensing",
+                    "Monitor competitors",
+                  ],
+                },
+                FORTRESS: {
+                  label: "Fortress",
+                  shortDescription: "Strong defensive and blocking position",
+                  longDescription:
+                    "This patent provides strong blocking power through legal strength, family breadth, and strategic positioning. It is difficult for competitors to design around.",
+                  color: "purple",
+                  badgeVariant: "strong",
+                  icon: "shield",
+                  riskLevel: "DEFENSIVE_ADVANTAGE",
+                  recommendedActions: [
+                    "Defensive enforcement",
+                    "Use as negotiation leverage",
+                    "Protect aggressively",
+                  ],
+                },
+                HIDDEN_GEM: {
+                  label: "Hidden Gem",
+                  shortDescription: "Underexploited but high-potential patent",
+                  longDescription:
+                    "This patent shows strong technological or innovation signals but has not yet translated into market dominance or licensing activity. It represents latent value.",
+                  color: "green",
+                  badgeVariant: "success",
+                  icon: "gem",
+                  riskLevel: "HIGH_UPSIDE",
+                  recommendedActions: [
+                    "Evaluate licensing opportunities",
+                    "Explore new market applications",
+                    "Increase visibility in deal screening",
+                  ],
+                },
+                CROWN_JEWEL: {
+                  label: "Crown Jewel",
+                  shortDescription: "Exceptional strategic and commercial value",
+                  longDescription:
+                    "This patent combines strong technology, market relevance, legal strength, and impact. It is a key asset for licensing, enforcement, or strategic positioning.",
+                  color: "gold",
+                  badgeVariant: "premium",
+                  icon: "crown",
+                  riskLevel: "CRITICAL_ASSET",
+                  recommendedActions: [
+                    "Prioritize for licensing and enforcement",
+                    "Protect across jurisdictions",
+                    "Use as flagship portfolio asset",
+                  ],
+                },
+              } as const;
+
+              const categoryKey = overviewData.patent.patent_category;
+              const categoryInfo = PATENT_CATEGORY_UI_MAP[categoryKey as keyof typeof PATENT_CATEGORY_UI_MAP];
+
+              if (!categoryInfo) {
+                return (
+                  <div className="rounded-xl p-6 border-2 mb-6 bg-gray-50 border-gray-200">
+                    <div className="text-muted-foreground">
+                      Unknown category: {categoryKey}
+                    </div>
+                  </div>
+                );
+              }
+
+              const iconMap: Record<string, React.ElementType> = {
+                log: FileText,
+                settings: Settings,
+                shield: Shield,
+                gem: Gem,
+                crown: Crown,
+              };
+
+              const IconComponent = iconMap[categoryInfo.icon] || Award;
+
+              const bgColors: Record<string, string> = {
+                gray: "bg-gray-50 border-gray-200",
+                blue: "bg-blue-50 border-blue-200",
+                purple: "bg-purple-50 border-purple-200",
+                green: "bg-emerald-50 border-emerald-200",
+                gold: "bg-amber-50 border-amber-200",
+              };
+
+              const textColors: Record<string, string> = {
+                gray: "text-gray-700",
+                blue: "text-blue-700",
+                purple: "text-purple-700",
+                green: "text-emerald-700",
+                gold: "text-amber-700",
+              };
+
+              const badgeColors: Record<string, string> = {
+                neutral: "bg-gray-100 text-gray-800 border-gray-300",
+                primary: "bg-blue-100 text-blue-800 border-blue-300",
+                strong: "bg-purple-100 text-purple-800 border-purple-300",
+                success: "bg-green-100 text-green-800 border-green-300",
+                premium: "bg-amber-100 text-amber-800 border-amber-300",
+              };
+
+              return (
+                <div
+                  className={cn(
+                    "rounded-xl p-6 border-2 mb-6",
+                    bgColors[categoryInfo.color] || "bg-gray-50 border-gray-200"
+                  )}
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <IconComponent className={cn("h-8 w-8", textColors[categoryInfo.color] || "text-gray-700")} />
+                      <h2 className={cn("text-2xl font-bold", textColors[categoryInfo.color] || "text-gray-700")}>
+                        {categoryInfo.label.toUpperCase()}
+                      </h2>
+                    </div>
+                    <Badge className={cn("text-xs font-semibold", badgeColors[categoryInfo.badgeVariant] || badgeColors.neutral)}>
+                      {formatLabel(categoryInfo.riskLevel)}
+                    </Badge>
+                  </div>
+
+                  <p className="text-sm font-medium text-foreground/90 mb-3">
+                    {categoryInfo.shortDescription}
+                  </p>
+
+                  <p className="text-foreground/80 leading-relaxed mb-6">
+                    {categoryInfo.longDescription}
+                  </p>
+
+                  {categoryInfo.recommendedActions.length > 0 && (
+                    <div className="space-y-2">
+                      <span className="text-sm font-semibold text-muted-foreground">Recommended Actions:</span>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-foreground/70">
+                        {categoryInfo.recommendedActions.map((action, idx) => (
+                          <li key={idx}>{action}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              );
+            })()
+          )}
+
+          {/* Main Tabs: Overview and Advanced */}
+          <Card>
+            <CardContent className="pt-6">
+              <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="overview">
+                <TabsList className="grid w-full grid-cols-2 mb-6">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="advanced">Advanced</TabsTrigger>
+                </TabsList>
+
+                {/* OVERVIEW TAB */}
+                <TabsContent value="overview" className="space-y-6">
+                  <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab + "-overview"}
+                    variants={tabVariants}
+                    initial="initial" animate="animate" exit="exit"
+                    transition={tabTransition}
+                    className="space-y-6"
+                  >
+                  {/* Key Scores */}
+
+                  <motion.div variants={cardContainerVariants} initial="hidden" animate="visible" className="space-y-6">
+                  {/* Radar Chart Overview */}
+                  <motion.div variants={cardItemVariants}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Patent Strength Radar</CardTitle>
+                      <CardDescription>Multi-dimensional percentile visualization (5 key dimensions)</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {/* Radar Chart */}
+                        <div className="flex justify-center items-center">
+                          <RadarChart data={radarData} />
+                        </div>
+
+                        {/* Values Card */}
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-semibold text-foreground mb-4">Percentile Scores</h4>
+                          {radarData.map((item, index) => (
+                            <div key={index} className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium text-foreground">{item.category}</span>
+                                  {item.description && (
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                      </TooltipTrigger>
+                                      <TooltipContent className="max-w-xs">
+                                        <p>{item.description}</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  )}
+                                </div>
+                                <span className="text-lg font-bold text-primary">{item.value.toFixed(1)}/100</span>
+                              </div>
+                              <Progress value={item.value} className="h-2" />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  </motion.div>
+
+                  {/* Citations Overview */}
+                  <motion.div variants={cardItemVariants}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Activity className="h-5 w-5 text-primary" />
+                        Citation Analysis
+                      </CardTitle>
+                      <CardDescription>Patent influence and reference patterns</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div className="text-center p-4 bg-muted/50 rounded-lg">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="cursor-help">
+                                <div className="text-3xl font-bold text-primary mb-1 flex items-center justify-center gap-2">
+                                  {overviewData.citations.backward.count}
+                                  <Info className="h-4 w-4 text-muted-foreground" />
+                                </div>
+                                <p className="text-sm text-muted-foreground">Backward Citations</p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {overviewData.citations.backward.x_normalized.toFixed(1)}/100
+                                </p>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <p>
+                                Number of prior art references cited. Indicates research depth and technological
+                                foundation. Normalized score shows relative citation density.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+
+                        <div className="text-center p-4 bg-muted/50 rounded-lg">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="cursor-help">
+                                <div className="text-3xl font-bold text-primary mb-1 flex items-center justify-center gap-2">
+                                  {overviewData.citations.forward.count}
+                                  <Info className="h-4 w-4 text-muted-foreground" />
+                                </div>
+                                <p className="text-sm text-muted-foreground">Forward Citations</p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {overviewData.citations.forward.x_normalized.toFixed(1)}/100
+                                </p>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <p>
+                                Number of later patents citing this invention. Measures technological impact and
+                                influence. Higher counts indicate foundational innovations.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+
+                        <div className="text-center p-4 bg-muted/50 rounded-lg">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="cursor-help">
+                                <div className="text-3xl font-bold text-muted-foreground mb-1 flex items-center justify-center gap-2">
+                                  {overviewData.citations.family_citations}
+                                  <Info className="h-4 w-4 text-muted-foreground" />
+                                </div>
+                                <p className="text-sm text-muted-foreground">Family Citations</p>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-xs">
+                              <p>
+                                Citations across related patent family members (US, EP, JP filings). Indicates global
+                                technology recognition and international impact.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                      </div>
+
+                    </CardContent>
+                  </Card>
+                  </motion.div>
+
+                  {/* Relative Positioning */}
+
+                  </motion.div>
+                  </motion.div>
+                  </AnimatePresence>
+                </TabsContent>
+
+                {/* ADVANCED TAB */}
+                <TabsContent value="advanced" className="space-y-6">
+                  <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab + "-advanced"}
+                    variants={tabVariants}
+                    initial="initial" animate="animate" exit="exit"
+                    transition={tabTransition}
+                    className="space-y-6"
+                  >
+                  {analysisLoading && (
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                          <Card key={i} className="p-6">
+                            <Skeleton className="h-3 w-20 mb-3" />
+                            <Skeleton className="h-8 w-16 mb-2" />
+                            <Skeleton className="h-2 w-full" />
+                          </Card>
+                        ))}
+                      </div>
+                      <Card>
+                        <CardHeader>
+                          <Skeleton className="h-5 w-48" />
+                          <Skeleton className="h-3 w-64 mt-1" />
+                        </CardHeader>
+                        <CardContent>
+                          <Skeleton className="h-[350px] w-full rounded-md" />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  )}
+                  {analysisError && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{analysisError}</AlertDescription>
+                    </Alert>
+                  )}
+                  {!analysisLoading && !analysisError && !advancedData && (
+                    <div className="text-center py-12">
+                      <div className="text-muted-foreground">No analysis data available</div>
+                    </div>
+                  )}
+                  {!analysisLoading && !analysisError && advancedData && (
+                    <>
+                      {/* Technology & Market Profile */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {/* Technology Profile */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Zap className="h-5 w-5 text-primary" />
+                              Technology Profile
+                            </CardTitle>
+                            <CardDescription>CPC class distribution and diversification</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="grid md:grid-cols-2 gap-6">
+                              {/* Pie Chart */}
+                              <div className="flex items-center justify-center">
+                                {/* Donut Chart */}
+                                {cpcPieData.length > 0 ? (
+                                  <div className="h-[200px] w-full min-w-[200px]">
+                                    <ResponsivePie
+                                      data={cpcPieData}
+                                      innerRadius={0.6}
+                                      padAngle={2}
+                                      colors={COLORS}
+                                      enableArcLabels={false}
+                                      enableArcLinkLabels={false}
+                                      tooltip={({ datum }) => (
+                                        <div className="bg-background border border-border p-2 rounded-lg text-xs">
+                                          {datum.id}: {datum.value.toFixed(1)}%
+                                        </div>
+                                      )}
+                                    />
+                                  </div>
+                                ) : (
+                                  <div className="h-[200px] w-full flex items-center justify-center text-muted-foreground text-sm">
+                                    No distribution data available
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Insights Section */}
+                              <div className="space-y-4">
+                                <h4 className="text-sm font-semibold flex items-center gap-2">
+                                  <Sparkles className="h-4 w-4 text-yellow-500" />
+                                  Key Insights
+                                </h4>
+                                {(() => {
+                                  // Check if data exists
+                                  if (!advancedData.technology.distribution.cpc_subclasses || advancedData.technology.distribution.cpc_subclasses.length === 0) {
+                                    return <div className="text-sm text-muted-foreground">Insufficient data for insights.</div>
+                                  }
+
+                                  // Construct profile for insight rules
+                                  const sorted = [...advancedData.technology.distribution.cpc_subclasses].sort((a, b) => b.weight - a.weight)
+                                  const top5 = sorted.slice(0, 5)
+                                  const top_k_share = top5.reduce((sum, item) => sum + item.weight, 0)
+
+                                  const profile: TechnologyProfile = {
+                                    axis_score: advancedData.technology.diversification.normalized,
+                                    diversification: {
+                                      entropy_norm: advancedData.technology.diversification.normalized,
+                                      top_k_share: top_k_share,
+                                      long_tail_share: 1 - top_k_share,
+                                      interpretation: advancedData.technology.diversification.interpretation
+                                    },
+                                    top_cpc_classes: advancedData.technology.distribution.cpc_subclasses
+                                  }
+                                  const insights = getTechnologyInsights(profile)
+
+                                  return (
+                                    <>
+                                      <ul className="space-y-3">
+                                        {insights.map((insight, i) => (
+                                          <li key={i} className="text-sm text-muted-foreground flex gap-2">
+                                            <span className="text-primary mt-1">•</span>
+                                            <span>{insight}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+
+                                      {/* Top CPCs List */}
+                                      <div className="mt-4 pt-4 border-t">
+                                        <h4 className="text-sm font-semibold mb-3">Top Classifications</h4>
+                                        <div className="space-y-2">
+                                          {advancedData.technology.distribution.cpc_subclasses
+                                            .slice(0, 5)
+                                            .map((item, i) => (
+                                              <div key={i} className="flex items-center justify-between text-sm gap-2">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                  <div
+                                                    className="w-2 h-2 rounded-full flex-shrink-0"
+                                                    style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                                                  />
+                                                  <span className="font-medium text-muted-foreground truncate" title={item.code}>
+                                                    {item.code}
+                                                  </span>
+                                                </div>
+                                                <span className="font-mono text-xs flex-shrink-0">{(item.weight * 100).toFixed(1)}%</span>
+                                              </div>
+                                            ))}
+                                        </div>
+                                      </div>
+                                    </>
+                                  )
+                                })()}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        {/* Market Profile */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Layers className="h-5 w-5 text-primary" />
+                              Market Profile
+                            </CardTitle>
+                            <CardDescription>Industry distribution and diversification</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="grid md:grid-cols-2 gap-6">
+                              {/* Pie Chart */}
+                              <div className="flex items-center justify-center">
+                                {/* Donut Chart */}
+                                {industryPieData.length > 0 ? (
+                                  <div className="h-[200px] w-full min-w-[200px]">
+                                    <ResponsivePie
+                                      data={industryPieData}
+                                      innerRadius={0.6}
+                                      padAngle={2}
+                                      colors={COLORS}
+                                      enableArcLabels={false}
+                                      enableArcLinkLabels={false}
+                                      tooltip={({ datum }) => (
+                                        <div className="bg-background border border-border p-2 rounded-lg text-xs">
+                                          {datum.id}: {datum.value.toFixed(1)}%
+                                        </div>
+                                      )}
+                                    />
+                                  </div>
+                                ) : (
+                                  <div className="h-[200px] w-full flex items-center justify-center text-muted-foreground text-sm">
+                                    No distribution data available
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Insights Section */}
+                              <div className="space-y-4">
+                                <h4 className="text-sm font-semibold flex items-center gap-2">
+                                  <Sparkles className="h-4 w-4 text-yellow-500" />
+                                  Key Insights
+                                </h4>
+                                {(() => {
+                                  // Check if data exists
+                                  if (!advancedData.market.distribution.industries || advancedData.market.distribution.industries.length === 0) {
+                                    return <div className="text-sm text-muted-foreground">Insufficient data for insights.</div>
+                                  }
+
+                                  // Construct profile for insight rules
+                                  const sorted = [...advancedData.market.distribution.industries].sort((a, b) => b.weight - a.weight)
+                                  const top5 = sorted.slice(0, 5)
+                                  const top_k_share = top5.reduce((sum, item) => sum + item.weight, 0)
+
+                                  const profile: MarketProfile = {
+                                    axis_score: advancedData.market.diversification.normalized,
+                                    diversification: {
+                                      entropy_norm: advancedData.market.diversification.normalized,
+                                      top_k_share: top_k_share,
+                                      long_tail_share: 1 - top_k_share,
+                                      interpretation: advancedData.market.diversification.interpretation
+                                    },
+                                    top_industries: advancedData.market.distribution.industries
+                                  }
+                                  const insights = getMarketInsights(profile)
+
+                                  return (
+                                    <>
+                                      <ul className="space-y-3">
+                                        {insights.map((insight, i) => (
+                                          <li key={i} className="text-sm text-muted-foreground flex gap-2">
+                                            <span className="text-primary mt-1">•</span>
+                                            <span>{insight}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+
+                                      {/* Top Industries List */}
+                                      <div className="mt-4 pt-4 border-t">
+                                        <h4 className="text-sm font-semibold mb-3">Top Industries</h4>
+                                        <div className="space-y-2">
+                                          {advancedData.market.distribution.industries
+                                            .slice(0, 5)
+                                            .map((item, i) => (
+                                              <div key={i} className="flex items-center justify-between text-sm gap-2">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                  <div
+                                                    className="w-2 h-2 rounded-full flex-shrink-0"
+                                                    style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                                                  />
+                                                  <span className="font-medium text-muted-foreground truncate" title={item.code.replace(/_/g, " ")}>
+                                                    {item.code.replace(/_/g, " ")}
+                                                  </span>
+                                                </div>
+                                                <span className="font-mono text-xs flex-shrink-0">{(item.weight * 100).toFixed(1)}%</span>
+                                              </div>
+                                            ))}
+                                        </div>
+                                      </div>
+                                    </>
+                                  )
+                                })()}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      {/* Citations Analysis */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Activity className="h-5 w-5 text-primary" />
+                            Detailed EP Citation Analysis
+                          </CardTitle>
+                          <CardDescription>Complete breakdown of EP citation patterns and self-citations</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid md:grid-cols-3 gap-6">
+                            <div>
+                              <h4 className="font-semibold mb-4">Backward Citations</h4>
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">Total</span>
+                                  <span className="text-lg font-bold">{advancedData.citations.backward.total}</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">X Patents</span>
+                                  <span className="text-lg font-bold">{advancedData.citations.backward.x_patent}</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">Y Patents</span>
+                                  <span className="text-lg font-bold">{advancedData.citations.backward.y_patent}</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">X NPL</span>
+                                  <span className="text-lg font-bold">{advancedData.citations.backward.x_npl}</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">Y NPL</span>
+                                  <span className="text-lg font-bold">{advancedData.citations.backward.y_npl}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                              <h4 className="font-semibold mb-4">Forward Citations</h4>
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">Total</span>
+                                  <span className="text-lg font-bold">{advancedData.citations.forward.total}</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">X Patents</span>
+                                  <span className="text-lg font-bold">{advancedData.citations.forward.x_patent}</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">Y Patents</span>
+                                  <span className="text-lg font-bold">{advancedData.citations.forward.y_patent}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                              <h4 className="font-semibold mb-4">EP Self-Citations</h4>
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">Forward</span>
+                                  <span className="text-lg font-bold">{advancedData.citations.self_citations.forward}</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">Backward</span>
+                                  <span className="text-lg font-bold">{advancedData.citations.self_citations.backward}</span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">Self Forward Rate</span>
+                                  <span className="text-lg font-bold">
+                                    {advancedData.citations.self_citations.self_forward_rate != null
+                                      ? `${(advancedData.citations.self_citations.self_forward_rate * 100).toFixed(1)}%`
+                                      : "N/A"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                  <span className="text-sm">Self Blocking Rate</span>
+                                  <span className="text-lg font-bold">
+                                    {advancedData.citations.self_citations.self_blocking_rate != null
+                                      ? `${(advancedData.citations.self_citations.self_blocking_rate * 100).toFixed(1)}%`
+                                      : "N/A"}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Detailed Citations - Removed to avoid redundancy with Overview Tab */}
+                      {/* <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Activity className="h-5 w-5 text-primary" />
+                        Detailed Citation Analysis
+                      </CardTitle>
+                      <CardDescription>Complete breakdown of citation patterns and self-citations</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div>
+                          <h4 className="font-semibold mb-4">Backward Citations</h4>
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                              <span className="text-sm">Total Backward</span>
+                              <span className="text-lg font-bold">{advancedData.citation_details.backward_citations.count}</span>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                              <span className="text-sm">Normalized</span>
+                              <span className="text-lg font-bold">{advancedData.citation_details.backward_citations.normalized.toFixed(1)}/100</span>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                              <span className="text-sm">Top Cited Patents</span>
+                              <div className="flex gap-1 flex-wrap">
+                                {advancedData.citation_details.backward_citations.top_cited_patents.map((patent) => (
+                                  <Badge key={patent} variant="outline">{patent}</Badge>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-4">Forward Citations & Self-Citations</h4>
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                              <span className="text-sm">Total Forward</span>
+                              <span className="text-lg font-bold">{advancedData.citation_details.forward_citations.count}</span>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                              <span className="text-sm">Normalized</span>
+                              <span className="text-lg font-bold">{advancedData.citation_details.forward_citations.normalized.toFixed(1)}/100</span>
+                            </div>
+                            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                              <span className="text-sm">Self-Citations</span>
+                              <span className="text-lg font-bold">{advancedData.citation_details.self_citations}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card> */}
+
+                      {/* Legal Analysis */}
+                      <div className="space-y-6">
+                        <h3 className="text-lg font-semibold flex items-center gap-2">
+                          <TrendingUp className="h-5 w-5 text-primary" />
+                          Global Citation Dynamics & Lifecycle
+                        </h3>
+
+                        <TrajectoryLifecycleCards metrics={lifecycleMetrics} />
+
+                        <CitationEvolutionChart data={citationEvolutionData} />
+
+                        {patentData?.patent?.appln_id ? (
+                          <>
+                            <ForecastCard applnId={patentData.patent.appln_id} />
+                          </>
+                        ) : null}
+                      </div>
+
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Legal Analysis</CardTitle>
+                          <CardDescription>Legal events and status indicators</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid md:grid-cols-4 gap-4">
+                            <div className="text-center p-4 bg-muted/50 rounded-lg">
+                              <Scale className="h-8 w-8 text-primary mx-auto mb-2" />
+                              <div className="text-2xl font-bold mb-1">{advancedData.legal.opposition_count}</div>
+                              <div className="text-sm font-medium">Oppositions</div>
+                            </div>
+                            <div className="text-center p-4 bg-muted/50 rounded-lg">
+                              <XCircle className="h-8 w-8 text-primary mx-auto mb-2" />
+                              <div className="text-2xl font-bold mb-1">{advancedData.legal.lapse_count}</div>
+                              <div className="text-sm font-medium">Lapses</div>
+                            </div>
+                            <div className="text-center p-4 bg-muted/50 rounded-lg">
+                              <CheckCircle2 className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                              <div className="text-2xl font-bold mb-1">{advancedData.legal.renewal_payment_count}</div>
+                              <div className="text-sm font-medium">Renewals</div>
+                            </div>
+                            <div className="text-center p-4 bg-muted/50 rounded-lg">
+                              <FileWarning className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                              <div className="text-sm font-medium mb-2">Legal Uncertainty</div>
+                              <Badge variant="outline" className={advancedData.legal.legal_uncertainty ? "border-primary text-primary" : "border-muted-foreground text-muted-foreground"}>
+                                {advancedData.legal.legal_uncertainty ? "YES" : "NO"}
+                              </Badge>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Innovation Analysis */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Innovation Analysis</CardTitle>
+                          <CardDescription>Technical innovation and impact indicators</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+
+                          <div className="grid md:grid-cols-3 gap-4">
+                            <div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-sm text-muted-foreground">Innovation Score</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-xs">
+                                    <p>
+                                      Composite innovation score measuring the patent's overall technological impact and
+                                      novelty. Combines citation patterns, technological diversity, and field-normalized metrics.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <div className="text-3xl font-bold mb-2">
+                                {advancedData.innovation.innovation_score != null
+                                  ? advancedData.innovation.innovation_score.toFixed(2)
+                                  : "N/A"}
+                              </div>
+                              <Progress value={advancedData.innovation.innovation_score ?? 0} className="h-2" />
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-sm text-muted-foreground">Tech Field Influence</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-xs">
+                                    <p>
+                                      Measures the patent's influence within its specific technology field. Higher values
+                                      indicate greater recognition and impact among peers in the same technical domain.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <div className="text-3xl font-bold mb-2">
+                                {advancedData.innovation.tech_field_influence != null
+                                  ? advancedData.innovation.tech_field_influence.toFixed(2)
+                                  : "N/A"}
+                              </div>
+                              <Progress value={advancedData.innovation.tech_field_influence ?? 0} className="h-2" />
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-sm text-muted-foreground">Field Attention</span>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent className="max-w-xs">
+                                    <p>
+                                      Indicates the level of attention and citation activity the patent receives within its
+                                      field. Higher values suggest the patent addresses important problems or introduces
+                                      significant advances that attract research interest.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <div className="text-3xl font-bold mb-2">
+                                {advancedData.innovation.field_attention != null
+                                  ? advancedData.innovation.field_attention.toFixed(2)
+                                  : "N/A"}
+                              </div>
+                              <Progress value={advancedData.innovation.field_attention != null ? Math.min(advancedData.innovation.field_attention, 100) : 0} className="h-2" />
+                            </div>
+                          </div>
+
+                        </CardContent>
+                      </Card>
+
+                      {/* Global Rankings */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Global Rankings</CardTitle>
+                          <CardDescription>Comparative position against global patent database</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-4">
+                            <div className="p-4 bg-muted/50 rounded-lg">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="font-medium">Blocking Power Rank</span>
+                                <span className="text-lg font-bold">
+                                  {advancedData.rankings.blocking_power.rank_global != null
+                                    ? `#${advancedData.rankings.blocking_power.rank_global.toLocaleString()}`
+                                    : "N/A"}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-sm text-muted-foreground">Percentile</span>
+                                <span className="text-sm font-medium">
+                                  {advancedData.rankings.blocking_power.percentile_global != null
+                                    ? `${advancedData.rankings.blocking_power.percentile_global.toFixed(1)}%ile`
+                                    : "N/A"}
+                                </span>
+                              </div>
+                              <Progress value={advancedData.rankings.blocking_power.percentile_global ?? 0} className="h-2" />
+                            </div>
+
+                            <div className="p-4 bg-muted/50 rounded-lg">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="font-medium">Technology Axis Rank</span>
+                                <span className="text-lg font-bold">
+                                  {advancedData.rankings.technology_axis.rank_global != null
+                                    ? `#${advancedData.rankings.technology_axis.rank_global.toLocaleString()}`
+                                    : "N/A"}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-sm text-muted-foreground">Percentile</span>
+                                <span className="text-sm font-medium">
+                                  {advancedData.rankings.technology_axis.percentile_global != null
+                                    ? `${advancedData.rankings.technology_axis.percentile_global.toFixed(1)}%ile`
+                                    : "N/A"}
+                                </span>
+                              </div>
+                              <Progress
+                                value={advancedData.rankings.technology_axis.percentile_global ?? 0}
+                                className="h-2"
+                              />
+                            </div>
+
+                            <div className="p-4 bg-muted/50 rounded-lg">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="font-medium">Market Axis Rank</span>
+                                <span className="text-lg font-bold">
+                                  {advancedData.rankings.market_axis.rank_global != null
+                                    ? `#${advancedData.rankings.market_axis.rank_global.toLocaleString()}`
+                                    : "N/A"}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-sm text-muted-foreground">Percentile</span>
+                                <span className="text-sm font-medium">
+                                  {advancedData.rankings.market_axis.percentile_global != null
+                                    ? `${advancedData.rankings.market_axis.percentile_global.toFixed(1)}%ile`
+                                    : "N/A"}
+                                </span>
+                              </div>
+                              <Progress
+                                value={advancedData.rankings.market_axis.percentile_global ?? 0}
+                                className="h-2"
+                              />
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </>
+                  )}
+                  </motion.div>
+                  </AnimatePresence>
+
+                </TabsContent>
+
+              </Tabs>
+            </CardContent>
+          </Card>
+        </div >
+      )
+      }
+    </>
+  )
+}

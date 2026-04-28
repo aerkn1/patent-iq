@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "This mart is the first safe source for portfolio over-time comparison, historical report sections, and legal-attrition context before Phase 04 predictions arrive."
+  ],
+  "finished_at": "2026-04-24T12:07:17+00:00",
+  "metrics": {
+    "gold_portfolio_summary_pit_rows": 36127659
+  },
+  "output_profiles": [
+    {
+      "column_count": 18,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary_pit.parquet",
+      "row_count": 36127659,
+      "sha256": "5783f2c9d9271f77a2d5faa7e59146e0a98567860c5adbc36a2b0fa0fe992fbc",
+      "size_bytes": 1232296825,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-portfolio-summary-pit",
+  "started_at": "2026-04-24T12:01:59+00:00",
+  "status": "success",
+  "summary": "Built the portfolio PIT summary mart by aggregating family compare PIT rows through the current owner bridge with explicit historical caveats.",
+  "warnings": []
+}

@@ -1,0 +1,31 @@
+{
+  "chunk_id": "it-methods-for-management__2023_2024__legal",
+  "duration_seconds": 113.576,
+  "field": "IT methods for management",
+  "finished_at": "2026-03-21T15:24:59+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/it-methods-for-management__2023_2024__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 294774,
+    "ep_appln_count": 3382,
+    "ep_publication_count": 3786,
+    "family_count": 275469,
+    "local_output_bytes": 9713268,
+    "local_output_file_count": 2,
+    "publn_count": 346562,
+    "us_publication_count": 32086
+  },
+  "recovered_at": "2026-03-23T18:15:38+00:00",
+  "started_at": "2026-03-21T15:23:05+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=it-methods-for-management/year=2023-2024/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=it-methods-for-management/year=2023-2024/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}

@@ -1,0 +1,32 @@
+{
+  "chunk_id": "digital-communication__2019_2020__epab",
+  "duration_seconds": 6313.511,
+  "field": "Digital communication",
+  "finished_at": "2026-03-24T20:55:24+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/digital-communication__2019_2020__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 463874,
+    "ep_appln_count": 37033,
+    "ep_publication_count": 73622,
+    "family_count": 311739,
+    "local_output_bytes": 127576400,
+    "local_output_file_count": 3,
+    "publn_count": 727788,
+    "us_publication_count": 203922
+  },
+  "started_at": "2026-03-24T19:10:10+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=digital-communication/year=2019-2020/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=digital-communication/year=2019-2020/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=digital-communication/year=2019-2020/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2020,
+  "year_start": 2019
+}

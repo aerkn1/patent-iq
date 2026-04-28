@@ -1,0 +1,35 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-owner-refresh.json"
+  },
+  "calculations": [
+    "Owner harmonization uses UNKNOWN_OWNER only for blank or degenerate normalized names.",
+    "Primary-owner ranking prefers non-UNKNOWN_OWNER owners, then highest owner_scope_appln_count, then harmonized/display-name tie-breaks."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md",
+    "docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-03T20:46:59+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet"
+  ],
+  "methods": [
+    "Aggregated the scoped owner seed into one reusable row per family-owner combination.",
+    "Selected the primary family owner deterministically by scoped application coverage with stable lexical tie-breaks."
+  ],
+  "metrics": {
+    "silver_assignee_harmonized_rows": 20894233,
+    "silver_family_owner_bridge_rows": 27840126
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_owner_bridge.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet"
+  ],
+  "stage": "silver-owner-refresh",
+  "started_at": "2026-04-03T20:43:34+00:00",
+  "status": "success",
+  "summary": "Rebuilt Silver family-owner bridge and deterministic primary-owner table from the scoped owner seed.",
+  "warnings": []
+}

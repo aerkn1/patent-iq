@@ -1,5 +1,15 @@
 # Patent IQ
 
+## UI Runtime Split
+
+1. [frontend_v1](frontend_v1/README.md) preserves the legacy UI.
+2. [frontend_v2](frontend_v2/README.md) is the clean V2 implementation target.
+
+## Backend Runtime Split
+
+1. [backend](backend/README.md) is the preserved legacy/reference backend.
+2. [backend_v2](backend_v2/README.md) is the clean V2 backend implementation target.
+
 ML-based IP Evaluation Platform
 
 ## Overview

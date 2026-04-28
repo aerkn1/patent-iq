@@ -1,0 +1,32 @@
+{
+  "chunk_id": "control__2017_2018__epab",
+  "duration_seconds": 2040.08,
+  "field": "Control",
+  "finished_at": "2026-03-25T17:10:28+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2017_2018__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2017_2018__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/control__2017_2018__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 347646,
+    "ep_appln_count": 12633,
+    "ep_publication_count": 25153,
+    "family_count": 295545,
+    "local_output_bytes": 53583769,
+    "local_output_file_count": 3,
+    "publn_count": 466211,
+    "us_publication_count": 81970
+  },
+  "started_at": "2026-03-25T16:36:28+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=control/year=2017-2018/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=control/year=2017-2018/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=control/year=2017-2018/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2018,
+  "year_start": 2017
+}

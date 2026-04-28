@@ -1,0 +1,32 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-06T06:00:16+00:00",
+  "metrics": {
+    "duplicate_family_rate": 0.195155,
+    "duplicate_family_rows": 40960,
+    "embedding_device": "mps",
+    "embedding_dim_max": 1024,
+    "embedding_dim_min": 1024,
+    "encoded_rows": 0,
+    "merged_rows": 209884,
+    "phase_chunk_files_present": 169,
+    "phase_count": 10,
+    "phase_id": 0
+  },
+  "output_profiles": [
+    {
+      "column_count": 23,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/phases/abstracts/vec_family_embeddings_abstracts_phase_00_of_10.parquet",
+      "row_count": 209884,
+      "sha256": "da59dd83cc3da9dfc1fd15baf01957f4a9333c74cc88468c020ace7255f09313",
+      "size_bytes": 1032491854,
+      "type": "file"
+    }
+  ],
+  "stage": "semantic-abstract-phase-00",
+  "started_at": "2026-04-06T05:59:41+00:00",
+  "status": "success",
+  "summary": "Built abstracts semantic phase artifact 1/10.",
+  "warnings": []
+}

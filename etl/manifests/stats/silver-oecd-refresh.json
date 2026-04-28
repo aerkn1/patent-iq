@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "Gold, ML, and portfolio quality overlays can now consume richer OECD-style family signals without a full Silver rerun."
+  ],
+  "finished_at": "2026-04-03T17:39:26+00:00",
+  "metrics": {
+    "silver_family_oecd_quality_rows": 21353101
+  },
+  "output_profiles": [
+    {
+      "column_count": 30,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet",
+      "row_count": 21353101,
+      "sha256": "51f6dec5bf1a88e136b55d94ccbce67a2b36f33acf1a9635f33166f48a0ba660",
+      "size_bytes": 2041138397,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-oecd-refresh",
+  "started_at": "2026-04-03T17:21:11+00:00",
+  "status": "success",
+  "summary": "Rebuilt only the Silver OECD family mart from the normalized OECD long-form artifact and existing legal/citation support tables.",
+  "warnings": []
+}

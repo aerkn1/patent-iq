@@ -1,0 +1,41 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/home/jovyan/patent-iq/etl/manifests/stats/tip-chunk-plan.json"
+  },
+  "calculations": [
+    "Chunk ids are built from field slug + year bucket + table family.",
+    "Year buckets use the configured chunk span across the configured ETL year window."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/28-patentiq-v2-tip-chunked-full-scope-execution-plan.md",
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md",
+    "docs/data/epo-tip-client-usage.md"
+  ],
+  "downstream_impacts": [
+    "This plan drives Blob-first pre-Bronze extraction instead of monolithic local bounded-raw materialization inside TIP.",
+    "Chunk manifests enable resume, retry, and local cleanup after verified upload."
+  ],
+  "finished_at": "2026-03-17T22:22:16+00:00",
+  "inputs": [],
+  "methods": [
+    "Split the configured mega-cluster scope into field and year buckets.",
+    "Assigned recommended worker counts per table family according to the documented TIP resource envelope.",
+    "Prepared deterministic chunk ids and Blob prefixes for resumable export."
+  ],
+  "metrics": {
+    "chunk_plan_field_count": 10,
+    "chunk_plan_max_worker_sum": 8,
+    "chunk_plan_table_family_count": 6,
+    "chunk_plan_total_chunk_count": 420,
+    "chunk_plan_year_bucket_count": 7
+  },
+  "outputs": [
+    "/home/jovyan/patent-iq/etl/manifests/chunks",
+    "/home/jovyan/patent-iq/etl/manifests/chunks/tip_chunk_plan.json"
+  ],
+  "stage": "tip-chunk-plan",
+  "started_at": "2026-03-17T22:22:16+00:00",
+  "status": "success",
+  "summary": "Generated the TIP chunked export plan for Blob-first full-scope extraction.",
+  "warnings": []
+}

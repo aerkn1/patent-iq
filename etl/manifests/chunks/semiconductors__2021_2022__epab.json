@@ -1,0 +1,32 @@
+{
+  "chunk_id": "semiconductors__2021_2022__epab",
+  "duration_seconds": 894.239,
+  "field": "Semiconductors",
+  "finished_at": "2026-03-25T08:32:03+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2021_2022__epab/epab/epab_publication.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2021_2022__epab/epab/epab_abstract.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/semiconductors__2021_2022__epab/epab/epab_claims.parquet"
+  ],
+  "metrics": {
+    "appln_count": 316985,
+    "ep_appln_count": 11558,
+    "ep_publication_count": 18336,
+    "family_count": 206557,
+    "local_output_bytes": 46885900,
+    "local_output_file_count": 3,
+    "publn_count": 429693,
+    "us_publication_count": 101901
+  },
+  "started_at": "2026-03-25T08:17:08+00:00",
+  "status": "success",
+  "table_family": "epab",
+  "uploaded_blobs": [
+    "raw-bounded/epab/field=semiconductors/year=2021-2022/family=epab/epab_publication.parquet",
+    "raw-bounded/epab/field=semiconductors/year=2021-2022/family=epab/epab_abstract.parquet",
+    "raw-bounded/epab/field=semiconductors/year=2021-2022/family=epab/epab_claims.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2022,
+  "year_start": 2021
+}

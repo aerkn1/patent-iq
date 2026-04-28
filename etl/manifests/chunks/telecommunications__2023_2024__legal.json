@@ -1,0 +1,31 @@
+{
+  "chunk_id": "telecommunications__2023_2024__legal",
+  "duration_seconds": 68.325,
+  "field": "Telecommunications",
+  "finished_at": "2026-03-19T14:04:20+00:00",
+  "local_outputs": [
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2023_2024__legal/patstat/tls231_inpadoc_legal_event.parquet",
+    "/home/jovyan/patent-iq/etl/data/temp/chunks/telecommunications__2023_2024__legal/patstat/tls803_legal_event_code.parquet"
+  ],
+  "metrics": {
+    "appln_count": 161160,
+    "ep_appln_count": 5687,
+    "ep_publication_count": 6938,
+    "family_count": 140919,
+    "local_output_bytes": 6064005,
+    "local_output_file_count": 2,
+    "publn_count": 184771,
+    "us_publication_count": 29233
+  },
+  "recovered_at": "2026-03-23T18:18:14+00:00",
+  "started_at": "2026-03-19T14:03:12+00:00",
+  "status": "success",
+  "table_family": "legal",
+  "uploaded_blobs": [
+    "raw-bounded/patstat/field=telecommunications/year=2023-2024/family=legal/tls231_inpadoc_legal_event.parquet",
+    "raw-bounded/patstat/field=telecommunications/year=2023-2024/family=legal/tls803_legal_event_code.parquet"
+  ],
+  "warnings": [],
+  "year_end": 2024,
+  "year_start": 2023
+}
