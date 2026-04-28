@@ -183,8 +183,8 @@ Wrong here corrupts:
 
 1. `silver_family_text_representative`,
 2. vector provenance,
-3. claim-space semantic FTO workflows,
-4. abstract-space whitespace maps.
+3. claim-space semantic compare quality,
+4. abstract-space discovery and overlap maps.
 
 ## Stage 2: Family Anchor Construction
 
@@ -893,12 +893,21 @@ Create:
 4. compute fixed-window citation windows,
 5. compute separate NPL count and science-grounding score from `silver_family_npl_backlinks`.
 
+### Citation Method Decisions
+
+1. `family_fwd_cits5` and `family_fwd_cits7` must count distinct clean forward-citing families, not raw publication citation rows.
+2. the family observation window must anchor on `family_earliest_publication_date`.
+3. only if no valid family publication date exists may the window anchor fall back to `family_earliest_priority_date`.
+4. `family_forward_citations_weighted` and `family_adjusted_citation_score_raw` must use the 7-year clean weighted forward-influence window.
+5. cohort normalization for `family_rcf_score` must use `family_priority_year x primary_wipo_field`.
+
 ### Guardrails
 
 1. `family_adjusted_citation_score_raw` must only depend on patent-family forward citations,
 2. backward NPL must never be blended into blocking-power impact,
 3. cohort sample sizes must be checked before publishing `family_rcf_score`,
-4. fixed-window metrics must respect observation windows.
+4. fixed-window metrics must respect observation windows,
+5. weighted blocking-power citation impact must not silently revert to an unbounded lifetime rollup.
 
 ### Downstream Failure Impact
 
@@ -936,6 +945,17 @@ Create:
 
 1. enrich each clean patent citation edge with citing-side assignee, stage, market, and trend context,
 2. produce the event-level threat network used by leaderboards and friction logic.
+
+### Citation Method Decisions
+
+1. `citation_date` must be the citing publication date from PATSTAT publication evidence.
+2. `citation_lethality_score` must equal:
+   - `clean_edge_weight * citing_stage_multiplier * citing_market_multiplier * clipped_trend_coefficient`
+3. `clean_edge_weight` remains binary in the current Silver implementation:
+   - `0.0` for intra-family and self-citation edges
+   - `1.0` otherwise
+4. `clipped_trend_coefficient` must prefer localized trend and fall back to global trend.
+5. `clipped_trend_coefficient` must be clipped to `0.5 .. 3.0` for stability.
 
 ### Guardrails
 
@@ -1059,6 +1079,7 @@ Create:
 
 1. `branch_enforceability_contribution_raw`
 2. `branch_coefficient_mode`
+3. `branch_state_label`
 
 ### Core Logic
 
@@ -1075,6 +1096,37 @@ For each `family x snapshot x jurisdiction x field` branch:
    - `global_fallback`
    - `mixed`
 4. office-specific stage semantics must already be normalized before this step.
+
+### Explicit Branch-State Mapping
+
+`representative_branch_stage` should remain the normalized legal-stage indicator.
+
+`branch_state_label` should explain why the branch is active, inactive, or excluded from present-state enforceability.
+
+Apply the label in this precedence order, using branch-level legal-event evidence first, then branch publication-stage evidence, then family-status fallback:
+
+1. `ACTIVE_GRANT`
+   - active enforceable branch with no live opposition signal.
+   - synthetic UP member-state rows with confirmed unitary registration and an active family state should also land here, while retaining `representative_branch_stage = UNITARY_GRANT`.
+2. `ACTIVE_OPPOSED_GRANT`
+   - active enforceable branch with opposition/contestation still present.
+3. `LAPSED_OR_EXPIRED`
+   - grant evidence exists, and the branch is no longer active because lapse or expiry has occurred by the snapshot date.
+   - if branch-level lapse/expiry events are sparse, a dead-family fallback may still classify an enforceable-publication branch here.
+4. `PENDING_ONLY`
+   - only pending/application-stage evidence exists at the branch.
+   - branch publication evidence may be used even when a dedicated pending legal event is absent.
+5. `POST_GRANT_INACTIVE`
+   - only post-grant modifier evidence exists and no active enforceable right remains.
+6. `NON_ENFORCEABLE_PUBLICATION`
+   - the branch has publication evidence, but the normalized kind-code semantics are not legally enforceable.
+   - use this for publication-backed inactive branches before falling through to unresolved semantics.
+7. `GLOBAL_PLACEHOLDER`
+   - global placeholder branches such as `WO` should not masquerade as enforceable local rights.
+8. `UNCLASSIFIED_KIND`
+   - reserve only for true unresolved normalization or unmapped semantics after the prior branch-state buckets have been evaluated.
+
+`OTHER` must not remain the generic inactive bucket for current-state branch analytics.
 
 ### Downstream Failure Impact
 
@@ -1096,6 +1148,10 @@ Wrong here corrupts:
 3. `silver_family_wipo_fields`
 4. `silver_family_core`
 5. `bronze_ext_oecd_indicator_seed` where used
+
+Implementation references:
+1. `docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md`
+2. `docs/new-feature-ideas/oecd-indicator-seed-build-spec.md`
 
 ### Build
 
@@ -1170,13 +1226,12 @@ Create:
 
 Apply the deterministic text hierarchy:
 
-1. U.S. granted `B` Claim 1 from USPTO full text,
-2. else English EP granted `B` Claim 1 from EPAB,
-3. else English abstract fallback from PATSTAT `tls203_appln_abstr`.
+1. English EP granted `B` Claim 1 from EPAB,
+2. else English abstract fallback from PATSTAT `tls203_appln_abstr`.
 
 During selection and extraction:
 
-1. reject `A`-document claims for FTO or infringement-oriented claim-space embeddings,
+1. reject `A`-document claims for claim-space embeddings,
 2. extract Claim 1 only for MVP,
 3. sanitize XML/HTML tags, line breaks, and inline reference numerals where safe,
 4. preserve provenance and fallback reason.
@@ -1186,7 +1241,7 @@ During selection and extraction:
 1. exactly one representative text selection per `docdb_family_id`,
 2. claim-space selection must never silently fall back from `B` claims to `A` claims,
 3. abstract fallback must set `is_abstract_fallback = TRUE`,
-4. provenance must identify the exact text source such as `USPTO_US...B2`, `EPAB_EP...B1`, or `PATSTAT_ABSTRACT`,
+4. provenance must identify the exact text source such as `EPAB_EP...B1` or `PATSTAT_ABSTRACT`,
 5. text sanitization must be deterministic and versioned.
 
 ### Stop Conditions
@@ -1194,18 +1249,18 @@ During selection and extraction:
 Stop if:
 
 1. multiple text candidates tie without deterministic resolution,
-2. claim-order parsing is unreliable for USPTO or EPAB,
-3. abstract fallback rate is too high for the intended claim-space MVP workflows.
+2. claim-order parsing is unreliable for EPAB,
+3. abstract fallback rate is too high for the intended abstract-first / EP-claim-enriched semantic MVP.
 
 ### Downstream Failure Impact
 
 Wrong here corrupts:
 
 1. `vec_family_embeddings`,
-2. semantic FTO,
-3. semantic prior-art search,
+2. semantic family discovery,
+3. semantic comparison quality,
 4. semantic comparison rollups,
-5. whitespace and collision mapping.
+5. future whitespace and collision mapping.
 
 ## Stage 20B: Vector Payload Enrichment
 
@@ -1568,9 +1623,9 @@ Create:
 
 Wrong here corrupts:
 
-1. semantic FTO,
-2. whitespace mapping,
-3. semantic threat surfaces.
+1. semantic family discovery,
+2. semantic compare and overlap mapping,
+3. semantic context surfaces.
 
 ## Final Release Gate
 

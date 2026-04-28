@@ -1,0 +1,51 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase0-foundation.json",
+    "training_snapshot_manifest": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/training_snapshot_manifest.json"
+  },
+  "calculations": [
+    "Family forecast split assignment uses main-window family rows from Gold family summary and places recent unlabeled cohorts into an explicit holdout bucket.",
+    "Semantic fixtures intentionally cover claim-backed, abstract-backed, dead, pending, and partially-lapsed families to test both retrieval and legal gating behavior."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/semantic-and-model-development/enriched-semantic-and-model-implementation-runbook-backlog.md",
+    "docs/new-feature-ideas/semantic-and-model-development/phases/phase-00-freeze-inputs-and-eval-fixtures.md",
+    "docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md",
+    "docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-04T20:27:11+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_text_representative.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_history.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet"
+  ],
+  "methods": [
+    "Fingerprinted canonical Silver and Gold source marts with row counts, file size, and modified-time metadata for reproducibility.",
+    "Built a deterministic family-first split registry for the immediate family citation forecast scope using priority-year time bands.",
+    "Bootstrapped semantic evaluation fixtures and compare pairs from the live family semantic context while preserving legal-status expectations."
+  ],
+  "metrics": {
+    "ml_split_registry_rows": 17633618,
+    "semantic_eval_fixture_registry_rows": 600,
+    "semantic_eval_pair_registry_rows": 144,
+    "training_snapshot_source_table_count": 9
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/semantic_eval_fixture_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/semantic_eval_pair_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/training_snapshot_manifest.json"
+  ],
+  "stage": "ml-phase0-foundation",
+  "started_at": "2026-04-04T20:26:23+00:00",
+  "status": "success",
+  "summary": "Built a frozen training snapshot manifest, immediate family-forecast split registry, and semantic evaluation fixtures.",
+  "warnings": []
+}

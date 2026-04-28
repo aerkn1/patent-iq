@@ -21,4 +21,4 @@ def test_settings_load_selected_scope() -> None:
     assert settings.bounded_patstat_dir.name == "patstat"
     assert settings.bounded_seed_dir.name == "_seeds"
     assert settings.execution["tip_chunked_export_enabled"] is True
-    assert settings.execution["chunk_year_span"] == 3
+    assert settings.execution["chunk_year_span"] == 2

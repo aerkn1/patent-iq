@@ -87,3 +87,5 @@ class BuildSettings:
     thresholds: dict[str, Any]
     azure: dict[str, Any]
     execution: dict[str, Any] = field(default_factory=dict)
+    release_overwrite_enabled: bool = False
+    azure_release_overwrite_enabled: bool = False

@@ -1,17 +1,17 @@
 import os
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from dotenv import load_dotenv
-
-load_dotenv()
+from config.settings import get_settings
 from api.v1.patents import router as patent_router
 from api.v1.portfolios import router as portfolios_router
 from api.v1.stats import router as stats_router
+from api.v1.market import router as market_router
 from fastapi.middleware.cors import CORSMiddleware
 from infrastructure.duckdb.connection import DuckDBConnection
 import logging
 
 logger = logging.getLogger("uvicorn")
+settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,9 +23,12 @@ async def lifespan(app: FastAPI):
         logger.info("Startup: Cache verification complete.")
 
         # Load ML models for citation forecast
-        from infrastructure.ml.model_registry import ModelRegistry
-        ModelRegistry.initialize()
-        logger.info("Startup: ML models loaded. Forecast ready.")
+        if settings.load_ml_models_on_startup:
+            from infrastructure.ml.model_registry import ModelRegistry
+            ModelRegistry.initialize()
+            logger.info("Startup: ML models loaded. Forecast ready.")
+        else:
+            logger.info("Startup: ML model loading skipped by config.")
 
         logger.info("Startup: Backend ready.")
     except Exception as e:
@@ -45,16 +48,13 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:3000").split(","),
+    allow_origins=list(settings.cors_origins),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(
-    patent_router,
-    prefix="/api/v1"
-)
-
-app.include_router(portfolios_router)
-app.include_router(stats_router, prefix="/api/v1")
+app.include_router(patent_router, prefix=settings.api_v1_prefix)
+app.include_router(portfolios_router, prefix=settings.api_v1_prefix)
+app.include_router(stats_router, prefix=settings.api_v1_prefix)
+app.include_router(market_router, prefix=settings.api_v1_prefix)

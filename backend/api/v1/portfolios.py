@@ -19,7 +19,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/v1/portfolios", tags=["Portfolios"])
+router = APIRouter(prefix="/portfolios", tags=["Portfolios"])
 
 
 @router.get("/{owner_id}/overview")

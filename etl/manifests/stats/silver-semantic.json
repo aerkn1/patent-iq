@@ -1,0 +1,36 @@
+{
+  "downstream_impacts": [
+    "These representative text and eligibility tables feed vector payload generation and the semantic comparison UI.",
+    "If empty or degraded, semantic discovery and comparison surfaces should be treated as unavailable in the app."
+  ],
+  "finished_at": "2026-04-01T23:00:48+00:00",
+  "metrics": {
+    "silver_family_text_representative_rows": 20295898,
+    "silver_semantic_sampling_eligibility_rows": 21353101
+  },
+  "output_profiles": [
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_text_representative.parquet",
+      "row_count": 20295898,
+      "sha256": "775f9322b8b83c85be079e3a3463fffc7e94ac9104ba82f45790ce402c8a5b6a",
+      "size_bytes": 5693649910,
+      "type": "file"
+    },
+    {
+      "column_count": 6,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_semantic_sampling_eligibility.parquet",
+      "row_count": 21353101,
+      "sha256": "306bcd37121850986995b5a5bf6453ad79ef3a803d9e460f021071b419d0dd88",
+      "size_bytes": 46027655,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-semantic",
+  "started_at": "2026-04-01T22:54:36+00:00",
+  "status": "success",
+  "summary": "Built representative family text and semantic eligibility according to the EPAB/PATSTAT hierarchy.",
+  "warnings": []
+}

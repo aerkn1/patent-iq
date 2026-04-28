@@ -18,6 +18,15 @@ This document is the operational companion to:
 3. [14-patentiq-v2-metrics-generation-flow-and-guardrails.md](./14-patentiq-v2-metrics-generation-flow-and-guardrails.md)
 4. [semantic-similarity-and-vector-layer-requirements.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md)
 5. [mega-cluster-dataset-scope-and-boundary-governance-requirements.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/new-feature-ideas/mega-cluster-dataset-scope-and-boundary-governance-requirements.md)
+6. [semantic-mvp-without-uspto-requirements.md](/Users/ardaerkan/Documents/MIGRATE/patent-iq/docs/new-feature-ideas/semantic-mvp-without-uspto-requirements.md)
+
+## Current MVP Operating Decision
+
+The active PatentIQ V2 semantic MVP should assume:
+1. USPTO full text is not available as a usable semantic text provider,
+2. EPAB is the only claim-grade text provider in the semantic corpus,
+3. PATSTAT English abstract fallback remains the broad coverage layer,
+4. semantic scope is therefore optimized for discovery and comparison rather than broad claim-faithful FTO workflows.
 
 ## Semantic Scope Inventory
 
@@ -28,6 +37,13 @@ PatentIQ V2 should support these semantic scopes:
 3. `family_to_family_semantic_compare`
 4. `portfolio_to_portfolio_semantic_compare`
 5. `semantic_whitespace_and_collision_mapping`
+
+Current MVP status:
+1. `text_to_family_semantic_search` is exploratory and abstract-first by default,
+2. `family_to_family_semantic_search` remains in scope,
+3. `family_to_family_semantic_compare` remains in scope,
+4. `portfolio_to_portfolio_semantic_compare` remains in scope,
+5. `semantic_whitespace_and_collision_mapping` is deferred or heavily caveated until stronger claim coverage exists.
 
 ## Shared Semantic Governance Contract
 
@@ -153,18 +169,13 @@ Freeze the exact family text corpus used for embedding generation and evaluation
 
 1. `silver_family_core`
 2. `silver_family_member_publications`
-3. `bronze_uspto_ft_document`
-4. `bronze_uspto_ft_biblio_application`
-5. `bronze_uspto_ft_claims`
-6. `bronze_uspto_ft_abstract`
-7. `bronze_epab_document`
-8. `bronze_epab_publication`
-9. `bronze_epab_application`
-10. `bronze_epab_claims`
-11. `bronze_epab_abstract`
-12. `bronze_patstat_appln_abstr`
-13. representative text sources from titles, abstracts, and claims
-14. scope and sampling rules
+3. `bronze_epab_document`
+4. `bronze_epab_publication`
+5. `bronze_epab_claims`
+6. `bronze_epab_abstract`
+7. `bronze_patstat_appln_abstr`
+8. representative text sources from titles, abstracts, and claims
+9. scope and sampling rules
 
 ### Outputs
 
@@ -224,11 +235,10 @@ Pick the single representative family member for embedding without cluttering re
 
 Use the deterministic hierarchy:
 
-1. U.S. granted `B` Claim 1 from USPTO full text,
-2. if no U.S. grant claim exists, English EP granted `B` Claim 1 from EPAB,
-3. if no usable U.S. or EP grant claims exist, English PATSTAT abstract fallback,
-4. never use `A`-document claims for FTO or infringement-oriented `vector_claims`,
-5. never prefer `C0` as technical text unless no better artifact exists.
+1. English EP granted `B` Claim 1 from EPAB,
+2. if no usable EP grant claim exists, English PATSTAT abstract fallback,
+3. never use `A`-document claims for claim-oriented `vector_claims`,
+4. never prefer `C0` as technical text unless no better artifact exists.
 
 ### Guardrails
 
@@ -236,7 +246,8 @@ Use the deterministic hierarchy:
 2. keep the selected representative linked to the family and publication provenance,
 3. retain fallback reason when no English granted text exists,
 4. for MVP claim-space embeddings, extract Claim 1 only,
-5. USPTO and EPAB full-text sources must act as text providers only and must not replace PATSTAT/Register metadata layers for classifications, citations, parties, or legal truth.
+5. EPAB full-text sources must act as text providers only and must not replace PATSTAT/Register metadata layers for classifications, citations, parties, or legal truth,
+6. the semantic layer must expose that claim coverage is EPAB-backed rather than global.
 
 ### Stop Conditions
 
@@ -244,14 +255,15 @@ Stop if:
 
 1. the representative hierarchy produces multiple candidates with no deterministic tie-break,
 2. too many in-scope families lack usable text,
-3. claims text is missing for most families intended for FTO workflows.
+3. EPAB claim coverage is too low to justify claim-space exposure,
+4. the build cannot clearly distinguish claim-backed families from abstract-fallback families.
 
 ### Downstream Blast Radius
 
 Wrong here corrupts:
 
 1. family-level deduplication,
-2. semantic FTO precision,
+2. semantic compare quality,
 3. family-to-family comparisons,
 4. whitespace maps.
 
@@ -556,7 +568,7 @@ Stop if:
 
 Wrong here corrupts:
 
-1. semantic FTO shortlists,
+1. semantic discovery shortlists,
 2. comparison workspaces,
 3. whitespace results,
 4. explainability of semantic hits.

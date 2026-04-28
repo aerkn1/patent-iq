@@ -1,0 +1,44 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-03T20:20:06+00:00",
+  "metrics": {
+    "history_refresh_bucket_count": 16,
+    "silver_branch_status_history_dense_rows": 386481639,
+    "silver_branch_status_history_rows": 76203835,
+    "silver_family_status_history_rows": 240834180
+  },
+  "output_profiles": [
+    {
+      "column_count": 20,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_branch_status_history.parquet",
+      "row_count": 76203835,
+      "sha256": "0722a95c41024a5e1e0fc03dfb0b317cedac22fbddb86297cac0d7689485c788",
+      "size_bytes": 425401250,
+      "type": "file"
+    },
+    {
+      "column_count": 19,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_branch_status_history_dense.parquet",
+      "row_count": 386481639,
+      "sha256": "69a64844d56e472e0a969d6fd6d2121504a0010ec4ddbc0e39eb3548aebf6f9d",
+      "size_bytes": 1709351434,
+      "type": "file"
+    },
+    {
+      "column_count": 10,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_history.parquet",
+      "row_count": 240834180,
+      "sha256": "56636a19f9d4575a6a2f7be0a821a41e779184b4e1a26bfb959de02d3724e317",
+      "size_bytes": 376495788,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-history-refresh",
+  "started_at": "2026-04-03T20:10:53+00:00",
+  "status": "success",
+  "summary": "Rebuilt Silver legal-history sidecars in family buckets from the replayable legal ledger.",
+  "warnings": []
+}

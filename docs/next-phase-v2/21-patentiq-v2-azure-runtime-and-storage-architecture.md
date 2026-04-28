@@ -155,11 +155,15 @@ It should:
 
 Representative family text must be built offline using:
 
-1. U.S. granted `B` Claim 1 from USPTO,
-2. else EP granted English `B` Claim 1 from EPAB,
-3. else PATSTAT English abstract fallback.
+1. English EP granted `B` Claim 1 from EPAB,
+2. else PATSTAT English abstract fallback.
 
 This selection result is published to Blob as part of Silver and vector artifacts.
+
+Current MVP consequence:
+1. `vector_abstract` is the primary global semantic space,
+2. `vector_claims` is narrower and EPAB-backed,
+3. semantic serving must preserve provenance and fallback metadata.
 
 ## Blob Layout
 

@@ -1,0 +1,33 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/bronze-uspto-fulltext.json"
+  },
+  "calculations": [
+    "No family collapse or semantic prioritization occurs in Bronze. This stage only lands text-provider tables."
+  ],
+  "doc_refs": [
+    "docs/data/uspto-full-text-schema.md",
+    "docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md",
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md"
+  ],
+  "downstream_impacts": [
+    "These tables feed representative claim and abstract selection in the semantic Silver stage only.",
+    "They must not be used to override PATSTAT or Register harmonized metadata layers downstream."
+  ],
+  "finished_at": "2026-04-02T10:08:39+00:00",
+  "inputs": [],
+  "methods": [
+    "Parsed USPTO XML application/publication identifiers, abstracts, and claims.",
+    "Preserved publication kind and claim ordering fields required for semantic hierarchy selection.",
+    "Skipped bounded-XML parsing because USPTO is handled by the separate `prebronze-uspto-odp` stage when that external path is executed."
+  ],
+  "metrics": {
+    "uspto_odp_outputs_present": 0
+  },
+  "outputs": [],
+  "stage": "bronze-uspto-fulltext",
+  "started_at": "2026-04-02T10:07:20+00:00",
+  "status": "success",
+  "summary": "USPTO Bronze parsing was deferred because USPTO is configured for the external ODP stream path and no direct Bronze outputs are present in this runtime.",
+  "warnings": []
+}

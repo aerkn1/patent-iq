@@ -1,0 +1,462 @@
+.heroGrid {
+  margin-top: 14px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.95fr);
+}
+
+.headlineSurface,
+.signalSurface,
+.chartSurface {
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.headlineSurface {
+  padding: 20px;
+  background:
+    radial-gradient(circle at top right, rgba(47, 104, 180, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(250, 252, 255, 0.88));
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.headlineTitle {
+  margin: 10px 0 0;
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-size: clamp(2.3rem, 4vw, 3.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.headlineRange {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.headlineNote {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+.rangeTrack {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  border-radius: 18px;
+  background: rgba(248, 250, 252, 0.88);
+}
+
+.rangeTrackBar {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(47, 104, 180, 0.1);
+  overflow: hidden;
+}
+
+.rangeTrackFill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(47, 104, 180, 0.38), rgba(142, 27, 27, 0.42));
+}
+
+.rangeTrackMetrics {
+  margin-top: 10px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.rangeTrackMetric {
+  display: grid;
+  gap: 4px;
+}
+
+.rangeTrackMetric span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rangeTrackMetric strong {
+  font-size: 0.98rem;
+}
+
+.signalSurface {
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.signalCard {
+  border: 1px solid rgba(17, 24, 39, 0.07);
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(247, 250, 252, 0.88);
+  display: grid;
+  gap: 6px;
+}
+
+.signalLabel {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.signalValue {
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-size: 1.7rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.signalCopy {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.tableCellStrong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  color: var(--foreground);
+}
+
+.tableMetricPrimary {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-strong);
+}
+
+.splitGrid {
+  margin-top: 14px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+}
+
+.chartSurface {
+  padding: 16px;
+}
+
+.chartTitle {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.chartCopy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.driverRail,
+.contributorList,
+.branchList {
+  display: grid;
+  gap: 10px;
+}
+
+.driverCard,
+.contributorCard,
+.branchCard {
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.driverCard {
+  display: grid;
+  gap: 10px;
+}
+
+.driverHead,
+.contributorHead,
+.branchHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.driverIdentity,
+.contributorIdentity,
+.branchIdentity {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.driverIdentity strong,
+.contributorIdentity strong,
+.branchIdentity strong {
+  font-size: 0.96rem;
+}
+
+.driverIdentity span,
+.contributorIdentity span,
+.branchIdentity span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.driverMeta,
+.contributorMeta,
+.branchMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 28px;
+  border-radius: 999px;
+  padding: 0 10px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.positive {
+  background: rgba(31, 139, 76, 0.14);
+  color: #18703e;
+}
+
+.negative {
+  background: rgba(175, 77, 65, 0.14);
+  color: #944136;
+}
+
+.neutral {
+  background: rgba(179, 125, 0, 0.14);
+  color: #8f6700;
+}
+
+.mutedPill {
+  background: rgba(17, 24, 39, 0.08);
+  color: #4b5a6c;
+}
+
+.driverMetrics,
+.contributorMetrics,
+.branchMetrics {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metricCell {
+  border: 1px solid rgba(17, 24, 39, 0.07);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: rgba(248, 250, 252, 0.86);
+  display: grid;
+  gap: 4px;
+}
+
+.metricCell span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metricCell strong {
+  font-size: 0.95rem;
+}
+
+.pendingGrid {
+  margin-top: 14px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pendingSurface {
+  overflow: visible;
+}
+
+.pendingReason {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(22, 33, 48, 0.08);
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.9);
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.pendingSection {
+  display: grid;
+  gap: 12px;
+}
+
+.pendingFull {
+  margin-top: 14px;
+}
+
+.pendingHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pendingHead h4 {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.tableRowSelected td {
+  background: rgba(161, 79, 49, 0.06);
+}
+
+.tableFilterButton {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.pendingFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: end;
+}
+
+.pendingBranchToolbar {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid rgba(22, 33, 48, 0.08);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 252, 0.94)),
+    var(--surface);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84);
+}
+
+.pendingFiltersBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.pendingFilterGroup {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  flex: 0 1 240px;
+}
+
+.pendingFilterGroup span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.pendingFilterSelect {
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--foreground);
+  padding: 0 40px 0 14px;
+  font: inherit;
+  width: 100%;
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #64748b 50%),
+    linear-gradient(135deg, #64748b 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 2px),
+    calc(100% - 12px) calc(50% - 2px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.footnote {
+  margin-top: 12px;
+}
+
+@media (max-width: 1100px) {
+  .heroGrid,
+  .splitGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .rangeTrackMetrics,
+  .driverMetrics,
+  .contributorMetrics,
+  .branchMetrics,
+  .pendingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pendingFiltersBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pendingFilterGroup {
+    flex-basis: auto;
+  }
+}

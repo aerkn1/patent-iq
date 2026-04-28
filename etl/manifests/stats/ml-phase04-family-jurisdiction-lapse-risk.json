@@ -1,0 +1,126 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-07T18:45:59+00:00",
+  "metrics": {
+    "ml_calibration_registry_rows": 4,
+    "ml_experiment_registry_rows": 10,
+    "ml_feature_family_jurisdiction_lapse_risk_rows": 97347045,
+    "ml_label_family_jurisdiction_lapse_risk_rows": 151930838,
+    "ml_model_registry_rows": 4,
+    "ml_split_registry_phase04_rows": 13197143,
+    "ml_split_registry_rows": 24970099,
+    "phase04_12m_brier_score": 0.00303720718626948,
+    "phase04_12m_pr_auc": 0.12142728609508663,
+    "phase04_12m_roc_auc": 0.9827997855811244,
+    "phase04_24m_brier_score": 0.005308691908264898,
+    "phase04_24m_pr_auc": 0.11726776657391866,
+    "phase04_24m_roc_auc": 0.9715023234033948
+  },
+  "output_profiles": [
+    {
+      "column_count": 11,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_jurisdiction_lapse_risk.parquet",
+      "row_count": 151930838,
+      "sha256": "a14595022e39c18cbf4c90ddcafaca7a2c33a7f2f07c6b66ede866b6a009150d",
+      "size_bytes": 705539244,
+      "type": "file"
+    },
+    {
+      "column_count": 39,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_jurisdiction_lapse_risk.parquet",
+      "row_count": 97347045,
+      "sha256": "bfb76a267ee28aa7f5c4575dfd0104c9c7a799f93f690878829f194a4c08d5b9",
+      "size_bytes": 1757890697,
+      "type": "file"
+    },
+    {
+      "column_count": 8,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet",
+      "row_count": 24970099,
+      "sha256": "b8cbe9757bd23106619932894584bb81a08d2ab88c28166bd3cccf3627e83dd6",
+      "size_bytes": 255346422,
+      "type": "file"
+    },
+    {
+      "column_count": 8,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase04.parquet",
+      "row_count": 13197143,
+      "sha256": "daf79c60ddb52661dc6b8eaa3b251e14fa699860eec6e34c9d1b7d6cfcfe52a7",
+      "size_bytes": 139818950,
+      "type": "file"
+    },
+    {
+      "column_count": 24,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet",
+      "row_count": 10,
+      "sha256": "90f9ec97b189a3fd3c1714972a29f446cddc5d07e7f458a81168546704446f98",
+      "size_bytes": 5975,
+      "type": "file"
+    },
+    {
+      "column_count": 10,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet",
+      "row_count": 4,
+      "sha256": "eb48ead0335ef22135b3f2073f1a3b2c54e17b648effe354503faddc1c9a0269",
+      "size_bytes": 2945,
+      "type": "file"
+    },
+    {
+      "column_count": 11,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet",
+      "row_count": 4,
+      "sha256": "fb82e4994824580d8662d2a12ebc97d3f334e7d0c8371dde56cba2c4b1a8fcd5",
+      "size_bytes": 4185,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet",
+      "row_count": 52,
+      "sha256": "4dbc172f90c87c682dae9410e496ef27137e5ecab53ba09dde3aef0df5fb19d8",
+      "size_bytes": 2771,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_jurisdiction_lapse_risk.json",
+      "sha256": "f610e7110492e4086a672ee2114189e00c130127dfc317003008b38a24bb452d",
+      "size_bytes": 10107627,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_12m_model.txt",
+      "sha256": "891424b5f9a8fb6753682b92a1a901dcb470e1c1818ca45561e0dfab86377924",
+      "size_bytes": 8164765,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_24m_model.txt",
+      "sha256": "f1a2344137109867a3a58c2f0308d007eed70d744f84ab06466595780f170d73",
+      "size_bytes": 8119274,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_calibration.json",
+      "sha256": "8c7a4369f604bcd4d7bd4eed7fb47685504032a0b3346cb6895aed5b5d03514d",
+      "size_bytes": 10105575,
+      "type": "file"
+    }
+  ],
+  "stage": "ml-phase04-family-jurisdiction-lapse-risk",
+  "started_at": "2026-04-07T18:45:59+00:00",
+  "status": "success",
+  "summary": "Built Phase 04 branch-aware label, feature, split, and baseline-training artifacts with registry-preserving metadata.",
+  "warnings": []
+}

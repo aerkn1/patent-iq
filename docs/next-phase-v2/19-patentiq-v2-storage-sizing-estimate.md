@@ -40,6 +40,10 @@ The estimate assumes:
 6. Parquet remains the authoritative analytical storage layer,
 7. DuckDB, vector indexes, and model artifacts are treated as additional working/storage overhead.
 
+Current operating note:
+1. if USPTO full text remains unavailable, the active semantic MVP should assume EPAB claims plus PATSTAT abstract fallback,
+2. this lowers text-retention and claim-space storage pressure relative to the original full-source semantic plan.
+
 ## Why The Estimate Is A Range
 
 The range is intentionally broad because storage will move materially based on:
@@ -64,7 +68,7 @@ Those older estimates are useful as a lower anchor, but they do **not** include 
 2. richer Silver and Gold marts,
 3. PATSTAT Register overlays,
 4. sampled semantic embeddings,
-5. USPTO and EPAB full-text support.
+5. EPAB full-text support and optional USPTO availability.
 
 ## Scenario Anchors
 
@@ -106,7 +110,7 @@ The authoritative Parquet lake is the primary sizing baseline. Everything else i
 Lean MVP assumes:
 
 1. Bronze stores raw PATSTAT / Register faithfully,
-2. USPTO / EPAB Bronze stores the semantic text path needed for claims and abstracts,
+2. EPAB Bronze plus optional USPTO Bronze stores the semantic text path needed for claims and abstracts,
 3. full long descriptions are **not** broadly materialized into the analytical layer,
 4. vectors stay sampled.
 
@@ -114,7 +118,7 @@ Lean MVP assumes:
 |---|---:|---:|---:|
 | Bronze PATSTAT bounded slice | `8 GB` | `15 GB` | `25 GB` |
 | Bronze PATSTAT Register overlay | `0.5 GB` | `1.5 GB` | `4 GB` |
-| Bronze USPTO / EPAB text providers, claims + abstracts + bridge metadata | `2 GB` | `5 GB` | `10 GB` |
+| Bronze EPAB text providers plus optional USPTO text providers, claims + abstracts + bridge metadata | `1.5 GB` | `4 GB` | `8 GB` |
 | Silver core normalization tables | `4 GB` | `8 GB` | `15 GB` |
 | Silver citation / coverage / trend / OECD / forecast tables | `4 GB` | `8 GB` | `15 GB` |
 | Gold marts and timeseries | `1.5 GB` | `3 GB` | `6 GB` |

@@ -275,6 +275,12 @@ Constraint:
 - this score must use adjusted patent-family forward citations
 - backward NPL references must not be blended into this blocking-power component
 
+Operational V2 rule:
+- use clean forward patent-family influence within the 7-year observation window
+- anchor the observation window on `family_earliest_publication_date`
+- fall back to `family_earliest_priority_date` only when no valid publication date exists for the family
+- normalize within the `family_priority_year x primary_wipo_field` cohort
+
 ## 7. OECD / Nature Of Innovation Metrics
 
 ### `family_generality_score`
@@ -316,6 +322,12 @@ Silver producer:
 
 Formula:
 - clean forward citations accumulated within 5-year / 7-year windows from family anchor
+
+Operational V2 rule:
+- count distinct clean forward-citing families
+- use `family_earliest_publication_date` as the family anchor date for the citation window
+- use the first observed clean citation date from each citing family to that cited family for window placement
+- do not count intra-family citations, self-citations, or out-of-bounds ghost citations in these windowed metrics
 
 ## 8. Legal Status Metrics
 
@@ -576,6 +588,13 @@ Formula:
   - citing jurisdiction value
   - citing field trend coefficient
 
+Operational V2 rule:
+- `citation_lethality_score = clean_edge_weight * citing_stage_multiplier * citing_market_multiplier * clipped_trend_coefficient`
+- `clean_edge_weight` remains `0.0` for intra-family and self-citation edges, `1.0` otherwise in the current Silver implementation
+- `clipped_trend_coefficient` must use localized trend when available, otherwise global trend fallback
+- `clipped_trend_coefficient` must be clipped to the bounded range `0.5 .. 3.0` for stability
+- event dating remains publication-based on the citing publication, not filing-date-based
+
 ### `family_top_attacker_score`
 
 Gold producer:
@@ -717,7 +736,7 @@ Bronze inputs:
 - `bronze_patstat_appln_abstr`
 
 Definition:
-- deterministic identifier of the text artifact selected for embedding, such as a USPTO grant publication, EPAB grant publication, or PATSTAT abstract fallback
+- deterministic identifier of the text artifact selected for embedding, such as an EPAB grant publication or PATSTAT abstract fallback in the current MVP operating mode
 
 ### `is_abstract_fallback`
 
@@ -725,7 +744,7 @@ Silver producer:
 - `silver_family_text_representative`
 
 Formula:
-- true when no usable U.S. or EP grant Claim 1 exists and the semantic layer falls back to English abstract text
+- true when no usable EP grant Claim 1 exists and the semantic layer falls back to English abstract text
 
 Constraint:
 - this flag must remain visible to the vector payload and the UI because abstract fallback is weaker than granted-claim provenance for FTO-style workflows
@@ -739,8 +758,7 @@ Definition:
 - sanitized English Claim 1 selected through the semantic hierarchy
 
 Hierarchy:
-1. U.S. granted `B` Claim 1 from USPTO full text
-2. English EP granted `B` Claim 1 from EPAB
+1. English EP granted `B` Claim 1 from EPAB
 
 Guardrail:
 - application-stage `A`-document claims must not be used in the claim-space FTO flow
@@ -751,7 +769,7 @@ Silver producer:
 - `silver_family_text_representative`
 
 Definition:
-- sanitized English abstract selected from USPTO, EPAB, or PATSTAT fallback sources
+- sanitized English abstract selected from PATSTAT fallback sources in the current MVP operating mode
 
 ### `earliest_priority_timestamp`
 

@@ -1,0 +1,39 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic-claim-phase-01.json"
+  },
+  "calculations": [
+    "Phase partitions are deterministic by docdb_family_id modulo phase_count.",
+    "Only rows with usable text for the requested vector space are encoded in the phase artifact."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-06T10:01:03+00:00",
+  "inputs": [],
+  "methods": [
+    "Materialized or reused the semantic base parquet, then encoded one deterministic phase partition.",
+    "Persisted resumable chunk checkpoints before merging the finished phase artifact."
+  ],
+  "metrics": {
+    "duplicate_family_rate": 0.0,
+    "duplicate_family_rows": 0,
+    "embedding_device": "mps",
+    "embedding_dim_max": 768,
+    "embedding_dim_min": 768,
+    "encoded_rows": 136121,
+    "merged_rows": 136121,
+    "phase_chunk_files_present": 133,
+    "phase_count": 3,
+    "phase_id": 1
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/phases/claims/vec_family_embeddings_claims_phase_01_of_03.parquet"
+  ],
+  "stage": "semantic-claim-phase-01",
+  "started_at": "2026-04-06T08:24:26+00:00",
+  "status": "success",
+  "summary": "Built claims semantic phase artifact 2/3.",
+  "warnings": []
+}

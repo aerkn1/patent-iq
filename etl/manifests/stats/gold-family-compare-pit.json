@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "This mart is the safe family-level source for historical compare, time-slice report sections, and year-aware family evidence payloads."
+  ],
+  "finished_at": "2026-04-24T11:37:37+00:00",
+  "metrics": {
+    "gold_family_compare_pit_rows": 164988135
+  },
+  "output_profiles": [
+    {
+      "column_count": 34,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_compare_pit.parquet",
+      "row_count": 164988135,
+      "sha256": "402d6121a2db420e51137f7ebafcced181154959b2df20128ee08c0842e3759a",
+      "size_bytes": 5489700325,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-family-compare-pit",
+  "started_at": "2026-04-24T11:36:19+00:00",
+  "status": "success",
+  "summary": "Built the family compare PIT serving mart from the audited family PIT core and current summary metadata.",
+  "warnings": []
+}

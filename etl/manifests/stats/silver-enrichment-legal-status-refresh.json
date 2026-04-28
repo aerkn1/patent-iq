@@ -1,0 +1,54 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-03T18:44:18+00:00",
+  "metrics": {
+    "legal_status_refresh_affected_family_rows": 1000157,
+    "silver_family_coverage_metrics_rows": 21353101,
+    "silver_family_enforceability_branches_rows": 36096788,
+    "silver_family_field_contributions_rows": 23816698,
+    "silver_family_oecd_quality_rows": 21353101
+  },
+  "output_profiles": [
+    {
+      "column_count": 9,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet",
+      "row_count": 21353101,
+      "sha256": "1c49a6840d959a691eda85643d7f540348128adebfe476e6e7346cd0ae13dec9",
+      "size_bytes": 123516925,
+      "type": "file"
+    },
+    {
+      "column_count": 24,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet",
+      "row_count": 36096788,
+      "sha256": "ac28e9624cc8985bae71e4681b282a14fa50e7ba8e719c29764db550e450ffe9",
+      "size_bytes": 368202416,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet",
+      "row_count": 23816698,
+      "sha256": "0599346d9a1a9828038b60223c3e5c2a6ca5c82cc04cb5f30b6c131d99e60324",
+      "size_bytes": 167305012,
+      "type": "file"
+    },
+    {
+      "column_count": 30,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet",
+      "row_count": 21353101,
+      "sha256": "07084970c043a946660767be5bffc1394a550a27d9b481fd699a0f89135a4627",
+      "size_bytes": 2053894796,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-enrichment-legal-status-refresh",
+  "started_at": "2026-04-03T18:10:22+00:00",
+  "status": "success",
+  "summary": "Rebuilt coverage and incrementally refreshed legal-weighted Silver marts for families affected by dated lapse/expiry events after legal-ledger date repair.",
+  "warnings": []
+}

@@ -1,0 +1,44 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-semantic.json"
+  },
+  "calculations": [
+    "Claim-space payloads exclude A-document claims and prefer claim 1 only.",
+    "Abstract fallback is marked explicitly through `is_abstract_fallback`."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md",
+    "docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md",
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md"
+  ],
+  "downstream_impacts": [
+    "These representative text and eligibility tables feed vector payload generation and the semantic comparison UI.",
+    "If empty or degraded, semantic discovery and comparison surfaces should be treated as unavailable in the app."
+  ],
+  "finished_at": "2026-04-01T23:00:51+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_claims.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_abstr.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet"
+  ],
+  "methods": [
+    "Selected one representative text payload per family using EP grant claim first, then PATSTAT abstract fallback.",
+    "Materialized semantic sample eligibility as a bounded active-grant cohort for MVP."
+  ],
+  "metrics": {
+    "silver_family_text_representative_rows": 20295898,
+    "silver_semantic_sampling_eligibility_rows": 21353101
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_text_representative.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_semantic_sampling_eligibility.parquet"
+  ],
+  "stage": "silver-semantic",
+  "started_at": "2026-04-01T22:54:36+00:00",
+  "status": "success",
+  "summary": "Built representative family text and semantic eligibility according to the EPAB/PATSTAT hierarchy.",
+  "warnings": []
+}

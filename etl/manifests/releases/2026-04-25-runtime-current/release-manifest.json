@@ -1,0 +1,303 @@
+{
+  "ann_manifest": {
+    "method": "hnsw_cosine_snapshot_v1",
+    "path": "releases/2026-04-25-runtime-current/vectors/vec_ann_index_manifest.json"
+  },
+  "artifact_root": "releases/2026-04-25-runtime-current",
+  "artifacts": {
+    "models": {
+      "blob_prefix": "releases/2026-04-25-runtime-current/models",
+      "bytes": 9964583947,
+      "file_count": 99,
+      "local_path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml"
+    },
+    "serving": {
+      "blob_prefix": "releases/2026-04-25-runtime-current/serving",
+      "bytes": 95858533797,
+      "file_count": 1030,
+      "local_path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/serving"
+    },
+    "vectors": {
+      "blob_prefix": "releases/2026-04-25-runtime-current/vectors",
+      "bytes": 15701700428,
+      "file_count": 589,
+      "local_path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors"
+    }
+  },
+  "built_at": "2026-04-26T13:04:58+00:00",
+  "release_id": "2026-04-25-runtime-current",
+  "runtime_profiles": {
+    "default": {
+      "description": "Base local/remote runtime profile with serving snapshots, vector payloads, and the full ML directory. Analytics serving stays excluded to keep local bootstrap lighter.",
+      "items": [
+        {
+          "path": "serving/core_serving.duckdb",
+          "type": "file"
+        },
+        {
+          "path": "serving/market_serving.duckdb",
+          "type": "file"
+        },
+        {
+          "path": "serving/semantic_serving.duckdb",
+          "type": "file"
+        },
+        {
+          "path": "serving/publication_serving",
+          "type": "directory"
+        },
+        {
+          "path": "serving/serving_snapshot_manifest.json",
+          "type": "file"
+        },
+        {
+          "path": "serving/serving_snapshot_audit.json",
+          "type": "file"
+        },
+        {
+          "path": "vectors/vec_embedding_manifest.json",
+          "type": "file"
+        },
+        {
+          "path": "vectors/vec_family_embeddings_abstracts.parquet",
+          "type": "file"
+        },
+        {
+          "path": "vectors/vec_family_embeddings_claims.parquet",
+          "type": "file"
+        },
+        {
+          "path": "vectors/vec_query_registry.parquet",
+          "type": "file"
+        },
+        {
+          "path": "models",
+          "type": "directory"
+        }
+      ]
+    },
+    "full": {
+      "description": "Full parity runtime profile including analytics serving and ANN payloads for every endpoint family.",
+      "items": [
+        {
+          "path": "serving/core_serving.duckdb",
+          "type": "file"
+        },
+        {
+          "path": "serving/market_serving.duckdb",
+          "type": "file"
+        },
+        {
+          "path": "serving/semantic_serving.duckdb",
+          "type": "file"
+        },
+        {
+          "path": "serving/publication_serving",
+          "type": "directory"
+        },
+        {
+          "path": "serving/serving_snapshot_manifest.json",
+          "type": "file"
+        },
+        {
+          "path": "serving/serving_snapshot_audit.json",
+          "type": "file"
+        },
+        {
+          "path": "vectors/vec_embedding_manifest.json",
+          "type": "file"
+        },
+        {
+          "path": "vectors/vec_family_embeddings_abstracts.parquet",
+          "type": "file"
+        },
+        {
+          "path": "vectors/vec_family_embeddings_claims.parquet",
+          "type": "file"
+        },
+        {
+          "path": "vectors/vec_query_registry.parquet",
+          "type": "file"
+        },
+        {
+          "path": "models",
+          "type": "directory"
+        },
+        {
+          "path": "serving/analytics_serving.duckdb",
+          "type": "file"
+        },
+        {
+          "path": "vectors/vec_ann_index_manifest.json",
+          "type": "file"
+        },
+        {
+          "path": "vectors/vec_ann_exact_vs_ann_audit.json",
+          "type": "file"
+        },
+        {
+          "path": "vectors/ann",
+          "type": "directory"
+        }
+      ]
+    }
+  },
+  "scope_type": "mega_cluster_bounded",
+  "selected_wipo_fields": [
+    "Audio-visual technology",
+    "Telecommunications",
+    "Digital communication",
+    "Basic communication processes",
+    "Computer technology",
+    "IT methods for management",
+    "Semiconductors",
+    "Measurement",
+    "Control",
+    "Electrical machinery, apparatus, energy"
+  ],
+  "semantic_model_dependencies": {
+    "abstract": {
+      "bootstrap_required": true,
+      "cache_scope": "hf_hub",
+      "packaged_in_release": false,
+      "provider": "huggingface",
+      "repo_id": "BAAI/bge-m3",
+      "required_for_profiles": [
+        "default",
+        "full"
+      ],
+      "revision": null,
+      "version_hint": "v2_mvp_local_etl"
+    },
+    "claims": {
+      "bootstrap_required": true,
+      "cache_scope": "hf_hub",
+      "packaged_in_release": false,
+      "provider": "huggingface",
+      "repo_id": "AI-Growth-Lab/PatentSBERTa",
+      "required_for_profiles": [
+        "default",
+        "full"
+      ],
+      "revision": null,
+      "version_hint": "v2_mvp_local_etl"
+    }
+  },
+  "serving_release": "2026-04-25-serving",
+  "serving_snapshots": {
+    "analytics": {
+      "bytes": 72023027712,
+      "filename": "analytics_serving.duckdb",
+      "tables": [
+        "branch_status_history_dense",
+        "enriched_citation_network",
+        "ep_register_up_status",
+        "family_blocking_power",
+        "family_blocking_power_timeseries",
+        "family_citation_chronology",
+        "family_citation_metrics",
+        "family_citation_summary",
+        "family_citation_timeseries_pit",
+        "family_classification_jurisdiction_pit",
+        "family_classification_mix_pit",
+        "family_compare_pit",
+        "family_enforceability_branches",
+        "family_feature_snapshot_pit",
+        "family_field_contributions",
+        "family_field_contributions_timeseries",
+        "family_forecast_predictions",
+        "family_heritage_summary",
+        "family_jurisdiction_unrolled",
+        "family_lapse_risk_predictions",
+        "family_member_publications",
+        "family_oecd_quality",
+        "family_owner_bridge",
+        "family_status_history",
+        "family_summary",
+        "legal_status_event_ledger",
+        "market_attacker_leaderboard_pit",
+        "market_citation_pressure_by_jurisdiction_pit",
+        "market_citation_trend_pit",
+        "market_cpc_jurisdiction_trend_pit",
+        "market_cpc_trend_pit",
+        "market_leaderboard_pit",
+        "market_summary_pit",
+        "pending_grant_prediction_pipeline",
+        "portfolio_attacker_momentum",
+        "portfolio_citation_family_leaderboard",
+        "portfolio_citation_pressure_by_field",
+        "portfolio_citation_pressure_by_jurisdiction",
+        "portfolio_citation_summary",
+        "portfolio_citation_timeseries",
+        "portfolio_classification_mix_pit",
+        "portfolio_compare_pit",
+        "portfolio_field_timeseries",
+        "portfolio_filing_timeseries",
+        "portfolio_forecast_contributors",
+        "portfolio_forecast_segments",
+        "portfolio_forecast_summary",
+        "portfolio_summary",
+        "portfolio_threat_matrix",
+        "up_status"
+      ]
+    },
+    "core": {
+      "bytes": 11011633152,
+      "filename": "core_serving.duckdb",
+      "tables": [
+        "family_blocking_power",
+        "family_compare_current_serving",
+        "family_heritage_summary",
+        "family_owner_bridge",
+        "family_summary",
+        "portfolio_citation_family_leaderboard",
+        "portfolio_classification_current_serving",
+        "portfolio_compare_current_serving",
+        "portfolio_filing_timeseries",
+        "portfolio_forecast_contributors",
+        "portfolio_forecast_segments",
+        "portfolio_forecast_summary",
+        "portfolio_heritage_summary",
+        "portfolio_summary",
+        "portfolio_threat_matrix"
+      ]
+    },
+    "market": {
+      "bytes": 798720,
+      "filename": "market_serving.duckdb",
+      "tables": [
+        "market_intelligence_overview",
+        "market_intelligence_segments",
+        "market_intelligence_timeseries"
+      ]
+    },
+    "publication": {
+      "bytes": 11916574065,
+      "filename": "publication_serving",
+      "tables": [
+        "publication_member_by_number",
+        "application_evidence_by_appln",
+        "publication_claim_by_number",
+        "family_publications_by_family"
+      ]
+    },
+    "semantic": {
+      "bytes": 906768384,
+      "filename": "semantic_serving.duckdb",
+      "tables": [
+        "semantic_match_context"
+      ]
+    }
+  },
+  "snapshot_date": "2026-03-15",
+  "training_snapshot_id": "mvp-local-build-2026-03-15-phase0",
+  "training_snapshot_manifest": "releases/2026-04-25-runtime-current/models/training_snapshot_manifest.json",
+  "vector_manifest": {
+    "model_ids": {
+      "abstract": "BAAI/bge-m3",
+      "claims": "AI-Growth-Lab/PatentSBERTa"
+    },
+    "path": "releases/2026-04-25-runtime-current/vectors/vec_embedding_manifest.json"
+  },
+  "vector_release": "semantic-mvp-2026-04-06"
+}

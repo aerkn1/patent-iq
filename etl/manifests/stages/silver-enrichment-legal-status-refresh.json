@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-legal-status-refresh.json"
+  },
+  "calculations": [
+    "Affected-family slice is derived from current Silver legal-ledger rows with dated lapse/expiry events on or before the snapshot date.",
+    "This refresh path is intended to propagate legal-state fixes without rerunning the semantic or citation-edge layers."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-03T18:44:27+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet"
+  ],
+  "methods": [
+    "Rebuilt family coverage metrics from the repaired current family-status snapshot.",
+    "Merged refreshed enforceability, field-contribution, and OECD rows only for families touched by dated lapse/expiry events."
+  ],
+  "metrics": {
+    "legal_status_refresh_affected_family_rows": 1000157,
+    "silver_family_coverage_metrics_rows": 21353101,
+    "silver_family_enforceability_branches_rows": 36096788,
+    "silver_family_field_contributions_rows": 23816698,
+    "silver_family_oecd_quality_rows": 21353101
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet"
+  ],
+  "stage": "silver-enrichment-legal-status-refresh",
+  "started_at": "2026-04-03T18:10:22+00:00",
+  "status": "success",
+  "summary": "Rebuilt coverage and incrementally refreshed legal-weighted Silver marts for families affected by dated lapse/expiry events after legal-ledger date repair.",
+  "warnings": []
+}

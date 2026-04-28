@@ -9,8 +9,17 @@ from patentiq_etl.prebronze.chunked import (
     run_tip_chunked_export,
     run_tip_heritage_chunked_export,
 )
+from patentiq_etl.prebronze.consolidate import consolidate_before_bronze
 from patentiq_etl.prebronze.extract import extract_bounded_raw
+from patentiq_etl.prebronze.kind_code import normalize_kind_code
+from patentiq_etl.prebronze.oecd_seed import (
+    build_oecd_indicator_bronze_projection,
+    build_oecd_indicator_cohort_stats,
+    build_oecd_indicator_longform,
+    build_oecd_indicator_seed,
+)
 from patentiq_etl.prebronze.plan import plan_tip_chunked_export, plan_tip_heritage_chunked_export
+from patentiq_etl.prebronze.repair_epab import repair_epab_for_semantic
 from patentiq_etl.prebronze.uspto_odp import extract_uspto_odp_to_bronze
 
 
@@ -54,6 +63,41 @@ def run_tip_blob_recovery(settings: BuildSettings) -> list[StageResult]:
 def run_tip_derived_seed_backfill(settings: BuildSettings) -> list[StageResult]:
     """Backfill canonical derived seed files from successful local or Blob-backed chunk outputs."""
     return [backfill_tip_derived_seeds(settings)]
+
+
+def run_consolidate_before_bronze(settings: BuildSettings) -> list[StageResult]:
+    """Download Blob-backed bounded raw outputs and flatten them into canonical local parquet files."""
+    return [consolidate_before_bronze(settings)]
+
+
+def run_normalize_kind_code(settings: BuildSettings) -> list[StageResult]:
+    """Build the pre-Bronze kind-code normalization seed from observed publication kinds."""
+    return [normalize_kind_code(settings)]
+
+
+def run_build_oecd_indicator_seed(settings: BuildSettings) -> list[StageResult]:
+    """Build the family-first OECD indicator seed from current Silver outputs."""
+    return [build_oecd_indicator_seed(settings)]
+
+
+def run_build_oecd_indicator_cohort_stats(settings: BuildSettings) -> list[StageResult]:
+    """Build the OECD cohort-stat companion from the existing raw OECD seed."""
+    return [build_oecd_indicator_cohort_stats(settings)]
+
+
+def run_build_oecd_indicator_longform(settings: BuildSettings) -> list[StageResult]:
+    """Build the normalized long-form OECD indicator projection from the raw seed and cohort stats."""
+    return [build_oecd_indicator_longform(settings)]
+
+
+def run_build_oecd_indicator_bronze_projection(settings: BuildSettings) -> list[StageResult]:
+    """Build the Bronze-facing OECD projection from the richer long-form artifact."""
+    return [build_oecd_indicator_bronze_projection(settings)]
+
+
+def run_repair_epab_for_semantic(settings: BuildSettings) -> list[StageResult]:
+    """Repair staged EPAB chunk parquet into Bronze-compatible semantic-support files."""
+    return [repair_epab_for_semantic(settings)]
 
 
 def run_prebronze_uspto_odp(settings: BuildSettings) -> list[StageResult]:

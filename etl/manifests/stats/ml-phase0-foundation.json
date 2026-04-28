@@ -1,0 +1,51 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-04T20:27:10+00:00",
+  "metrics": {
+    "ml_split_registry_rows": 17633618,
+    "semantic_eval_fixture_registry_rows": 600,
+    "semantic_eval_pair_registry_rows": 144,
+    "training_snapshot_source_table_count": 9
+  },
+  "output_profiles": [
+    {
+      "column_count": 8,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet",
+      "row_count": 17633618,
+      "sha256": "8456e364086d48f248d17b671c2d2add8ba5bd5831ec8f380b7885806c0eff65",
+      "size_bytes": 137165653,
+      "type": "file"
+    },
+    {
+      "column_count": 16,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/semantic_eval_fixture_registry.parquet",
+      "row_count": 600,
+      "sha256": "876ab557194561d8e5b24934214a78d5c49a0771bcf589fab2a37503577982df",
+      "size_bytes": 229221,
+      "type": "file"
+    },
+    {
+      "column_count": 10,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/semantic_eval_pair_registry.parquet",
+      "row_count": 144,
+      "sha256": "f55fbd961bae821e1a122e3e2e6ca59de1aea2422c4e430008ad59fd99e43134",
+      "size_bytes": 4425,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/training_snapshot_manifest.json",
+      "sha256": "48cdffbebafe8e1f8047cdda4cab13727c7bef6740a1fae298b87ccc6341eaf3",
+      "size_bytes": 3732,
+      "type": "file"
+    }
+  ],
+  "stage": "ml-phase0-foundation",
+  "started_at": "2026-04-04T20:26:23+00:00",
+  "status": "success",
+  "summary": "Built a frozen training snapshot manifest, immediate family-forecast split registry, and semantic evaluation fixtures.",
+  "warnings": []
+}

@@ -42,6 +42,8 @@ def load_settings(etl_root: Path) -> BuildSettings:
         heritage_backfill_start=int(build.get("heritage_backfill_start", 1996)),
         heritage_backfill_end=int(build.get("heritage_backfill_end", build["year_window_start"] - 1)),
         azure_publish_enabled=bool(build["azure_publish_enabled"]),
+        release_overwrite_enabled=bool(build.get("release_overwrite_enabled", False)),
+        azure_release_overwrite_enabled=bool(build.get("azure_release_overwrite_enabled", False)),
         vector_sample_pct=float(build["vector_sample_pct"]),
         active_grant_only_for_semantic=bool(build["active_grant_only_for_semantic"]),
         method_version=methods["method_version"],

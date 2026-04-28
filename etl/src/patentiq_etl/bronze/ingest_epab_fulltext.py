@@ -3,9 +3,10 @@ from __future__ import annotations
 from datetime import date
 from pathlib import Path
 import json
+import shutil
 import duckdb
 
-from patentiq_etl.common.io import normalize_ws, write_pylist_parquet
+from patentiq_etl.common.io import ensure_dir, normalize_ws, parquet_row_count, write_pylist_parquet
 from patentiq_etl.common.types import BuildSettings, StageResult
 
 
@@ -40,10 +41,9 @@ def _date(text: str | None) -> date | None:
 
 def _copy_tip_group(source_path: Path, out_path: Path) -> int:
     """Copy one TIP-derived EPAB parquet group into the Bronze layer."""
-    con = duckdb.connect()
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    con.execute("copy (select * from read_parquet(?)) to ? (format parquet, compression zstd)", [str(source_path), str(out_path)])
-    return int(con.execute("select count(*) from read_parquet(?)", [str(out_path)]).fetchone()[0])
+    ensure_dir(out_path.parent)
+    shutil.copy2(source_path, out_path)
+    return parquet_row_count(out_path)
 
 
 def _ingest_tip_epab_extracts(settings: BuildSettings, result: StageResult) -> StageResult:

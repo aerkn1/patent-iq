@@ -1,0 +1,1461 @@
+.summaryRail {
+  display: grid;
+  gap: 18px;
+}
+
+.familyOverviewShell {
+  display: grid;
+  gap: 18px;
+  margin: 18px 0 20px;
+}
+
+.familyOverviewStack {
+  display: grid;
+  gap: 14px;
+}
+
+.familyOverviewBanner {
+  padding: 18px 20px;
+  border-radius: 26px;
+}
+
+.familyOverviewBannerGridProfile {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.heroSignalStrip {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.heroSignalCard {
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.68);
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.heroSignalCard span {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.heroSignalCard strong {
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.heroSignalCard small {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.summaryGrid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.summaryCard {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow:
+    var(--shadow-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84);
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.summaryCardNeutral {
+  background:
+    radial-gradient(circle at top right, rgba(63, 110, 150, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(246, 249, 252, 0.8));
+}
+
+.summaryCardWarning {
+  background:
+    radial-gradient(circle at top right, rgba(180, 132, 56, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.94), rgba(255, 255, 255, 0.82));
+}
+
+.summaryLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.summaryValue {
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 2.4vw, 2.35rem);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+}
+
+.summaryMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.summaryBandLabel {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.detailPanel,
+.tablePanel,
+.caveatPanel,
+.statePanel {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(246, 249, 252, 0.8));
+  box-shadow:
+    var(--shadow-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84);
+}
+
+.stateText,
+.caveatCard p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.detailPanel,
+.tablePanel,
+.caveatPanel,
+.statePanel {
+  padding: 20px;
+}
+
+.tabStack,
+.tabMain,
+.tabSide,
+.tabDetailStack {
+  display: grid;
+  gap: 16px;
+}
+
+.tabLayout {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
+  align-items: start;
+}
+
+.legalOverviewRow {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.launcherGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.launcherCard {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+.launcherCard span,
+.forecastIntervalCard span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.launcherCard strong,
+.detailDisclosureCopy strong,
+.forecastIntervalCard strong {
+  color: var(--text-strong);
+  font-size: 15px;
+}
+
+.launcherCard small,
+.detailDisclosureCopy small {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.launcherCard:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+}
+
+.detailDisclosure {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow:
+    var(--shadow-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84);
+}
+
+.detailDisclosureSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.detailDisclosureSummary::-webkit-details-marker {
+  display: none;
+}
+
+.detailDisclosureCopy {
+  display: grid;
+  gap: 4px;
+}
+
+.detailDisclosureBody,
+.disclosureGrid {
+  display: grid;
+  gap: 16px;
+}
+
+.subDisclosure {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  border: 1px dashed rgba(15, 23, 42, 0.14);
+  background: rgba(247, 249, 252, 0.78);
+}
+
+.subDisclosureSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.subDisclosureSummary::-webkit-details-marker {
+  display: none;
+}
+
+.subDisclosureBody {
+  display: grid;
+  gap: 14px;
+}
+
+.keyValueGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.keyValueItem {
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.keyValueItem dt {
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.keyValueItem dd {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.keyValueMeter {
+  position: relative;
+  overflow: hidden;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+}
+
+.keyValueMeterFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.68), rgba(14, 165, 233, 0.88));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22) inset;
+}
+
+.keyValueDescription {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.metricGroups {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.metricGroup {
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 22px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  display: grid;
+  gap: 12px;
+}
+
+.metricGroupTitle {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.metricGroupRows {
+  display: grid;
+  gap: 10px;
+}
+
+.metricRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.metricRow:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.metricRow span {
+  color: var(--text-body);
+  font-size: 13px;
+}
+
+.metricRow strong {
+  color: var(--text-strong);
+  text-align: right;
+  font-size: 13px;
+}
+
+.trajectoryGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 16px;
+}
+
+.trajectoryCard {
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.trajectoryCard span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.trajectoryCard strong {
+  color: var(--text-strong);
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.trajectoryCard small {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.trajectoryChart {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.74);
+  padding: 14px 14px 6px;
+}
+
+.trajectoryNote {
+  margin-top: 12px;
+}
+
+.fieldChipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.classificationGroupGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.classificationGroup {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.classificationGroupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.classificationGroupHeader span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.classificationCodeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.classificationPanelBlock {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  margin-bottom: 14px;
+}
+
+.classificationPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.classificationPanelHeader span,
+.classificationMapHead span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.classificationMapGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.classificationMapCard {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.classificationMapHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.classificationMapHead strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-strong);
+  font-size: 15px;
+}
+
+.classificationMapGroups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.classificationMapEmpty {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.classificationVisualShell {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(161, 79, 49, 0.18), transparent 24%),
+    radial-gradient(circle at 82% 28%, rgba(63, 110, 150, 0.16), transparent 28%),
+    linear-gradient(135deg, rgba(248, 250, 252, 0.92), rgba(255, 255, 255, 0.78));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 18px 38px rgba(15, 23, 42, 0.06);
+}
+
+.classificationVisualIntro {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: start;
+}
+
+.classificationVisualIntro > div:first-child {
+  display: grid;
+  max-width: 620px;
+  gap: 8px;
+}
+
+.classificationVisualIntro span,
+.classificationOrbitLabel,
+.classificationFlowColumnLabel {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.classificationVisualIntro strong {
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 3vw, 3rem);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+}
+
+.classificationVisualIntro p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.classificationVisualStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(82px, 1fr));
+  gap: 8px;
+}
+
+.classificationVisualStats article {
+  display: grid;
+  place-items: center;
+  min-width: 86px;
+  padding: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.classificationVisualStats strong {
+  color: var(--text-strong);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.classificationVisualBody {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.34fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.classificationOrbitCard {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  align-content: space-between;
+  gap: 16px;
+  min-height: 320px;
+  padding: 18px;
+  border: 1px solid rgba(161, 79, 49, 0.14);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at center, rgba(161, 79, 49, 0.18), transparent 46%),
+    linear-gradient(160deg, rgba(255, 247, 237, 0.96), rgba(255, 255, 255, 0.7));
+}
+
+.classificationOrbit {
+  position: relative;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: min(220px, 100%);
+  aspect-ratio: 1;
+}
+
+.classificationOrbitRingOuter,
+.classificationOrbitRingInner {
+  position: absolute;
+  border-radius: 999px;
+  border: 1px solid rgba(161, 79, 49, 0.28);
+}
+
+.classificationOrbitRingOuter {
+  inset: 4px;
+  box-shadow: 0 0 0 22px rgba(161, 79, 49, 0.06);
+}
+
+.classificationOrbitRingInner {
+  inset: 36px;
+  border-color: rgba(63, 110, 150, 0.3);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.96), rgba(255, 247, 237, 0.84));
+}
+
+.classificationOrbit strong {
+  position: relative;
+  z-index: 1;
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.5vw, 2.2rem);
+  letter-spacing: -0.04em;
+}
+
+.classificationOrbitMeta {
+  display: grid;
+  gap: 4px;
+  text-align: center;
+}
+
+.classificationOrbitMeta strong {
+  color: var(--text-strong);
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.classificationOrbitMeta span,
+.classificationOrbitMeta small {
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.classificationFlowMap {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(88px, 0.18fr) minmax(138px, 0.28fr) minmax(0, 1fr);
+  gap: 16px;
+  min-height: 320px;
+  padding: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 26px;
+  background:
+    linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    rgba(255, 255, 255, 0.64);
+  background-size: 44px 44px;
+}
+
+.classificationFlowMap::before {
+  content: "";
+  position: absolute;
+  top: 70px;
+  right: 24px;
+  left: 96px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(161, 79, 49, 0.5), rgba(63, 110, 150, 0.18));
+}
+
+.classificationFlowColumn,
+.classificationFlowColumnWide {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.classificationOrbStack,
+.classificationNodeStack,
+.classificationLeafCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.classificationSectionOrb {
+  display: grid;
+  place-items: center;
+  width: 74px;
+  height: 74px;
+  border: 1px solid rgba(63, 110, 150, 0.18);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 32% 25%, rgba(255, 255, 255, 0.96), transparent 32%),
+    linear-gradient(145deg, rgba(63, 110, 150, 0.2), rgba(63, 110, 150, 0.08));
+  box-shadow: 0 14px 28px rgba(63, 110, 150, 0.1);
+}
+
+.classificationSectionOrbLead {
+  border-color: rgba(161, 79, 49, 0.26);
+  background:
+    radial-gradient(circle at 32% 25%, rgba(255, 255, 255, 0.96), transparent 32%),
+    linear-gradient(145deg, rgba(161, 79, 49, 0.28), rgba(161, 79, 49, 0.1));
+}
+
+.classificationSectionOrb strong {
+  color: var(--text-strong);
+  font-size: 1.35rem;
+  font-weight: 950;
+}
+
+.classificationSectionOrb span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.classificationSubclassNode {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  min-width: 112px;
+  padding: 12px 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+}
+
+.classificationSubclassNodeLead {
+  border-color: rgba(161, 79, 49, 0.28);
+  box-shadow: 0 14px 28px rgba(161, 79, 49, 0.12);
+}
+
+.classificationNodeConnector {
+  position: absolute;
+  top: 50%;
+  left: -16px;
+  width: 16px;
+  height: 2px;
+  background: rgba(161, 79, 49, 0.32);
+}
+
+.classificationSubclassNode strong {
+  color: var(--text-strong);
+  font-size: 1rem;
+  font-weight: 950;
+}
+
+.classificationSubclassNode small {
+  color: var(--text-muted);
+}
+
+.classificationLeafCloud {
+  align-content: flex-start;
+}
+
+.classificationLeaf,
+.classificationLeafMore {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 8px 11px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--text-body);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.05);
+}
+
+.classificationLeafLead {
+  border-color: rgba(161, 79, 49, 0.35);
+  background: linear-gradient(135deg, rgba(161, 79, 49, 0.98), rgba(122, 53, 32, 0.96));
+  color: #fff;
+  box-shadow: 0 16px 30px rgba(122, 53, 32, 0.18);
+}
+
+.classificationLeafMore {
+  border-style: dashed;
+  color: var(--text-muted);
+}
+
+.classificationFootprintHero {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.classificationNarrative {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 8px;
+  padding: 20px;
+  border: 1px solid rgba(161, 79, 49, 0.12);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(161, 79, 49, 0.22), transparent 34%),
+    linear-gradient(135deg, rgba(255, 247, 237, 0.94), rgba(255, 255, 255, 0.8));
+}
+
+.classificationNarrative span,
+.classificationRoute span,
+.classificationMetricRow span,
+.classificationSectionHead span,
+.classificationSubclassCode span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.classificationNarrative strong {
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.classificationNarrative p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.classificationRoute {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.classificationRoute article,
+.classificationMetricRow article {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.classificationRoute strong,
+.classificationMetricRow strong {
+  color: var(--text-strong);
+  font-size: 1.05rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.classificationRoute small,
+.classificationMetricRow small {
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.classificationMetricRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.classificationFootprintGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.38fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.classificationLaneStack,
+.classificationSubclassStack,
+.classificationMainGroupList {
+  display: grid;
+  gap: 10px;
+}
+
+.classificationSectionLane,
+.classificationIpcPanel {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(63, 110, 150, 0.1), transparent 34%),
+    rgba(255, 255, 255, 0.78);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
+}
+
+.classificationSectionHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.classificationSectionHead strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.classificationSubclassRow {
+  display: grid;
+  grid-template-columns: 90px minmax(70px, 0.18fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.classificationSubclassCode strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-strong);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.classificationDensityBar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.classificationDensityBar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(63, 110, 150, 0.78), rgba(161, 79, 49, 0.9));
+}
+
+.classificationMainGroupList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.classificationIpcPanel p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.contributionGrid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.contributionMetricCard {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.contributionMetricHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.contributionMetricHeader span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.contributionPieChart {
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.74);
+  padding: 8px 8px 2px;
+}
+
+.contributionMetricBody {
+  display: grid;
+  gap: 10px;
+}
+
+.contributionLegendCompact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.contributionLegendChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--text-body);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.contributionLegendSwatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.38);
+}
+
+.forecastIntervalGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.forecastIntervalCard {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.forecastIntervalCard small {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.forecastIntervalMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lapseRiskGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.lapseRiskCard {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.lapseRiskHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lapseRiskChipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.lapseRiskHead strong {
+  color: var(--text-strong);
+  font-size: 15px;
+}
+
+.lapseRiskValue {
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.lapseRiskShareLabel {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.lapseRiskMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.lapseRiskBar {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.lapseRiskBarFill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(180, 132, 56, 0.82), rgba(161, 79, 49, 0.96));
+}
+
+.chronologyMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.viewToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.viewToggleButton {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.viewToggleButton:hover,
+.viewToggleButton:focus-visible {
+  color: var(--text-strong);
+  background: rgba(63, 110, 150, 0.08);
+}
+
+.viewToggleButtonActive {
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(161, 79, 49, 0.96), rgba(122, 53, 32, 0.96)),
+    rgba(161, 79, 49, 0.94);
+  box-shadow:
+    0 12px 22px rgba(122, 53, 32, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.filterToolbar {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.filterField {
+  display: grid;
+  gap: 6px;
+  flex: 1 1 280px;
+}
+
+.filterLabel {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.filterSelect {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--text-strong);
+  font: inherit;
+  padding: 10px 14px;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease;
+  appearance: none;
+}
+
+.filterSelect:focus-visible {
+  outline: none;
+  border-color: rgba(63, 110, 150, 0.48);
+  box-shadow: 0 0 0 4px rgba(63, 110, 150, 0.12);
+}
+
+.tableWrap {
+  overflow: auto;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.table {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th,
+.table td {
+  padding: 13px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  background: rgba(248, 250, 252, 0.96);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  z-index: 1;
+}
+
+.inlineHeaderLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.table tbody tr:hover {
+  background: rgba(63, 110, 150, 0.05);
+}
+
+.publicationLink {
+  color: var(--accent-strong);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.publicationLink:hover,
+.publicationLink:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.caveatList {
+  display: grid;
+  gap: 12px;
+}
+
+.caveatDisclosure {
+  display: grid;
+  gap: 12px;
+}
+
+.caveatDisclosureSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.caveatDisclosureSummary::-webkit-details-marker {
+  display: none;
+}
+
+.caveatCard {
+  border: 1px solid rgba(196, 96, 82, 0.18);
+  border-radius: 20px;
+  background: rgba(255, 248, 247, 0.9);
+  padding: 16px 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.caveatCode {
+  color: var(--critical);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1180px) {
+  .familyOverviewShell,
+  .heroSignalStrip,
+  .summaryGrid,
+  .metricGroups,
+  .classificationGroupGrid,
+  .classificationMapGrid,
+  .classificationFootprintHero,
+  .classificationFootprintGrid,
+  .classificationVisualBody,
+  .classificationFlowMap,
+  .classificationRoute,
+  .classificationMetricRow,
+  .contributionGrid,
+  .trajectoryGrid,
+  .tabLayout,
+  .legalOverviewRow,
+  .lapseRiskGrid,
+  .forecastIntervalGrid,
+  .disclosureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .familyOverviewBannerGridProfile {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .filterToolbar {
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 760px) {
+  .familyOverviewShell,
+  .heroSignalStrip,
+  .summaryGrid,
+  .metricGroups,
+  .classificationGroupGrid,
+  .classificationMapGrid,
+  .classificationFootprintHero,
+  .classificationFootprintGrid,
+  .classificationVisualBody,
+  .classificationFlowMap,
+  .classificationRoute,
+  .classificationMetricRow,
+  .contributionGrid,
+  .trajectoryGrid,
+  .legalOverviewRow,
+  .lapseRiskGrid,
+  .forecastIntervalGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .familyOverviewBannerGridProfile,
+  .keyValueGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .classificationSubclassRow {
+    grid-template-columns: 1fr;
+  }
+
+  .classificationVisualIntro {
+    display: grid;
+  }
+
+  .classificationVisualStats {
+    grid-template-columns: 1fr;
+  }
+
+  .classificationFlowMap::before,
+  .classificationNodeConnector {
+    display: none;
+  }
+
+  .detailPanel,
+  .tablePanel,
+  .caveatPanel,
+  .statePanel {
+    padding: 18px;
+    border-radius: 24px;
+  }
+
+  .table {
+    min-width: 720px;
+  }
+
+  .filterToolbar {
+    flex-direction: column;
+  }
+}

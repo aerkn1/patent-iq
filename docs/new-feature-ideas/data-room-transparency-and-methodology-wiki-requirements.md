@@ -105,7 +105,8 @@ Each page should explain:
 2. what fields/tables are used,
 3. what role it plays,
 4. what is not used,
-5. any scope or licensing caveats.
+5. any scope or licensing caveats,
+6. whether the source is active, degraded, or absent in the current release.
 
 ## DRW-08: Pipeline Room Must Explain Bronze, Silver, And Gold
 
@@ -183,7 +184,9 @@ The `Semantic` room should explain:
 5. ANN/index method,
 6. chronology/legal gating,
 7. semantic sampling policy,
-8. fallback flags such as `is_abstract_fallback`.
+8. fallback flags such as `is_abstract_fallback`,
+9. current corpus coverage by text provenance,
+10. whether USPTO full text is absent from the current semantic build.
 
 ## DRW-13: Manifests Room Must Expose Active Artifact Pointers
 

@@ -1,0 +1,86 @@
+{
+  "downstream_impacts": [
+    "These scope seeds bound every downstream family, publication, owner, and portfolio calculation in the MVP warehouse.",
+    "An over-broad or under-broad seed will contaminate blocking power, Market Intelligence, forecasts, semantic sampling, and Data Room counts."
+  ],
+  "finished_at": "2026-04-01T21:40:27+00:00",
+  "metrics": {
+    "scope_appln_count": 32871909,
+    "scope_appln_count__Audio-visual technology": 3449359,
+    "scope_appln_count__Basic communication processes": 602460,
+    "scope_appln_count__Computer technology": 6224533,
+    "scope_appln_count__Control": 2011050,
+    "scope_appln_count__Digital communication": 3160801,
+    "scope_appln_count__Electrical machinery, apparatus, energy": 6549502,
+    "scope_appln_count__IT methods for management": 1343950,
+    "scope_appln_count__Measurement": 4800151,
+    "scope_appln_count__Semiconductors": 2551134,
+    "scope_appln_count__Telecommunications": 2178969,
+    "scope_family_count": 21353101,
+    "scope_family_count__Audio-visual technology": 2446006,
+    "scope_family_count__Basic communication processes": 384536,
+    "scope_family_count__Computer technology": 4490120,
+    "scope_family_count__Control": 1644622,
+    "scope_family_count__Digital communication": 1829831,
+    "scope_family_count__Electrical machinery, apparatus, energy": 5061217,
+    "scope_family_count__IT methods for management": 1039957,
+    "scope_family_count__Measurement": 3924046,
+    "scope_family_count__Semiconductors": 1522749,
+    "scope_family_count__Telecommunications": 1473614,
+    "scope_owner_count": 37134586,
+    "scope_publn_count": 42692835,
+    "scope_publn_count__Audio-visual technology": 4757897,
+    "scope_publn_count__Basic communication processes": 909364,
+    "scope_publn_count__Computer technology": 9007569,
+    "scope_publn_count__Control": 2673570,
+    "scope_publn_count__Digital communication": 4741516,
+    "scope_publn_count__Electrical machinery, apparatus, energy": 8536504,
+    "scope_publn_count__IT methods for management": 1770411,
+    "scope_publn_count__Measurement": 6373812,
+    "scope_publn_count__Semiconductors": 3794315,
+    "scope_publn_count__Telecommunications": 3173773
+  },
+  "output_profiles": [
+    {
+      "column_count": 11,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet",
+      "row_count": 32871909,
+      "sha256": "4c133a3994077c2f43174501b138ec1b2c17b153cce643d620aa2d989f539e21",
+      "size_bytes": 584921842,
+      "type": "file"
+    },
+    {
+      "column_count": 8,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet",
+      "row_count": 21353101,
+      "sha256": "68f383219d97b1fe39d486c2f36fa49404a385143601a97ebba2f14cec954af7",
+      "size_bytes": 240121655,
+      "type": "file"
+    },
+    {
+      "column_count": 10,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet",
+      "row_count": 42692835,
+      "sha256": "e0fedc4d159592235b69241a4f07684880dc702334c3c49a2b8fb1ca818c7657",
+      "size_bytes": 1118291434,
+      "type": "file"
+    },
+    {
+      "column_count": 8,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet",
+      "row_count": 37134586,
+      "sha256": "3247723013153c6ecffb10beb1a8b03d4abed5e01f31ff09ef1b52e78de33eaa",
+      "size_bytes": 980173418,
+      "type": "file"
+    }
+  ],
+  "stage": "scope",
+  "started_at": "2026-04-01T21:39:42+00:00",
+  "status": "success",
+  "summary": "Built bounded-scope application, family, publication, and owner seeds for the mega-cluster universe.",
+  "warnings": []
+}

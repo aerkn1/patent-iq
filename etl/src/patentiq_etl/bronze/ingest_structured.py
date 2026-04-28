@@ -69,10 +69,10 @@ PATSTAT_TYPE_OVERRIDES: dict[str, dict[str, str]] = {
         "pat_publn_id": "bigint",
         "cited_pat_publn_id": "bigint",
         "cited_appln_id": "bigint",
-        "npl_publn_id": "bigint",
+        "cited_npl_publn_id": "varchar",
     },
     "bronze_patstat_npl_publn": {
-        "npl_publn_id": "bigint",
+        "npl_publn_id": "varchar",
     },
     "bronze_patstat_appln_contn": {
         "appln_id": "bigint",
@@ -92,9 +92,18 @@ PATSTAT_TYPE_OVERRIDES: dict[str, dict[str, str]] = {
     },
     "bronze_patstat_inpadoc_legal_event": {
         "appln_id": "bigint",
-        "lec_id": "bigint",
-        "event_date": "date",
-        "published_date": "date",
+        "event_id": "bigint",
+        "event_seq_nr": "bigint",
+        "event_filing_date": "date",
+        "event_publn_date": "date",
+        "event_effective_date": "date",
+        "ref_doc_date": "date",
+        "spc_filing_date": "date",
+        "spc_patent_expiry_date": "date",
+        "spc_extension_date": "date",
+        "fee_payment_date": "date",
+        "lapse_date": "date",
+        "reinstate_date": "date",
     },
     "bronze_ref_legal_event_code": {},
 }
@@ -214,13 +223,32 @@ REFERENCE_NORMALIZATION_SPECS: dict[str, dict[str, Any]] = {
             "docdb_family_id": ["docdb_family_id"],
             "indicator_name": ["indicator_name", "metric_name"],
             "indicator_value": ["indicator_value", "metric_value", "value"],
+            "indicator_value_raw": ["indicator_value_raw", "raw_value"],
+            "indicator_percentile_rank": ["indicator_percentile_rank", "percentile_rank"],
+            "indicator_z_score": ["indicator_z_score", "z_score"],
+            "normalization_basis": ["normalization_basis"],
+            "cohort_size": ["cohort_size"],
             "snapshot_year": ["snapshot_year", "year"],
+            "observation_window_years": ["observation_window_years"],
+            "is_truncation_sensitive": ["is_truncation_sensitive"],
+            "is_proxy": ["is_proxy"],
+            "component_policy": ["component_policy"],
+            "component_count": ["component_count"],
+            "method_version": ["method_version"],
         },
         "casts": {
             "appln_id": "bigint",
             "docdb_family_id": "bigint",
             "indicator_value": "double",
+            "indicator_value_raw": "double",
+            "indicator_percentile_rank": "double",
+            "indicator_z_score": "double",
+            "cohort_size": "bigint",
             "snapshot_year": "bigint",
+            "observation_window_years": "bigint",
+            "is_truncation_sensitive": "boolean",
+            "is_proxy": "boolean",
+            "component_count": "bigint",
         },
     },
     "bronze_ext_cpc_coverage": {
@@ -270,7 +298,7 @@ def _typed_copy(source_path: Path, out_path: Path, overrides: dict[str, str]) ->
     replacements: list[str] = []
     for column, cast_type in overrides.items():
         if column in columns:
-            expr = f"try_cast({column} as {cast_type})" if cast_type in {"date", "timestamp"} else f"cast({column} as {cast_type})"
+            expr = f"try_cast({column} as {cast_type})"
             replacements.append(f"{expr} as {column}")
     relation = _relation_sql(source_path)
     query = f"select * from {relation}"

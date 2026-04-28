@@ -1,0 +1,40 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/build-oecd-indicator-longform.json"
+  },
+  "calculations": [
+    "Percentile rank is the canonical exposed normalized value; z-score is preserved for analytical use.",
+    "Grant-lag normalization is inverted so faster grants receive higher normalized scores.",
+    "Composite rows are built from normalized components only and carry explicit component policy metadata."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md",
+    "docs/new-feature-ideas/oecd-indicator-seed-build-spec.md"
+  ],
+  "downstream_impacts": [
+    "This artifact can feed Bronze/Silver OECD overlays and direct portfolio benchmarking without recomputing cohort windows.",
+    "The long-form shape supports explainable indicator drilldowns and future Bronze-compatible ingestion."
+  ],
+  "finished_at": "2026-04-03T08:51:37+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_cohort_stats.parquet"
+  ],
+  "methods": [
+    "Expanded the wide family-level OECD seed into one row per `family x indicator` for downstream benchmarking and Bronze-compatible projections.",
+    "Computed exact within-cohort percentile ranks and z-scores by `family_priority_year x primary_wipo_field x indicator_name`.",
+    "Built `quality_index_4` and `quality_index_6` as explicit family-first composite variants with the claims component omitted and labeled in-schema."
+  ],
+  "metrics": {
+    "oecd_indicator_longform_indicator_count": 12,
+    "oecd_indicator_longform_rows": 240090134
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_longform.parquet"
+  ],
+  "stage": "build-oecd-indicator-longform",
+  "started_at": "2026-04-03T08:40:21+00:00",
+  "status": "success",
+  "summary": "Built the normalized long-form OECD indicator projection, including explicit family-first composite variants.",
+  "warnings": []
+}

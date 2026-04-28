@@ -1,0 +1,84 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment.json"
+  },
+  "calculations": [
+    "Family adjusted citation score now uses 7-year clean weighted forward citation influence with a cohort normalization fallback.",
+    "Market-state labels use recent family-count momentum by field-year segment."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md",
+    "docs/new-feature-ideas/field-sliced-competitor-intelligence-and-tech-trend-requirements.md",
+    "docs/new-feature-ideas/parallel-global-and-local-trend-engines-requirements.md"
+  ],
+  "downstream_impacts": [
+    "These Silver enrichment tables feed Gold blocking power, Market Intelligence, attacker summaries, portfolio summaries, and forecast feature generation.",
+    "Weak citation coverage or legal weighting here directly distorts compare, portfolio, and family-level UI cards."
+  ],
+  "finished_at": "2026-04-02T09:35:54+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_docdb_fam_citn.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet"
+  ],
+  "methods": [
+    "Mapped PATSTAT publication and DOCDB family citation sources into bounded family citation edges and cleaned family-level impact inputs.",
+    "Materialized a publication-dated enriched citation network with citing-side assignee, stage, market, and trend context.",
+    "Derived market-intelligence segment tables from field-year family activity inside the bounded universe.",
+    "Built lightweight MVP proxies for coverage, enforceability, and quality from validated Silver dependencies."
+  ],
+  "metrics": {
+    "citation_edge_count": 17461197,
+    "citation_out_of_bounds_edge_count": 3441661,
+    "citation_unique_cited_family_count": 6019674,
+    "citation_unique_source_family_count": 10922324,
+    "silver_enriched_citation_network_rows": 19602108,
+    "silver_family_citation_edges_clean_rows": 17461197,
+    "silver_family_citation_edges_rows": 17461197,
+    "silver_family_citation_metrics_rows": 21353101,
+    "silver_family_coverage_metrics_rows": 21353101,
+    "silver_family_enforceability_branches_rows": 36096788,
+    "silver_family_field_contributions_rows": 23816698,
+    "silver_family_npl_backlinks_rows": 14380370,
+    "silver_family_oecd_quality_rows": 21353101,
+    "silver_family_trend_tables_rows": 23816698,
+    "silver_global_tech_trends_timeseries_rows": 504,
+    "silver_local_tech_trends_timeseries_rows": 21488,
+    "silver_market_intelligence_segments_rows": 10,
+    "silver_market_intelligence_timeseries_rows": 504
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges_clean.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_segments.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_timeseries.parquet"
+  ],
+  "stage": "silver-enrichment",
+  "started_at": "2026-04-02T09:29:43+00:00",
+  "status": "success",
+  "summary": "Built Silver citation, coverage, enforceability, OECD-style proxy, and Market Intelligence segment layers.",
+  "warnings": []
+}

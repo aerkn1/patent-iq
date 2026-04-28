@@ -48,7 +48,8 @@ Should show:
 4. semantic sampling flag,
 5. active model versions,
 6. active vector/index versions,
-7. top-level row-count summary.
+7. top-level row-count summary,
+8. current semantic corpus mode such as `EPAB + PATSTAT fallback`.
 
 ### `Sources`
 
@@ -59,6 +60,11 @@ Per-source pages for:
 4. EPAB,
 5. OECD / WIPO / market references,
 6. optional client-input layer where enabled.
+
+Source pages should also declare whether the source is:
+1. active in the current release,
+2. degraded,
+3. absent from the current semantic or model layer.
 
 ### `Pipeline`
 
@@ -84,7 +90,7 @@ Model cards and training/evaluation evidence.
 
 ### `Semantic`
 
-Embedding, retrieval, and sampling documentation.
+Embedding, retrieval, sampling, provenance, and semantic-corpus coverage documentation.
 
 ### `Manifests`
 

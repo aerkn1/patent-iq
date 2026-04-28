@@ -1,0 +1,69 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json"
+  },
+  "calculations": [
+    "Future citation labels preserve raw and log1p targets for 3y and 5y horizons.",
+    "Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md",
+    "docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md",
+    "docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md",
+    "docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md"
+  ],
+  "downstream_impacts": [],
+  "finished_at": "2026-04-07T18:39:48+00:00",
+  "inputs": [],
+  "methods": [
+    "Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.",
+    "Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.",
+    "Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.",
+    "Applied point-in-time feature enrichment from `silver_family_feature_snapshot_pit`; replaced leakage-sensitive citation counts, network externalities, and legal-state columns with pre-as_of_date equivalents; replaced family_rcf_score, family_size_docdb, and family_coverage_stability_score with PIT-safe variants; recomputed data_completeness_pct from enriched values."
+  ],
+  "metrics": {
+    "ml_calibration_registry_rows": 2,
+    "ml_experiment_registry_rows": 8,
+    "ml_feature_family_future_citations_rows": 11772956,
+    "ml_label_family_future_citations_rows": 11772956,
+    "ml_model_registry_rows": 2,
+    "ml_split_registry_phase03_rows": 11772956,
+    "ml_split_registry_rows": 27944510,
+    "phase03_3y_interval_coverage_80pct": 0.80536,
+    "phase03_3y_spearman": 0.4495002937134462,
+    "phase03_5y_interval_coverage_80pct": 0.79701230228471,
+    "phase03_5y_spearman": 0.5995602733201085,
+    "phase03_sampled_training": 1.0,
+    "phase03_test_rows_raw": 2809372.0,
+    "phase03_test_rows_used": 50000.0,
+    "phase03_train_rows_raw": 6409400.0,
+    "phase03_train_rows_used": 200000.0,
+    "phase03_validation_rows_raw": 2314420.0,
+    "phase03_validation_rows_used": 50000.0
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase03.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_breakout_classifier.txt",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_breakout_tail_model.txt",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_bundle.json",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_breakout_classifier.txt",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_breakout_tail_model.txt",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_bundle.json",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json"
+  ],
+  "stage": "ml-phase03-family-forecast",
+  "started_at": "2026-04-07T18:30:38+00:00",
+  "status": "success",
+  "summary": "Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.",
+  "warnings": []
+}

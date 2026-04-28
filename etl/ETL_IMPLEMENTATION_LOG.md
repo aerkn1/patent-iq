@@ -2529,3 +2529,9477 @@
 - `chunk_degraded_count`: `0`
 - `chunk_uploaded_file_count`: `840`
 
+## consolidate-before-bronze | success
+
+- Summary: Downloaded Blob-backed bounded raw chunks into local staging, consolidated them into canonical bounded parquet files, and kept heritage seeds isolated from the active main seed root.
+- Started: 2026-03-31T16:12:11+00:00
+- Finished: 2026-03-31T16:22:30+00:00
+
+### Inputs
+
+1. azure-blob://patentiq-data/raw-bounded/patstat
+2. azure-blob://patentiq-data/raw-bounded/register
+3. azure-blob://patentiq-data/raw-bounded/epab
+4. azure-blob://patentiq-data/raw-bounded/refs
+5. azure-blob://patentiq-data/raw-bounded-heritage/patstat
+6. azure-blob://patentiq-data/raw-bounded-heritage/seeds
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls201_appln.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls202_appln_title.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls203_appln_abstr.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls204_appln_prior.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls206_person.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls207_pers_appln.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls209_appln_ipc.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls212_citation.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls214_npl_publn.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls216_appln_contn.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls224_appln_cpc.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls230_appln_techn_field.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls228_docdb_fam_citn.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls231_inpadoc_legal_event.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls803_legal_event_code.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg101_appln.parquet
+18. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg107_parties.parquet
+19. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg111_licensee.parquet
+20. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg125_appeal.parquet
+21. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg130_opponent.parquet
+22. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg201_proc_step.parquet
+23. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg202_proc_step_text.parquet
+24. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg203_proc_step_date.parquet
+25. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg301_event_data.parquet
+26. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg402_event_text.parquet
+27. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg701_appln.parquet
+28. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg731_event_data.parquet
+29. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg742_event_text.parquet
+30. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_publication.parquet
+31. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_abstract.parquet
+32. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_claims.parquet
+33. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat
+34. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register
+35. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab
+36. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs
+
+### Artifacts
+
+- `staging_root`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/imports`
+- `heritage_seed_staging_dir`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/imports/raw-bounded-heritage/_seeds`
+- `main_patstat_staging_dir`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/imports/raw-bounded/patstat`
+- `heritage_patstat_staging_dir`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/imports/raw-bounded-heritage/patstat`
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/consolidate-before-bronze.json`
+
+### Methods
+
+1. Downloaded the Blob-backed bounded raw prefixes needed for local Bronze/Silver/Gold preparation into a separate staging tree.
+2. Merged partitioned field/year chunk parquet into one canonical local bounded parquet per logical table using DuckDB `select distinct *` deduplication.
+3. Folded heritage PATSTAT parquet into the same canonical PATSTAT outputs while keeping heritage seeds in staging only.
+
+### Calculations
+
+1. Main PATSTAT, Register, EPAB, and refs are sourced from `raw-bounded/*` Blob prefixes.
+2. Heritage PATSTAT and heritage seeds are sourced from `raw-bounded-heritage/*` Blob prefixes.
+3. Canonical Bronze inputs remain the existing local bounded directories that downstream stages already read.
+
+### Downstream Impacts
+
+1. The local bounded raw layer becomes compatible with the non-recursive Bronze ingestors that expect one top-level parquet per logical source table.
+2. Heritage history is incorporated into downstream Bronze/Silver/Gold by merging heritage PATSTAT into canonical PATSTAT outputs before Bronze runs.
+
+### Governing Docs
+
+1. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+2. docs/next-phase-v2/26-patentiq-v2-mega-cluster-raw-extraction-and-bronze-bounding-strategy.md
+3. docs/next-phase-v2/29-patentiq-v2-two-horizon-scope-and-heritage-backfill-policy.md
+
+### Warnings
+
+1. Skipped `bronze_reg403_appln_status` because no staged parquet was found for stems ['reg403_appln_status'].
+2. Skipped `bronze_reg741_appln_status` because no staged parquet was found for stems ['reg741_appln_status'].
+3. Skipped `bronze_ref_techn_field_ipc` because no staged parquet was found for stems ['wipo_techn_field_ipc', 'ipc_to_wipo_industry'].
+4. Skipped `bronze_ext_cpc_coverage` because no staged parquet was found for stems ['cpc_coverage'].
+5. Skipped `bronze_ext_cpc_ipc_weights` because no staged parquet was found for stems ['cpc_ipc_weights_2014_2025'].
+6. Skipped `bronze_ext_iso_country_map` because no staged parquet was found for stems ['iso_country_map', 'country_iso_map'].
+7. Skipped `bronze_ext_world_bank_gdp_ppp` because no staged parquet was found for stems ['world_bank_gdp_ppp', 'wb_gdp_ppp'].
+8. Skipped `bronze_ext_us_chamber_ip_index` because no staged parquet was found for stems ['us_chamber_ip_index', 'ip_index'].
+9. Skipped `bronze_ext_up_member_states` because no staged parquet was found for stems ['up_member_states', 'unitary_patent_member_states'].
+10. Skipped `bronze_ext_kind_code_normalization_seed` because no staged parquet was found for stems ['kind_code_normalization', 'kind_code_normalization_seed'].
+11. Skipped `bronze_ext_oecd_indicator_seed` because no staged parquet was found for stems ['oecd_indicator_seed', 'oecd_quality_indicator_seed'].
+
+### Metrics
+
+- `raw-bounded_patstat_blob_count`: `2043`
+- `raw-bounded_patstat_reused_count`: `2043`
+- `raw-bounded_register_blob_count`: `1651`
+- `raw-bounded_register_reused_count`: `1651`
+- `raw-bounded_epab_blob_count`: `474`
+- `raw-bounded_epab_reused_count`: `474`
+- `raw-bounded_refs_blob_count`: `0`
+- `raw-bounded_refs_reused_count`: `0`
+- `raw-bounded-heritage_patstat_blob_count`: `840`
+- `raw-bounded-heritage_patstat_reused_count`: `840`
+- `raw-bounded-heritage_seeds_blob_count`: `8`
+- `raw-bounded-heritage_seeds_reused_count`: `8`
+- `staged_blob_file_count`: `5016`
+- `staged_blob_total_bytes`: `43796095433`
+- `tls201_appln_source_file_count`: `188`
+- `tls201_appln_bounded_count`: `36231729`
+- `tls202_appln_title_source_file_count`: `188`
+- `tls202_appln_title_bounded_count`: `34149771`
+- `tls203_appln_abstr_source_file_count`: `188`
+- `tls203_appln_abstr_bounded_count`: `32628318`
+- `tls204_appln_prior_source_file_count`: `188`
+- `tls204_appln_prior_bounded_count`: `12240913`
+- `tls206_person_source_file_count`: `188`
+- `tls206_person_bounded_count`: `25484970`
+- `tls207_pers_appln_source_file_count`: `188`
+- `tls207_pers_appln_bounded_count`: `132921009`
+- `tls209_appln_ipc_source_file_count`: `188`
+- `tls209_appln_ipc_bounded_count`: `40798728`
+- `tls211_pat_publn_source_file_count`: `188`
+- `tls211_pat_publn_bounded_count`: `47798843`
+- `tls212_citation_source_file_count`: `187`
+- `tls212_citation_bounded_count`: `27652952`
+- `tls214_npl_publn_source_file_count`: `187`
+- `tls214_npl_publn_bounded_count`: `5281343`
+- `tls216_appln_contn_source_file_count`: `188`
+- `tls216_appln_contn_bounded_count`: `1839143`
+- `tls224_appln_cpc_source_file_count`: `188`
+- `tls224_appln_cpc_bounded_count`: `31300011`
+- `tls230_appln_techn_field_source_file_count`: `188`
+- `tls230_appln_techn_field_bounded_count`: `37135004`
+- `tls228_docdb_fam_citn_source_file_count`: `187`
+- `tls228_docdb_fam_citn_bounded_count`: `18526500`
+- `tls231_inpadoc_legal_event_source_file_count`: `127`
+- `tls231_inpadoc_legal_event_bounded_count`: `138761674`
+- `tls803_legal_event_code_source_file_count`: `127`
+- `tls803_legal_event_code_bounded_count`: `62`
+- `patstat_target_cleanup_count`: `16`
+- `reg101_appln_source_file_count`: `127`
+- `reg101_appln_bounded_count`: `1138403`
+- `reg107_parties_source_file_count`: `127`
+- `reg107_parties_bounded_count`: `7541254`
+- `reg111_licensee_source_file_count`: `127`
+- `reg111_licensee_bounded_count`: `4216`
+- `reg125_appeal_source_file_count`: `127`
+- `reg125_appeal_bounded_count`: `9921`
+- `reg130_opponent_source_file_count`: `127`
+- `reg130_opponent_bounded_count`: `16398`
+- `reg201_proc_step_source_file_count`: `127`
+- `reg201_proc_step_bounded_count`: `1195313`
+- `reg202_proc_step_text_source_file_count`: `127`
+- `reg202_proc_step_text_bounded_count`: `1442273`
+- `reg203_proc_step_date_source_file_count`: `127`
+- `reg203_proc_step_date_bounded_count`: `1446346`
+- `reg301_event_data_source_file_count`: `127`
+- `reg301_event_data_bounded_count`: `1675053`
+- `reg402_event_text_source_file_count`: `127`
+- `reg402_event_text_bounded_count`: `355`
+- `reg701_appln_source_file_count`: `127`
+- `reg701_appln_bounded_count`: `22860`
+- `reg731_event_data_source_file_count`: `127`
+- `reg731_event_data_bounded_count`: `22686`
+- `reg742_event_text_source_file_count`: `127`
+- `reg742_event_text_bounded_count`: `20`
+- `register_target_cleanup_count`: `13`
+- `refs_target_cleanup_count`: `0`
+- `epab_target_cleanup_count`: `2`
+- `epab_publication_source_file_count`: `101`
+- `epab_publication_bounded_count`: `2696348`
+- `epab_abstract_source_file_count`: `101`
+- `epab_abstract_bounded_count`: `2097316`
+- `epab_claims_source_file_count`: `101`
+- `epab_claims_bounded_count`: `2696361`
+- `patstat_consolidated_table_count`: `16`
+- `register_consolidated_table_count`: `13`
+- `refs_consolidated_table_count`: `0`
+- `epab_consolidated_table_count`: `3`
+- `consolidated_total_row_count`: `644756093`
+- `heritage_seed_staging_count`: `8`
+- `main_seed_dir_untouched`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/_seeds`
+
+## repair-epab-for-semantic | success
+
+- Summary: Repaired the staged EPAB chunk parquet into a deterministic semantic-support subset without rerunning raw EPAB extraction.
+- Started: 2026-03-31T19:18:42+00:00
+- Finished: 2026-03-31T19:35:15+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/temp/epab-semantic-repair/publication_chunk_001.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/temp/epab-semantic-repair/claims_chunk_001.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_publication.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_claims.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_abstract.parquet
+
+### Artifacts
+
+- `staged_epab_root`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/imports/raw-bounded/epab`
+- `repair_temp_root`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/temp/epab-semantic-repair`
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/repair-epab-for-semantic.json`
+
+### Methods
+
+1. Used only EPAB chunk folders whose publication and claims row counts aligned exactly, which allows deterministic row-order pairing.
+2. Derived `publication_number_full` and synthetic `epab_doc_id` keys from EP publication rows, then retained only claim-1 payloads for semantic representative-text use.
+3. Dropped unreliable EPAB abstract payloads and kept PATSTAT abstracts as the universal semantic fallback.
+
+### Calculations
+
+1. Safe EPAB repairability is measured from publication/claims row-count alignment per chunk.
+2. Final EPAB publication rows are deduplicated by `publication_number_full`; final EPAB claims are deduplicated by a stable hash over publication, language, sequence, and text.
+3. This stage intentionally produces a semantic-oriented EPAB subset, not a full historical EPAB restoration.
+
+### Downstream Impacts
+
+1. Bronze can continue using the existing TIP EPAB copy path because the repaired bounded EPAB files are already in Bronze-compatible shape.
+2. Silver semantic representative-text generation can recover EPAB claim-1 coverage where repair is deterministic and fall back to PATSTAT abstracts elsewhere.
+
+### Governing Docs
+
+1. docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. Skipped 4 EPAB chunk roots whose publication/claims row counts did not align.
+2. EPAB abstracts were intentionally neutralized; PATSTAT abstracts remain the semantic fallback.
+
+### Metrics
+
+- `epab_chunk_count`: `101`
+- `epab_safe_chunk_count`: `97`
+- `epab_unsafe_chunk_count`: `4`
+- `epab_repaired_publication_row_count_pre_dedupe`: `2149576`
+- `epab_repaired_claim1_row_count_pre_dedupe`: `3429520`
+- `epab_repaired_claim_dedupe_key_count`: `2763676`
+- `epab_repaired_claim1_row_count`: `2763676`
+- `epab_repaired_publication_row_count`: `1679816`
+- `epab_repaired_abstract_row_count`: `0`
+
+## normalize-kind-code | success
+
+- Summary: Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.
+- Started: 2026-03-31T20:03:47+00:00
+- Finished: 2026-03-31T20:03:47+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/normalize-kind-code.json`
+
+### Methods
+
+1. Read the consolidated PATSTAT publication table and aggregated the observed `(publn_auth, publn_kind)` pairs inside the local bounded universe.
+2. Preserved existing kind-code seed rows from `etl/data/raw/refs` and overlaid any explicit manual overrides when present.
+3. Filled missing observed pairs with deterministic office-aware or prefix-aware rules so Bronze can ingest a complete normalization seed before Silver.
+
+### Calculations
+
+1. Observed pair counts and first/last seen dates are computed from the consolidated `tls211_pat_publn` table.
+2. EP `B2` is elevated to `OPPOSITION_SURVIVOR` and EP `C0` to `UNITARY_GRANT`; remaining missing pairs use prefix-based defaults.
+
+### Downstream Impacts
+
+1. This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.
+2. Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue.
+
+### Metrics
+
+- `observed_pair_count`: `641`
+- `seed_input_pair_count`: `9834`
+- `auto_generated_pair_count`: `263`
+- `review_queue_pair_count`: `263`
+- `final_pair_count`: `10097`
+
+## normalize-kind-code | success
+
+- Summary: Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.
+- Started: 2026-03-31T20:20:49+00:00
+- Finished: 2026-03-31T20:20:50+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_manual_overrides.csv
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/normalize-kind-code.json`
+
+### Methods
+
+1. Read the consolidated PATSTAT publication table and aggregated the observed `(publn_auth, publn_kind)` pairs inside the local bounded universe.
+2. Preserved existing kind-code seed rows from `etl/data/raw/refs` and overlaid any explicit manual overrides when present.
+3. Filled missing observed pairs with deterministic office-aware or prefix-aware rules so Bronze can ingest a complete normalization seed before Silver.
+
+### Calculations
+
+1. Observed pair counts and first/last seen dates are computed from the consolidated `tls211_pat_publn` table.
+2. EP `B2` is elevated to `OPPOSITION_SURVIVOR` and EP `C0` to `UNITARY_GRANT`; remaining missing pairs use prefix-based defaults.
+
+### Downstream Impacts
+
+1. This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.
+2. Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue.
+
+### Metrics
+
+- `observed_pair_count`: `641`
+- `seed_input_pair_count`: `10097`
+- `auto_generated_pair_count`: `0`
+- `review_queue_pair_count`: `251`
+- `final_pair_count`: `10097`
+
+## normalize-kind-code | success
+
+- Summary: Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.
+- Started: 2026-03-31T20:25:38+00:00
+- Finished: 2026-03-31T20:25:39+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_manual_overrides.csv
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/normalize-kind-code.json`
+
+### Methods
+
+1. Read the consolidated PATSTAT publication table and aggregated the observed `(publn_auth, publn_kind)` pairs inside the local bounded universe.
+2. Preserved existing kind-code seed rows from `etl/data/raw/refs` and overlaid any explicit manual overrides when present.
+3. Filled missing observed pairs with deterministic office-aware or prefix-aware rules so Bronze can ingest a complete normalization seed before Silver.
+
+### Calculations
+
+1. Observed pair counts and first/last seen dates are computed from the consolidated `tls211_pat_publn` table.
+2. EP `B2` is elevated to `OPPOSITION_SURVIVOR` and EP `C0` to `UNITARY_GRANT`; remaining missing pairs use prefix-based defaults.
+
+### Downstream Impacts
+
+1. This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.
+2. Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue.
+
+### Metrics
+
+- `observed_pair_count`: `641`
+- `seed_input_pair_count`: `10097`
+- `auto_generated_pair_count`: `0`
+- `review_queue_pair_count`: `247`
+- `final_pair_count`: `10097`
+
+## source-certification | failed
+
+- Summary: Certified raw source availability, bridge viability, and mega-cluster sufficiency preconditions.
+- Started: 2026-03-31T20:29:20+00:00
+- Finished: 2026-03-31T20:29:20+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/wipo_techn_field_ipc.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/iso_country_map.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/world_bank_gdp_ppp.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/us_chamber_ip_index.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/up_member_states.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/data-analytics/cpc-coverage-data/ipc_to_wipo_industry.csv
+
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/source-certification.json`
+
+### Methods
+
+1. Scanned local raw-source directories or TIP clients depending on the configured source mode.
+2. Applied release severity classification using configured thresholds and source-family-specific rules.
+3. Recorded source availability and missing-resource warnings before Bronze generation.
+4. Validated required raw-source columns against the schema contracts captured in docs/data and V2 warehouse docs.
+
+### Calculations
+
+1. Source sufficiency is evaluated as presence plus bridge-readiness of family/application/publication identifiers.
+2. Selected field sufficiency requires every configured WIPO field to remain representable downstream.
+
+### Downstream Impacts
+
+1. Failure here blocks Bronze ingestion and prevents the bounded mega-cluster seed from being generated safely.
+2. Missing PATSTAT or weak field coverage will invalidate all downstream family, portfolio, Market Intelligence, and semantic marts.
+3. Missing USPTO or EPAB will specifically degrade semantic claim-space selection while leaving abstract fallback available.
+
+### Governing Docs
+
+1. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+
+### Warnings
+
+1. TIP PATSTAT client could not be initialized: No module named 'epo'
+2. Missing source for `bronze_ext_cpc_coverage` in `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs`.
+3. Missing source for `bronze_ext_cpc_ipc_weights` in `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs`.
+4. Missing source for `bronze_ext_oecd_indicator_seed` in `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs`.
+5. TIP EPAB client could not be initialized: No module named 'epo'
+6. USPTO is configured for external ODP extraction. API key env var `USPTO_ODP_API_KEY` is not present in this runtime, so the dedicated USPTO ODP stage is deferred.
+
+### Metrics
+
+- `bronze_ref_techn_field_ipc_file_count`: `1`
+- `bronze_ref_techn_field_ipc_column_count`: `6`
+- `bronze_ext_iso_country_map_file_count`: `1`
+- `bronze_ext_iso_country_map_column_count`: `3`
+- `bronze_ext_world_bank_gdp_ppp_file_count`: `1`
+- `bronze_ext_world_bank_gdp_ppp_column_count`: `3`
+- `bronze_ext_us_chamber_ip_index_file_count`: `1`
+- `bronze_ext_us_chamber_ip_index_column_count`: `3`
+- `bronze_ext_up_member_states_file_count`: `1`
+- `bronze_ext_up_member_states_column_count`: `3`
+- `bronze_ext_kind_code_normalization_seed_file_count`: `1`
+- `bronze_ext_kind_code_normalization_seed_column_count`: `12`
+- `total_input_file_count`: `6`
+- `uspto_xml_file_count`: `0`
+- `epab_payload_file_count`: `0`
+- `uspto_odp_api_key_available`: `0`
+- `uspto_externalized_from_tip`: `1`
+- `uspto_runtime_stage_required`: `1`
+- `selected_wipo_field_count`: `10`
+
+## bronze | success
+
+- Summary: Generated typed and source-aware Bronze parquet for PATSTAT, Register, and reference inputs.
+- Started: 2026-03-31T21:20:29+00:00
+- Finished: 2026-03-31T21:21:55+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls201_appln.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls202_appln_title.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls203_appln_abstr.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls204_appln_prior.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls206_person.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls207_pers_appln.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls209_appln_ipc.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls212_citation.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls214_npl_publn.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls216_appln_contn.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls224_appln_cpc.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls230_appln_techn_field.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls228_docdb_fam_citn.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls231_inpadoc_legal_event.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls803_legal_event_code.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg101_appln.parquet
+18. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg403_appln_status.parquet
+19. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg107_parties.parquet
+20. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg111_licensee.parquet
+21. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg125_appeal.parquet
+22. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg130_opponent.parquet
+23. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg201_proc_step.parquet
+24. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg202_proc_step_text.parquet
+25. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg203_proc_step_date.parquet
+26. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg301_event_data.parquet
+27. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg402_event_text.parquet
+28. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg701_appln.parquet
+29. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg731_event_data.parquet
+30. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg741_appln_status.parquet
+31. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg742_event_text.parquet
+32. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/wipo_techn_field_ipc.parquet
+33. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/iso_country_map.parquet
+34. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/world_bank_gdp_ppp.parquet
+35. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/us_chamber_ip_index.parquet
+36. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/up_member_states.parquet
+37. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/kind_code_normalization.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_title.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_abstr.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_prior.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_person.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pers_appln.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_ipc.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_contn.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_cpc.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_techn_field.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_docdb_fam_citn.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_inpadoc_legal_event.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ref_legal_event_code.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg101_appln.parquet
+18. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg403_appln_status.parquet
+19. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg107_parties.parquet
+20. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg111_licensee.parquet
+21. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg125_appeal.parquet
+22. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg130_opponent.parquet
+23. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg201_proc_step.parquet
+24. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg202_proc_step_text.parquet
+25. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg203_proc_step_date.parquet
+26. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg301_event_data.parquet
+27. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg402_event_text.parquet
+28. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg701_appln.parquet
+29. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg731_event_data.parquet
+30. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg741_appln_status.parquet
+31. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg742_event_text.parquet
+32. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ref_techn_field_ipc.parquet
+33. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_iso_country_map.parquet
+34. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_world_bank_gdp_ppp.parquet
+35. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_us_chamber_ip_index.parquet
+36. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_up_member_states.parquet
+37. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_kind_code_normalization_seed.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/bronze.json`
+
+### Methods
+
+1. Applied table-specific typing for PATSTAT and Register key/date columns while preserving source columns.
+2. Normalized reference inputs to the canonical Bronze schemas required by Silver legal, market, and scope logic.
+
+### Calculations
+
+1. Bronze row counts reflect the landed bounded raw slice, not downstream family-first aggregates.
+
+### Downstream Impacts
+
+1. These Bronze parquet tables feed scope seeding, legal ledger reconstruction, market weighting, EP Register overlays, citation metrics, and OECD support layers.
+2. Typing errors or missing normalized reference columns here will propagate directly into Silver joins and point-in-time analytics.
+
+### Governing Docs
+
+1. docs/next-phase-v2/26-patentiq-v2-mega-cluster-raw-extraction-and-bronze-bounding-strategy.md
+2. docs/data/patstat-schema.md
+3. docs/data/patstat-register-schema.md
+
+### Warnings
+
+1. Skipped `bronze_ext_cpc_coverage` because no matching raw file was found.
+2. Skipped `bronze_ext_cpc_ipc_weights` because no matching raw file was found.
+3. Skipped `bronze_ext_oecd_indicator_seed` because no matching raw file was found.
+
+### Metrics
+
+- `bronze_patstat_appln_rows`: `36231729`
+- `bronze_patstat_appln_title_rows`: `34149771`
+- `bronze_patstat_appln_abstr_rows`: `32628318`
+- `bronze_patstat_appln_prior_rows`: `12240913`
+- `bronze_patstat_person_rows`: `25484970`
+- `bronze_patstat_pers_appln_rows`: `132921009`
+- `bronze_patstat_appln_ipc_rows`: `40798728`
+- `bronze_patstat_pat_publn_rows`: `47798843`
+- `bronze_patstat_citation_rows`: `27652952`
+- `bronze_patstat_npl_publn_rows`: `5281343`
+- `bronze_patstat_appln_contn_rows`: `1839143`
+- `bronze_patstat_appln_cpc_rows`: `31300011`
+- `bronze_patstat_appln_techn_field_rows`: `37135004`
+- `bronze_patstat_docdb_fam_citn_rows`: `18526500`
+- `bronze_patstat_inpadoc_legal_event_rows`: `138761674`
+- `bronze_ref_legal_event_code_rows`: `62`
+- `bronze_reg101_appln_rows`: `1138403`
+- `bronze_reg403_appln_status_rows`: `17`
+- `bronze_reg107_parties_rows`: `7541254`
+- `bronze_reg111_licensee_rows`: `4216`
+- `bronze_reg125_appeal_rows`: `9921`
+- `bronze_reg130_opponent_rows`: `16398`
+- `bronze_reg201_proc_step_rows`: `1195313`
+- `bronze_reg202_proc_step_text_rows`: `1442273`
+- `bronze_reg203_proc_step_date_rows`: `1446346`
+- `bronze_reg301_event_data_rows`: `1675053`
+- `bronze_reg402_event_text_rows`: `355`
+- `bronze_reg701_appln_rows`: `22860`
+- `bronze_reg731_event_data_rows`: `22686`
+- `bronze_reg741_appln_status_rows`: `7`
+- `bronze_reg742_event_text_rows`: `20`
+- `bronze_ref_techn_field_ipc_rows`: `771`
+- `bronze_ext_iso_country_map_rows`: `296`
+- `bronze_ext_world_bank_gdp_ppp_rows`: `8336`
+- `bronze_ext_us_chamber_ip_index_rows`: `55`
+- `bronze_ext_up_member_states_rows`: `18`
+- `bronze_ext_kind_code_normalization_seed_rows`: `10097`
+- `bronze_total_row_count`: `637285665`
+
+## bronze-uspto-fulltext | success
+
+- Summary: USPTO Bronze parsing was deferred because USPTO is configured for the external ODP stream path and no direct Bronze outputs are present in this runtime.
+- Started: 2026-03-31T21:21:41+00:00
+- Finished: 2026-03-31T21:21:55+00:00
+
+
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/bronze-uspto-fulltext.json`
+
+### Methods
+
+1. Parsed USPTO XML application/publication identifiers, abstracts, and claims.
+2. Preserved publication kind and claim ordering fields required for semantic hierarchy selection.
+3. Skipped bounded-XML parsing because USPTO is handled by the separate `prebronze-uspto-odp` stage when that external path is executed.
+
+### Calculations
+
+1. No family collapse or semantic prioritization occurs in Bronze. This stage only lands text-provider tables.
+
+### Downstream Impacts
+
+1. These tables feed representative claim and abstract selection in the semantic Silver stage only.
+2. They must not be used to override PATSTAT or Register harmonized metadata layers downstream.
+
+### Governing Docs
+
+1. docs/data/uspto-full-text-schema.md
+2. docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `uspto_odp_outputs_present`: `0`
+
+## bronze-epab-fulltext | success
+
+- Summary: Parsed EPAB payloads into Bronze text-provider tables for semantic workflows.
+- Started: 2026-03-31T21:21:41+00:00
+- Finished: 2026-03-31T21:21:57+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_publication.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_publication.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_abstract.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_claims.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_document.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_publication.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_abstract.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_claims.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/bronze-epab-fulltext.json`
+
+### Methods
+
+1. Parsed EPAB publication/application anchors, abstracts, and claims from JSON payloads.
+2. Preserved language and sequence fields for English-claim selection and abstract fallback.
+
+### Calculations
+
+1. Bronze EPAB is source-faithful and does not replace PATSTAT/Register metadata for analytical truth.
+
+### Downstream Impacts
+
+1. These Bronze tables feed EP grant claim selection, abstract fallback, and Data Room transparency outputs.
+2. They must remain text-provider tables and not become the canonical source for classifications or parties in downstream analytics.
+
+### Governing Docs
+
+1. docs/data/ep-full-text-publication-database-schema.md
+2. docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `bronze_epab_document_rows`: `1679816`
+- `bronze_epab_publication_rows`: `1679816`
+- `bronze_epab_abstract_rows`: `0`
+- `bronze_epab_claims_rows`: `2763676`
+
+## scope | failed
+
+- Summary: Built bounded-scope application, family, publication, and owner seeds for the mega-cluster universe.
+- Started: 2026-03-31T21:44:03+00:00
+- Finished: 2026-03-31T21:44:04+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_ipc.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_techn_field.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pers_appln.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_person.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ref_techn_field_ipc.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/scope.json`
+
+### Methods
+
+1. Resolved the in-scope family universe from selected WIPO field mappings before heavy downstream analytics.
+2. Preferred direct PATSTAT technology-field inputs when present and fell back to IPC subclass to WIPO field concordance otherwise.
+3. Bridged the in-scope applications to families, publications, and owners to create the canonical bounded universe.
+
+### Calculations
+
+1. An in-scope application is one whose technology-field mapping falls inside the selected 10 WIPO fields.
+2. An in-scope family is any DOCDB family reachable from the in-scope application seed.
+3. An in-scope portfolio owner seed is derived from applicant-side application-person links only.
+
+### Downstream Impacts
+
+1. These scope seeds bound every downstream family, publication, owner, and portfolio calculation in the MVP warehouse.
+2. An over-broad or under-broad seed will contaminate blocking power, Market Intelligence, forecasts, semantic sampling, and Data Room counts.
+
+### Governing Docs
+
+1. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+2. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+3. docs/new-feature-ideas/mega-cluster-dataset-scope-and-boundary-governance-requirements.md
+
+### Warnings
+
+1. Scope seeding produced zero in-scope families.
+
+### Metrics
+
+- `scope_appln_count`: `0`
+- `scope_family_count`: `0`
+- `scope_publn_count`: `0`
+- `scope_owner_count`: `0`
+
+## scope | success
+
+- Summary: Built bounded-scope application, family, publication, and owner seeds for the mega-cluster universe.
+- Started: 2026-03-31T21:45:29+00:00
+- Finished: 2026-03-31T21:46:31+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_ipc.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_techn_field.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pers_appln.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_person.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ref_techn_field_ipc.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/scope.json`
+
+### Methods
+
+1. Resolved the in-scope family universe from selected WIPO field mappings before heavy downstream analytics.
+2. Preferred direct PATSTAT technology-field inputs when present and fell back to IPC subclass to WIPO field concordance otherwise.
+3. Bridged the in-scope applications to families, publications, and owners to create the canonical bounded universe.
+
+### Calculations
+
+1. An in-scope application is one whose technology-field mapping falls inside the selected 10 WIPO fields.
+2. An in-scope family is any DOCDB family reachable from the in-scope application seed.
+3. An in-scope portfolio owner seed is derived from applicant-side application-person links only.
+
+### Downstream Impacts
+
+1. These scope seeds bound every downstream family, publication, owner, and portfolio calculation in the MVP warehouse.
+2. An over-broad or under-broad seed will contaminate blocking power, Market Intelligence, forecasts, semantic sampling, and Data Room counts.
+
+### Governing Docs
+
+1. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+2. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+3. docs/new-feature-ideas/mega-cluster-dataset-scope-and-boundary-governance-requirements.md
+
+
+### Metrics
+
+- `scope_appln_count`: `32871909`
+- `scope_family_count`: `21353101`
+- `scope_publn_count`: `45738731`
+- `scope_owner_count`: `37134586`
+- `scope_appln_count__Control`: `2011050`
+- `scope_family_count__Control`: `1644622`
+- `scope_publn_count__Control`: `2673570`
+- `scope_appln_count__Audio-visual technology`: `3449359`
+- `scope_family_count__Audio-visual technology`: `2446006`
+- `scope_publn_count__Audio-visual technology`: `4757897`
+- `scope_appln_count__IT methods for management`: `1343950`
+- `scope_family_count__IT methods for management`: `1039957`
+- `scope_publn_count__IT methods for management`: `1770411`
+- `scope_appln_count__Basic communication processes`: `602460`
+- `scope_family_count__Basic communication processes`: `384536`
+- `scope_publn_count__Basic communication processes`: `909364`
+- `scope_appln_count__Measurement`: `4800151`
+- `scope_family_count__Measurement`: `3924046`
+- `scope_publn_count__Measurement`: `6373812`
+- `scope_appln_count__Semiconductors`: `2551134`
+- `scope_family_count__Semiconductors`: `1522749`
+- `scope_publn_count__Semiconductors`: `3794315`
+- `scope_appln_count__Electrical machinery, apparatus, energy`: `6549502`
+- `scope_family_count__Electrical machinery, apparatus, energy`: `5061217`
+- `scope_publn_count__Electrical machinery, apparatus, energy`: `8536504`
+- `scope_appln_count__Computer technology`: `6224533`
+- `scope_family_count__Computer technology`: `4490120`
+- `scope_publn_count__Computer technology`: `9007569`
+- `scope_appln_count__Telecommunications`: `2178969`
+- `scope_family_count__Telecommunications`: `1473614`
+- `scope_publn_count__Telecommunications`: `3173773`
+- `scope_appln_count__Digital communication`: `3160801`
+- `scope_family_count__Digital communication`: `1829831`
+- `scope_publn_count__Digital communication`: `4741516`
+
+## silver-core | success
+
+- Summary: Built core family-first Silver entities and bounded ownership/field normalizations.
+- Started: 2026-04-01T06:05:46+00:00
+- Finished: 2026-04-01T06:14:49+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_ipc_cpc_canonical.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_core.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_agent_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_current_opposition.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_up_status.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_proc_step_features.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_display_ledger.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-core.json`
+
+### Methods
+
+1. Collapsed in-scope applications to the canonical family core.
+2. Normalized publication stage semantics from publication kinds.
+3. Materialized owner harmonization and WIPO field assignment as reusable Silver entities.
+
+### Calculations
+
+1. Grant-stage classification is inferred from publication kind prefix `B` and modifier-stage from `C`.
+2. Portfolio ownership remains bounded to the in-scope family universe only.
+
+### Downstream Impacts
+
+1. silver_family_core and its sibling Silver tables feed all Gold family, portfolio, Market Intelligence, forecast, and semantic marts.
+2. The legal ledger, family status, market weighting, and Register tables created here become the canonical support layer for downstream point-in-time analytics and EP publication evidence views.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+
+
+### Metrics
+
+- `silver_family_core_rows`: `21353101`
+- `silver_family_member_publications_rows`: `45738731`
+- `silver_kind_code_normalization_rows`: `10097`
+- `silver_family_wipo_fields_rows`: `21353101`
+- `silver_assignee_harmonized_rows`: `20894233`
+- `silver_family_ipc_cpc_canonical_rows`: `21353101`
+- `silver_tiered_market_weighting_rows`: `8336`
+- `silver_up_status_rows`: `21353101`
+- `silver_family_jurisdiction_unrolled_rows`: `29523316`
+- `silver_legal_status_event_ledger_rows`: `153932599`
+- `silver_family_status_pt_rows`: `21353101`
+- `silver_ep_register_core_rows`: `1090998`
+- `silver_ep_register_agent_summary_rows`: `1006327`
+- `silver_ep_register_current_opposition_rows`: `1090998`
+- `silver_ep_register_up_status_rows`: `2`
+- `silver_ep_register_proc_step_features_rows`: `1006327`
+- `silver_ep_register_display_ledger_rows`: `1273328`
+
+## silver-enrichment | success
+
+- Summary: Built Silver citation, coverage, enforceability, OECD-style proxy, and Market Intelligence segment layers.
+- Started: 2026-04-01T06:08:01+00:00
+- Finished: 2026-04-01T06:14:50+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_segments.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_timeseries.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment.json`
+
+### Methods
+
+1. Mapped in-scope publications to citation edges and flagged out-of-scope references as ghost-node candidates.
+2. Derived market-intelligence segment tables from field-year family activity inside the bounded universe.
+3. Built lightweight MVP proxies for coverage, enforceability, and quality from validated Silver dependencies.
+
+### Calculations
+
+1. Family adjusted citation score is an MVP proxy based on in-scope citation volume and out-of-scope citation share.
+2. Market-state labels use recent family-count momentum by field-year segment.
+
+### Downstream Impacts
+
+1. These Silver enrichment tables feed Gold blocking power, Market Intelligence, attacker summaries, portfolio summaries, and forecast feature generation.
+2. Weak citation coverage or legal weighting here directly distorts compare, portfolio, and family-level UI cards.
+
+### Governing Docs
+
+1. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+2. docs/new-feature-ideas/field-sliced-competitor-intelligence-and-tech-trend-requirements.md
+3. docs/new-feature-ideas/parallel-global-and-local-trend-engines-requirements.md
+
+
+### Metrics
+
+- `citation_edge_count`: `30166820`
+- `citation_unique_source_publication_count`: `19765529`
+- `citation_unique_cited_publication_count`: `9220675`
+- `citation_unique_source_family_count`: `10871882`
+- `citation_unique_cited_family_count`: `4961245`
+- `silver_family_citation_metrics_rows`: `10871882`
+- `silver_family_trend_tables_rows`: `23816698`
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `silver_family_enforceability_branches_rows`: `21353101`
+- `silver_family_oecd_quality_rows`: `21353101`
+- `silver_market_intelligence_segments_rows`: `10`
+- `silver_market_intelligence_timeseries_rows`: `504`
+
+## silver-semantic | success
+
+- Summary: Built representative family text and semantic eligibility according to the EPAB/PATSTAT hierarchy.
+- Started: 2026-04-01T06:08:14+00:00
+- Finished: 2026-04-01T06:15:07+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_claims.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_abstr.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_text_representative.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_semantic_sampling_eligibility.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-semantic.json`
+
+### Methods
+
+1. Selected one representative text payload per family using EP grant claim first, then PATSTAT abstract fallback.
+2. Materialized semantic sample eligibility as a bounded active-grant cohort for MVP.
+
+### Calculations
+
+1. Claim-space payloads exclude A-document claims and prefer claim 1 only.
+2. Abstract fallback is marked explicitly through `is_abstract_fallback`.
+
+### Downstream Impacts
+
+1. These representative text and eligibility tables feed vector payload generation and the semantic comparison UI.
+2. If empty or degraded, semantic discovery and comparison surfaces should be treated as unavailable in the app.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md
+2. docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `silver_family_text_representative_rows`: `20331702`
+- `silver_semantic_sampling_eligibility_rows`: `2135310`
+
+## scope | success
+
+- Summary: Built bounded-scope application, family, publication, and owner seeds for the mega-cluster universe.
+- Started: 2026-04-01T21:39:42+00:00
+- Finished: 2026-04-01T21:40:29+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_ipc.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_techn_field.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pers_appln.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_person.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ref_techn_field_ipc.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/scope.json`
+
+### Methods
+
+1. Resolved the in-scope family universe from selected WIPO field mappings before heavy downstream analytics.
+2. Preferred direct PATSTAT technology-field inputs when present and fell back to IPC subclass to WIPO field concordance otherwise.
+3. Bridged the in-scope applications to families, publications, and owners to create the canonical bounded universe.
+
+### Calculations
+
+1. An in-scope application is one whose technology-field mapping falls inside the selected 10 WIPO fields.
+2. An in-scope family is any DOCDB family reachable from the in-scope application seed.
+3. An in-scope portfolio owner seed is derived from applicant-side application-person links only.
+
+### Downstream Impacts
+
+1. These scope seeds bound every downstream family, publication, owner, and portfolio calculation in the MVP warehouse.
+2. An over-broad or under-broad seed will contaminate blocking power, Market Intelligence, forecasts, semantic sampling, and Data Room counts.
+
+### Governing Docs
+
+1. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+2. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+3. docs/new-feature-ideas/mega-cluster-dataset-scope-and-boundary-governance-requirements.md
+
+
+### Metrics
+
+- `scope_appln_count`: `32871909`
+- `scope_family_count`: `21353101`
+- `scope_publn_count`: `42692835`
+- `scope_owner_count`: `37134586`
+- `scope_appln_count__IT methods for management`: `1343950`
+- `scope_family_count__IT methods for management`: `1039957`
+- `scope_publn_count__IT methods for management`: `1770411`
+- `scope_appln_count__Basic communication processes`: `602460`
+- `scope_family_count__Basic communication processes`: `384536`
+- `scope_publn_count__Basic communication processes`: `909364`
+- `scope_appln_count__Measurement`: `4800151`
+- `scope_family_count__Measurement`: `3924046`
+- `scope_publn_count__Measurement`: `6373812`
+- `scope_appln_count__Audio-visual technology`: `3449359`
+- `scope_family_count__Audio-visual technology`: `2446006`
+- `scope_publn_count__Audio-visual technology`: `4757897`
+- `scope_appln_count__Control`: `2011050`
+- `scope_family_count__Control`: `1644622`
+- `scope_publn_count__Control`: `2673570`
+- `scope_appln_count__Digital communication`: `3160801`
+- `scope_family_count__Digital communication`: `1829831`
+- `scope_publn_count__Digital communication`: `4741516`
+- `scope_appln_count__Computer technology`: `6224533`
+- `scope_family_count__Computer technology`: `4490120`
+- `scope_publn_count__Computer technology`: `9007569`
+- `scope_appln_count__Telecommunications`: `2178969`
+- `scope_family_count__Telecommunications`: `1473614`
+- `scope_publn_count__Telecommunications`: `3173773`
+- `scope_appln_count__Electrical machinery, apparatus, energy`: `6549502`
+- `scope_family_count__Electrical machinery, apparatus, energy`: `5061217`
+- `scope_publn_count__Electrical machinery, apparatus, energy`: `8536504`
+- `scope_appln_count__Semiconductors`: `2551134`
+- `scope_family_count__Semiconductors`: `1522749`
+- `scope_publn_count__Semiconductors`: `3794315`
+
+## silver-core | success
+
+- Summary: Built core family-first Silver entities and bounded ownership/field normalizations.
+- Started: 2026-04-01T21:40:33+00:00
+- Finished: 2026-04-01T21:48:10+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_ipc_cpc_canonical.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_core.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_agent_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_current_opposition.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_up_status.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_proc_step_features.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_display_ledger.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-core.json`
+
+### Methods
+
+1. Collapsed in-scope applications to the canonical family core.
+2. Normalized publication stage semantics from publication kinds.
+3. Materialized owner harmonization and WIPO field assignment as reusable Silver entities.
+
+### Calculations
+
+1. Grant-stage classification is inferred from publication kind prefix `B` and modifier-stage from `C`.
+2. Portfolio ownership remains bounded to the in-scope family universe only.
+
+### Downstream Impacts
+
+1. silver_family_core and its sibling Silver tables feed all Gold family, portfolio, Market Intelligence, forecast, and semantic marts.
+2. The legal ledger, family status, market weighting, and Register tables created here become the canonical support layer for downstream point-in-time analytics and EP publication evidence views.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+
+
+### Metrics
+
+- `silver_family_core_rows`: `21353101`
+- `silver_family_member_publications_rows`: `42692835`
+- `silver_kind_code_normalization_rows`: `10097`
+- `silver_family_wipo_fields_rows`: `21353101`
+- `silver_assignee_harmonized_rows`: `20894233`
+- `silver_family_ipc_cpc_canonical_rows`: `21353101`
+- `silver_tiered_market_weighting_rows`: `8336`
+- `silver_up_status_rows`: `21353101`
+- `silver_family_jurisdiction_unrolled_rows`: `29523316`
+- `silver_legal_status_event_ledger_rows`: `152285488`
+- `silver_family_status_pt_rows`: `21353101`
+- `silver_ep_register_core_rows`: `1090998`
+- `silver_ep_register_agent_summary_rows`: `1006327`
+- `silver_ep_register_current_opposition_rows`: `1090998`
+- `silver_ep_register_up_status_rows`: `2`
+- `silver_ep_register_proc_step_features_rows`: `1006327`
+- `silver_ep_register_display_ledger_rows`: `1273328`
+
+## silver-enrichment | success
+
+- Summary: Built Silver citation, coverage, enforceability, OECD-style proxy, and Market Intelligence segment layers.
+- Started: 2026-04-01T21:41:36+00:00
+- Finished: 2026-04-01T21:48:10+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_segments.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_timeseries.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment.json`
+
+### Methods
+
+1. Mapped in-scope publications to citation edges and flagged out-of-scope references as ghost-node candidates.
+2. Derived market-intelligence segment tables from field-year family activity inside the bounded universe.
+3. Built lightweight MVP proxies for coverage, enforceability, and quality from validated Silver dependencies.
+
+### Calculations
+
+1. Family adjusted citation score is an MVP proxy based on in-scope citation volume and out-of-scope citation share.
+2. Market-state labels use recent family-count momentum by field-year segment.
+
+### Downstream Impacts
+
+1. These Silver enrichment tables feed Gold blocking power, Market Intelligence, attacker summaries, portfolio summaries, and forecast feature generation.
+2. Weak citation coverage or legal weighting here directly distorts compare, portfolio, and family-level UI cards.
+
+### Governing Docs
+
+1. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+2. docs/new-feature-ideas/field-sliced-competitor-intelligence-and-tech-trend-requirements.md
+3. docs/new-feature-ideas/parallel-global-and-local-trend-engines-requirements.md
+
+
+### Metrics
+
+- `citation_edge_count`: `25169771`
+- `citation_unique_source_publication_count`: `19765529`
+- `citation_unique_cited_publication_count`: `9220675`
+- `citation_unique_source_family_count`: `10871882`
+- `citation_unique_cited_family_count`: `4961245`
+- `silver_family_citation_metrics_rows`: `21353101`
+- `silver_family_trend_tables_rows`: `23816698`
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `silver_family_enforceability_branches_rows`: `21353101`
+- `silver_family_oecd_quality_rows`: `21353101`
+- `silver_market_intelligence_segments_rows`: `10`
+- `silver_market_intelligence_timeseries_rows`: `504`
+
+## silver-semantic | success
+
+- Summary: Built representative family text and semantic eligibility according to the EPAB/PATSTAT hierarchy.
+- Started: 2026-04-01T21:41:46+00:00
+- Finished: 2026-04-01T21:48:14+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_claims.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_abstr.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_text_representative.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_semantic_sampling_eligibility.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-semantic.json`
+
+### Methods
+
+1. Selected one representative text payload per family using EP grant claim first, then PATSTAT abstract fallback.
+2. Materialized semantic sample eligibility as a bounded active-grant cohort for MVP.
+
+### Calculations
+
+1. Claim-space payloads exclude A-document claims and prefer claim 1 only.
+2. Abstract fallback is marked explicitly through `is_abstract_fallback`.
+
+### Downstream Impacts
+
+1. These representative text and eligibility tables feed vector payload generation and the semantic comparison UI.
+2. If empty or degraded, semantic discovery and comparison surfaces should be treated as unavailable in the app.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md
+2. docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `silver_family_text_representative_rows`: `20295898`
+- `silver_semantic_sampling_eligibility_rows`: `21353101`
+
+## silver-core | success
+
+- Summary: Built core family-first Silver entities and bounded ownership/field normalizations.
+- Started: 2026-04-01T22:18:35+00:00
+- Finished: 2026-04-01T22:26:32+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_ipc_cpc_canonical.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_core.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_agent_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_current_opposition.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_up_status.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_proc_step_features.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_display_ledger.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-core.json`
+
+### Methods
+
+1. Collapsed in-scope applications to the canonical family core.
+2. Normalized publication stage semantics from publication kinds.
+3. Materialized owner harmonization and WIPO field assignment as reusable Silver entities.
+
+### Calculations
+
+1. Grant-stage classification is inferred from publication kind prefix `B` and modifier-stage from `C`.
+2. Portfolio ownership remains bounded to the in-scope family universe only.
+
+### Downstream Impacts
+
+1. silver_family_core and its sibling Silver tables feed all Gold family, portfolio, Market Intelligence, forecast, and semantic marts.
+2. The legal ledger, family status, market weighting, and Register tables created here become the canonical support layer for downstream point-in-time analytics and EP publication evidence views.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+
+
+### Metrics
+
+- `silver_family_core_rows`: `21353101`
+- `silver_family_member_publications_rows`: `42692835`
+- `silver_kind_code_normalization_rows`: `10097`
+- `silver_family_wipo_fields_rows`: `21353101`
+- `silver_assignee_harmonized_rows`: `20894233`
+- `silver_family_ipc_cpc_canonical_rows`: `21353101`
+- `silver_tiered_market_weighting_rows`: `8336`
+- `silver_up_status_rows`: `21353101`
+- `silver_family_jurisdiction_unrolled_rows`: `29523316`
+- `silver_legal_status_event_ledger_rows`: `152285488`
+- `silver_family_status_pt_rows`: `21353101`
+- `silver_ep_register_core_rows`: `1090998`
+- `silver_ep_register_agent_summary_rows`: `1006327`
+- `silver_ep_register_current_opposition_rows`: `1090998`
+- `silver_ep_register_up_status_rows`: `2`
+- `silver_ep_register_proc_step_features_rows`: `1006327`
+- `silver_ep_register_display_ledger_rows`: `1273328`
+
+## silver-enrichment | success
+
+- Summary: Built Silver citation, coverage, enforceability, OECD-style proxy, and Market Intelligence segment layers.
+- Started: 2026-04-01T22:19:55+00:00
+- Finished: 2026-04-01T22:26:33+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_docdb_fam_citn.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges_clean.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_segments.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_timeseries.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment.json`
+
+### Methods
+
+1. Mapped PATSTAT publication and DOCDB family citation sources into bounded family citation edges and cleaned family-level impact inputs.
+2. Derived market-intelligence segment tables from field-year family activity inside the bounded universe.
+3. Built lightweight MVP proxies for coverage, enforceability, and quality from validated Silver dependencies.
+
+### Calculations
+
+1. Family adjusted citation score now uses cleaned family-level forward citation intensity with a cohort normalization fallback.
+2. Market-state labels use recent family-count momentum by field-year segment.
+
+### Downstream Impacts
+
+1. These Silver enrichment tables feed Gold blocking power, Market Intelligence, attacker summaries, portfolio summaries, and forecast feature generation.
+2. Weak citation coverage or legal weighting here directly distorts compare, portfolio, and family-level UI cards.
+
+### Governing Docs
+
+1. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+2. docs/new-feature-ideas/field-sliced-competitor-intelligence-and-tech-trend-requirements.md
+3. docs/new-feature-ideas/parallel-global-and-local-trend-engines-requirements.md
+
+
+### Metrics
+
+- `citation_edge_count`: `17461197`
+- `citation_unique_source_family_count`: `10922324`
+- `citation_unique_cited_family_count`: `6019674`
+- `citation_out_of_bounds_edge_count`: `3441661`
+- `silver_family_citation_edges_rows`: `17461197`
+- `silver_family_citation_edges_clean_rows`: `17461197`
+- `silver_family_npl_backlinks_rows`: `14380370`
+- `silver_family_citation_metrics_rows`: `21353101`
+- `silver_family_trend_tables_rows`: `23816698`
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `silver_family_enforceability_branches_rows`: `21353101`
+- `silver_family_oecd_quality_rows`: `21353101`
+- `silver_market_intelligence_segments_rows`: `10`
+- `silver_market_intelligence_timeseries_rows`: `504`
+
+## silver-semantic | success
+
+- Summary: Built representative family text and semantic eligibility according to the EPAB/PATSTAT hierarchy.
+- Started: 2026-04-01T22:20:13+00:00
+- Finished: 2026-04-01T22:26:36+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_claims.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_abstr.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_text_representative.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_semantic_sampling_eligibility.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-semantic.json`
+
+### Methods
+
+1. Selected one representative text payload per family using EP grant claim first, then PATSTAT abstract fallback.
+2. Materialized semantic sample eligibility as a bounded active-grant cohort for MVP.
+
+### Calculations
+
+1. Claim-space payloads exclude A-document claims and prefer claim 1 only.
+2. Abstract fallback is marked explicitly through `is_abstract_fallback`.
+
+### Downstream Impacts
+
+1. These representative text and eligibility tables feed vector payload generation and the semantic comparison UI.
+2. If empty or degraded, semantic discovery and comparison surfaces should be treated as unavailable in the app.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md
+2. docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `silver_family_text_representative_rows`: `20295898`
+- `silver_semantic_sampling_eligibility_rows`: `21353101`
+
+## silver-core | success
+
+- Summary: Built core family-first Silver entities and bounded ownership/field normalizations.
+- Started: 2026-04-01T22:52:58+00:00
+- Finished: 2026-04-01T23:00:47+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_ipc_cpc_canonical.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_core.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_agent_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_current_opposition.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_up_status.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_proc_step_features.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_display_ledger.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-core.json`
+
+### Methods
+
+1. Collapsed in-scope applications to the canonical family core.
+2. Normalized publication stage semantics from publication kinds.
+3. Materialized owner harmonization and WIPO field assignment as reusable Silver entities.
+
+### Calculations
+
+1. Grant-stage classification is inferred from publication kind prefix `B` and modifier-stage from `C`.
+2. Portfolio ownership remains bounded to the in-scope family universe only.
+
+### Downstream Impacts
+
+1. silver_family_core and its sibling Silver tables feed all Gold family, portfolio, Market Intelligence, forecast, and semantic marts.
+2. The legal ledger, family status, market weighting, and Register tables created here become the canonical support layer for downstream point-in-time analytics and EP publication evidence views.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+
+
+### Metrics
+
+- `silver_family_core_rows`: `21353101`
+- `silver_family_member_publications_rows`: `42692835`
+- `silver_kind_code_normalization_rows`: `10097`
+- `silver_family_wipo_fields_rows`: `21353101`
+- `silver_assignee_harmonized_rows`: `20894233`
+- `silver_family_ipc_cpc_canonical_rows`: `21353101`
+- `silver_tiered_market_weighting_rows`: `8336`
+- `silver_up_status_rows`: `21353101`
+- `silver_family_jurisdiction_unrolled_rows`: `29523316`
+- `silver_legal_status_event_ledger_rows`: `152285488`
+- `silver_family_status_pt_rows`: `21353101`
+- `silver_ep_register_core_rows`: `1090998`
+- `silver_ep_register_agent_summary_rows`: `1006327`
+- `silver_ep_register_current_opposition_rows`: `1090998`
+- `silver_ep_register_up_status_rows`: `2`
+- `silver_ep_register_proc_step_features_rows`: `1006327`
+- `silver_ep_register_display_ledger_rows`: `1273328`
+
+## silver-enrichment | success
+
+- Summary: Built Silver citation, coverage, enforceability, OECD-style proxy, and Market Intelligence segment layers.
+- Started: 2026-04-01T22:54:14+00:00
+- Finished: 2026-04-01T23:00:48+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_docdb_fam_citn.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges_clean.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_segments.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_timeseries.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment.json`
+
+### Methods
+
+1. Mapped PATSTAT publication and DOCDB family citation sources into bounded family citation edges and cleaned family-level impact inputs.
+2. Derived market-intelligence segment tables from field-year family activity inside the bounded universe.
+3. Built lightweight MVP proxies for coverage, enforceability, and quality from validated Silver dependencies.
+
+### Calculations
+
+1. Family adjusted citation score now uses cleaned family-level forward citation intensity with a cohort normalization fallback.
+2. Market-state labels use recent family-count momentum by field-year segment.
+
+### Downstream Impacts
+
+1. These Silver enrichment tables feed Gold blocking power, Market Intelligence, attacker summaries, portfolio summaries, and forecast feature generation.
+2. Weak citation coverage or legal weighting here directly distorts compare, portfolio, and family-level UI cards.
+
+### Governing Docs
+
+1. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+2. docs/new-feature-ideas/field-sliced-competitor-intelligence-and-tech-trend-requirements.md
+3. docs/new-feature-ideas/parallel-global-and-local-trend-engines-requirements.md
+
+
+### Metrics
+
+- `citation_edge_count`: `17461197`
+- `citation_unique_source_family_count`: `10922324`
+- `citation_unique_cited_family_count`: `6019674`
+- `citation_out_of_bounds_edge_count`: `3441661`
+- `silver_family_citation_edges_rows`: `17461197`
+- `silver_family_citation_edges_clean_rows`: `17461197`
+- `silver_family_npl_backlinks_rows`: `14380370`
+- `silver_family_citation_metrics_rows`: `21353101`
+- `silver_family_trend_tables_rows`: `23816698`
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `silver_family_enforceability_branches_rows`: `21353101`
+- `silver_family_oecd_quality_rows`: `21353101`
+- `silver_market_intelligence_segments_rows`: `10`
+- `silver_market_intelligence_timeseries_rows`: `504`
+
+## silver-semantic | success
+
+- Summary: Built representative family text and semantic eligibility according to the EPAB/PATSTAT hierarchy.
+- Started: 2026-04-01T22:54:36+00:00
+- Finished: 2026-04-01T23:00:51+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_claims.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_abstr.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_text_representative.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_semantic_sampling_eligibility.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-semantic.json`
+
+### Methods
+
+1. Selected one representative text payload per family using EP grant claim first, then PATSTAT abstract fallback.
+2. Materialized semantic sample eligibility as a bounded active-grant cohort for MVP.
+
+### Calculations
+
+1. Claim-space payloads exclude A-document claims and prefer claim 1 only.
+2. Abstract fallback is marked explicitly through `is_abstract_fallback`.
+
+### Downstream Impacts
+
+1. These representative text and eligibility tables feed vector payload generation and the semantic comparison UI.
+2. If empty or degraded, semantic discovery and comparison surfaces should be treated as unavailable in the app.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md
+2. docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `silver_family_text_representative_rows`: `20295898`
+- `silver_semantic_sampling_eligibility_rows`: `21353101`
+
+## semantic | failed
+
+- Summary: Packaged vector payloads, embedding manifests, and ANN placeholder metadata for the MVP semantic layer.
+- Started: 2026-04-01T23:31:04+00:00
+- Finished: 2026-04-01T23:31:04+00:00
+
+
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic.json`
+
+### Methods
+
+1. Derived claim and abstract vector payloads from the representative family text table using the active EPAB-first representative-text policy.
+2. Used deterministic hash embeddings as the default local MVP embedding method until a promoted external embedding model is wired in.
+
+### Calculations
+
+1. Claim and abstract vector spaces remain physically separate.
+2. Only bounded semantic candidates are embedded.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md
+2. docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. Representative text and semantic eligibility must exist before vector packaging.
+
+## silver-enrichment | success
+
+- Summary: Built Silver citation, coverage, enforceability, OECD-style proxy, and Market Intelligence segment layers.
+- Started: 2026-04-02T09:29:43+00:00
+- Finished: 2026-04-02T09:35:54+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_docdb_fam_citn.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges_clean.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_segments.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_timeseries.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment.json`
+
+### Methods
+
+1. Mapped PATSTAT publication and DOCDB family citation sources into bounded family citation edges and cleaned family-level impact inputs.
+2. Materialized a publication-dated enriched citation network with citing-side assignee, stage, market, and trend context.
+3. Derived market-intelligence segment tables from field-year family activity inside the bounded universe.
+4. Built lightweight MVP proxies for coverage, enforceability, and quality from validated Silver dependencies.
+
+### Calculations
+
+1. Family adjusted citation score now uses 7-year clean weighted forward citation influence with a cohort normalization fallback.
+2. Market-state labels use recent family-count momentum by field-year segment.
+
+### Downstream Impacts
+
+1. These Silver enrichment tables feed Gold blocking power, Market Intelligence, attacker summaries, portfolio summaries, and forecast feature generation.
+2. Weak citation coverage or legal weighting here directly distorts compare, portfolio, and family-level UI cards.
+
+### Governing Docs
+
+1. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+2. docs/new-feature-ideas/field-sliced-competitor-intelligence-and-tech-trend-requirements.md
+3. docs/new-feature-ideas/parallel-global-and-local-trend-engines-requirements.md
+
+
+### Metrics
+
+- `citation_edge_count`: `17461197`
+- `citation_unique_source_family_count`: `10922324`
+- `citation_unique_cited_family_count`: `6019674`
+- `citation_out_of_bounds_edge_count`: `3441661`
+- `silver_family_citation_edges_rows`: `17461197`
+- `silver_family_citation_edges_clean_rows`: `17461197`
+- `silver_enriched_citation_network_rows`: `19602108`
+- `silver_family_npl_backlinks_rows`: `14380370`
+- `silver_family_citation_metrics_rows`: `21353101`
+- `silver_family_trend_tables_rows`: `23816698`
+- `silver_global_tech_trends_timeseries_rows`: `504`
+- `silver_local_tech_trends_timeseries_rows`: `21488`
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `silver_family_enforceability_branches_rows`: `36096788`
+- `silver_family_field_contributions_rows`: `23816698`
+- `silver_family_oecd_quality_rows`: `21353101`
+- `silver_market_intelligence_segments_rows`: `10`
+- `silver_market_intelligence_timeseries_rows`: `504`
+
+## normalize-kind-code | success
+
+- Summary: Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.
+- Started: 2026-04-02T10:05:25+00:00
+- Finished: 2026-04-02T10:05:26+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_manual_overrides.csv
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/normalize-kind-code.json`
+
+### Methods
+
+1. Read the consolidated PATSTAT publication table and aggregated the observed `(publn_auth, publn_kind)` pairs inside the local bounded universe.
+2. Preserved existing kind-code seed rows from `etl/data/raw/refs` and overlaid any explicit manual overrides when present.
+3. Filled missing observed pairs with deterministic office-aware or prefix-aware rules so Bronze can ingest a complete normalization seed before Silver.
+
+### Calculations
+
+1. Observed pair counts and first/last seen dates are computed from the consolidated `tls211_pat_publn` table.
+2. EP `B2` is elevated to `OPPOSITION_SURVIVOR` and EP `C0` to `UNITARY_GRANT`; remaining missing pairs use prefix-based defaults.
+
+### Downstream Impacts
+
+1. This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.
+2. Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue.
+
+### Metrics
+
+- `observed_pair_count`: `641`
+- `seed_input_pair_count`: `10097`
+- `auto_generated_pair_count`: `0`
+- `review_queue_pair_count`: `241`
+- `final_pair_count`: `10097`
+
+## bronze | success
+
+- Summary: Generated typed and source-aware Bronze parquet for PATSTAT, Register, and reference inputs.
+- Started: 2026-04-02T10:05:33+00:00
+- Finished: 2026-04-02T10:08:39+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls201_appln.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls202_appln_title.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls203_appln_abstr.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls204_appln_prior.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls206_person.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls207_pers_appln.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls209_appln_ipc.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls212_citation.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls214_npl_publn.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls216_appln_contn.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls224_appln_cpc.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls230_appln_techn_field.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls228_docdb_fam_citn.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls231_inpadoc_legal_event.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls803_legal_event_code.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg101_appln.parquet
+18. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg403_appln_status.parquet
+19. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg107_parties.parquet
+20. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg111_licensee.parquet
+21. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg125_appeal.parquet
+22. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg130_opponent.parquet
+23. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg201_proc_step.parquet
+24. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg202_proc_step_text.parquet
+25. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg203_proc_step_date.parquet
+26. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg301_event_data.parquet
+27. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg402_event_text.parquet
+28. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg701_appln.parquet
+29. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg731_event_data.parquet
+30. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg741_appln_status.parquet
+31. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/register/reg742_event_text.parquet
+32. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/wipo_techn_field_ipc.parquet
+33. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/iso_country_map.parquet
+34. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/world_bank_gdp_ppp.parquet
+35. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/us_chamber_ip_index.parquet
+36. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/up_member_states.parquet
+37. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/kind_code_normalization.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_title.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_abstr.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_prior.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_person.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pers_appln.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_ipc.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_contn.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_cpc.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_appln_techn_field.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_docdb_fam_citn.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_inpadoc_legal_event.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ref_legal_event_code.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg101_appln.parquet
+18. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg403_appln_status.parquet
+19. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg107_parties.parquet
+20. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg111_licensee.parquet
+21. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg125_appeal.parquet
+22. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg130_opponent.parquet
+23. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg201_proc_step.parquet
+24. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg202_proc_step_text.parquet
+25. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg203_proc_step_date.parquet
+26. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg301_event_data.parquet
+27. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg402_event_text.parquet
+28. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg701_appln.parquet
+29. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg731_event_data.parquet
+30. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg741_appln_status.parquet
+31. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_reg742_event_text.parquet
+32. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ref_techn_field_ipc.parquet
+33. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_iso_country_map.parquet
+34. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_world_bank_gdp_ppp.parquet
+35. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_us_chamber_ip_index.parquet
+36. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_up_member_states.parquet
+37. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_kind_code_normalization_seed.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/bronze.json`
+
+### Methods
+
+1. Applied table-specific typing for PATSTAT and Register key/date columns while preserving source columns.
+2. Normalized reference inputs to the canonical Bronze schemas required by Silver legal, market, and scope logic.
+
+### Calculations
+
+1. Bronze row counts reflect the landed bounded raw slice, not downstream family-first aggregates.
+
+### Downstream Impacts
+
+1. These Bronze parquet tables feed scope seeding, legal ledger reconstruction, market weighting, EP Register overlays, citation metrics, and OECD support layers.
+2. Typing errors or missing normalized reference columns here will propagate directly into Silver joins and point-in-time analytics.
+
+### Governing Docs
+
+1. docs/next-phase-v2/26-patentiq-v2-mega-cluster-raw-extraction-and-bronze-bounding-strategy.md
+2. docs/data/patstat-schema.md
+3. docs/data/patstat-register-schema.md
+
+### Warnings
+
+1. Skipped `bronze_ext_cpc_coverage` because no matching raw file was found.
+2. Skipped `bronze_ext_cpc_ipc_weights` because no matching raw file was found.
+3. Skipped `bronze_ext_oecd_indicator_seed` because no matching raw file was found.
+
+### Metrics
+
+- `bronze_patstat_appln_rows`: `36231729`
+- `bronze_patstat_appln_title_rows`: `34149771`
+- `bronze_patstat_appln_abstr_rows`: `32628318`
+- `bronze_patstat_appln_prior_rows`: `12240913`
+- `bronze_patstat_person_rows`: `25484970`
+- `bronze_patstat_pers_appln_rows`: `132921009`
+- `bronze_patstat_appln_ipc_rows`: `40798728`
+- `bronze_patstat_pat_publn_rows`: `47798843`
+- `bronze_patstat_citation_rows`: `27652952`
+- `bronze_patstat_npl_publn_rows`: `5281343`
+- `bronze_patstat_appln_contn_rows`: `1839143`
+- `bronze_patstat_appln_cpc_rows`: `31300011`
+- `bronze_patstat_appln_techn_field_rows`: `37135004`
+- `bronze_patstat_docdb_fam_citn_rows`: `18526500`
+- `bronze_patstat_inpadoc_legal_event_rows`: `138761674`
+- `bronze_ref_legal_event_code_rows`: `62`
+- `bronze_reg101_appln_rows`: `1138403`
+- `bronze_reg403_appln_status_rows`: `17`
+- `bronze_reg107_parties_rows`: `7541254`
+- `bronze_reg111_licensee_rows`: `4216`
+- `bronze_reg125_appeal_rows`: `9921`
+- `bronze_reg130_opponent_rows`: `16398`
+- `bronze_reg201_proc_step_rows`: `1195313`
+- `bronze_reg202_proc_step_text_rows`: `1442273`
+- `bronze_reg203_proc_step_date_rows`: `1446346`
+- `bronze_reg301_event_data_rows`: `1675053`
+- `bronze_reg402_event_text_rows`: `355`
+- `bronze_reg701_appln_rows`: `22860`
+- `bronze_reg731_event_data_rows`: `22686`
+- `bronze_reg741_appln_status_rows`: `7`
+- `bronze_reg742_event_text_rows`: `20`
+- `bronze_ref_techn_field_ipc_rows`: `771`
+- `bronze_ext_iso_country_map_rows`: `296`
+- `bronze_ext_world_bank_gdp_ppp_rows`: `8336`
+- `bronze_ext_us_chamber_ip_index_rows`: `55`
+- `bronze_ext_up_member_states_rows`: `18`
+- `bronze_ext_kind_code_normalization_seed_rows`: `10097`
+- `bronze_total_row_count`: `637285665`
+
+## bronze-uspto-fulltext | success
+
+- Summary: USPTO Bronze parsing was deferred because USPTO is configured for the external ODP stream path and no direct Bronze outputs are present in this runtime.
+- Started: 2026-04-02T10:07:20+00:00
+- Finished: 2026-04-02T10:08:39+00:00
+
+
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/bronze-uspto-fulltext.json`
+
+### Methods
+
+1. Parsed USPTO XML application/publication identifiers, abstracts, and claims.
+2. Preserved publication kind and claim ordering fields required for semantic hierarchy selection.
+3. Skipped bounded-XML parsing because USPTO is handled by the separate `prebronze-uspto-odp` stage when that external path is executed.
+
+### Calculations
+
+1. No family collapse or semantic prioritization occurs in Bronze. This stage only lands text-provider tables.
+
+### Downstream Impacts
+
+1. These tables feed representative claim and abstract selection in the semantic Silver stage only.
+2. They must not be used to override PATSTAT or Register harmonized metadata layers downstream.
+
+### Governing Docs
+
+1. docs/data/uspto-full-text-schema.md
+2. docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `uspto_odp_outputs_present`: `0`
+
+## bronze-epab-fulltext | success
+
+- Summary: Parsed EPAB payloads into Bronze text-provider tables for semantic workflows.
+- Started: 2026-04-02T10:07:20+00:00
+- Finished: 2026-04-02T10:08:52+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_publication.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_publication.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_abstract.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_claims.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_document.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_publication.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_abstract.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_claims.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/bronze-epab-fulltext.json`
+
+### Methods
+
+1. Parsed EPAB publication/application anchors, abstracts, and claims from JSON payloads.
+2. Preserved language and sequence fields for English-claim selection and abstract fallback.
+
+### Calculations
+
+1. Bronze EPAB is source-faithful and does not replace PATSTAT/Register metadata for analytical truth.
+
+### Downstream Impacts
+
+1. These Bronze tables feed EP grant claim selection, abstract fallback, and Data Room transparency outputs.
+2. They must remain text-provider tables and not become the canonical source for classifications or parties in downstream analytics.
+
+### Governing Docs
+
+1. docs/data/ep-full-text-publication-database-schema.md
+2. docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `bronze_epab_document_rows`: `1679816`
+- `bronze_epab_publication_rows`: `1679816`
+- `bronze_epab_abstract_rows`: `0`
+- `bronze_epab_claims_rows`: `2763676`
+
+## silver-enrichment-kind-legal-refresh | success
+
+- Summary: Rebuilt only the legal-weighted Silver marts after kind-code curation using existing citation and trend support outputs.
+- Started: 2026-04-02T13:03:11+00:00
+- Finished: 2026-04-02T13:06:35+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-legal-refresh.json`
+
+### Methods
+
+1. Reused refreshed citation metrics and existing trend support outputs.
+2. Recomputed only family coverage, enforceability branches, field contributions, and OECD proxy outputs from the current kind-code normalization layer.
+
+### Calculations
+
+1. Branch stage and field contribution values are refreshed from the current Silver kind-code normalization table without rebuilding the semantic layer.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `kindcode_refresh_affected_family_rows`: `5934204`
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `silver_family_enforceability_branches_rows`: `36096788`
+- `silver_family_field_contributions_rows`: `23816698`
+- `silver_family_oecd_quality_rows`: `21353101`
+
+## normalize-kind-code | success
+
+- Summary: Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.
+- Started: 2026-04-02T13:27:11+00:00
+- Finished: 2026-04-02T13:27:12+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_manual_overrides.csv
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/normalize-kind-code.json`
+
+### Methods
+
+1. Read the consolidated PATSTAT publication table and aggregated the observed `(publn_auth, publn_kind)` pairs inside the local bounded universe.
+2. Preserved existing kind-code seed rows from `etl/data/raw/refs` and overlaid any explicit manual overrides when present.
+3. Filled missing observed pairs with deterministic office-aware or prefix-aware rules so Bronze can ingest a complete normalization seed before Silver.
+
+### Calculations
+
+1. Observed pair counts and first/last seen dates are computed from the consolidated `tls211_pat_publn` table.
+2. EP `B2` is elevated to `OPPOSITION_SURVIVOR` and EP `C0` to `UNITARY_GRANT`; remaining missing pairs use prefix-based defaults.
+
+### Downstream Impacts
+
+1. This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.
+2. Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue.
+
+### Metrics
+
+- `observed_pair_count`: `641`
+- `seed_input_pair_count`: `10097`
+- `auto_generated_pair_count`: `0`
+- `review_queue_pair_count`: `237`
+- `final_pair_count`: `10097`
+
+## silver-enrichment-kind-legal-refresh | success
+
+- Summary: Rebuilt only the legal-weighted Silver marts after kind-code curation using existing citation and trend support outputs.
+- Started: 2026-04-02T16:27:23+00:00
+- Finished: 2026-04-02T16:29:02+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-legal-refresh.json`
+
+### Methods
+
+1. Reused refreshed citation metrics and existing trend support outputs.
+2. Recomputed only family coverage, enforceability branches, field contributions, and OECD proxy outputs from the current kind-code normalization layer.
+
+### Calculations
+
+1. Branch stage and field contribution values are refreshed from the current Silver kind-code normalization table without rebuilding the semantic layer.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `kindcode_refresh_affected_family_rows`: `6050238`
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `silver_family_enforceability_branches_rows`: `36096788`
+- `silver_family_field_contributions_rows`: `23816698`
+- `silver_family_oecd_quality_rows`: `21353101`
+
+## normalize-kind-code | success
+
+- Summary: Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.
+- Started: 2026-04-02T16:41:52+00:00
+- Finished: 2026-04-02T16:41:53+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_manual_overrides.csv
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/normalize-kind-code.json`
+
+### Methods
+
+1. Read the consolidated PATSTAT publication table and aggregated the observed `(publn_auth, publn_kind)` pairs inside the local bounded universe.
+2. Preserved existing kind-code seed rows from `etl/data/raw/refs` and overlaid any explicit manual overrides when present.
+3. Filled missing observed pairs with deterministic office-aware or prefix-aware rules so Bronze can ingest a complete normalization seed before Silver.
+
+### Calculations
+
+1. Observed pair counts and first/last seen dates are computed from the consolidated `tls211_pat_publn` table.
+2. EP `B2` is elevated to `OPPOSITION_SURVIVOR` and EP `C0` to `UNITARY_GRANT`; remaining missing pairs use prefix-based defaults.
+
+### Downstream Impacts
+
+1. This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.
+2. Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue.
+
+### Metrics
+
+- `observed_pair_count`: `641`
+- `seed_input_pair_count`: `10097`
+- `auto_generated_pair_count`: `0`
+- `review_queue_pair_count`: `233`
+- `final_pair_count`: `10097`
+
+## silver-enrichment-kind-legal-refresh | success
+
+- Summary: Rebuilt only the legal-weighted Silver marts after kind-code curation using existing citation and trend support outputs.
+- Started: 2026-04-02T16:42:18+00:00
+- Finished: 2026-04-02T17:01:13+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-legal-refresh.json`
+
+### Methods
+
+1. Reused refreshed citation metrics and existing trend support outputs.
+2. Recomputed only family coverage, enforceability branches, field contributions, and OECD proxy outputs from the current kind-code normalization layer.
+
+### Calculations
+
+1. Branch stage and field contribution values are refreshed from the current Silver kind-code normalization table without rebuilding the semantic layer.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `kindcode_refresh_affected_family_rows`: `6050238`
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `silver_family_enforceability_branches_rows`: `36096788`
+- `silver_family_field_contributions_rows`: `23816698`
+- `silver_family_oecd_quality_rows`: `21353101`
+
+## silver-core | success
+
+- Summary: Built core family-first Silver entities and bounded ownership/field normalizations.
+- Started: 2026-04-02T16:42:18+00:00
+- Finished: 2026-04-02T17:03:14+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_ipc_cpc_canonical.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_core.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_agent_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_current_opposition.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_up_status.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_proc_step_features.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_display_ledger.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-core.json`
+
+### Methods
+
+1. Collapsed in-scope applications to the canonical family core.
+2. Normalized publication stage semantics from publication kinds.
+3. Materialized owner harmonization and WIPO field assignment as reusable Silver entities.
+
+### Calculations
+
+1. Grant-stage classification is inferred from publication kind prefix `B` and modifier-stage from `C`.
+2. Portfolio ownership remains bounded to the in-scope family universe only.
+
+### Downstream Impacts
+
+1. silver_family_core and its sibling Silver tables feed all Gold family, portfolio, Market Intelligence, forecast, and semantic marts.
+2. The legal ledger, family status, market weighting, and Register tables created here become the canonical support layer for downstream point-in-time analytics and EP publication evidence views.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+
+
+### Metrics
+
+- `silver_family_core_rows`: `21353101`
+- `silver_family_member_publications_rows`: `42692835`
+- `silver_kind_code_normalization_rows`: `10097`
+- `silver_family_wipo_fields_rows`: `21353101`
+- `silver_assignee_harmonized_rows`: `20894233`
+- `silver_family_ipc_cpc_canonical_rows`: `21353101`
+- `silver_tiered_market_weighting_rows`: `8336`
+- `silver_up_status_rows`: `21353101`
+- `silver_family_jurisdiction_unrolled_rows`: `29502055`
+- `silver_legal_status_event_ledger_rows`: `176704214`
+- `silver_family_status_pt_rows`: `21353101`
+- `silver_ep_register_core_rows`: `1090998`
+- `silver_ep_register_agent_summary_rows`: `1006327`
+- `silver_ep_register_current_opposition_rows`: `1090998`
+- `silver_ep_register_up_status_rows`: `2`
+- `silver_ep_register_proc_step_features_rows`: `1006327`
+- `silver_ep_register_display_ledger_rows`: `1273328`
+
+## silver-enrichment-kind-refresh | success
+
+- Summary: Rebuilt the refreshed kind-code-dependent citation weighting layer; legal-weighted marts should then be refreshed through the incremental legal refresh stage.
+- Started: 2026-04-02T16:46:08+00:00
+- Finished: 2026-04-02T17:03:17+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet
+18. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+19. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+20. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-refresh.json`
+
+### Methods
+
+1. Reused stable citation-edge, NPL, trend, and coverage support outputs from the latest Silver enrichment run.
+2. Recomputed only the kind-code-dependent citation weighting layer and left legal-weighted marts to the dedicated incremental legal refresh stage.
+
+### Calculations
+
+1. Citing-stage multipliers in the enriched citation network are refreshed from the current Silver kind-code normalization table.
+2. Use the follow-on silver-kind-legal-refresh stage to merge refreshed branch, field-contribution, and OECD rows for the affected families.
+
+### Downstream Impacts
+
+1. This refresh path is intended for iterative kind-code curation where the stable support outputs have not changed.
+2. Use the full silver-enrichment stage if citation edges, trend tables, or coverage support outputs are absent or stale for other reasons.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `silver_enriched_citation_network_rows`: `19602108`
+- `silver_family_citation_metrics_rows`: `21353101`
+
+## normalize-kind-code | success
+
+- Summary: Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.
+- Started: 2026-04-02T19:12:23+00:00
+- Finished: 2026-04-02T19:12:24+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_manual_overrides.csv
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/normalize-kind-code.json`
+
+### Methods
+
+1. Read the consolidated PATSTAT publication table and aggregated the observed `(publn_auth, publn_kind)` pairs inside the local bounded universe.
+2. Preserved existing kind-code seed rows from `etl/data/raw/refs` and overlaid any explicit manual overrides when present.
+3. Filled missing observed pairs with deterministic office-aware or prefix-aware rules so Bronze can ingest a complete normalization seed before Silver.
+
+### Calculations
+
+1. Observed pair counts and first/last seen dates are computed from the consolidated `tls211_pat_publn` table.
+2. EP `B2` is elevated to `OPPOSITION_SURVIVOR` and EP `C0` to `UNITARY_GRANT`; remaining missing pairs use prefix-based defaults.
+
+### Downstream Impacts
+
+1. This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.
+2. Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue.
+
+### Metrics
+
+- `observed_pair_count`: `641`
+- `seed_input_pair_count`: `10097`
+- `auto_generated_pair_count`: `0`
+- `review_queue_pair_count`: `224`
+- `final_pair_count`: `10097`
+
+## silver-enrichment-kind-legal-refresh | success
+
+- Summary: Rebuilt only the legal-weighted Silver marts after kind-code curation using existing citation and trend support outputs.
+- Started: 2026-04-02T19:15:31+00:00
+- Finished: 2026-04-02T19:31:57+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-legal-refresh.json`
+
+### Methods
+
+1. Reused refreshed citation metrics and existing trend support outputs.
+2. Recomputed only family coverage, enforceability branches, field contributions, and OECD proxy outputs from the current kind-code normalization layer.
+
+### Calculations
+
+1. Branch stage and field contribution values are refreshed from the current Silver kind-code normalization table without rebuilding the semantic layer.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `kindcode_refresh_affected_family_rows`: `6077939`
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `silver_family_enforceability_branches_rows`: `36096788`
+- `silver_family_field_contributions_rows`: `23816698`
+- `silver_family_oecd_quality_rows`: `21353101`
+
+## silver-core | success
+
+- Summary: Built core family-first Silver entities and bounded ownership/field normalizations.
+- Started: 2026-04-02T19:12:38+00:00
+- Finished: 2026-04-02T19:33:29+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_ipc_cpc_canonical.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_core.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_agent_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_current_opposition.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_up_status.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_proc_step_features.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_display_ledger.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-core.json`
+
+### Methods
+
+1. Collapsed in-scope applications to the canonical family core.
+2. Normalized publication stage semantics from publication kinds.
+3. Materialized owner harmonization and WIPO field assignment as reusable Silver entities.
+
+### Calculations
+
+1. Grant-stage classification is inferred from publication kind prefix `B` and modifier-stage from `C`.
+2. Portfolio ownership remains bounded to the in-scope family universe only.
+
+### Downstream Impacts
+
+1. silver_family_core and its sibling Silver tables feed all Gold family, portfolio, Market Intelligence, forecast, and semantic marts.
+2. The legal ledger, family status, market weighting, and Register tables created here become the canonical support layer for downstream point-in-time analytics and EP publication evidence views.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+
+
+### Metrics
+
+- `silver_family_core_rows`: `21353101`
+- `silver_family_member_publications_rows`: `42692835`
+- `silver_kind_code_normalization_rows`: `10097`
+- `silver_family_wipo_fields_rows`: `21353101`
+- `silver_assignee_harmonized_rows`: `20894233`
+- `silver_family_ipc_cpc_canonical_rows`: `21353101`
+- `silver_tiered_market_weighting_rows`: `8336`
+- `silver_up_status_rows`: `21353101`
+- `silver_family_jurisdiction_unrolled_rows`: `29502055`
+- `silver_legal_status_event_ledger_rows`: `176704214`
+- `silver_family_status_pt_rows`: `21353101`
+- `silver_ep_register_core_rows`: `1090998`
+- `silver_ep_register_agent_summary_rows`: `1006327`
+- `silver_ep_register_current_opposition_rows`: `1090998`
+- `silver_ep_register_up_status_rows`: `2`
+- `silver_ep_register_proc_step_features_rows`: `1006327`
+- `silver_ep_register_display_ledger_rows`: `1273328`
+
+## silver-enrichment-kind-refresh | success
+
+- Summary: Rebuilt the refreshed kind-code-dependent citation weighting layer; legal-weighted marts should then be refreshed through the incremental legal refresh stage.
+- Started: 2026-04-02T19:15:14+00:00
+- Finished: 2026-04-02T19:33:31+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet
+18. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+19. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+20. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-refresh.json`
+
+### Methods
+
+1. Reused stable citation-edge, NPL, trend, and coverage support outputs from the latest Silver enrichment run.
+2. Recomputed only the kind-code-dependent citation weighting layer and left legal-weighted marts to the dedicated incremental legal refresh stage.
+
+### Calculations
+
+1. Citing-stage multipliers in the enriched citation network are refreshed from the current Silver kind-code normalization table.
+2. Use the follow-on silver-kind-legal-refresh stage to merge refreshed branch, field-contribution, and OECD rows for the affected families.
+
+### Downstream Impacts
+
+1. This refresh path is intended for iterative kind-code curation where the stable support outputs have not changed.
+2. Use the full silver-enrichment stage if citation edges, trend tables, or coverage support outputs are absent or stale for other reasons.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `silver_enriched_citation_network_rows`: `19602108`
+- `silver_family_citation_metrics_rows`: `21353101`
+
+## normalize-kind-code | success
+
+- Summary: Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.
+- Started: 2026-04-02T20:26:09+00:00
+- Finished: 2026-04-02T20:26:10+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_manual_overrides.csv
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/normalize-kind-code.json`
+
+### Methods
+
+1. Read the consolidated PATSTAT publication table and aggregated the observed `(publn_auth, publn_kind)` pairs inside the local bounded universe.
+2. Preserved existing kind-code seed rows from `etl/data/raw/refs` and overlaid any explicit manual overrides when present.
+3. Filled missing observed pairs with deterministic office-aware or prefix-aware rules so Bronze can ingest a complete normalization seed before Silver.
+
+### Calculations
+
+1. Observed pair counts and first/last seen dates are computed from the consolidated `tls211_pat_publn` table.
+2. EP `B2` is elevated to `OPPOSITION_SURVIVOR` and EP `C0` to `UNITARY_GRANT`; remaining missing pairs use prefix-based defaults.
+
+### Downstream Impacts
+
+1. This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.
+2. Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue.
+
+### Metrics
+
+- `observed_pair_count`: `641`
+- `seed_input_pair_count`: `10097`
+- `auto_generated_pair_count`: `0`
+- `review_queue_pair_count`: `216`
+- `final_pair_count`: `10097`
+
+## silver-enrichment-kind-legal-refresh | success
+
+- Summary: Rebuilt only the legal-weighted Silver marts after kind-code curation using existing citation and trend support outputs.
+- Started: 2026-04-02T20:27:36+00:00
+- Finished: 2026-04-02T21:02:21+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-legal-refresh.json`
+
+### Methods
+
+1. Reused refreshed citation metrics and existing trend support outputs.
+2. Recomputed only family coverage, enforceability branches, field contributions, and OECD proxy outputs from the current kind-code normalization layer.
+
+### Calculations
+
+1. Branch stage and field contribution values are refreshed from the current Silver kind-code normalization table without rebuilding the semantic layer.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `kindcode_refresh_affected_family_rows`: `6077939`
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `silver_family_enforceability_branches_rows`: `36088232`
+- `silver_family_field_contributions_rows`: `23816698`
+- `silver_family_oecd_quality_rows`: `21353101`
+
+## silver-core | success
+
+- Summary: Built core family-first Silver entities and bounded ownership/field normalizations.
+- Started: 2026-04-02T20:26:17+00:00
+- Finished: 2026-04-02T21:11:41+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_ipc_cpc_canonical.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_core.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_agent_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_current_opposition.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_up_status.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_proc_step_features.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_display_ledger.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-core.json`
+
+### Methods
+
+1. Collapsed in-scope applications to the canonical family core.
+2. Normalized publication stage semantics from publication kinds.
+3. Materialized owner harmonization and WIPO field assignment as reusable Silver entities.
+
+### Calculations
+
+1. Grant-stage classification is inferred from publication kind prefix `B` and modifier-stage from `C`.
+2. Portfolio ownership remains bounded to the in-scope family universe only.
+
+### Downstream Impacts
+
+1. silver_family_core and its sibling Silver tables feed all Gold family, portfolio, Market Intelligence, forecast, and semantic marts.
+2. The legal ledger, family status, market weighting, and Register tables created here become the canonical support layer for downstream point-in-time analytics and EP publication evidence views.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+
+
+### Metrics
+
+- `silver_family_core_rows`: `21353101`
+- `silver_family_member_publications_rows`: `42692835`
+- `silver_kind_code_normalization_rows`: `10097`
+- `silver_family_wipo_fields_rows`: `21353101`
+- `silver_assignee_harmonized_rows`: `20894233`
+- `silver_family_ipc_cpc_canonical_rows`: `21353101`
+- `silver_tiered_market_weighting_rows`: `8336`
+- `silver_up_status_rows`: `21353101`
+- `silver_family_jurisdiction_unrolled_rows`: `29502055`
+- `silver_legal_status_event_ledger_rows`: `176704214`
+- `silver_family_status_pt_rows`: `21353101`
+- `silver_ep_register_core_rows`: `1090998`
+- `silver_ep_register_agent_summary_rows`: `1006327`
+- `silver_ep_register_current_opposition_rows`: `1090998`
+- `silver_ep_register_up_status_rows`: `2`
+- `silver_ep_register_proc_step_features_rows`: `1006327`
+- `silver_ep_register_display_ledger_rows`: `1273328`
+
+## silver-enrichment-kind-refresh | success
+
+- Summary: Rebuilt the refreshed kind-code-dependent citation weighting layer; legal-weighted marts should then be refreshed through the incremental legal refresh stage.
+- Started: 2026-04-02T20:29:53+00:00
+- Finished: 2026-04-02T21:11:44+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet
+18. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+19. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+20. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-refresh.json`
+
+### Methods
+
+1. Reused stable citation-edge, NPL, trend, and coverage support outputs from the latest Silver enrichment run.
+2. Recomputed only the kind-code-dependent citation weighting layer and left legal-weighted marts to the dedicated incremental legal refresh stage.
+
+### Calculations
+
+1. Citing-stage multipliers in the enriched citation network are refreshed from the current Silver kind-code normalization table.
+2. Use the follow-on silver-kind-legal-refresh stage to merge refreshed branch, field-contribution, and OECD rows for the affected families.
+
+### Downstream Impacts
+
+1. This refresh path is intended for iterative kind-code curation where the stable support outputs have not changed.
+2. Use the full silver-enrichment stage if citation edges, trend tables, or coverage support outputs are absent or stale for other reasons.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `silver_enriched_citation_network_rows`: `19602108`
+- `silver_family_citation_metrics_rows`: `21353101`
+
+## normalize-kind-code | success
+
+- Summary: Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.
+- Started: 2026-04-02T21:17:06+00:00
+- Finished: 2026-04-02T21:17:06+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_manual_overrides.csv
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/normalize-kind-code.json`
+
+### Methods
+
+1. Read the consolidated PATSTAT publication table and aggregated the observed `(publn_auth, publn_kind)` pairs inside the local bounded universe.
+2. Preserved existing kind-code seed rows from `etl/data/raw/refs` and overlaid any explicit manual overrides when present.
+3. Filled missing observed pairs with deterministic office-aware or prefix-aware rules so Bronze can ingest a complete normalization seed before Silver.
+
+### Calculations
+
+1. Observed pair counts and first/last seen dates are computed from the consolidated `tls211_pat_publn` table.
+2. EP `B2` is elevated to `OPPOSITION_SURVIVOR` and EP `C0` to `UNITARY_GRANT`; remaining missing pairs use prefix-based defaults.
+
+### Downstream Impacts
+
+1. This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.
+2. Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue.
+
+### Metrics
+
+- `observed_pair_count`: `641`
+- `seed_input_pair_count`: `10097`
+- `auto_generated_pair_count`: `0`
+- `review_queue_pair_count`: `214`
+- `final_pair_count`: `10097`
+
+## silver-core | success
+
+- Summary: Built core family-first Silver entities and bounded ownership/field normalizations.
+- Started: 2026-04-02T21:17:22+00:00
+- Finished: 2026-04-02T21:25:01+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_ipc_cpc_canonical.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_core.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_agent_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_current_opposition.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_up_status.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_proc_step_features.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_display_ledger.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-core.json`
+
+### Methods
+
+1. Collapsed in-scope applications to the canonical family core.
+2. Normalized publication stage semantics from publication kinds.
+3. Materialized owner harmonization and WIPO field assignment as reusable Silver entities.
+
+### Calculations
+
+1. Grant-stage classification is inferred from publication kind prefix `B` and modifier-stage from `C`.
+2. Portfolio ownership remains bounded to the in-scope family universe only.
+
+### Downstream Impacts
+
+1. silver_family_core and its sibling Silver tables feed all Gold family, portfolio, Market Intelligence, forecast, and semantic marts.
+2. The legal ledger, family status, market weighting, and Register tables created here become the canonical support layer for downstream point-in-time analytics and EP publication evidence views.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md
+
+
+### Metrics
+
+- `silver_family_core_rows`: `21353101`
+- `silver_family_member_publications_rows`: `42692835`
+- `silver_kind_code_normalization_rows`: `10097`
+- `silver_family_wipo_fields_rows`: `21353101`
+- `silver_assignee_harmonized_rows`: `20894233`
+- `silver_family_ipc_cpc_canonical_rows`: `21353101`
+- `silver_tiered_market_weighting_rows`: `8336`
+- `silver_up_status_rows`: `21353101`
+- `silver_family_jurisdiction_unrolled_rows`: `29502055`
+- `silver_legal_status_event_ledger_rows`: `176704214`
+- `silver_family_status_pt_rows`: `21353101`
+- `silver_ep_register_core_rows`: `1090998`
+- `silver_ep_register_agent_summary_rows`: `1006327`
+- `silver_ep_register_current_opposition_rows`: `1090998`
+- `silver_ep_register_up_status_rows`: `2`
+- `silver_ep_register_proc_step_features_rows`: `1006327`
+- `silver_ep_register_display_ledger_rows`: `1273328`
+
+## silver-enrichment-kind-refresh | success
+
+- Summary: Rebuilt the refreshed kind-code-dependent citation weighting layer; legal-weighted marts should then be refreshed through the incremental legal refresh stage.
+- Started: 2026-04-02T21:19:27+00:00
+- Finished: 2026-04-02T21:25:04+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_citation.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_pat_publn.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_patstat_npl_publn.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet
+18. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+19. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+20. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-kind-refresh.json`
+
+### Methods
+
+1. Reused stable citation-edge, NPL, trend, and coverage support outputs from the latest Silver enrichment run.
+2. Recomputed only the kind-code-dependent citation weighting layer and left legal-weighted marts to the dedicated incremental legal refresh stage.
+
+### Calculations
+
+1. Citing-stage multipliers in the enriched citation network are refreshed from the current Silver kind-code normalization table.
+2. Use the follow-on silver-kind-legal-refresh stage to merge refreshed branch, field-contribution, and OECD rows for the affected families.
+
+### Downstream Impacts
+
+1. This refresh path is intended for iterative kind-code curation where the stable support outputs have not changed.
+2. Use the full silver-enrichment stage if citation edges, trend tables, or coverage support outputs are absent or stale for other reasons.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `silver_enriched_citation_network_rows`: `19602108`
+- `silver_family_citation_metrics_rows`: `21353101`
+
+## build-oecd-indicator-seed | success
+
+- Summary: Built a family-first OECD indicator seed in wide family-level raw form from existing Silver citation, field, and family layers without rerunning Bronze.
+- Started: 2026-04-03T06:07:53+00:00
+- Finished: 2026-04-03T06:19:40+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_seed.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/build-oecd-indicator-seed.json`
+
+### Methods
+
+1. Used family-first collapse and deduplicated family-to-family citation pools rather than patent-level averaging.
+2. Anchored OECD cohort normalization on `family_priority_year x primary_wipo_field` and forward-citation windows on `family_earliest_publication_date`.
+3. Materialized a scalable wide family-level raw indicator seed; normalized cohort-stat projection is deferred until a downstream consumer requires it.
+
+### Calculations
+
+1. Computed `fwd_cits5`, `fwd_cits7`, `generality`, `originality`, `radicalness`, `bwd_cits`, `npl_cits`, and `science_grounding` at family grain.
+2. Preserved raw values and truncation flags per indicator in the wide seed.
+3. Marked fixed-window forward-citation rows as truncation-sensitive when the family publication anchor is too recent for a complete observation window.
+
+### Downstream Impacts
+
+1. The rich seed can later feed Bronze or direct Silver/Gold benchmark overlays without recomputing the citation pools.
+2. Recent-cohort forward-window indicators remain usable but are explicitly marked as truncation-sensitive.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md
+2. docs/new-feature-ideas/oecd-indicator-seed-build-spec.md
+3. docs/oecd-patent-quality/oecd-patent-quality-definitions-and-feature-mapping.md
+
+
+### Metrics
+
+- `oecd_indicator_seed_rows`: `21353101`
+- `oecd_indicator_seed_indicator_count`: `8`
+- `oecd_indicator_seed_family_count`: `21353101`
+
+## build-oecd-indicator-cohort-stats | success
+
+- Summary: Built the OECD cohort-stat companion from the wide raw family-level OECD seed.
+- Started: 2026-04-03T08:14:33+00:00
+- Finished: 2026-04-03T08:14:55+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_cohort_stats.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/build-oecd-indicator-cohort-stats.json`
+
+### Methods
+
+1. Read the existing wide family-level OECD seed rather than recomputing the citation and field joins.
+2. Aggregated cohort statistics by `family_priority_year x primary_wipo_field x indicator_name`.
+3. Used approximate quantiles for cohort percentiles to keep local generation tractable on the bounded mega-cluster slice.
+
+### Calculations
+
+1. Computed cohort size, mean, standard deviation, and percentile checkpoints for the core OECD indicator set.
+2. Kept the cohort companion separate from the raw seed so normalized benchmarking can be added later without changing the base family-level artifact.
+
+### Downstream Impacts
+
+1. This companion enables cohort-relative interpretation and future percentile/z-score derivation without rerunning the raw OECD seed build.
+2. Portfolio hit-rate and top-decile OECD views can now be built from the current local artifact set.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md
+2. docs/new-feature-ideas/oecd-indicator-seed-build-spec.md
+
+
+### Metrics
+
+- `oecd_indicator_cohort_rows`: `3968`
+
+## build-oecd-indicator-cohort-stats | success
+
+- Summary: Built the OECD cohort-stat companion from the wide raw family-level OECD seed.
+- Started: 2026-04-03T08:17:39+00:00
+- Finished: 2026-04-03T08:18:02+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_cohort_stats.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/build-oecd-indicator-cohort-stats.json`
+
+### Methods
+
+1. Read the existing wide family-level OECD seed rather than recomputing the citation and field joins.
+2. Aggregated cohort statistics by `family_priority_year x primary_wipo_field x indicator_name`.
+3. Used approximate quantiles for cohort percentiles to keep local generation tractable on the bounded mega-cluster slice.
+
+### Calculations
+
+1. Computed cohort size, mean, standard deviation, and percentile checkpoints for the core OECD indicator set.
+2. Kept the cohort companion separate from the raw seed so normalized benchmarking can be added later without changing the base family-level artifact.
+
+### Downstream Impacts
+
+1. This companion enables cohort-relative interpretation and future percentile/z-score derivation without rerunning the raw OECD seed build.
+2. Portfolio hit-rate and top-decile OECD views can now be built from the current local artifact set.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md
+2. docs/new-feature-ideas/oecd-indicator-seed-build-spec.md
+
+
+### Metrics
+
+- `oecd_indicator_cohort_rows`: `3968`
+
+## build-oecd-indicator-seed | success
+
+- Summary: Built a family-first OECD indicator seed in wide family-level raw form from existing Silver citation, field, family-size, and grant-lag layers without rerunning Bronze.
+- Started: 2026-04-03T08:32:40+00:00
+- Finished: 2026-04-03T08:36:50+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_seed.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/build-oecd-indicator-seed.json`
+
+### Methods
+
+1. Used family-first collapse and deduplicated family-to-family citation pools rather than patent-level averaging.
+2. Anchored OECD cohort normalization on `family_priority_year x primary_wipo_field` and forward-citation windows on `family_earliest_publication_date`.
+3. Computed family-level grant lag from the first granted member publication minus that member application filing date.
+4. Kept the raw seed wide and family-grain so richer normalized or Bronze-facing projections can be materialized separately.
+
+### Calculations
+
+1. Computed `fwd_cits5`, `fwd_cits7`, `generality`, `originality`, `radicalness`, `bwd_cits`, `npl_cits`, `science_grounding`, `family_size`, and `grant_lag` at family grain.
+2. Preserved raw values and truncation flags per indicator in the wide seed.
+3. Marked fixed-window forward-citation rows as truncation-sensitive when the family publication anchor is too recent for a complete observation window.
+
+### Downstream Impacts
+
+1. The rich seed can feed Bronze or direct Silver/Gold benchmark overlays without recomputing the citation pools.
+2. Recent-cohort forward-window indicators remain usable but are explicitly marked as truncation-sensitive.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md
+2. docs/new-feature-ideas/oecd-indicator-seed-build-spec.md
+3. docs/oecd-patent-quality/oecd-patent-quality-definitions-and-feature-mapping.md
+
+
+### Metrics
+
+- `oecd_indicator_seed_rows`: `21353101`
+- `oecd_indicator_seed_indicator_count`: `10`
+- `oecd_indicator_seed_family_count`: `21353101`
+
+## build-oecd-indicator-cohort-stats | success
+
+- Summary: Built the OECD cohort-stat companion from the wide raw family-level OECD seed.
+- Started: 2026-04-03T08:37:10+00:00
+- Finished: 2026-04-03T08:37:37+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_cohort_stats.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/build-oecd-indicator-cohort-stats.json`
+
+### Methods
+
+1. Read the existing wide family-level OECD seed rather than recomputing the citation and field joins.
+2. Aggregated cohort statistics by `family_priority_year x primary_wipo_field x indicator_name`.
+3. Used approximate quantiles for cohort percentiles to keep local generation tractable on the bounded mega-cluster slice.
+
+### Calculations
+
+1. Computed cohort size, mean, standard deviation, and percentile checkpoints for the OECD base indicator set including `family_size` and `grant_lag`.
+2. Kept the cohort companion separate from the raw seed so normalized benchmarking can be added later without changing the base family-level artifact.
+
+### Downstream Impacts
+
+1. This companion enables cohort-relative interpretation and later percentile/z-score derivation without rerunning the raw OECD seed build.
+2. Portfolio hit-rate and top-decile OECD views can now be built from the current local artifact set.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md
+2. docs/new-feature-ideas/oecd-indicator-seed-build-spec.md
+
+
+### Metrics
+
+- `oecd_indicator_cohort_rows`: `4944`
+- `oecd_indicator_cohort_indicator_count`: `10`
+
+## build-oecd-indicator-longform | success
+
+- Summary: Built the normalized long-form OECD indicator projection, including explicit family-first composite variants.
+- Started: 2026-04-03T08:40:21+00:00
+- Finished: 2026-04-03T08:51:37+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_cohort_stats.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_longform.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/build-oecd-indicator-longform.json`
+
+### Methods
+
+1. Expanded the wide family-level OECD seed into one row per `family x indicator` for downstream benchmarking and Bronze-compatible projections.
+2. Computed exact within-cohort percentile ranks and z-scores by `family_priority_year x primary_wipo_field x indicator_name`.
+3. Built `quality_index_4` and `quality_index_6` as explicit family-first composite variants with the claims component omitted and labeled in-schema.
+
+### Calculations
+
+1. Percentile rank is the canonical exposed normalized value; z-score is preserved for analytical use.
+2. Grant-lag normalization is inverted so faster grants receive higher normalized scores.
+3. Composite rows are built from normalized components only and carry explicit component policy metadata.
+
+### Downstream Impacts
+
+1. This artifact can feed Bronze/Silver OECD overlays and direct portfolio benchmarking without recomputing cohort windows.
+2. The long-form shape supports explainable indicator drilldowns and future Bronze-compatible ingestion.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md
+2. docs/new-feature-ideas/oecd-indicator-seed-build-spec.md
+
+
+### Metrics
+
+- `oecd_indicator_longform_rows`: `240090134`
+- `oecd_indicator_longform_indicator_count`: `12`
+
+## silver-oecd-refresh | success
+
+- Summary: Rebuilt only the Silver OECD family mart from the normalized OECD long-form artifact and existing legal/citation support tables.
+- Started: 2026-04-03T08:58:57+00:00
+- Finished: 2026-04-03T09:04:58+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-oecd-refresh.json`
+
+### Methods
+
+1. Preferred the normalized OECD long-form projection when present and fell back to the legacy proxy formula only if the richer artifact was unavailable.
+2. Reused existing Silver coverage, citation, and enforceability outputs rather than rerunning the full legal refresh.
+
+### Calculations
+
+1. Pivoted the OECD long-form indicators back to one row per family and preserved the legacy proxy columns for compatibility.
+2. Exposed richer raw and percentile OECD fields alongside `oecd_quality_percentile` and `oecd_quality_proxy_score`.
+
+### Downstream Impacts
+
+1. Gold, ML, and portfolio quality overlays can now consume richer OECD-style family signals without a full Silver rerun.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md
+2. docs/new-feature-ideas/oecd-indicator-seed-build-spec.md
+
+
+### Metrics
+
+- `silver_family_oecd_quality_rows`: `21353101`
+
+## build-oecd-indicator-bronze-projection | success
+
+- Summary: Projected the richer OECD long-form artifact into the Bronze-facing reference contract and landed the typed Bronze parquet directly.
+- Started: 2026-04-03T09:18:07+00:00
+- Finished: 2026-04-03T09:22:19+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_longform.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/refs/oecd_quality_indicator_seed.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_ext_oecd_indicator_seed.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/build-oecd-indicator-bronze-projection.json`
+
+### Methods
+
+1. Read the normalized OECD long-form artifact rather than recomputing family metrics again.
+2. Used percentile rank as the canonical `indicator_value` for the Bronze-facing contract while preserving raw and z-score companions.
+3. Wrote both the bounded reference source file and the Bronze parquet directly so future Bronze reruns have a stable OECD input.
+
+### Calculations
+
+1. Projected one row per `family x indicator` with normalized value, raw value, z-score, cohort size, and component metadata.
+
+### Downstream Impacts
+
+1. This closes the Bronze contract gap for the OECD indicator seed without disturbing the richer raw family-level seed artifacts.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/oecd-indicator-seed-build-spec.md
+2. docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md
+
+
+### Metrics
+
+- `oecd_indicator_bronze_projection_rows`: `240090134`
+
+## silver-enrichment-legal-status-refresh | success
+
+- Summary: Rebuilt coverage and incrementally refreshed legal-weighted Silver marts for families affected by dated lapse/expiry events after legal-ledger date repair.
+- Started: 2026-04-03T17:14:03+00:00
+- Finished: 2026-04-03T17:36:54+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-legal-status-refresh.json`
+
+### Methods
+
+1. Rebuilt family coverage metrics from the repaired current family-status snapshot.
+2. Merged refreshed enforceability, field-contribution, and OECD rows only for families touched by dated lapse/expiry events.
+
+### Calculations
+
+1. Affected-family slice is derived from current Silver legal-ledger rows with dated lapse/expiry events on or before the snapshot date.
+2. This refresh path is intended to propagate legal-state fixes without rerunning the semantic or citation-edge layers.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `legal_status_refresh_affected_family_rows`: `1000157`
+- `silver_family_enforceability_branches_rows`: `36096788`
+- `silver_family_field_contributions_rows`: `23816698`
+- `silver_family_oecd_quality_rows`: `21353101`
+
+## silver-oecd-refresh | success
+
+- Summary: Rebuilt only the Silver OECD family mart from the normalized OECD long-form artifact and existing legal/citation support tables.
+- Started: 2026-04-03T17:21:11+00:00
+- Finished: 2026-04-03T17:39:33+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-oecd-refresh.json`
+
+### Methods
+
+1. Preferred the normalized OECD long-form projection when present and fell back to the legacy proxy formula only if the richer artifact was unavailable.
+2. Reused existing Silver coverage, citation, and enforceability outputs rather than rerunning the full legal refresh.
+
+### Calculations
+
+1. Pivoted the OECD long-form indicators back to one row per family and preserved the legacy proxy columns for compatibility.
+2. Exposed richer raw and percentile OECD fields alongside `oecd_quality_percentile` and `oecd_quality_proxy_score`.
+
+### Downstream Impacts
+
+1. Gold, ML, and portfolio quality overlays can now consume richer OECD-style family signals without a full Silver rerun.
+
+### Governing Docs
+
+1. docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md
+2. docs/new-feature-ideas/oecd-indicator-seed-build-spec.md
+
+
+### Metrics
+
+- `silver_family_oecd_quality_rows`: `21353101`
+
+## silver-enrichment-legal-status-refresh | success
+
+- Summary: Rebuilt coverage and incrementally refreshed legal-weighted Silver marts for families affected by dated lapse/expiry events after legal-ledger date repair.
+- Started: 2026-04-03T18:10:22+00:00
+- Finished: 2026-04-03T18:44:27+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-enrichment-legal-status-refresh.json`
+
+### Methods
+
+1. Rebuilt family coverage metrics from the repaired current family-status snapshot.
+2. Merged refreshed enforceability, field-contribution, and OECD rows only for families touched by dated lapse/expiry events.
+
+### Calculations
+
+1. Affected-family slice is derived from current Silver legal-ledger rows with dated lapse/expiry events on or before the snapshot date.
+2. This refresh path is intended to propagate legal-state fixes without rerunning the semantic or citation-edge layers.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `silver_family_coverage_metrics_rows`: `21353101`
+- `legal_status_refresh_affected_family_rows`: `1000157`
+- `silver_family_enforceability_branches_rows`: `36096788`
+- `silver_family_field_contributions_rows`: `23816698`
+- `silver_family_oecd_quality_rows`: `21353101`
+
+## silver-history-refresh | success
+
+- Summary: Rebuilt Silver legal-history sidecars in family buckets from the replayable legal ledger.
+- Started: 2026-04-03T19:29:28+00:00
+- Finished: 2026-04-03T19:35:41+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_branch_status_history.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_history.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-history-refresh.json`
+
+### Methods
+
+1. Partitioned families into deterministic buckets and replayed yearly branch state per bucket.
+2. Derived dense yearly family history from compact branch-state deltas rather than one monolithic all-family query.
+
+### Calculations
+
+1. Branch history remains change-point based plus current year.
+2. Family history is expanded yearly from the earliest observed branch-history year to the build snapshot year.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/blocking-power-lifecycle-and-point-in-time-scoring-requirements.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `silver_branch_status_history_rows`: `76203840`
+- `silver_family_status_history_rows`: `240834180`
+- `history_refresh_bucket_count`: `16`
+
+## silver-history-refresh | success
+
+- Summary: Rebuilt Silver legal-history sidecars in family buckets from the replayable legal ledger.
+- Started: 2026-04-03T19:41:14+00:00
+- Finished: 2026-04-03T19:47:26+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_branch_status_history.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_history.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-history-refresh.json`
+
+### Methods
+
+1. Partitioned families into deterministic buckets and replayed yearly branch state per bucket.
+2. Derived dense yearly family history from compact branch-state deltas rather than one monolithic all-family query.
+
+### Calculations
+
+1. Branch history remains change-point based plus current year.
+2. Family history is expanded yearly from the earliest observed branch-history year to the build snapshot year.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/blocking-power-lifecycle-and-point-in-time-scoring-requirements.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `silver_branch_status_history_rows`: `76203835`
+- `silver_family_status_history_rows`: `240834180`
+- `history_refresh_bucket_count`: `16`
+
+## silver-history-refresh | success
+
+- Summary: Rebuilt Silver legal-history sidecars in family buckets from the replayable legal ledger.
+- Started: 2026-04-03T19:49:33+00:00
+- Finished: 2026-04-03T19:55:46+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_branch_status_history.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_history.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-history-refresh.json`
+
+### Methods
+
+1. Partitioned families into deterministic buckets and replayed yearly branch state per bucket.
+2. Derived dense yearly family history from compact branch-state deltas rather than one monolithic all-family query.
+
+### Calculations
+
+1. Branch history remains change-point based plus current year.
+2. Family history is expanded yearly from the earliest observed branch-history year to the build snapshot year, with current-year rows anchored to silver_family_status_pt.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/blocking-power-lifecycle-and-point-in-time-scoring-requirements.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `silver_branch_status_history_rows`: `76203835`
+- `silver_family_status_history_rows`: `240834180`
+- `history_refresh_bucket_count`: `16`
+
+## silver-history-refresh | success
+
+- Summary: Rebuilt Silver legal-history sidecars in family buckets from the replayable legal ledger.
+- Started: 2026-04-03T20:10:53+00:00
+- Finished: 2026-04-03T20:20:13+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_branch_status_history.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_branch_status_history_dense.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_history.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-history-refresh.json`
+
+### Methods
+
+1. Partitioned families into deterministic buckets and replayed yearly branch state per bucket.
+2. Derived dense yearly branch and family history from compact branch-state deltas rather than one monolithic all-family query.
+
+### Calculations
+
+1. Branch history remains change-point based plus current year, with a separate dense branch-year expansion artifact.
+2. Family history is expanded yearly from the earliest observed branch-history year to the build snapshot year, with current-year rows anchored to silver_family_status_pt.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/blocking-power-lifecycle-and-point-in-time-scoring-requirements.md
+2. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+
+### Metrics
+
+- `silver_branch_status_history_rows`: `76203835`
+- `silver_branch_status_history_dense_rows`: `386481639`
+- `silver_family_status_history_rows`: `240834180`
+- `history_refresh_bucket_count`: `16`
+
+## silver-owner-refresh | success
+
+- Summary: Rebuilt Silver family-owner bridge and deterministic primary-owner table from the scoped owner seed.
+- Started: 2026-04-03T20:43:34+00:00
+- Finished: 2026-04-03T20:46:59+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_owner_bridge.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-owner-refresh.json`
+
+### Methods
+
+1. Aggregated the scoped owner seed into one reusable row per family-owner combination.
+2. Selected the primary family owner deterministically by scoped application coverage with stable lexical tie-breaks.
+
+### Calculations
+
+1. Owner harmonization uses UNKNOWN_OWNER only for blank or degenerate normalized names.
+2. Primary-owner ranking prefers non-UNKNOWN_OWNER owners, then highest owner_scope_appln_count, then harmonized/display-name tie-breaks.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+
+
+### Metrics
+
+- `silver_family_owner_bridge_rows`: `27840126`
+- `silver_assignee_harmonized_rows`: `20894233`
+
+## gold | success
+
+- Summary: Built Gold family, portfolio, Market Intelligence, attacker, history, and semantic-context marts from note-aligned Silver contracts.
+- Started: 2026-04-03T21:56:57+00:00
+- Finished: 2026-04-03T22:48:08+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power_timeseries.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions_timeseries.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_field_timeseries.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_threat_matrix.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_overview.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_segments.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_timeseries.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_attacker_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_summary.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_heritage_summary.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_heritage_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_summary_rows`: `17633618`
+- `gold_family_blocking_power_rows`: `17633618`
+- `gold_family_blocking_power_timeseries_rows`: `152148100`
+- `gold_family_field_contributions_timeseries_rows`: `172227934`
+- `gold_family_field_contributions_rows`: `172227934`
+- `gold_portfolio_summary_rows`: `3034400`
+- `gold_portfolio_field_timeseries_rows`: `5520241`
+- `gold_portfolio_threat_matrix_rows`: `15269449`
+- `gold_market_intelligence_overview_rows`: `1`
+- `gold_market_intelligence_segments_rows`: `10`
+- `gold_market_intelligence_timeseries_rows`: `504`
+- `gold_semantic_match_context_rows`: `20295898`
+- `gold_family_attacker_summary_rows`: `6334292`
+- `gold_portfolio_forecast_summary_rows`: `3034400`
+- `gold_family_heritage_summary_rows`: `21353101`
+- `gold_portfolio_heritage_summary_rows`: `3852589`
+
+## gold | success
+
+- Summary: Built Gold family, portfolio, Market Intelligence, attacker, history, and semantic-context marts from note-aligned Silver contracts.
+- Started: 2026-04-03T23:11:40+00:00
+- Finished: 2026-04-03T23:55:19+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power_timeseries.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions_timeseries.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_field_timeseries.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_threat_matrix.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_overview.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_segments.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_timeseries.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_attacker_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_summary.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_heritage_summary.parquet
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_heritage_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_summary_rows`: `17633618`
+- `gold_family_blocking_power_rows`: `17633618`
+- `gold_family_blocking_power_timeseries_rows`: `152145173`
+- `gold_family_field_contributions_timeseries_rows`: `172223907`
+- `gold_family_field_contributions_rows`: `172223907`
+- `gold_portfolio_summary_rows`: `3034400`
+- `gold_portfolio_field_timeseries_rows`: `5520241`
+- `gold_portfolio_threat_matrix_rows`: `15269449`
+- `gold_market_intelligence_overview_rows`: `1`
+- `gold_market_intelligence_segments_rows`: `10`
+- `gold_market_intelligence_timeseries_rows`: `504`
+- `gold_semantic_match_context_rows`: `20295898`
+- `gold_family_attacker_summary_rows`: `6334292`
+- `gold_portfolio_forecast_summary_rows`: `3034400`
+- `gold_family_heritage_summary_rows`: `21353101`
+- `gold_portfolio_heritage_summary_rows`: `3852589`
+
+## gold-family-metrics | success
+
+- Summary: Built Gold family blocking, attacker, and heritage marts from note-aligned Silver legal and citation contracts.
+- Started: 2026-04-04T06:02:23+00:00
+- Finished: 2026-04-04T06:02:45+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_attacker_summary.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_heritage_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-metrics.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_blocking_power_rows`: `17633618`
+- `gold_family_attacker_summary_rows`: `6334292`
+- `gold_family_heritage_summary_rows`: `21353101`
+
+## gold-history-fields | success
+
+- Summary: Built Gold field-contribution history marts from replay-aligned Silver branch and field history.
+- Started: 2026-04-04T06:18:17+00:00
+- Finished: 2026-04-04T06:22:39+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions_timeseries.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-history-fields.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_field_contributions_timeseries_rows`: `172223907`
+- `gold_family_field_contributions_rows`: `172223907`
+
+## gold-history-blocking | success
+
+- Summary: Built Gold blocking-power history marts from replay-aligned Silver legal and citation history.
+- Started: 2026-04-04T06:23:55+00:00
+- Finished: 2026-04-04T06:29:47+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power_timeseries.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-history-blocking.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_blocking_power_timeseries_rows`: `152145173`
+
+## gold-family-summary | success
+
+- Summary: Built the Gold family summary mart from note-aligned Silver family, legal, owner, and OECD contracts.
+- Started: 2026-04-04T08:30:32+00:00
+- Finished: 2026-04-04T10:12:05+00:00
+
+
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-summary.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+### Warnings
+
+1. Built partial family summary buckets (16/32); final gold_family_summary merge not written yet.
+
+## gold-family-summary | success
+
+- Summary: Built the Gold family summary mart from note-aligned Silver family, legal, owner, and OECD contracts.
+- Started: 2026-04-04T08:30:32+00:00
+- Finished: 2026-04-04T10:12:05+00:00
+
+
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-summary.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+### Warnings
+
+1. Built partial family summary buckets (16/32); final gold_family_summary merge not written yet.
+
+## gold-family-summary | success
+
+- Summary: Built the Gold family summary mart from note-aligned Silver family, legal, owner, and OECD contracts.
+- Started: 2026-04-04T10:12:18+00:00
+- Finished: 2026-04-04T11:55:09+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-summary.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_summary_rows`: `17633618`
+
+## gold-family-summary | success
+
+- Summary: Built the Gold family summary mart from note-aligned Silver family, legal, owner, and OECD contracts.
+- Started: 2026-04-04T10:12:18+00:00
+- Finished: 2026-04-04T11:55:09+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-summary.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_summary_rows`: `17633618`
+
+## gold-family-summary | success
+
+- Summary: Built the Gold family summary mart from note-aligned Silver family, legal, owner, and OECD contracts.
+- Started: 2026-04-04T17:47:46+00:00
+- Finished: 2026-04-04T17:47:47+00:00
+
+
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-summary.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+### Warnings
+
+1. Built partial family summary buckets (0/32); final gold_family_summary merge not written yet.
+
+## gold-portfolio | success
+
+- Summary: Built Gold portfolio marts from the family-owner bridge and Gold family/history contracts.
+- Started: 2026-04-04T17:48:20+00:00
+- Finished: 2026-04-04T18:04:09+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_field_timeseries.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_threat_matrix.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_heritage_summary.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_portfolio_field_timeseries_rows`: `5520241`
+- `gold_portfolio_summary_rows`: `3034400`
+- `gold_portfolio_threat_matrix_rows`: `15269449`
+- `gold_portfolio_heritage_summary_rows`: `3852589`
+- `gold_portfolio_forecast_summary_rows`: `3034400`
+
+## gold-market-semantic | success
+
+- Summary: Built Gold Market Intelligence and semantic-context marts from note-aligned Silver and Gold family outputs.
+- Started: 2026-04-04T17:48:20+00:00
+- Finished: 2026-04-04T18:04:09+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_segments.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_timeseries.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_overview.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-semantic.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_market_intelligence_segments_rows`: `10`
+- `gold_market_intelligence_timeseries_rows`: `504`
+- `gold_market_intelligence_overview_rows`: `1`
+- `gold_semantic_match_context_rows`: `20295898`
+
+## ml-phase0-foundation | success
+
+- Summary: Built a frozen training snapshot manifest, immediate family-forecast split registry, and semantic evaluation fixtures.
+- Started: 2026-04-04T20:23:21+00:00
+- Finished: 2026-04-04T20:23:48+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_text_representative.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_history.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/semantic_eval_fixture_registry.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/semantic_eval_pair_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/training_snapshot_manifest.json
+
+### Artifacts
+
+- `training_snapshot_manifest`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/training_snapshot_manifest.json`
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase0-foundation.json`
+
+### Methods
+
+1. Fingerprinted canonical Silver and Gold source marts with row counts, file size, and modified-time metadata for reproducibility.
+2. Built a deterministic family-first split registry for the immediate family citation forecast scope using priority-year time bands.
+3. Bootstrapped semantic evaluation fixtures and compare pairs from the live family semantic context while preserving legal-status expectations.
+
+### Calculations
+
+1. Family forecast split assignment uses main-window family rows from Gold family summary and places recent unlabeled cohorts into an explicit holdout bucket.
+2. Semantic fixtures intentionally cover claim-backed, abstract-backed, dead, pending, and partially-lapsed families to test both retrieval and legal gating behavior.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/enriched-semantic-and-model-implementation-runbook-backlog.md
+2. docs/new-feature-ideas/semantic-and-model-development/phases/phase-00-freeze-inputs-and-eval-fixtures.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md
+
+
+### Metrics
+
+- `ml_split_registry_rows`: `17633618`
+- `semantic_eval_fixture_registry_rows`: `500`
+- `semantic_eval_pair_registry_rows`: `97`
+- `training_snapshot_source_table_count`: `9`
+
+## ml-phase0-foundation | success
+
+- Summary: Built a frozen training snapshot manifest, immediate family-forecast split registry, and semantic evaluation fixtures.
+- Started: 2026-04-04T20:16:17+00:00
+- Finished: 2026-04-04T20:24:37+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_text_representative.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_history.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/semantic_eval_fixture_registry.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/semantic_eval_pair_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/training_snapshot_manifest.json
+
+### Artifacts
+
+- `training_snapshot_manifest`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/training_snapshot_manifest.json`
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase0-foundation.json`
+
+### Methods
+
+1. Fingerprinted canonical Silver and Gold source marts with row counts, file size, and modified-time metadata for reproducibility.
+2. Built a deterministic family-first split registry for the immediate family citation forecast scope using priority-year time bands.
+3. Bootstrapped semantic evaluation fixtures and compare pairs from the live family semantic context while preserving legal-status expectations.
+
+### Calculations
+
+1. Family forecast split assignment uses main-window family rows from Gold family summary and places recent unlabeled cohorts into an explicit holdout bucket.
+2. Semantic fixtures intentionally cover claim-backed, abstract-backed, dead, pending, and partially-lapsed families to test both retrieval and legal gating behavior.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/enriched-semantic-and-model-implementation-runbook-backlog.md
+2. docs/new-feature-ideas/semantic-and-model-development/phases/phase-00-freeze-inputs-and-eval-fixtures.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md
+
+
+### Metrics
+
+- `ml_split_registry_rows`: `17633618`
+- `semantic_eval_fixture_registry_rows`: `500`
+- `semantic_eval_pair_registry_rows`: `97`
+- `training_snapshot_source_table_count`: `9`
+
+## ml-phase0-foundation | success
+
+- Summary: Built a frozen training snapshot manifest, immediate family-forecast split registry, and semantic evaluation fixtures.
+- Started: 2026-04-04T20:26:23+00:00
+- Finished: 2026-04-04T20:27:11+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_text_representative.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_history.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/semantic_eval_fixture_registry.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/semantic_eval_pair_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/training_snapshot_manifest.json
+
+### Artifacts
+
+- `training_snapshot_manifest`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/training_snapshot_manifest.json`
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase0-foundation.json`
+
+### Methods
+
+1. Fingerprinted canonical Silver and Gold source marts with row counts, file size, and modified-time metadata for reproducibility.
+2. Built a deterministic family-first split registry for the immediate family citation forecast scope using priority-year time bands.
+3. Bootstrapped semantic evaluation fixtures and compare pairs from the live family semantic context while preserving legal-status expectations.
+
+### Calculations
+
+1. Family forecast split assignment uses main-window family rows from Gold family summary and places recent unlabeled cohorts into an explicit holdout bucket.
+2. Semantic fixtures intentionally cover claim-backed, abstract-backed, dead, pending, and partially-lapsed families to test both retrieval and legal gating behavior.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/enriched-semantic-and-model-implementation-runbook-backlog.md
+2. docs/new-feature-ideas/semantic-and-model-development/phases/phase-00-freeze-inputs-and-eval-fixtures.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md
+
+
+### Metrics
+
+- `ml_split_registry_rows`: `17633618`
+- `semantic_eval_fixture_registry_rows`: `600`
+- `semantic_eval_pair_registry_rows`: `144`
+- `training_snapshot_source_table_count`: `9`
+
+## semantic | success
+
+- Summary: Built chunked family-first semantic vector artifacts, exact-scan runtime manifests, and query fixtures for the Phase 01 semantic foundation.
+- Started: 2026-04-04T20:38:11+00:00
+- Finished: 2026-04-04T21:07:33+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_embedding_manifest.json
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic.json`
+
+### Methods
+
+1. Generated separate claim and abstract vector spaces from family representative text using a local lexical-hash embedding fallback.
+2. Joined legal, chronology, OECD, and blocking context directly into the vector payloads so retrieval results can carry deterministic overlays.
+3. Materialized a query registry from Phase 00 semantic fixtures to support repeatable retrieval evaluation and backend integration.
+
+### Calculations
+
+1. Claims and abstracts remain physically separated as vector_claims and vector_abstract spaces.
+2. Vector packaging is limited to semantic candidates already marked in the bounded Silver semantic eligibility mart.
+3. ANN remains unbuilt in this local phase; the runtime contract is exact-scan-ready and records this explicitly in the manifests.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+2. docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md
+3. docs/next-phase-v2/16-patentiq-v2-semantic-search-and-comparison-flow-and-guardrails.md
+4. docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md
+
+### Warnings
+
+1. No promoted external embedding model is configured locally; Phase 01 uses lexical_hash_embedding_v1 as the runtime-safe fallback.
+
+### Metrics
+
+- `vec_family_embeddings_claims_rows`: `3`
+- `vec_family_embeddings_abstracts_rows`: `2004951`
+- `vec_query_registry_rows`: `600`
+- `claim_duplicate_family_rate`: `0.0`
+- `abstract_duplicate_family_rate`: `0.0`
+- `claim_legal_status_join_completeness`: `1.0`
+- `abstract_legal_status_join_completeness`: `1.0`
+- `claim_chronology_join_completeness`: `1.0`
+- `abstract_chronology_join_completeness`: `5e-06`
+- `claim_blocking_context_completeness`: `1.0`
+- `abstract_blocking_context_completeness`: `5e-06`
+- `query_anchor_claim_coverage`: `0.02`
+- `query_anchor_abstract_coverage`: `1.0`
+
+## semantic | success
+
+- Summary: Built family-first semantic vector artifacts and query fixtures for the promoted dual semantic runtime.
+- Started: 2026-04-04T22:07:58+00:00
+- Finished: 2026-04-04T22:09:24+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_embedding_manifest.json
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic.json`
+
+### Methods
+
+1. Generated separate vector_claims and vector_abstract payloads from representative family text.
+2. Used BGE-M3 for abstract embeddings and PatentSBERTa for claim embeddings when the promoted dual runtime is enabled, otherwise kept the lexical fallback for local regression use.
+3. Materialized one semantic base parquet first, then encoded in bucketed slices to avoid repeated large joins.
+
+### Calculations
+
+1. Claims and abstracts remain physically separated and explicitly labeled by vector space.
+2. Only semantic candidates already marked in the Silver eligibility mart are embedded.
+3. Current runtime remains dense-only; ANN is still exact-scan compatible and recorded as such in manifests.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+2. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-model-selection-decision.md
+3. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-candidate-shortlist-and-benchmark-plan.md
+4. docs/new-feature-ideas/semantic-and-model-development/bge-m3-and-patentsberta-local-installation-storage-and-runtime-guide.md
+
+### Warnings
+
+1. Semantic bucket row limiting was enabled for this run, so the outputs represent a bounded smoke sample, not a full corpus release.
+2. Semantic run was intentionally bounded to a subset of buckets, so final merged vector artifacts were not rewritten.
+
+### Metrics
+
+- `semantic_base_rows`: `2004954`
+- `encoded_claim_bucket_rows`: `0`
+- `encoded_abstract_bucket_rows`: `256`
+- `claim_bucket_files_present`: `16`
+- `abstract_bucket_files_present`: `16`
+- `vec_family_embeddings_claims_rows`: `0`
+- `vec_family_embeddings_abstracts_rows`: `0`
+- `vec_query_registry_rows`: `600`
+- `claim_duplicate_family_rate`: `None`
+- `abstract_duplicate_family_rate`: `None`
+- `claim_legal_status_join_completeness`: `None`
+- `abstract_legal_status_join_completeness`: `None`
+- `claim_chronology_join_completeness`: `None`
+- `abstract_chronology_join_completeness`: `None`
+- `claim_blocking_context_completeness`: `None`
+- `abstract_blocking_context_completeness`: `None`
+- `query_anchor_claim_coverage`: `None`
+- `query_anchor_abstract_coverage`: `None`
+
+## semantic | success
+
+- Summary: Built family-first semantic vector artifacts and query fixtures for the promoted dual semantic runtime.
+- Started: 2026-04-04T22:15:28+00:00
+- Finished: 2026-04-04T22:17:13+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_embedding_manifest.json
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic.json`
+
+### Methods
+
+1. Generated separate vector_claims and vector_abstract payloads from representative family text.
+2. Used BGE-M3 for abstract embeddings and PatentSBERTa for claim embeddings when the promoted dual runtime is enabled, otherwise kept the lexical fallback for local regression use.
+3. Materialized one semantic base parquet first, then encoded in bucketed slices to avoid repeated large joins.
+
+### Calculations
+
+1. Claims and abstracts remain physically separated and explicitly labeled by vector space.
+2. Only semantic candidates already marked in the Silver eligibility mart are embedded.
+3. Current runtime remains dense-only; ANN is still exact-scan compatible and recorded as such in manifests.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+2. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-model-selection-decision.md
+3. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-candidate-shortlist-and-benchmark-plan.md
+4. docs/new-feature-ideas/semantic-and-model-development/bge-m3-and-patentsberta-local-installation-storage-and-runtime-guide.md
+
+### Warnings
+
+1. Semantic bucket row limiting was enabled for this run, so the outputs represent a bounded smoke sample, not a full corpus release.
+2. Semantic run was intentionally bounded to a subset of buckets, so final merged vector artifacts were not rewritten.
+
+### Metrics
+
+- `semantic_base_rows`: `2135310`
+- `encoded_claim_bucket_rows`: `0`
+- `encoded_abstract_bucket_rows`: `256`
+- `claim_bucket_files_present`: `16`
+- `abstract_bucket_files_present`: `16`
+- `vec_family_embeddings_claims_rows`: `0`
+- `vec_family_embeddings_abstracts_rows`: `0`
+- `vec_query_registry_rows`: `600`
+- `claim_duplicate_family_rate`: `None`
+- `abstract_duplicate_family_rate`: `None`
+- `claim_legal_status_join_completeness`: `None`
+- `abstract_legal_status_join_completeness`: `None`
+- `claim_chronology_join_completeness`: `None`
+- `abstract_chronology_join_completeness`: `None`
+- `claim_blocking_context_completeness`: `None`
+- `abstract_blocking_context_completeness`: `None`
+- `query_anchor_claim_coverage`: `None`
+- `query_anchor_abstract_coverage`: `None`
+
+## semantic | success
+
+- Summary: Built family-first semantic vector artifacts and query fixtures for the promoted dual semantic runtime.
+- Started: 2026-04-05T07:28:28+00:00
+- Finished: 2026-04-05T07:30:14+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_embedding_manifest.json
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic.json`
+
+### Methods
+
+1. Generated separate vector_claims and vector_abstract payloads from representative family text.
+2. Used BGE-M3 for abstract embeddings and PatentSBERTa for claim embeddings when the promoted dual runtime is enabled, otherwise kept the lexical fallback for local regression use.
+3. Materialized one semantic base parquet first, then encoded in bucketed slices to avoid repeated large joins.
+
+### Calculations
+
+1. Claims and abstracts remain physically separated and explicitly labeled by vector space.
+2. Only semantic candidates already marked in the Silver eligibility mart are embedded.
+3. Current runtime remains dense-only; ANN is still exact-scan compatible and recorded as such in manifests.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+2. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-model-selection-decision.md
+3. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-candidate-shortlist-and-benchmark-plan.md
+4. docs/new-feature-ideas/semantic-and-model-development/bge-m3-and-patentsberta-local-installation-storage-and-runtime-guide.md
+
+### Warnings
+
+1. Semantic bucket row limiting was enabled for this run, so the outputs represent a bounded smoke sample, not a full corpus release.
+2. Semantic run was intentionally bounded to a subset of buckets, so final merged vector artifacts were not rewritten.
+
+### Metrics
+
+- `semantic_base_rows`: `2135310`
+- `encoded_claim_bucket_rows`: `0`
+- `encoded_abstract_bucket_rows`: `256`
+- `claim_bucket_files_present`: `16`
+- `abstract_bucket_files_present`: `16`
+- `vec_family_embeddings_claims_rows`: `0`
+- `vec_family_embeddings_abstracts_rows`: `0`
+- `vec_query_registry_rows`: `600`
+- `claim_duplicate_family_rate`: `None`
+- `abstract_duplicate_family_rate`: `None`
+- `claim_legal_status_join_completeness`: `None`
+- `abstract_legal_status_join_completeness`: `None`
+- `claim_chronology_join_completeness`: `None`
+- `abstract_chronology_join_completeness`: `None`
+- `claim_blocking_context_completeness`: `None`
+- `abstract_blocking_context_completeness`: `None`
+- `query_anchor_claim_coverage`: `None`
+- `query_anchor_abstract_coverage`: `None`
+
+## semantic | success
+
+- Summary: Built family-first semantic vector artifacts and query fixtures for the promoted dual semantic runtime.
+- Started: 2026-04-05T07:56:43+00:00
+- Finished: 2026-04-05T07:56:59+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_embedding_manifest.json
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic.json`
+
+### Methods
+
+1. Generated separate vector_claims and vector_abstract payloads from representative family text.
+2. Used BGE-M3 for abstract embeddings and PatentSBERTa for claim embeddings when the promoted dual runtime is enabled, otherwise kept the lexical fallback for local regression use.
+3. Materialized one semantic base parquet first, then encoded in bucketed slices to avoid repeated large joins.
+
+### Calculations
+
+1. Claims and abstracts remain physically separated and explicitly labeled by vector space.
+2. Only semantic candidates already marked in the Silver eligibility mart are embedded.
+3. Current runtime remains dense-only; ANN is still exact-scan compatible and recorded as such in manifests.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+2. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-model-selection-decision.md
+3. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-candidate-shortlist-and-benchmark-plan.md
+4. docs/new-feature-ideas/semantic-and-model-development/bge-m3-and-patentsberta-local-installation-storage-and-runtime-guide.md
+
+### Warnings
+
+1. Semantic run was intentionally bounded to a subset of buckets, so final merged vector artifacts were not rewritten.
+2. Semantic metadata and query registry writes were skipped for this subset worker run.
+
+### Metrics
+
+- `claim_bucket_files_present`: `0`
+- `abstract_bucket_files_present`: `0`
+- `vec_family_embeddings_claims_rows`: `0`
+- `vec_family_embeddings_abstracts_rows`: `0`
+- `vec_query_registry_rows`: `0`
+- `claim_duplicate_family_rate`: `None`
+- `abstract_duplicate_family_rate`: `None`
+- `claim_legal_status_join_completeness`: `None`
+- `abstract_legal_status_join_completeness`: `None`
+- `claim_chronology_join_completeness`: `None`
+- `abstract_chronology_join_completeness`: `None`
+- `claim_blocking_context_completeness`: `None`
+- `abstract_blocking_context_completeness`: `None`
+- `query_anchor_claim_coverage`: `None`
+- `query_anchor_abstract_coverage`: `None`
+
+## semantic | success
+
+- Summary: Built family-first semantic vector artifacts and query fixtures for the promoted dual semantic runtime.
+- Started: 2026-04-05T11:07:21+00:00
+- Finished: 2026-04-05T11:09:55+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_embedding_manifest.json
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic.json`
+
+### Methods
+
+1. Generated separate vector_claims and vector_abstract payloads from representative family text.
+2. Used BGE-M3 for abstract embeddings and PatentSBERTa for claim embeddings when the promoted dual runtime is enabled, otherwise kept the lexical fallback for local regression use.
+3. Materialized one semantic base parquet first, then encoded in bucketed slices to avoid repeated large joins.
+
+### Calculations
+
+1. Claims and abstracts remain physically separated and explicitly labeled by vector space.
+2. Only semantic candidates already marked in the Silver eligibility mart are embedded.
+3. Current runtime remains dense-only; ANN is still exact-scan compatible and recorded as such in manifests.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+2. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-model-selection-decision.md
+3. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-candidate-shortlist-and-benchmark-plan.md
+4. docs/new-feature-ideas/semantic-and-model-development/bge-m3-and-patentsberta-local-installation-storage-and-runtime-guide.md
+
+### Warnings
+
+1. Semantic bucket row limiting was enabled for this run, so the outputs represent a bounded smoke sample, not a full corpus release.
+2. Semantic run was intentionally bounded to a subset of buckets, so final merged vector artifacts were not rewritten.
+3. Semantic metadata and query registry writes were skipped for this subset worker run.
+
+### Metrics
+
+- `embedding_device`: `mps`
+- `encoded_claim_bucket_rows`: `0`
+- `encoded_abstract_bucket_rows`: `2048`
+- `claim_bucket_files_present`: `1`
+- `abstract_bucket_files_present`: `1`
+- `vec_family_embeddings_claims_rows`: `0`
+- `vec_family_embeddings_abstracts_rows`: `0`
+- `vec_query_registry_rows`: `0`
+- `claim_duplicate_family_rate`: `None`
+- `abstract_duplicate_family_rate`: `None`
+- `claim_legal_status_join_completeness`: `None`
+- `abstract_legal_status_join_completeness`: `None`
+- `claim_chronology_join_completeness`: `None`
+- `abstract_chronology_join_completeness`: `None`
+- `claim_blocking_context_completeness`: `None`
+- `abstract_blocking_context_completeness`: `None`
+- `query_anchor_claim_coverage`: `None`
+- `query_anchor_abstract_coverage`: `None`
+
+## semantic | success
+
+- Summary: Built family-first semantic vector artifacts and query fixtures for the promoted dual semantic runtime.
+- Started: 2026-04-05T11:20:57+00:00
+- Finished: 2026-04-05T11:22:56+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_embedding_manifest.json
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic.json`
+
+### Methods
+
+1. Generated separate vector_claims and vector_abstract payloads from representative family text.
+2. Used BGE-M3 for abstract embeddings and PatentSBERTa for claim embeddings when the promoted dual runtime is enabled, otherwise kept the lexical fallback for local regression use.
+3. Materialized one semantic base parquet first, then encoded in bucketed slices to avoid repeated large joins.
+
+### Calculations
+
+1. Claims and abstracts remain physically separated and explicitly labeled by vector space.
+2. Only semantic candidates already marked in the Silver eligibility mart are embedded.
+3. Current runtime remains dense-only; ANN is still exact-scan compatible and recorded as such in manifests.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+2. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-model-selection-decision.md
+3. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-candidate-shortlist-and-benchmark-plan.md
+4. docs/new-feature-ideas/semantic-and-model-development/bge-m3-and-patentsberta-local-installation-storage-and-runtime-guide.md
+
+### Warnings
+
+1. Semantic bucket row limiting was enabled for this run, so the outputs represent a bounded smoke sample, not a full corpus release.
+2. Semantic run was intentionally bounded to a subset of buckets, so final merged vector artifacts were not rewritten.
+3. Semantic metadata and query registry writes were skipped for this subset worker run.
+
+### Metrics
+
+- `embedding_device`: `mps`
+- `encoded_claim_bucket_rows`: `2048`
+- `encoded_abstract_bucket_rows`: `0`
+- `claim_bucket_files_present`: `1`
+- `abstract_bucket_files_present`: `1`
+- `vec_family_embeddings_claims_rows`: `0`
+- `vec_family_embeddings_abstracts_rows`: `0`
+- `vec_query_registry_rows`: `0`
+- `claim_duplicate_family_rate`: `None`
+- `abstract_duplicate_family_rate`: `None`
+- `claim_legal_status_join_completeness`: `None`
+- `abstract_legal_status_join_completeness`: `None`
+- `claim_chronology_join_completeness`: `None`
+- `abstract_chronology_join_completeness`: `None`
+- `claim_blocking_context_completeness`: `None`
+- `abstract_blocking_context_completeness`: `None`
+- `query_anchor_claim_coverage`: `None`
+- `query_anchor_abstract_coverage`: `None`
+
+## semantic | success
+
+- Summary: Built family-first semantic vector artifacts and query fixtures for the promoted dual semantic runtime.
+- Started: 2026-04-05T11:46:00+00:00
+- Finished: 2026-04-05T11:47:55+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_embedding_manifest.json
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic.json`
+
+### Methods
+
+1. Generated separate vector_claims and vector_abstract payloads from representative family text.
+2. Used BGE-M3 for abstract embeddings and PatentSBERTa for claim embeddings when the promoted dual runtime is enabled, otherwise kept the lexical fallback for local regression use.
+3. Materialized one semantic base parquet first, then encoded in bucketed slices to avoid repeated large joins.
+
+### Calculations
+
+1. Claims and abstracts remain physically separated and explicitly labeled by vector space.
+2. Only semantic candidates already marked in the Silver eligibility mart are embedded.
+3. Current runtime remains dense-only; ANN is still exact-scan compatible and recorded as such in manifests.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+2. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-model-selection-decision.md
+3. docs/new-feature-ideas/semantic-and-model-development/semantic-embedding-candidate-shortlist-and-benchmark-plan.md
+4. docs/new-feature-ideas/semantic-and-model-development/bge-m3-and-patentsberta-local-installation-storage-and-runtime-guide.md
+
+### Warnings
+
+1. Semantic bucket row limiting was enabled for this run, so the outputs represent a bounded smoke sample, not a full corpus release.
+2. Semantic run was intentionally bounded to a subset of buckets, so final merged vector artifacts were not rewritten.
+3. Semantic metadata and query registry writes were skipped for this subset worker run.
+
+### Metrics
+
+- `embedding_device`: `mps`
+- `encoded_claim_bucket_rows`: `2048`
+- `encoded_abstract_bucket_rows`: `0`
+- `claim_bucket_files_present`: `1`
+- `abstract_bucket_files_present`: `1`
+- `vec_family_embeddings_claims_rows`: `0`
+- `vec_family_embeddings_abstracts_rows`: `0`
+- `vec_query_registry_rows`: `0`
+- `claim_duplicate_family_rate`: `None`
+- `abstract_duplicate_family_rate`: `None`
+- `claim_legal_status_join_completeness`: `None`
+- `abstract_legal_status_join_completeness`: `None`
+- `claim_chronology_join_completeness`: `None`
+- `abstract_chronology_join_completeness`: `None`
+- `claim_blocking_context_completeness`: `None`
+- `abstract_blocking_context_completeness`: `None`
+- `query_anchor_claim_coverage`: `None`
+- `query_anchor_abstract_coverage`: `None`
+
+## semantic-abstract-phase-00 | success
+
+- Summary: Built abstracts semantic phase artifact 1/10.
+- Started: 2026-04-05T15:33:40+00:00
+- Finished: 2026-04-05T15:34:23+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/phases/abstracts/vec_family_embeddings_abstracts_phase_00_of_10.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic-abstract-phase-00.json`
+
+### Methods
+
+1. Materialized or reused the semantic base parquet, then encoded one deterministic phase partition.
+2. Persisted resumable chunk checkpoints before merging the finished phase artifact.
+
+### Calculations
+
+1. Phase partitions are deterministic by docdb_family_id modulo phase_count.
+2. Only rows with usable text for the requested vector space are encoded in the phase artifact.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+
+
+### Metrics
+
+- `embedding_device`: `mps`
+- `phase_id`: `0`
+- `phase_count`: `10`
+- `phase_chunk_files_present`: `2`
+- `encoded_rows`: `512`
+- `merged_rows`: `512`
+- `duplicate_family_rows`: `0`
+- `duplicate_family_rate`: `0.0`
+- `embedding_dim_min`: `1024`
+- `embedding_dim_max`: `1024`
+
+## semantic-abstract-phase-00 | success
+
+- Summary: Built abstracts semantic phase artifact 1/10.
+- Started: 2026-04-06T05:59:41+00:00
+- Finished: 2026-04-06T06:00:19+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/phases/abstracts/vec_family_embeddings_abstracts_phase_00_of_10.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic-abstract-phase-00.json`
+
+### Methods
+
+1. Materialized or reused the semantic base parquet, then encoded one deterministic phase partition.
+2. Persisted resumable chunk checkpoints before merging the finished phase artifact.
+
+### Calculations
+
+1. Phase partitions are deterministic by docdb_family_id modulo phase_count.
+2. Only rows with usable text for the requested vector space are encoded in the phase artifact.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+
+
+### Metrics
+
+- `embedding_device`: `mps`
+- `phase_id`: `0`
+- `phase_count`: `10`
+- `phase_chunk_files_present`: `169`
+- `encoded_rows`: `0`
+- `merged_rows`: `209884`
+- `duplicate_family_rows`: `40960`
+- `duplicate_family_rate`: `0.195155`
+- `embedding_dim_min`: `1024`
+- `embedding_dim_max`: `1024`
+
+## semantic-claim-phase-00 | success
+
+- Summary: Built claims semantic phase artifact 1/3.
+- Started: 2026-04-06T06:15:55+00:00
+- Finished: 2026-04-06T07:48:09+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/phases/claims/vec_family_embeddings_claims_phase_00_of_03.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic-claim-phase-00.json`
+
+### Methods
+
+1. Materialized or reused the semantic base parquet, then encoded one deterministic phase partition.
+2. Persisted resumable chunk checkpoints before merging the finished phase artifact.
+
+### Calculations
+
+1. Phase partitions are deterministic by docdb_family_id modulo phase_count.
+2. Only rows with usable text for the requested vector space are encoded in the phase artifact.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+
+
+### Metrics
+
+- `embedding_device`: `mps`
+- `phase_id`: `0`
+- `phase_count`: `3`
+- `phase_chunk_files_present`: `133`
+- `encoded_rows`: `135575`
+- `merged_rows`: `135575`
+- `duplicate_family_rows`: `0`
+- `duplicate_family_rate`: `0.0`
+- `embedding_dim_min`: `768`
+- `embedding_dim_max`: `768`
+
+## semantic-claim-phase-01 | success
+
+- Summary: Built claims semantic phase artifact 2/3.
+- Started: 2026-04-06T08:24:26+00:00
+- Finished: 2026-04-06T10:01:03+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/phases/claims/vec_family_embeddings_claims_phase_01_of_03.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic-claim-phase-01.json`
+
+### Methods
+
+1. Materialized or reused the semantic base parquet, then encoded one deterministic phase partition.
+2. Persisted resumable chunk checkpoints before merging the finished phase artifact.
+
+### Calculations
+
+1. Phase partitions are deterministic by docdb_family_id modulo phase_count.
+2. Only rows with usable text for the requested vector space are encoded in the phase artifact.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+
+
+### Metrics
+
+- `embedding_device`: `mps`
+- `phase_id`: `1`
+- `phase_count`: `3`
+- `phase_chunk_files_present`: `133`
+- `encoded_rows`: `136121`
+- `merged_rows`: `136121`
+- `duplicate_family_rows`: `0`
+- `duplicate_family_rate`: `0.0`
+- `embedding_dim_min`: `768`
+- `embedding_dim_max`: `768`
+
+## semantic-claim-phase-02 | success
+
+- Summary: Built claims semantic phase artifact 3/3.
+- Started: 2026-04-06T10:20:58+00:00
+- Finished: 2026-04-06T11:56:05+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/phases/claims/vec_family_embeddings_claims_phase_02_of_03.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic-claim-phase-02.json`
+
+### Methods
+
+1. Materialized or reused the semantic base parquet, then encoded one deterministic phase partition.
+2. Persisted resumable chunk checkpoints before merging the finished phase artifact.
+
+### Calculations
+
+1. Phase partitions are deterministic by docdb_family_id modulo phase_count.
+2. Only rows with usable text for the requested vector space are encoded in the phase artifact.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+
+
+### Metrics
+
+- `embedding_device`: `mps`
+- `phase_id`: `2`
+- `phase_count`: `3`
+- `phase_chunk_files_present`: `132`
+- `encoded_rows`: `134943`
+- `merged_rows`: `134943`
+- `duplicate_family_rows`: `0`
+- `duplicate_family_rate`: `0.0`
+- `embedding_dim_min`: `768`
+- `embedding_dim_max`: `768`
+
+## semantic-ann | success
+
+- Summary: Built HNSW ANN snapshots for the promoted semantic payloads and audited exact-vs-ANN agreement.
+- Started: 2026-04-06T12:18:16+00:00
+- Finished: 2026-04-06T12:26:50+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_claims_hnsw.bin
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_claims_family_ids.npy
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_abstracts_hnsw.bin
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_abstracts_family_ids.npy
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_exact_vs_ann_audit.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic-ann.json`
+
+### Methods
+
+1. Loaded the promoted semantic payloads from the canonical vector parquet paths.
+2. Built separate cosine HNSW snapshots for abstract and claim corpora.
+3. Audited ANN recall against exact top-k search using the semantic query registry where anchor coverage exists.
+
+### Calculations
+
+1. Claims use a higher ef_construction default than abstracts to preserve legal/technical specificity during ANN approximation.
+2. Abstract query audit is evaluated only on the subset of registry anchors present in the current partial MVP abstract corpus.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+
+
+### Metrics
+
+- `claim_payload_count`: `406639`
+- `abstract_payload_count`: `168924`
+- `claim_embedding_dim`: `768`
+- `abstract_embedding_dim`: `1024`
+- `claim_exact_vs_ann_recall_at_10`: `0.989`
+- `abstract_exact_vs_ann_recall_at_10`: `1.0`
+- `query_anchor_claim_coverage`: `1.0`
+- `query_anchor_abstract_coverage`: `0.008`
+
+## semantic-ann | success
+
+- Summary: Built HNSW ANN snapshots for the promoted semantic payloads and audited exact-vs-ANN agreement.
+- Started: 2026-04-06T12:25:26+00:00
+- Finished: 2026-04-06T12:34:33+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_claims_hnsw.bin
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_claims_family_ids.npy
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_abstracts_hnsw.bin
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_abstracts_family_ids.npy
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_exact_vs_ann_audit.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic-ann.json`
+
+### Methods
+
+1. Loaded the promoted semantic payloads from the canonical vector parquet paths.
+2. Built separate cosine HNSW snapshots for abstract and claim corpora.
+3. Audited ANN recall against exact top-k search using the semantic query registry where anchor coverage exists.
+
+### Calculations
+
+1. Claims use a higher ef_construction default than abstracts to preserve legal/technical specificity during ANN approximation.
+2. Abstract query audit is evaluated only on the subset of registry anchors present in the current partial MVP abstract corpus.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+
+
+### Metrics
+
+- `claim_payload_count`: `406639`
+- `abstract_payload_count`: `168924`
+- `claim_embedding_dim`: `768`
+- `abstract_embedding_dim`: `1024`
+- `claim_exact_vs_ann_recall_at_10`: `0.99375`
+- `abstract_exact_vs_ann_recall_at_10`: `1.0`
+- `query_anchor_claim_coverage`: `1.0`
+- `query_anchor_abstract_coverage`: `0.008`
+
+## semantic-ann | success
+
+- Summary: Built HNSW ANN snapshots for the promoted semantic payloads and audited exact-vs-ANN agreement.
+- Started: 2026-04-06T12:31:59+00:00
+- Finished: 2026-04-06T12:41:57+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_claims.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_family_embeddings_abstracts.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_query_registry.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_claims_hnsw.bin
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_claims_family_ids.npy
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_abstracts_hnsw.bin
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/ann/vec_ann_abstracts_family_ids.npy
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_index_manifest.json
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/vec_ann_exact_vs_ann_audit.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/semantic-ann.json`
+
+### Methods
+
+1. Loaded the promoted semantic payloads from the canonical vector parquet paths.
+2. Built separate cosine HNSW snapshots for abstract and claim corpora.
+3. Audited ANN recall against exact top-k search using the semantic query registry where anchor coverage exists.
+
+### Calculations
+
+1. Claims use a higher ef_construction default than abstracts to preserve legal/technical specificity during ANN approximation.
+2. Abstract query audit is evaluated only on the subset of registry anchors present in the current partial MVP abstract corpus.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-01-semantic-runtime-foundation.md
+
+
+### Metrics
+
+- `claim_payload_count`: `406639`
+- `abstract_payload_count`: `168924`
+- `claim_embedding_dim`: `768`
+- `abstract_embedding_dim`: `1024`
+- `claim_exact_vs_ann_recall_at_10`: `0.989062`
+- `abstract_exact_vs_ann_recall_at_10`: `1.0`
+- `claim_corpus_sample_exact_vs_ann_recall_at_10`: `0.992188`
+- `abstract_corpus_sample_exact_vs_ann_recall_at_10`: `0.994531`
+- `query_anchor_claim_coverage`: `1.0`
+- `query_anchor_abstract_coverage`: `0.008`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-06T21:18:16+00:00
+- Finished: 2026-04-06T21:19:04+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `0`
+- `ml_feature_family_future_citations_rows`: `17633618`
+- `ml_split_registry_rows`: `17633618`
+- `ml_experiment_registry_rows`: `6`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-06T21:30:31+00:00
+- Finished: 2026-04-06T21:32:22+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+### Warnings
+
+1. Phase 03 labels were derived from `silver_enriched_citation_network` using `family_earliest_priority_date + 2 years` as `as_of_date`; current-state structural features remain provisional until explicit point-in-time feature snapshots are added.
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+- `ml_feature_family_future_citations_rows`: `11772956`
+- `ml_split_registry_rows`: `11772956`
+- `ml_experiment_registry_rows`: `6`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+- `phase03_3y_spearman`: `0.4433162364084222`
+- `phase03_3y_interval_coverage_80pct`: `0.85146`
+- `phase03_5y_spearman`: `0.5987730933684785`
+- `phase03_5y_interval_coverage_80pct`: `0.0552`
+- `phase03_sampled_training`: `1.0`
+- `phase03_train_rows_raw`: `6409400.0`
+- `phase03_train_rows_used`: `200000.0`
+- `phase03_validation_rows_raw`: `2314420.0`
+- `phase03_validation_rows_used`: `50000.0`
+- `phase03_test_rows_raw`: `2809372.0`
+- `phase03_test_rows_used`: `50000.0`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-06T21:33:56+00:00
+- Finished: 2026-04-06T21:35:41+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+### Warnings
+
+1. Phase 03 labels were derived from `silver_enriched_citation_network` using `family_earliest_priority_date + 2 years` as `as_of_date`; current-state structural features remain provisional until explicit point-in-time feature snapshots are added.
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+- `ml_feature_family_future_citations_rows`: `11772956`
+- `ml_split_registry_rows`: `11772956`
+- `ml_experiment_registry_rows`: `6`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+- `phase03_3y_spearman`: `0.4462442786110408`
+- `phase03_3y_interval_coverage_80pct`: `0.8459`
+- `phase03_5y_spearman`: `0.5930727725590689`
+- `phase03_5y_interval_coverage_80pct`: `0.819695664656905`
+- `phase03_sampled_training`: `1.0`
+- `phase03_train_rows_raw`: `6409400.0`
+- `phase03_train_rows_used`: `200000.0`
+- `phase03_validation_rows_raw`: `2314420.0`
+- `phase03_validation_rows_used`: `50000.0`
+- `phase03_test_rows_raw`: `2809372.0`
+- `phase03_test_rows_used`: `50000.0`
+
+## ml-phase03-family-forecast | failed
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-07T09:37:16+00:00
+- Finished: 2026-04-07T09:37:33+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+### Warnings
+
+1. Phase 03 labels were derived from `silver_enriched_citation_network` using `family_earliest_priority_date + 2 years` as `as_of_date`; current-state structural features remain provisional until explicit point-in-time feature snapshots are added.
+2. Promotion-safe Phase 03 requires `silver_family_feature_snapshot_pit.parquet` whenever labels are derived from citation events. Run `silver-pit` before `ml-phase03-family-forecast`, or explicitly enable `execution.phase03_allow_current_state_fallback=true` for exploratory candidate runs only.
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+
+## silver-pit | success
+
+- Summary: Built silver_family_feature_snapshot_pit.parquet with point-in-time safe features for each in-scope family at as_of_date = priority_date + 2 years.
+- Started: 2026-04-07T09:53:07+00:00
+- Finished: 2026-04-07T09:53:27+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-pit.json`
+
+### Methods
+
+1. Legal state (composite_status, active_jurisdiction_count, active_grant_branch_count, lapsed_jurisdiction_count) derived from silver_family_status_history at the nearest snapshot_year <= as_of_year.
+2. Pre-as_of citation metrics (forward_citations_clean, weighted, unique_citing_family_count, citing_assignee_diversity, attacker_density_score) derived from silver_enriched_citation_network filtering citation_date <= as_of_date.
+3. Blocking power (family_blocking_power_score_asof, family_enforceability_score_asof) derived from gold_family_blocking_power_timeseries at the nearest snapshot before as_of_year.
+4. Primary field contribution derived from gold_family_field_contributions_timeseries at as_of_year.
+5. family_size_docdb_asof and family_tech_breadth_wipo_count_asof are structural approximations from current-state tables (do not backproject these for historical UI views).
+
+### Calculations
+
+1. as_of_date = CAST(family_earliest_priority_date AS DATE) + INTERVAL '2 years'.
+2. data_completeness_pct_asof is the fraction of 10 tracked PIT columns that are non-null before COALESCE defaults are applied.
+
+### Downstream Impacts
+
+1. ml-phase03-family-forecast: replaces current-state leakage features with PIT equivalents when this table is present.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+
+### Metrics
+
+- `silver_family_feature_snapshot_pit_rows`: `17633618`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-07T09:53:48+00:00
+- Finished: 2026-04-07T09:55:28+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+4. Applied point-in-time feature enrichment from `silver_family_feature_snapshot_pit`; replaced leakage-sensitive citation counts, network externalities, and legal-state columns with pre-as_of_date equivalents; recomputed data_completeness_pct from enriched values.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+### Warnings
+
+1. Phase 03 labels were derived from `silver_enriched_citation_network` using `family_earliest_priority_date + 2 years` as `as_of_date`; current-state structural features remain provisional until explicit point-in-time feature snapshots are added.
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+- `ml_feature_family_future_citations_rows`: `11772956`
+- `ml_split_registry_rows`: `11772956`
+- `ml_experiment_registry_rows`: `6`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+- `phase03_3y_spearman`: `0.46310957963212346`
+- `phase03_3y_interval_coverage_80pct`: `0.84194`
+- `phase03_5y_spearman`: `0.6188226919447776`
+- `phase03_5y_interval_coverage_80pct`: `0.7780429594272077`
+- `phase03_sampled_training`: `1.0`
+- `phase03_train_rows_raw`: `6409400.0`
+- `phase03_train_rows_used`: `200000.0`
+- `phase03_validation_rows_raw`: `2314420.0`
+- `phase03_validation_rows_used`: `50000.0`
+- `phase03_test_rows_raw`: `2809372.0`
+- `phase03_test_rows_used`: `50000.0`
+
+## silver-pit | success
+
+- Summary: Built silver_family_feature_snapshot_pit.parquet with point-in-time safe features for each in-scope family at as_of_date = priority_date + 2 years.
+- Started: 2026-04-07T10:16:28+00:00
+- Finished: 2026-04-07T10:18:24+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_audit.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-pit.json`
+
+### Methods
+
+1. Legal state (composite_status, active_jurisdiction_count, active_grant_branch_count, lapsed_jurisdiction_count) derived from silver_family_status_history at the nearest snapshot_year <= as_of_year.
+2. Pre-as_of citation metrics (forward_citations_clean, weighted, unique_citing_family_count, citing_assignee_diversity, attacker_density_score) derived from silver_enriched_citation_network filtering citation_date <= as_of_date.
+3. Blocking power (family_blocking_power_score_asof, family_enforceability_score_asof) derived from gold_family_blocking_power_timeseries at the nearest snapshot before as_of_year.
+4. Primary field contribution and WIPO breadth derived from gold_family_field_contributions_timeseries at the nearest snapshot_year <= as_of_year.
+5. family_size_docdb_asof derived from distinct appln_id values in silver_family_member_publications with publn_date <= as_of_date.
+6. family_jurisdiction_count_asof derived from silver_branch_status_history_dense at the nearest snapshot_year <= as_of_year.
+7. family_coverage_stability_score_asof = active_jurisdiction_count_asof / family_jurisdiction_count_asof.
+8. A persisted JSON audit is written beside the PIT parquet to validate anchor-date correctness, uniqueness, and basic value sanity.
+
+### Calculations
+
+1. as_of_date = CAST(family_earliest_priority_date AS DATE) + INTERVAL '2 years'.
+2. family_rcf_score_asof = pre_asof_forward_citations_weighted / cohort_average_pre_asof_forward_citations_weighted within the same as_of_year.
+3. data_completeness_pct_asof is the fraction of 12 tracked PIT columns that are non-null before COALESCE defaults are applied.
+
+### Downstream Impacts
+
+1. ml-phase03-family-forecast: replaces current-state leakage features with PIT equivalents when this table is present.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+
+### Metrics
+
+- `silver_family_feature_snapshot_pit_rows`: `17633618`
+- `silver_family_feature_snapshot_pit_future_anchor_rows`: `1193145`
+- `silver_family_feature_snapshot_pit_duplicate_family_year_keys`: `0`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-07T10:18:31+00:00
+- Finished: 2026-04-07T10:20:13+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+4. Applied point-in-time feature enrichment from `silver_family_feature_snapshot_pit`; replaced leakage-sensitive citation counts, network externalities, and legal-state columns with pre-as_of_date equivalents; replaced family_rcf_score, family_size_docdb, and family_coverage_stability_score with PIT-safe variants; recomputed data_completeness_pct from enriched values.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+### Warnings
+
+1. Phase 03 labels were derived from `silver_enriched_citation_network` using `family_earliest_priority_date + 2 years` as `as_of_date`; current-state structural features remain provisional until explicit point-in-time feature snapshots are added.
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+- `ml_feature_family_future_citations_rows`: `11772956`
+- `ml_split_registry_rows`: `11772956`
+- `ml_experiment_registry_rows`: `6`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+- `phase03_3y_spearman`: `0.45392649324740886`
+- `phase03_3y_interval_coverage_80pct`: `0.80602`
+- `phase03_5y_spearman`: `0.6012240614528171`
+- `phase03_5y_interval_coverage_80pct`: `0.8210081497132509`
+- `phase03_sampled_training`: `1.0`
+- `phase03_train_rows_raw`: `6409400.0`
+- `phase03_train_rows_used`: `200000.0`
+- `phase03_validation_rows_raw`: `2314420.0`
+- `phase03_validation_rows_used`: `50000.0`
+- `phase03_test_rows_raw`: `2809372.0`
+- `phase03_test_rows_used`: `50000.0`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-07T10:21:06+00:00
+- Finished: 2026-04-07T10:22:42+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+4. Applied point-in-time feature enrichment from `silver_family_feature_snapshot_pit`; replaced leakage-sensitive citation counts, network externalities, and legal-state columns with pre-as_of_date equivalents; replaced family_rcf_score, family_size_docdb, and family_coverage_stability_score with PIT-safe variants; recomputed data_completeness_pct from enriched values.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+- `ml_feature_family_future_citations_rows`: `11772956`
+- `ml_split_registry_rows`: `11772956`
+- `ml_experiment_registry_rows`: `6`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+- `phase03_3y_spearman`: `0.44849503024302617`
+- `phase03_3y_interval_coverage_80pct`: `0.80608`
+- `phase03_5y_spearman`: `0.5881328163227821`
+- `phase03_5y_interval_coverage_80pct`: `0.8245920745920746`
+- `phase03_sampled_training`: `1.0`
+- `phase03_train_rows_raw`: `6409400.0`
+- `phase03_train_rows_used`: `200000.0`
+- `phase03_validation_rows_raw`: `2314420.0`
+- `phase03_validation_rows_used`: `50000.0`
+- `phase03_test_rows_raw`: `2809372.0`
+- `phase03_test_rows_used`: `50000.0`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-07T10:53:47+00:00
+- Finished: 2026-04-07T10:55:32+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+4. Applied point-in-time feature enrichment from `silver_family_feature_snapshot_pit`; replaced leakage-sensitive citation counts, network externalities, and legal-state columns with pre-as_of_date equivalents; replaced family_rcf_score, family_size_docdb, and family_coverage_stability_score with PIT-safe variants; recomputed data_completeness_pct from enriched values.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+- `ml_feature_family_future_citations_rows`: `11772956`
+- `ml_split_registry_rows`: `11772956`
+- `ml_experiment_registry_rows`: `6`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+- `phase03_3y_spearman`: `0.45807497752483095`
+- `phase03_3y_interval_coverage_80pct`: `0.80632`
+- `phase03_5y_spearman`: `0.5927538395867741`
+- `phase03_5y_interval_coverage_80pct`: `0.8263297090802233`
+- `phase03_sampled_training`: `1.0`
+- `phase03_train_rows_raw`: `6409400.0`
+- `phase03_train_rows_used`: `200000.0`
+- `phase03_validation_rows_raw`: `2314420.0`
+- `phase03_validation_rows_used`: `50000.0`
+- `phase03_test_rows_raw`: `2809372.0`
+- `phase03_test_rows_used`: `50000.0`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-07T11:06:30+00:00
+- Finished: 2026-04-07T11:08:10+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+4. Applied point-in-time feature enrichment from `silver_family_feature_snapshot_pit`; replaced leakage-sensitive citation counts, network externalities, and legal-state columns with pre-as_of_date equivalents; replaced family_rcf_score, family_size_docdb, and family_coverage_stability_score with PIT-safe variants; recomputed data_completeness_pct from enriched values.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+- `ml_feature_family_future_citations_rows`: `11772956`
+- `ml_split_registry_rows`: `11772956`
+- `ml_experiment_registry_rows`: `6`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+- `phase03_3y_spearman`: `0.4564041269335929`
+- `phase03_3y_interval_coverage_80pct`: `0.81532`
+- `phase03_5y_spearman`: `0.6100395999400557`
+- `phase03_5y_interval_coverage_80pct`: `0.7872846108140226`
+- `phase03_sampled_training`: `1.0`
+- `phase03_train_rows_raw`: `6409400.0`
+- `phase03_train_rows_used`: `200000.0`
+- `phase03_validation_rows_raw`: `2314420.0`
+- `phase03_validation_rows_used`: `50000.0`
+- `phase03_test_rows_raw`: `2809372.0`
+- `phase03_test_rows_used`: `50000.0`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-07T11:17:53+00:00
+- Finished: 2026-04-07T11:19:34+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+4. Applied point-in-time feature enrichment from `silver_family_feature_snapshot_pit`; replaced leakage-sensitive citation counts, network externalities, and legal-state columns with pre-as_of_date equivalents; replaced family_rcf_score, family_size_docdb, and family_coverage_stability_score with PIT-safe variants; recomputed data_completeness_pct from enriched values.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+- `ml_feature_family_future_citations_rows`: `11772956`
+- `ml_split_registry_rows`: `11772956`
+- `ml_experiment_registry_rows`: `6`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+- `phase03_3y_spearman`: `0.45400446467412797`
+- `phase03_3y_interval_coverage_80pct`: `0.79314`
+- `phase03_5y_spearman`: `0.614405119327523`
+- `phase03_5y_interval_coverage_80pct`: `0.8010008831321754`
+- `phase03_sampled_training`: `1.0`
+- `phase03_train_rows_raw`: `6409400.0`
+- `phase03_train_rows_used`: `200000.0`
+- `phase03_validation_rows_raw`: `2314420.0`
+- `phase03_validation_rows_used`: `50000.0`
+- `phase03_test_rows_raw`: `2809372.0`
+- `phase03_test_rows_used`: `50000.0`
+
+## gold-family-compare-pit | success
+
+- Summary: Built the family compare PIT serving mart from the audited family PIT core and current summary metadata.
+- Started: 2026-04-07T11:34:20+00:00
+- Finished: 2026-04-07T11:34:35+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_compare_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-compare-pit.json`
+
+### Methods
+
+1. Used only observed point-in-time family rows for historical compare serving.
+2. Kept current owner, field, and OECD metadata explicitly labeled as current-only side metadata.
+3. Materialized one row per family and observed year with a latest-observed-year flag for compare and report flows.
+
+### Calculations
+
+1. Family active-jurisdiction share is recomputed from point-in-time jurisdiction counts.
+2. Historical-safe metrics come from the PIT core rather than current-state summary marts.
+
+### Downstream Impacts
+
+1. This mart is the safe family-level source for historical compare, time-slice report sections, and year-aware family evidence payloads.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md
+3. docs/next-phase-v2/38-patentiq-v2-report-generation-use-cases-and-contract.md
+
+
+### Metrics
+
+- `gold_family_compare_pit_rows`: `16440473`
+
+## gold-portfolio-summary-pit | success
+
+- Summary: Built the portfolio PIT summary mart by aggregating family compare PIT rows through the current owner bridge with explicit historical caveats.
+- Started: 2026-04-07T11:37:26+00:00
+- Finished: 2026-04-07T11:37:49+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-summary-pit.json`
+
+### Methods
+
+1. Aggregated only historical-safe family PIT rows into year-keyed portfolio summaries.
+2. Reused the current owner bridge as a historical membership approximation and labeled that caveat explicitly.
+3. Focused the first release on legal, blocking, coverage, and concentration signals rather than forcing unsupported historical field-mix claims.
+
+### Calculations
+
+1. Portfolio top-family dependence is measured as the maximum family blocking share within each owner-year slice.
+2. Portfolio active-family count is derived from point-in-time active-jurisdiction presence rather than current family status.
+
+### Downstream Impacts
+
+1. This mart is the first safe source for portfolio over-time comparison, historical report sections, and legal-attrition context before Phase 04 predictions arrive.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+3. docs/next-phase-v2/09-forecast-v2-mvp-use-cases-and-feature-semantics.md
+
+
+### Metrics
+
+- `gold_portfolio_summary_pit_rows`: `5115232`
+
+## silver-pit-dense | success
+
+- Summary: Built silver_family_feature_snapshot_pit_dense.parquet with observed family-year PIT rows for historical compare, reports, and portfolio-over-time product behavior.
+- Started: 2026-04-07T11:55:22+00:00
+- Finished: 2026-04-07T12:29:38+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_dense.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_dense_audit.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-pit-dense.json`
+
+### Methods
+
+1. Generated one observed PIT row per family and as_of_year from family_priority_year through snapshot_year.
+2. For each year, legal, blocking, field, citation, and coverage metrics are taken from the latest history or event evidence available at or before that year-end.
+3. The current snapshot year uses snapshot_date rather than synthetic year-end so current-year product views stay aligned with the actual ETL snapshot.
+4. A persisted JSON audit is written beside the dense PIT parquet to validate uniqueness, year range, multi-year family coverage, and value sanity.
+
+### Calculations
+
+1. as_of_date = MAKE_DATE(as_of_year, 12, 31) except for the current snapshot year where as_of_date = snapshot_date.
+2. family_rcf_score_asof is normalized within the same as_of_year and primary field cohort.
+3. data_completeness_pct_asof is the fraction of 12 tracked PIT columns that are non-null before COALESCE defaults are applied.
+
+### Downstream Impacts
+
+1. gold-family-compare-pit: should use this dense PIT layer when present for current-vs-selected-year family comparisons.
+2. Historical compare and report flows can now use family-year rows rather than one anchored checkpoint per family.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md
+3. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+
+
+### Metrics
+
+- `silver_family_feature_snapshot_pit_dense_rows`: `164988135`
+- `silver_family_feature_snapshot_pit_dense_duplicate_family_year_keys`: `0`
+- `silver_family_feature_snapshot_pit_dense_families_with_multiple_year_rows`: `17633618`
+
+## gold-family-compare-pit | success
+
+- Summary: Built the family compare PIT serving mart from the audited family PIT core and current summary metadata.
+- Started: 2026-04-07T12:30:07+00:00
+- Finished: 2026-04-07T12:36:27+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_compare_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-compare-pit.json`
+
+### Methods
+
+1. Consumed the dense family-year PIT layer for multi-year historical compare behavior.
+2. Used only observed point-in-time family rows for historical compare serving.
+3. Kept current owner, field, and OECD metadata explicitly labeled as current-only side metadata.
+4. Materialized one row per family and observed year with a latest-observed-year flag for compare and report flows.
+
+### Calculations
+
+1. Family active-jurisdiction share is recomputed from point-in-time jurisdiction counts.
+2. Historical-safe metrics come from the PIT core rather than current-state summary marts.
+
+### Downstream Impacts
+
+1. This mart is the safe family-level source for historical compare, time-slice report sections, and year-aware family evidence payloads.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md
+3. docs/next-phase-v2/38-patentiq-v2-report-generation-use-cases-and-contract.md
+
+
+### Metrics
+
+- `gold_family_compare_pit_rows`: `164988135`
+
+## gold-portfolio-summary-pit | success
+
+- Summary: Built the portfolio PIT summary mart by aggregating family compare PIT rows through the current owner bridge with explicit historical caveats.
+- Started: 2026-04-07T12:43:07+00:00
+- Finished: 2026-04-07T12:48:01+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-summary-pit.json`
+
+### Methods
+
+1. Aggregated only historical-safe family PIT rows into year-keyed portfolio summaries.
+2. Reused the current owner bridge as a historical membership approximation and labeled that caveat explicitly.
+3. Focused the first release on legal, blocking, coverage, and concentration signals rather than forcing unsupported historical field-mix claims.
+
+### Calculations
+
+1. Portfolio top-family dependence is measured as the maximum family blocking share within each owner-year slice.
+2. Portfolio active-family count is derived from point-in-time active-jurisdiction presence rather than current family status.
+
+### Downstream Impacts
+
+1. This mart is the first safe source for portfolio over-time comparison, historical report sections, and legal-attrition context before Phase 04 predictions arrive.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+3. docs/next-phase-v2/09-forecast-v2-mvp-use-cases-and-feature-semantics.md
+
+
+### Metrics
+
+- `gold_portfolio_summary_pit_rows`: `36127659`
+
+## gold-market-summary-pit | success
+
+- Summary: Built the market PIT summary mart from year-safe market timeseries, dense family compare PIT, and current-owner caveated family membership.
+- Started: 2026-04-07T13:08:19+00:00
+- Finished: 2026-04-07T13:26:54+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_summary_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-summary-pit.json`
+
+### Methods
+
+1. Started from the year-safe market-intelligence timeseries and retained one row per segment and year.
+2. Joined dense family compare PIT with family field-contribution timeseries to derive blocking and active-family density by segment-year.
+3. Used the current family owner from the family compare PIT as a historical owner proxy and labeled that caveat explicitly.
+
+### Calculations
+
+1. Segment growth index is computed from family-count change versus the prior year when prior-year count exists.
+2. Segment blocking density is a weighted average of family blocking power using field base fractions as segment participation weights.
+3. Segment field balance is the average family allocation share to the segment, higher when families are more concentrated in that field.
+
+### Downstream Impacts
+
+1. This mart is the safe historical source for Market Intelligence year-slice cards, league tables, and segment detail drawers.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `gold_market_summary_pit_rows`: `504`
+
+## gold-portfolio-compare-pit | success
+
+- Summary: Built the portfolio compare PIT mart from dense portfolio PIT summaries and year-safe field-mix support where available.
+- Started: 2026-04-07T13:33:27+00:00
+- Finished: 2026-04-07T13:33:38+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_compare_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-compare-pit.json`
+
+### Methods
+
+1. Started from the dense portfolio summary PIT so legal, blocking, and concentration metrics stay historical-safe.
+2. Joined field-mix metrics only for years actually present in the portfolio field timeseries.
+3. Kept historical owner truth and historical field-mix support explicitly caveated when source coverage is unavailable.
+
+### Calculations
+
+1. Portfolio legal durability index is measured as active-family share within the historical owner-year proxy slice.
+2. Portfolio field breadth is the count of positive active-family fields in the supported field-timeseries year.
+3. Portfolio field concentration is calculated as HHI over active-family field shares, with top-field share surfaced separately.
+
+### Downstream Impacts
+
+1. This mart is the compare-oriented source for portfolio year-slice views, radar overlays, and report compare tables.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+
+
+### Metrics
+
+- `gold_portfolio_compare_pit_rows`: `36127659`
+
+## gold-market-leaderboard-pit | success
+
+- Summary: Built the market leaderboard PIT mart for segment-year family and owner rankings with explicit historical owner caveats.
+- Started: 2026-04-07T13:47:20+00:00
+- Finished: 2026-04-07T14:00:59+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_leaderboard_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-leaderboard-pit.json`
+
+### Methods
+
+1. Derived family leaderboard rows from year-safe family field-contribution timeseries joined to dense family compare PIT.
+2. Derived owner leaderboard rows by aggregating current-owner replay across in-segment family-year rows.
+3. Ranked families and owners separately within each segment-year slice and capped each leaderboard to a compact top set.
+
+### Calculations
+
+1. Family leaderboard ranking uses family blocking power first, then weighted field participation as a tiebreaker.
+2. Owner leaderboard share is measured against the segment active-family count from the market summary PIT.
+3. Owner average blocking is computed over the current-owner replay family set inside the segment-year slice.
+
+### Downstream Impacts
+
+1. This mart supports selected-year segment leader tables and owner presence panels without requiring ad hoc ranking logic in the backend.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `gold_market_leaderboard_pit_rows`: `0`
+
+## gold-market-leaderboard-pit | success
+
+- Summary: Built the market leaderboard PIT mart for segment-year family and owner rankings with explicit historical owner caveats.
+- Started: 2026-04-07T14:00:48+00:00
+- Finished: 2026-04-07T14:09:57+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_leaderboard_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-leaderboard-pit.json`
+
+### Methods
+
+1. Derived family leaderboard rows from year-safe family field-contribution timeseries joined to dense family compare PIT.
+2. Derived owner leaderboard rows by aggregating current-owner replay across in-segment family-year rows.
+3. Ranked families and owners separately within each segment-year slice and capped each leaderboard to a compact top set.
+
+### Calculations
+
+1. Family leaderboard ranking uses family blocking power first, then weighted field participation as a tiebreaker.
+2. Owner leaderboard share is measured against the segment active-family count from the market summary PIT.
+3. Owner average blocking is computed over the current-owner replay family set inside the segment-year slice.
+
+### Downstream Impacts
+
+1. This mart supports selected-year segment leader tables and owner presence panels without requiring ad hoc ranking logic in the backend.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `gold_market_leaderboard_pit_rows`: `7600`
+
+## gold-market-summary-pit | success
+
+- Summary: Built the market PIT summary mart from year-safe market timeseries, dense family compare PIT, and current-owner caveated family membership.
+- Started: 2026-04-07T14:14:42+00:00
+- Finished: 2026-04-07T14:16:00+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_summary_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-summary-pit.json`
+
+### Methods
+
+1. Started from the year-safe market-intelligence timeseries and retained one row per segment and year.
+2. Joined dense family compare PIT with family field-contribution timeseries to derive blocking and active-family density by segment-year.
+3. Used the current family owner from the family compare PIT as a historical owner proxy and labeled that caveat explicitly.
+
+### Calculations
+
+1. Segment growth index is computed from family-count change versus the prior year when prior-year count exists.
+2. Segment blocking density is a weighted average of family blocking power using field base fractions as segment participation weights.
+3. Segment field balance is the average family allocation share to the segment, higher when families are more concentrated in that field.
+
+### Downstream Impacts
+
+1. This mart is the safe historical source for Market Intelligence year-slice cards, league tables, and segment detail drawers.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `gold_market_summary_pit_rows`: `504`
+
+## ml-phase04-family-jurisdiction-lapse-risk | success
+
+- Summary: Built Phase 04 branch-aware label, feature, and split artifacts with registry-preserving scaffold metadata.
+- Started: 2026-04-07T14:34:50+00:00
+- Finished: 2026-04-07T14:34:53+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_jurisdiction_lapse_risk.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_jurisdiction_lapse_risk.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_jurisdiction_lapse_risk.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase04-family-jurisdiction-lapse-risk.json`
+
+### Methods
+
+1. Derived family-jurisdiction lapse labels from dated lapse/expiry events after each yearly active-grant branch snapshot.
+2. Joined dense branch history with dense family PIT metrics to keep first-pass Phase 04 features year-safe.
+3. Assigned one grouped time split per family-jurisdiction trajectory using the latest fully observed 24m year.
+
+### Calculations
+
+1. 12m and 24m labels are only treated as observed when the horizon closes by the ETL snapshot date.
+2. Branch-level timing features use the lag between as_of_date and last grant/lapse/expiry events.
+3. Current-state-only legal enrichments are intentionally excluded from the initial promotion feature set.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/45-patentiq-v2-phase-04-family-jurisdiction-lapse-risk-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+
+
+### Metrics
+
+- `ml_label_family_jurisdiction_lapse_risk_rows`: `157525345`
+- `ml_feature_family_jurisdiction_lapse_risk_rows`: `97347045`
+- `ml_split_registry_rows`: `24970099`
+- `ml_experiment_registry_rows`: `8`
+- `ml_model_registry_rows`: `4`
+- `ml_calibration_registry_rows`: `4`
+
+## ml-phase04-family-jurisdiction-lapse-risk | success
+
+- Summary: Built Phase 04 branch-aware label, feature, and split artifacts with registry-preserving scaffold metadata.
+- Started: 2026-04-07T14:41:20+00:00
+- Finished: 2026-04-07T14:41:23+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_jurisdiction_lapse_risk.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_jurisdiction_lapse_risk.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_jurisdiction_lapse_risk.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase04-family-jurisdiction-lapse-risk.json`
+
+### Methods
+
+1. Derived family-jurisdiction lapse labels from dated lapse/expiry events after each yearly active-grant branch snapshot.
+2. Joined dense branch history with dense family PIT metrics to keep first-pass Phase 04 features year-safe.
+3. Assigned one grouped time split per family-jurisdiction trajectory using the latest fully observed 24m year.
+
+### Calculations
+
+1. 12m and 24m labels are only treated as observed when the horizon closes by the ETL snapshot date.
+2. Branch-level timing features use the lag between as_of_date and last grant/lapse/expiry events.
+3. Current-state-only legal enrichments are intentionally excluded from the initial promotion feature set.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/45-patentiq-v2-phase-04-family-jurisdiction-lapse-risk-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+
+
+### Metrics
+
+- `ml_label_family_jurisdiction_lapse_risk_rows`: `151930838`
+- `ml_feature_family_jurisdiction_lapse_risk_rows`: `97347045`
+- `ml_split_registry_rows`: `24970099`
+- `ml_experiment_registry_rows`: `8`
+- `ml_model_registry_rows`: `4`
+- `ml_calibration_registry_rows`: `4`
+
+## ml-phase04-family-jurisdiction-lapse-risk | success
+
+- Summary: Built Phase 04 branch-aware label, feature, and split artifacts with registry-preserving scaffold metadata.
+- Started: 2026-04-07T14:48:27+00:00
+- Finished: 2026-04-07T14:48:29+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_jurisdiction_lapse_risk.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_jurisdiction_lapse_risk.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_jurisdiction_lapse_risk.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase04-family-jurisdiction-lapse-risk.json`
+
+### Methods
+
+1. Derived family-jurisdiction lapse labels from dated lapse/expiry events after each yearly active-grant branch snapshot.
+2. Joined dense branch history with dense family PIT metrics to keep first-pass Phase 04 features year-safe.
+3. Assigned one grouped time split per family-jurisdiction trajectory using the latest fully observed 24m year.
+
+### Calculations
+
+1. 12m and 24m labels are only treated as observed when the horizon closes by the ETL snapshot date.
+2. Branch-level timing features use the lag between as_of_date and last grant/lapse/expiry events.
+3. Current-state-only legal enrichments are intentionally excluded from the initial promotion feature set.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/45-patentiq-v2-phase-04-family-jurisdiction-lapse-risk-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+
+
+### Metrics
+
+- `ml_label_family_jurisdiction_lapse_risk_rows`: `151930838`
+- `ml_feature_family_jurisdiction_lapse_risk_rows`: `97347045`
+- `ml_split_registry_rows`: `24970099`
+- `ml_experiment_registry_rows`: `8`
+- `ml_model_registry_rows`: `4`
+- `ml_calibration_registry_rows`: `4`
+
+## ml-phase04-family-jurisdiction-lapse-risk | success
+
+- Summary: Built Phase 04 branch-aware label, feature, split, and baseline-training artifacts with registry-preserving metadata.
+- Started: 2026-04-07T15:04:58+00:00
+- Finished: 2026-04-07T15:05:01+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_jurisdiction_lapse_risk.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_jurisdiction_lapse_risk.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_jurisdiction_lapse_risk.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_12m_model.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_24m_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase04-family-jurisdiction-lapse-risk.json`
+
+### Methods
+
+1. Derived family-jurisdiction lapse labels from dated lapse/expiry events after each yearly active-grant branch snapshot.
+2. Joined dense branch history with dense family PIT metrics to keep first-pass Phase 04 features year-safe.
+3. Assigned one grouped time split per family-jurisdiction trajectory using the latest fully observed 24m year.
+4. Trained sampled LightGBM classifier baselines and selected validation-best probability calibration per horizon.
+
+### Calculations
+
+1. 12m and 24m labels are only treated as observed when the horizon closes by the ETL snapshot date.
+2. Branch-level timing features use the lag between as_of_date and last grant/lapse/expiry events.
+3. Current-state-only legal enrichments are intentionally excluded from the initial promotion feature set.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/45-patentiq-v2-phase-04-family-jurisdiction-lapse-risk-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+
+
+### Metrics
+
+- `ml_label_family_jurisdiction_lapse_risk_rows`: `151930838`
+- `ml_feature_family_jurisdiction_lapse_risk_rows`: `97347045`
+- `ml_split_registry_rows`: `24970099`
+- `ml_experiment_registry_rows`: `8`
+- `ml_model_registry_rows`: `4`
+- `ml_calibration_registry_rows`: `4`
+- `phase04_12m_roc_auc`: `nan`
+- `phase04_12m_pr_auc`: `nan`
+- `phase04_12m_brier_score`: `0.0`
+- `phase04_24m_roc_auc`: `nan`
+- `phase04_24m_pr_auc`: `nan`
+- `phase04_24m_brier_score`: `2.419313058216061e-10`
+
+## ml-phase04-family-jurisdiction-lapse-risk | success
+
+- Summary: Built Phase 04 branch-aware label, feature, split, and baseline-training artifacts with registry-preserving metadata.
+- Started: 2026-04-07T15:15:50+00:00
+- Finished: 2026-04-07T15:15:53+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_jurisdiction_lapse_risk.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_jurisdiction_lapse_risk.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_jurisdiction_lapse_risk.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_12m_model.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_24m_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase04-family-jurisdiction-lapse-risk.json`
+
+### Methods
+
+1. Derived family-jurisdiction lapse labels from dated lapse/expiry events after each yearly active-grant branch snapshot.
+2. Joined dense branch history with dense family PIT metrics to keep first-pass Phase 04 features year-safe.
+3. Assigned one grouped time split per family-jurisdiction trajectory using the latest fully observed 24m year.
+4. Trained sampled LightGBM classifier baselines and selected validation-best probability calibration per horizon.
+
+### Calculations
+
+1. 12m and 24m labels are only treated as observed when the horizon closes by the ETL snapshot date.
+2. Branch-level timing features use the lag between as_of_date and last grant/lapse/expiry events.
+3. Current-state-only legal enrichments are intentionally excluded from the initial promotion feature set.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/45-patentiq-v2-phase-04-family-jurisdiction-lapse-risk-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+
+
+### Metrics
+
+- `ml_label_family_jurisdiction_lapse_risk_rows`: `151930838`
+- `ml_feature_family_jurisdiction_lapse_risk_rows`: `97347045`
+- `ml_split_registry_rows`: `24970099`
+- `ml_experiment_registry_rows`: `8`
+- `ml_model_registry_rows`: `4`
+- `ml_calibration_registry_rows`: `4`
+- `phase04_12m_roc_auc`: `0.9854587838811208`
+- `phase04_12m_pr_auc`: `0.11962410366073237`
+- `phase04_12m_brier_score`: `0.002569726569718946`
+- `phase04_24m_roc_auc`: `0.9711444793067384`
+- `phase04_24m_pr_auc`: `0.11645043511949263`
+- `phase04_24m_brier_score`: `0.005286176439050758`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-07T17:58:57+00:00
+- Finished: 2026-04-07T18:01:17+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_breakout_classifier.txt
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_breakout_tail_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_bundle.json
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_breakout_classifier.txt
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_breakout_tail_model.txt
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_bundle.json
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+4. Applied point-in-time feature enrichment from `silver_family_feature_snapshot_pit`; replaced leakage-sensitive citation counts, network externalities, and legal-state columns with pre-as_of_date equivalents; replaced family_rcf_score, family_size_docdb, and family_coverage_stability_score with PIT-safe variants; recomputed data_completeness_pct from enriched values.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+- `ml_feature_family_future_citations_rows`: `11772956`
+- `ml_split_registry_rows`: `11772956`
+- `ml_experiment_registry_rows`: `8`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+- `phase03_3y_spearman`: `0.4565249237970863`
+- `phase03_3y_interval_coverage_80pct`: `0.79686`
+- `phase03_5y_spearman`: `0.5967673087990223`
+- `phase03_5y_interval_coverage_80pct`: `0.7959916242895603`
+- `phase03_sampled_training`: `1.0`
+- `phase03_train_rows_raw`: `6409400.0`
+- `phase03_train_rows_used`: `200000.0`
+- `phase03_validation_rows_raw`: `2314420.0`
+- `phase03_validation_rows_used`: `50000.0`
+- `phase03_test_rows_raw`: `2809372.0`
+- `phase03_test_rows_used`: `50000.0`
+
+## ml-phase03-family-forecast | success
+
+- Summary: Built deterministic Phase 03 family-future-citation label, feature, split, and registry scaffolding for family-first forecast training.
+- Started: 2026-04-07T18:30:38+00:00
+- Finished: 2026-04-07T18:39:48+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_future_citations.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_future_citations.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase03.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_future_citation_forecast.json
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_breakout_classifier.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_breakout_tail_model.txt
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_model.txt
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_3y_bundle.json
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_breakout_classifier.txt
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_breakout_tail_model.txt
+16. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_model.txt
+17. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_5y_bundle.json
+18. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_future_citation_forecast_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase03-family-forecast.json`
+
+### Methods
+
+1. Materialized leakage-safe Phase 03 label and feature tables at `docdb_family_id` grain from current Silver and Gold marts.
+2. Built a grouped time split registry aligned to family priority year and recent-cohort holdout rules.
+3. Wrote placeholder experiment, model, and calibration registries so training can proceed under an explicit TDD contract rather than ad hoc scripts.
+4. Applied point-in-time feature enrichment from `silver_family_feature_snapshot_pit`; replaced leakage-sensitive citation counts, network externalities, and legal-state columns with pre-as_of_date equivalents; replaced family_rcf_score, family_size_docdb, and family_coverage_stability_score with PIT-safe variants; recomputed data_completeness_pct from enriched values.
+
+### Calculations
+
+1. Future citation labels preserve raw and log1p targets for 3y and 5y horizons.
+2. Feature completeness remains explicit via `data_completeness_pct` rather than collapsing all missing numeric values to zero.
+
+
+### Governing Docs
+
+1. docs/new-feature-ideas/semantic-and-model-development/phases/phase-03-family-future-citation-forecast-v2.md
+2. docs/next-phase-v2/08-citation-forecast-model-v2-retraining-report.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+4. docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md
+
+
+### Metrics
+
+- `ml_label_family_future_citations_rows`: `11772956`
+- `ml_feature_family_future_citations_rows`: `11772956`
+- `ml_split_registry_rows`: `27944510`
+- `ml_split_registry_phase03_rows`: `11772956`
+- `ml_experiment_registry_rows`: `8`
+- `ml_model_registry_rows`: `2`
+- `ml_calibration_registry_rows`: `2`
+- `phase03_3y_spearman`: `0.4495002937134462`
+- `phase03_3y_interval_coverage_80pct`: `0.80536`
+- `phase03_5y_spearman`: `0.5995602733201085`
+- `phase03_5y_interval_coverage_80pct`: `0.79701230228471`
+- `phase03_sampled_training`: `1.0`
+- `phase03_train_rows_raw`: `6409400.0`
+- `phase03_train_rows_used`: `200000.0`
+- `phase03_validation_rows_raw`: `2314420.0`
+- `phase03_validation_rows_used`: `50000.0`
+- `phase03_test_rows_raw`: `2809372.0`
+- `phase03_test_rows_used`: `50000.0`
+
+## ml-phase04-family-jurisdiction-lapse-risk | success
+
+- Summary: Built Phase 04 branch-aware label, feature, split, and baseline-training artifacts with registry-preserving metadata.
+- Started: 2026-04-07T18:45:59+00:00
+- Finished: 2026-04-07T18:46:01+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_family_jurisdiction_lapse_risk.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_family_jurisdiction_lapse_risk.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase04.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_family_jurisdiction_lapse_risk.json
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_12m_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_24m_model.txt
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/family_jurisdiction_lapse_risk_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase04-family-jurisdiction-lapse-risk.json`
+
+### Methods
+
+1. Derived family-jurisdiction lapse labels from dated lapse/expiry events after each yearly active-grant branch snapshot.
+2. Joined dense branch history with dense family PIT metrics to keep first-pass Phase 04 features year-safe.
+3. Assigned one grouped time split per family-jurisdiction trajectory using the latest fully observed 24m year.
+4. Trained sampled LightGBM classifier baselines and selected validation-best probability calibration per horizon.
+
+### Calculations
+
+1. 12m and 24m labels are only treated as observed when the horizon closes by the ETL snapshot date.
+2. Branch-level timing features use the lag between as_of_date and last grant/lapse/expiry events.
+3. Current-state-only legal enrichments are intentionally excluded from the initial promotion feature set.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/45-patentiq-v2-phase-04-family-jurisdiction-lapse-risk-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+
+
+### Metrics
+
+- `ml_label_family_jurisdiction_lapse_risk_rows`: `151930838`
+- `ml_feature_family_jurisdiction_lapse_risk_rows`: `97347045`
+- `ml_split_registry_rows`: `24970099`
+- `ml_split_registry_phase04_rows`: `13197143`
+- `ml_experiment_registry_rows`: `10`
+- `ml_model_registry_rows`: `4`
+- `ml_calibration_registry_rows`: `4`
+- `phase04_12m_roc_auc`: `0.9827997855811244`
+- `phase04_12m_pr_auc`: `0.12142728609508663`
+- `phase04_12m_brier_score`: `0.00303720718626948`
+- `phase04_24m_roc_auc`: `0.9715023234033948`
+- `phase04_24m_pr_auc`: `0.11726776657391866`
+- `phase04_24m_brier_score`: `0.005308691908264898`
+
+## ml-phase06-jurisdiction-field-trend-forecast | success
+
+- Summary: Built Phase 06 jurisdiction-field trend labels, features, split registry, baseline forecasts, and calibration metadata.
+- Started: 2026-04-07T19:28:23+00:00
+- Finished: 2026-04-07T19:28:30+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_summary_pit.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_jurisdiction_field_trend_future.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_jurisdiction_field_trend_forecast.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase06.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_prediction_jurisdiction_field_trend_forecast.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_jurisdiction_field_trend_forecast.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase06-jurisdiction-field-trend-forecast.json`
+
+### Methods
+
+1. Built a dense jurisdiction-field-year grid from local and global trend timeseries.
+2. Derived lag, acceleration, volatility, and market-context features.
+3. Trained LightGBM baseline regressors on horizon-safe grouped time splits.
+4. Calibrated interval outputs with validation residual quantiles.
+
+### Calculations
+
+1. Targets are future local family filing counts at 3-year and 5-year horizons.
+2. Prediction rows are emitted interval-first and retain observed-horizon flags.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/48-patentiq-v2-post-phase-04-prioritization-and-next-execution-path.md
+2. docs/next-phase-v2/49-patentiq-v2-phase-06-jurisdiction-field-trend-forecast-execution-plan.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+
+
+### Metrics
+
+- `label_rows`: `25950`
+- `feature_rows`: `25950`
+- `split_rows`: `25950`
+- `prediction_rows`: `51900`
+- `3y_direction_accuracy`: `0.5017341040462427`
+- `3y_interval_coverage_80pct`: `0.7491329479768786`
+- `3y_mape_all`: `11.84358199145901`
+- `5y_direction_accuracy`: `0.7635838150289017`
+- `5y_interval_coverage_80pct`: `0.7884393063583816`
+- `5y_mape_all`: `181.20963084732625`
+
+## ml-phase06-jurisdiction-field-trend-forecast | success
+
+- Summary: Built Phase 06 jurisdiction-field trend labels, features, split registry, baseline forecasts, and calibration metadata.
+- Started: 2026-04-07T19:29:18+00:00
+- Finished: 2026-04-07T19:29:23+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_summary_pit.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_jurisdiction_field_trend_future.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_jurisdiction_field_trend_forecast.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase06.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_prediction_jurisdiction_field_trend_forecast.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_jurisdiction_field_trend_forecast.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase06-jurisdiction-field-trend-forecast.json`
+
+### Methods
+
+1. Built a dense jurisdiction-field-year grid from local and global trend timeseries.
+2. Derived lag, acceleration, volatility, and market-context features.
+3. Trained LightGBM baseline regressors on horizon-safe grouped time splits.
+4. Calibrated interval outputs with validation residual quantiles.
+
+### Calculations
+
+1. Targets are future local family filing counts at 3-year and 5-year horizons.
+2. Prediction rows are emitted interval-first and retain observed-horizon flags.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/48-patentiq-v2-post-phase-04-prioritization-and-next-execution-path.md
+2. docs/next-phase-v2/49-patentiq-v2-phase-06-jurisdiction-field-trend-forecast-execution-plan.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+
+
+### Metrics
+
+- `label_rows`: `16435`
+- `feature_rows`: `16435`
+- `split_rows`: `16435`
+- `prediction_rows`: `32870`
+- `3y_direction_accuracy`: `0.42716763005780345`
+- `3y_interval_coverage_80pct`: `0.7277456647398844`
+- `3y_mape_all`: `13.825853949629128`
+- `5y_direction_accuracy`: `0.7`
+- `5y_interval_coverage_80pct`: `0.7682080924855491`
+- `5y_mape_all`: `189.47232171353048`
+
+## ml-phase06-jurisdiction-field-trend-forecast | success
+
+- Summary: Built Phase 06 jurisdiction-field trend labels, features, split registry, direction-first baseline predictions, and band-calibration metadata.
+- Started: 2026-04-07T20:00:14+00:00
+- Finished: 2026-04-07T20:00:23+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_summary_pit.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_jurisdiction_field_trend_future.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_jurisdiction_field_trend_forecast.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase06.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_prediction_jurisdiction_field_trend_forecast.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/jurisdiction_field_trend_forecast_direction_calibration.json
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_jurisdiction_field_trend_forecast.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase06-jurisdiction-field-trend-forecast.json`
+
+### Methods
+
+1. Built a dense jurisdiction-field-year grid from local and global trend timeseries.
+2. Derived lag, acceleration, volatility, and market-context features.
+3. Trained LightGBM multiclass direction baselines on horizon-safe grouped time splits.
+4. Assigned direction, strength, and support bands from class probabilities and train-support thresholds.
+
+### Calculations
+
+1. Labels retain raw-count, growth, and direction fields, but the promoted serving semantics are direction-first.
+2. Prediction rows are emitted with direction, strength, and support fields plus secondary count references.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/48-patentiq-v2-post-phase-04-prioritization-and-next-execution-path.md
+2. docs/next-phase-v2/49-patentiq-v2-phase-06-jurisdiction-field-trend-forecast-execution-plan.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+
+
+### Metrics
+
+- `label_rows`: `16435`
+- `feature_rows`: `16435`
+- `split_rows`: `16435`
+- `prediction_rows`: `32870`
+- `3y_class_accuracy`: `0.5416184971098266`
+- `3y_balanced_accuracy`: `0.6256237703897015`
+- `3y_macro_f1`: `0.5421183525674148`
+- `5y_class_accuracy`: `0.7265895953757225`
+- `5y_balanced_accuracy`: `0.8631260277073224`
+- `5y_macro_f1`: `0.5873721893570805`
+
+## ml-phase06-jurisdiction-field-trend-forecast | success
+
+- Summary: Built Phase 06 jurisdiction-field trend labels, features, split registry, direction-first baseline predictions, and band-calibration metadata.
+- Started: 2026-04-07T20:05:50+00:00
+- Finished: 2026-04-07T20:06:00+00:00
+
+### Inputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_summary_pit.parquet
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_jurisdiction_field_trend_future.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_jurisdiction_field_trend_forecast.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase06.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_prediction_jurisdiction_field_trend_forecast.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/jurisdiction_field_trend_forecast_direction_calibration.json
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_jurisdiction_field_trend_forecast.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-phase06-jurisdiction-field-trend-forecast.json`
+
+### Methods
+
+1. Built a dense jurisdiction-field-year grid from local and global trend timeseries.
+2. Derived lag, acceleration, volatility, and market-context features.
+3. Trained LightGBM multiclass direction baselines on horizon-safe grouped time splits.
+4. Assigned direction, strength, and support bands from class probabilities and train-support thresholds.
+
+### Calculations
+
+1. Labels retain raw-count, growth, and direction fields, but the promoted serving semantics are direction-first.
+2. Prediction rows are emitted with direction, strength, and support fields plus secondary count references.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/48-patentiq-v2-post-phase-04-prioritization-and-next-execution-path.md
+2. docs/next-phase-v2/49-patentiq-v2-phase-06-jurisdiction-field-trend-forecast-execution-plan.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+
+
+### Metrics
+
+- `label_rows`: `16435`
+- `feature_rows`: `16435`
+- `split_rows`: `16435`
+- `prediction_rows`: `32870`
+- `3y_class_accuracy`: `0.5416184971098266`
+- `3y_balanced_accuracy`: `0.6256237703897015`
+- `3y_macro_f1`: `0.5421183525674148`
+- `5y_class_accuracy`: `0.7265895953757225`
+- `5y_balanced_accuracy`: `0.8631260277073224`
+- `5y_macro_f1`: `0.5873721893570805`
+
+## gold-portfolio | success
+
+- Summary: Built Gold portfolio marts from the family-owner bridge and Gold family/history contracts.
+- Started: 2026-04-07T20:44:44+00:00
+- Finished: 2026-04-07T20:59:50+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_field_timeseries.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_threat_matrix.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_heritage_summary.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_portfolio_prediction_rollup.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_summary.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_segments.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_contributors.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_portfolio_field_timeseries_rows`: `5520241`
+- `gold_portfolio_summary_rows`: `3034400`
+- `gold_portfolio_threat_matrix_rows`: `15269449`
+- `gold_portfolio_heritage_summary_rows`: `3852589`
+- `ml_portfolio_prediction_rollup_rows`: `3034400`
+- `gold_portfolio_forecast_summary_rows`: `3034400`
+- `gold_portfolio_forecast_segments_rows`: `11040482`
+- `gold_portfolio_forecast_contributors_rows`: `17866740`
+
+## ml-pending-grant-pipeline | success
+
+- Summary: Materialized pending-grant label, feature, and split contracts for the next Phase 08 extension.
+- Started: 2026-04-07T21:57:48+00:00
+- Finished: 2026-04-07T21:57:50+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_pending_grant_event.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_pending_grant_pipeline.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase_grant.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_pending_grant_pipeline.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-pending-grant-pipeline.json`
+
+### Methods
+
+1. Built branch-grain pending-grant labels from dense branch history by checking future grant conversion within 12m and 24m horizons.
+2. Joined family PIT-safe context and publication-stage counts to create the first pending-grant feature scaffold.
+3. Wrote phase-specific split registry and placeholder registry/model-card artifacts without training a live model yet.
+
+### Calculations
+
+1. Observed-horizon flags require the as-of row to have a fully observable 12m or 24m window by the ETL snapshot date.
+2. Pending-age is measured from the last pending event date when available.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/55-patentiq-v2-pending-grant-pipeline-execution-plan.md
+2. docs/next-phase-v2/09-forecast-v2-mvp-use-cases-and-feature-semantics.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+
+
+### Metrics
+
+- `ml_label_pending_grant_event_rows`: `93347403`
+- `ml_feature_pending_grant_pipeline_rows`: `93347403`
+- `ml_split_registry_phase_grant_rows`: `93347403`
+- `pending_grant_observed_12m_rows`: `74015905`
+- `pending_grant_observed_24m_rows`: `64881761`
+
+## ml-pending-grant-pipeline | success
+
+- Summary: Materialized pending-grant label, feature, and split artifacts and trained first baseline pending-grant classifiers when split sizes were sufficient.
+- Started: 2026-04-08T07:31:17+00:00
+- Finished: 2026-04-08T07:31:20+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_pending_grant_event.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_pending_grant_pipeline.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase_grant.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_pending_grant_pipeline.json
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_12m_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_24m_model.txt
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-pending-grant-pipeline.json`
+
+### Methods
+
+1. Built branch-grain pending-grant labels from dense branch history by checking future grant conversion within 12m and 24m horizons.
+2. Joined family PIT-safe context and publication-stage counts to create the first pending-grant feature scaffold.
+3. Sampled split-aligned pending snapshots to train first 12m and 24m LightGBM baseline grant-probability models with validation-time calibration selection.
+
+### Calculations
+
+1. Observed-horizon flags require the as-of row to have a fully observable 12m or 24m window by the ETL snapshot date.
+2. Pending-age is measured from the last pending event date when available.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/55-patentiq-v2-pending-grant-pipeline-execution-plan.md
+2. docs/next-phase-v2/09-forecast-v2-mvp-use-cases-and-feature-semantics.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+
+
+### Metrics
+
+- `ml_label_pending_grant_event_rows`: `93347403`
+- `ml_feature_pending_grant_pipeline_rows`: `93347403`
+- `ml_split_registry_phase_grant_rows`: `93347403`
+- `pending_grant_observed_12m_rows`: `74015905`
+- `pending_grant_observed_24m_rows`: `64881761`
+- `pending_grant_12m_roc_auc`: `0.9962887385977773`
+- `pending_grant_12m_pr_auc`: `0.8489725905894858`
+- `pending_grant_12m_brier_score`: `0.005760928692438487`
+- `pending_grant_24m_roc_auc`: `0.9989797963236232`
+- `pending_grant_24m_pr_auc`: `0.9688290062191814`
+- `pending_grant_24m_brier_score`: `0.005115810373689656`
+
+## ml-pending-grant-pipeline | success
+
+- Summary: Materialized pending-grant label, feature, and split artifacts and trained first baseline pending-grant classifiers when split sizes were sufficient.
+- Started: 2026-04-08T07:41:11+00:00
+- Finished: 2026-04-08T07:41:14+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_pending_grant_event.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_pending_grant_pipeline.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase_grant.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_pending_grant_pipeline.json
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_12m_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_24m_model.txt
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-pending-grant-pipeline.json`
+
+### Methods
+
+1. Built branch-grain pending-grant labels from dense branch history by checking future grant conversion within 12m and 24m horizons.
+2. Joined family PIT-safe context and publication-stage counts to create the first pending-grant feature scaffold.
+3. Sampled split-aligned pending snapshots to train first 12m and 24m LightGBM baseline grant-probability models with validation-time calibration selection.
+
+### Calculations
+
+1. Observed-horizon flags require the as-of row to have a fully observable 12m or 24m window by the ETL snapshot date.
+2. Pending-age is measured from the last pending event date when available.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/55-patentiq-v2-pending-grant-pipeline-execution-plan.md
+2. docs/next-phase-v2/09-forecast-v2-mvp-use-cases-and-feature-semantics.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+
+
+### Metrics
+
+- `ml_label_pending_grant_event_rows`: `93347403`
+- `ml_feature_pending_grant_pipeline_rows`: `93347403`
+- `ml_split_registry_phase_grant_rows`: `93347403`
+- `pending_grant_observed_12m_rows`: `74015905`
+- `pending_grant_observed_24m_rows`: `64881761`
+- `pending_grant_12m_roc_auc`: `0.6458783007770416`
+- `pending_grant_12m_pr_auc`: `0.18687252398502663`
+- `pending_grant_12m_brier_score`: `0.08914891953093323`
+- `pending_grant_24m_roc_auc`: `0.6555293858125568`
+- `pending_grant_24m_pr_auc`: `0.33159218721986716`
+- `pending_grant_24m_brier_score`: `0.1570057345910732`
+
+## silver-pit-classification-dense | success
+
+- Summary: Built silver_family_classification_pit_dense.parquet with dense family-year WIPO/CPC classification membership for family, portfolio, and market chronology surfaces.
+- Started: 2026-04-08T08:43:57+00:00
+- Finished: 2026-04-08T08:48:32+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_classification_pit_dense.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_classification_pit_dense_audit.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-pit-classification-dense.json`
+
+### Methods
+
+1. Uses silver_family_feature_snapshot_pit_dense as the family-year backbone so classification rows stay aligned with the existing PIT grain.
+2. Replays stable family-level WIPO and CPC membership across family PIT years rather than inferring dated code mutations.
+3. Derives CPC sections, subclasses, and main groups from canonical family CPC symbols.
+4. Writes a persisted JSON audit beside the parquet to validate dense PIT parity, uniqueness, and classification coverage.
+
+### Calculations
+
+1. covered_wipo_fields_asof and primary_wipo_field_asof come from silver_family_wipo_fields and are replayed across PIT years.
+2. cpc_main_groups_asof normalizes CPC symbols to main-group form by replacing the subgroup suffix with '/00'.
+3. classification_visibility_policy = stable_family_classification_replay and historical_classification_truth_supported = false for this first implementation.
+
+### Downstream Impacts
+
+1. gold_family_classification_mix_pit can use this as the family-year classification basis.
+2. gold_portfolio_classification_mix_pit can aggregate this with explicit current-owner replay caveats.
+3. gold_market_cpc_trend_pit can use the same CPC/WIPO chronology for CPC-within-field trends and PIT importance views.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+3. docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md
+4. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+5. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `silver_family_classification_pit_dense_rows`: `164988135`
+- `silver_family_classification_pit_dense_duplicate_family_year_keys`: `0`
+- `silver_family_classification_pit_dense_rows_with_cpc_main_groups`: `93283467`
+
+## gold-family-classification-mix-pit | success
+
+- Summary: Built the family classification PIT summary mart from the dense family-year classification backbone.
+- Started: 2026-04-08T09:02:04+00:00
+- Finished: 2026-04-08T09:07:15+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_mix_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-classification-mix-pit.json`
+
+### Methods
+
+1. Started from silver_family_classification_pit_dense so the mart stays aligned with the dense family-year PIT grain.
+2. Kept reusable WIPO and CPC arrays for UI drill-down while materializing summary fields for family cards and compare views.
+3. Made the stable classification replay policy explicit instead of implying dated code-mutation truth.
+
+### Calculations
+
+1. Classification concentration HHI uses equal-share membership across CPC main groups in the first stable-replay implementation.
+2. Classification entropy uses the natural log of the CPC main-group count under the same equal-share assumption.
+3. Classification breadth band is derived from CPC main-group count: unknown, focused, balanced, diversified.
+
+### Downstream Impacts
+
+1. This mart is the family-level classification source for chronological CPC/WIPO UI sections and later portfolio and market classification rollups.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+3. docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md
+
+
+### Metrics
+
+- `gold_family_classification_mix_pit_rows`: `164988135`
+
+## gold-family-classification-mix-pit | success
+
+- Summary: Built the family classification PIT summary mart from the dense family-year classification backbone.
+- Started: 2026-04-08T09:08:09+00:00
+- Finished: 2026-04-08T09:10:47+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_mix_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-classification-mix-pit.json`
+
+### Methods
+
+1. Started from silver_family_classification_pit_dense so the mart stays aligned with the dense family-year PIT grain.
+2. Kept reusable WIPO and CPC arrays for UI drill-down while materializing summary fields for family cards and compare views.
+3. Made the stable classification replay policy explicit instead of implying dated code-mutation truth.
+
+### Calculations
+
+1. Classification concentration HHI uses equal-share membership across CPC main groups in the first stable-replay implementation.
+2. Classification entropy uses the natural log of the CPC main-group count under the same equal-share assumption.
+3. Classification breadth band is derived from CPC main-group count: unknown, focused, balanced, diversified.
+
+### Downstream Impacts
+
+1. This mart is the family-level classification source for chronological CPC/WIPO UI sections and later portfolio and market classification rollups.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+3. docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md
+
+
+### Metrics
+
+- `gold_family_classification_mix_pit_rows`: `164988135`
+
+## gold-portfolio-classification-mix-pit | success
+
+- Summary: Built the portfolio classification PIT mart by aggregating family-year classification membership through the current owner bridge.
+- Started: 2026-04-08T09:16:19+00:00
+- Finished: 2026-04-08T09:38:24+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_classification_mix_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-classification-mix-pit.json`
+
+### Methods
+
+1. Started from the family classification mix PIT and family compare PIT so owner-year classification rows stay aligned with historical-safe family-year context.
+2. Aggregated WIPO-field and CPC-main-group membership separately into one owner-year classification mart.
+3. Kept current-owner replay caveats explicit rather than implying true historical ownership.
+
+### Calculations
+
+1. Portfolio family share within a classification is the fraction of owner-year families carrying that classification membership.
+2. Portfolio active-family share within a classification is measured against owner-year active-family count.
+3. Classification rank within owner-year is ordered by family count, then active-family share, then code.
+
+### Downstream Impacts
+
+1. This mart supports chronological portfolio CPC/WIPO exposure, gain/loss views, and later market-classification rollups.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+3. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+
+
+### Metrics
+
+- `gold_portfolio_classification_mix_pit_rows`: `174375803`
+
+## gold-market-cpc-trend-pit | success
+
+- Summary: Built the market CPC trend PIT mart from family-year classification visibility and family compare context.
+- Started: 2026-04-08T19:40:53+00:00
+- Finished: 2026-04-08T19:43:00+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_cpc_trend_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-cpc-trend-pit.json`
+
+### Methods
+
+1. Started from the family classification mix PIT and grouped visible CPC main groups by primary WIPO field and year.
+2. Avoided inventing a many-to-many CPC-to-WIPO mapping by using the family primary WIPO field as the market segment basis.
+3. Joined market summary PIT only for segment heat-state context, while deriving family-count denominators directly from the family-year basis.
+
+### Calculations
+
+1. CPC family share within segment is measured against the family-year segment basis, not against summed CPC memberships.
+2. CPC growth index uses prior-year family-count change within the same WIPO-field and CPC pair.
+3. CPC heat state is banded from growth: heating above 10 percent, cooling below negative 10 percent, otherwise stable.
+
+### Downstream Impacts
+
+1. This mart powers CPC drill-downs inside market WIPO segments and feeds the global CPC importance PIT layer.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/57-patentiq-v2-classification-first-seen-visibility-audit-and-upgrade-plan.md
+3. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `gold_market_cpc_trend_pit_rows`: `862969`
+
+## gold-cpc-importance-pit | success
+
+- Summary: Built the CPC importance PIT mart from the market CPC trend layer.
+- Started: 2026-04-08T19:43:17+00:00
+- Finished: 2026-04-08T19:43:17+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_cpc_importance_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-cpc-importance-pit.json`
+
+### Methods
+
+1. Aggregated CPC presence across WIPO segments into one CPC-year row per main group.
+2. Weighted blocking and enforceability by CPC family count so large segments matter proportionally.
+3. Scored CPC importance from family share, segment breadth, blocking, enforceability, and positive growth contribution.
+
+### Calculations
+
+1. CPC global family share is measured against the total family classification basis across all WIPO segments in the year.
+2. CPC segment presence share is the fraction of WIPO segments where the CPC appears in that year.
+3. Importance band is derived from the composite score: strategic above 0.55, core above 0.30, otherwise emerging.
+
+### Downstream Impacts
+
+1. This mart supports year-slice CPC ranking cards and importance drill-downs in Market Intelligence.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `gold_cpc_importance_pit_rows`: `152753`
+
+## gold-cpc-importance-pit | success
+
+- Summary: Built the CPC importance PIT mart from the market CPC trend layer.
+- Started: 2026-04-08T19:45:25+00:00
+- Finished: 2026-04-08T19:45:25+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_cpc_importance_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-cpc-importance-pit.json`
+
+### Methods
+
+1. Aggregated CPC presence across WIPO segments into one CPC-year row per main group.
+2. Weighted blocking and enforceability by CPC family count so large segments matter proportionally.
+3. Scored CPC importance from family share, segment breadth, blocking, enforceability, and positive growth contribution.
+
+### Calculations
+
+1. CPC global family share is measured against the total family classification basis across all WIPO segments in the year.
+2. CPC segment presence share is the fraction of WIPO segments where the CPC appears in that year.
+3. Importance band is derived from the composite score: strategic above 0.55, core above 0.30, otherwise emerging.
+
+### Downstream Impacts
+
+1. This mart supports year-slice CPC ranking cards and importance drill-downs in Market Intelligence.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `gold_cpc_importance_pit_rows`: `152753`
+
+## gold-market-cpc-trend-pit | success
+
+- Summary: Built the market CPC trend PIT mart from family-year classification visibility and family compare context.
+- Started: 2026-04-08T19:47:09+00:00
+- Finished: 2026-04-08T19:49:13+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_cpc_trend_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-cpc-trend-pit.json`
+
+### Methods
+
+1. Started from the family classification mix PIT and grouped visible CPC main groups by primary WIPO field and year.
+2. Avoided inventing a many-to-many CPC-to-WIPO mapping by using the family primary WIPO field as the market segment basis.
+3. Joined market summary PIT only for segment heat-state context, while deriving family-count denominators directly from the family-year basis.
+
+### Calculations
+
+1. CPC family share within segment is measured against the family-year segment basis, not against summed CPC memberships.
+2. CPC growth index uses prior-year family-count change within the same WIPO-field and CPC pair.
+3. CPC heat state is banded from growth: heating above 10 percent, cooling below negative 10 percent, otherwise stable.
+
+### Downstream Impacts
+
+1. This mart powers CPC drill-downs inside market WIPO segments and feeds the global CPC importance PIT layer.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/57-patentiq-v2-classification-first-seen-visibility-audit-and-upgrade-plan.md
+3. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `gold_market_cpc_trend_pit_rows`: `862969`
+
+## gold-cpc-importance-pit | success
+
+- Summary: Built the CPC importance PIT mart from the market CPC trend layer.
+- Started: 2026-04-08T19:49:35+00:00
+- Finished: 2026-04-08T19:49:36+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_cpc_importance_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-cpc-importance-pit.json`
+
+### Methods
+
+1. Aggregated CPC presence across WIPO segments into one CPC-year row per main group.
+2. Weighted blocking and enforceability by CPC family count so large segments matter proportionally.
+3. Scored CPC importance from family share, segment breadth, blocking, enforceability, and positive growth contribution.
+
+### Calculations
+
+1. CPC global family share is measured against the total family classification basis across all WIPO segments in the year.
+2. CPC segment presence share is the fraction of WIPO segments where the CPC appears in that year.
+3. Importance band is derived from the composite score: strategic above 0.55, core above 0.30, otherwise emerging.
+
+### Downstream Impacts
+
+1. This mart supports year-slice CPC ranking cards and importance drill-downs in Market Intelligence.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `gold_cpc_importance_pit_rows`: `152753`
+
+## ml-pending-grant-pipeline | success
+
+- Summary: Materialized pending-grant label, feature, and split artifacts and trained first baseline pending-grant classifiers when split sizes were sufficient.
+- Started: 2026-04-08T21:08:00+00:00
+- Finished: 2026-04-08T21:08:10+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_pending_grant_event.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_pending_grant_pipeline.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase_grant.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_pending_grant_pipeline.json
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_12m_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_24m_model.txt
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-pending-grant-pipeline.json`
+
+### Methods
+
+1. Built branch-grain pending-grant labels from dense branch history by checking future grant conversion within 12m and 24m horizons.
+2. Joined family PIT-safe context and publication-stage counts to create the first pending-grant feature scaffold.
+3. Sampled split-aligned pending snapshots to train first 12m and 24m LightGBM baseline grant-probability models with validation-time calibration selection.
+
+### Calculations
+
+1. Observed-horizon flags require the as-of row to have a fully observable 12m or 24m window by the ETL snapshot date.
+2. Pending-age is measured from the last pending event date when available.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/55-patentiq-v2-pending-grant-pipeline-execution-plan.md
+2. docs/next-phase-v2/09-forecast-v2-mvp-use-cases-and-feature-semantics.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+
+
+### Metrics
+
+- `ml_label_pending_grant_event_rows`: `93347403`
+- `ml_feature_pending_grant_pipeline_rows`: `93347403`
+- `ml_split_registry_phase_grant_rows`: `93347403`
+- `pending_grant_observed_12m_rows`: `74015905`
+- `pending_grant_observed_24m_rows`: `64881761`
+- `pending_grant_12m_roc_auc`: `0.6386844283833993`
+- `pending_grant_12m_pr_auc`: `0.16795010043304615`
+- `pending_grant_12m_brier_score`: `0.08936263759827406`
+- `pending_grant_24m_roc_auc`: `0.6736843727892121`
+- `pending_grant_24m_pr_auc`: `0.33229906039053775`
+- `pending_grant_24m_brier_score`: `0.15684801460752817`
+
+## ml-pending-grant-pipeline | success
+
+- Summary: Materialized pending-grant label, feature, and split artifacts and trained first baseline pending-grant classifiers when split sizes were sufficient.
+- Started: 2026-04-08T21:48:37+00:00
+- Finished: 2026-04-08T21:48:41+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_label_pending_grant_event.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_pending_grant_pipeline.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_split_registry_phase_grant.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_experiment_registry.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_model_registry.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_calibration_registry.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_feature_manifest.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/model_card_pending_grant_pipeline.json
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_12m_model.txt
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_24m_model.txt
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/pending_grant_pipeline_calibration.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/ml-pending-grant-pipeline.json`
+
+### Methods
+
+1. Built branch-grain pending-grant labels from dense branch history by checking future grant conversion within 12m and 24m horizons.
+2. Joined family PIT-safe context and publication-stage counts to create the first pending-grant feature scaffold.
+3. Sampled split-aligned pending snapshots to train first 12m and 24m LightGBM baseline grant-probability models with validation-time calibration selection.
+
+### Calculations
+
+1. Observed-horizon flags require the as-of row to have a fully observable 12m or 24m window by the ETL snapshot date.
+2. Pending-age is measured from the last pending event date when available.
+
+
+### Governing Docs
+
+1. docs/next-phase-v2/55-patentiq-v2-pending-grant-pipeline-execution-plan.md
+2. docs/next-phase-v2/09-forecast-v2-mvp-use-cases-and-feature-semantics.md
+3. docs/next-phase-v2/15-patentiq-v2-prediction-training-flow-and-guardrails.md
+
+
+### Metrics
+
+- `ml_label_pending_grant_event_rows`: `93347403`
+- `ml_feature_pending_grant_pipeline_rows`: `93347403`
+- `ml_split_registry_phase_grant_rows`: `93347403`
+- `pending_grant_observed_12m_rows`: `74015905`
+- `pending_grant_observed_24m_rows`: `64881761`
+- `pending_grant_12m_roc_auc`: `0.6394576583398613`
+- `pending_grant_12m_pr_auc`: `0.1669747356742301`
+- `pending_grant_12m_brier_score`: `0.08874634589296647`
+- `pending_grant_24m_roc_auc`: `0.6600185905047047`
+- `pending_grant_24m_pr_auc`: `0.3201084678815563`
+- `pending_grant_24m_brier_score`: `0.1569449701451074`
+
+## gold-family-metrics | success
+
+- Summary: Built Gold family blocking, attacker, and heritage marts from note-aligned Silver legal and citation contracts.
+- Started: 2026-04-09T14:15:43+00:00
+- Finished: 2026-04-09T14:20:54+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_attacker_summary.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_summary.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_timeseries_pit.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_heritage_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-metrics.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_blocking_power_rows`: `17633618`
+- `gold_family_attacker_summary_rows`: `6334292`
+- `gold_family_citation_summary_rows`: `17633618`
+- `gold_family_citation_timeseries_pit_rows`: `164988135`
+- `gold_family_heritage_summary_rows`: `21353101`
+
+## gold-family-metrics | success
+
+- Summary: Built Gold family blocking, attacker, and heritage marts from note-aligned Silver legal and citation contracts.
+- Started: 2026-04-09T14:23:34+00:00
+- Finished: 2026-04-09T14:24:21+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_attacker_summary.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_summary.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_timeseries_pit.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_heritage_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-metrics.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_blocking_power_rows`: `17633618`
+- `gold_family_attacker_summary_rows`: `6334292`
+- `gold_family_citation_summary_rows`: `17633618`
+- `gold_family_citation_timeseries_pit_rows`: `164988135`
+- `gold_family_heritage_summary_rows`: `21353101`
+
+## gold-market-semantic | success
+
+- Summary: Built Gold Market Intelligence and semantic-context marts from note-aligned Silver and Gold family outputs.
+- Started: 2026-04-09T15:04:48+00:00
+- Finished: 2026-04-09T15:06:07+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_segments.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_timeseries.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_overview.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_citation_trend_pit.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_citation_pressure_by_jurisdiction_pit.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_attacker_leaderboard_pit.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-semantic.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_market_intelligence_segments_rows`: `10`
+- `gold_market_intelligence_timeseries_rows`: `504`
+- `gold_market_intelligence_overview_rows`: `1`
+- `gold_market_citation_trend_pit_rows`: `295`
+- `gold_market_citation_pressure_by_jurisdiction_pit_rows`: `6064`
+- `gold_market_attacker_leaderboard_pit_rows`: `4771191`
+- `gold_semantic_match_context_rows`: `20295898`
+
+## gold-market-semantic | success
+
+- Summary: Built Gold Market Intelligence and semantic-context marts from note-aligned Silver and Gold family outputs.
+- Started: 2026-04-09T15:07:11+00:00
+- Finished: 2026-04-09T15:09:51+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_segments.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_timeseries.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_overview.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_citation_trend_pit.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_citation_pressure_by_jurisdiction_pit.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_attacker_leaderboard_pit.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-semantic.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_market_intelligence_segments_rows`: `10`
+- `gold_market_intelligence_timeseries_rows`: `504`
+- `gold_market_intelligence_overview_rows`: `1`
+- `gold_market_citation_trend_pit_rows`: `294`
+- `gold_market_citation_pressure_by_jurisdiction_pit_rows`: `6063`
+- `gold_market_attacker_leaderboard_pit_rows`: `4771190`
+- `gold_semantic_match_context_rows`: `20295898`
+
+## gold-portfolio-classification-jurisdiction-pit | failed
+
+- Summary: Built the portfolio WIPO-CPC-jurisdiction PIT mart by replaying family slice rows through the current owner bridge.
+- Started: 2026-04-09T15:29:56+00:00
+- Finished: 2026-04-09T15:29:56+00:00
+
+
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-classification-jurisdiction-pit.json`
+
+### Methods
+
+1. Started from the family classification-jurisdiction PIT mart and aggregated through the family-owner bridge at owner-year slice grain.
+2. Kept owner replay caveats explicit rather than implying native historical owner truth.
+3. Normalized citation pressure inside each owner-year so slice comparisons are readable without pretending cross-owner comparability.
+
+### Calculations
+
+1. Portfolio family share in slice is the owner-year family count in the slice divided by total owner-year family count.
+2. Portfolio citation pressure index scales slice-average pre-as-of forward citations to the strongest slice within the same owner-year.
+3. Slice rank within owner-year is ordered by family count, then active family count, then blocking density, then slice keys.
+
+### Downstream Impacts
+
+1. This mart supports portfolio classification-geography leaderboards, CPC-by-jurisdiction views, and field-cluster evidence tables.
+
+### Governing Docs
+
+1. docs/next-phase-v2/64-patentiq-v2-citation-serving-refactor-execution-plan.md
+2. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+3. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+
+### Warnings
+
+1. Missing required inputs for gold-portfolio-classification-jurisdiction-pit: ['/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_jurisdiction_pit.parquet']
+
+## gold-market-cpc-jurisdiction-trend-pit | failed
+
+- Summary: Built the market WIPO-CPC-jurisdiction PIT mart from family slice evidence.
+- Started: 2026-04-09T15:29:57+00:00
+- Finished: 2026-04-09T15:29:57+00:00
+
+
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-cpc-jurisdiction-trend-pit.json`
+
+### Methods
+
+1. Started from the family classification-jurisdiction PIT mart so market slice rows inherit the same replay-safe family-year semantics.
+2. Aggregated families by WIPO field, CPC main group, jurisdiction, and year, then lagged each slice for year-over-year growth.
+3. Normalized citation pressure inside each year so slice rankings remain readable without pretending absolute comparability across years.
+
+### Calculations
+
+1. Family share within slice basis is measured against the same WIPO-field and jurisdiction basis for the same year.
+2. Growth index compares current slice family count against prior-year family count in the same WIPO-CPC-jurisdiction slice.
+3. Slice rank within year is ordered by family count, then blocking density, then slice keys.
+
+### Downstream Impacts
+
+1. This mart supports market CPC-by-jurisdiction leaderboards, growth views, and future UI drill-downs across field, CPC, and office slices.
+
+### Governing Docs
+
+1. docs/next-phase-v2/64-patentiq-v2-citation-serving-refactor-execution-plan.md
+2. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+3. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+### Warnings
+
+1. Missing required input for gold-market-cpc-jurisdiction-trend-pit: /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_jurisdiction_pit.parquet
+
+## gold-family-metrics | success
+
+- Summary: Built Gold family blocking, attacker, and heritage marts from note-aligned Silver legal and citation contracts.
+- Started: 2026-04-09T23:11:07+00:00
+- Finished: 2026-04-09T23:13:13+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_attacker_summary.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_summary.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_timeseries_pit.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_heritage_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-metrics.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_blocking_power_rows`: `17633618`
+- `gold_family_attacker_summary_rows`: `6334292`
+- `gold_family_citation_summary_rows`: `17633618`
+- `gold_family_citation_timeseries_pit_rows`: `164988135`
+- `gold_family_heritage_summary_rows`: `21353101`
+
+## gold-history-blocking | success
+
+- Summary: Built Gold blocking-power history marts from replay-aligned Silver legal and citation history.
+- Started: 2026-04-09T23:13:21+00:00
+- Finished: 2026-04-09T23:16:06+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power_timeseries.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-history-blocking.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_blocking_power_timeseries_rows`: `152145173`
+
+## gold-family-classification-jurisdiction-pit | success
+
+- Summary: Built the family WIPO-CPC-jurisdiction PIT mart from classification replay and dense branch history.
+- Started: 2026-04-09T23:55:14+00:00
+- Finished: 2026-04-10T00:07:34+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_jurisdiction_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-classification-jurisdiction-pit.json`
+
+### Methods
+
+1. Started from the family classification mix PIT and joined dense branch-year replay so technology and jurisdiction slices stay aligned to the same family-year grain.
+2. Exploded WIPO-field and CPC-main-group membership into one row per family, year, field, CPC, and jurisdiction slice.
+3. Kept replay caveats explicit by preserving classification-history support flags instead of implying dated code-mutation truth.
+
+### Calculations
+
+1. Jurisdiction support level reuses the current office support policy map and defaults to limited where no explicit support policy exists.
+2. Active status is read from the branch-history replay for the same family, jurisdiction, and year.
+3. Blocking, enforceability, and pre-as-of citation columns are carried from the family compare PIT for the same family-year.
+
+### Downstream Impacts
+
+1. This mart is the ranking-ready family evidence layer for WIPO x CPC x jurisdiction chronology and downstream portfolio and market slice rollups.
+
+### Governing Docs
+
+1. docs/next-phase-v2/64-patentiq-v2-citation-serving-refactor-execution-plan.md
+2. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+3. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+
+
+### Metrics
+
+- `gold_family_classification_jurisdiction_pit_rows`: `566936693`
+
+## gold-family-summary | success
+
+- Summary: Built the Gold family summary mart from note-aligned Silver family, legal, owner, and OECD contracts.
+- Started: 2026-04-10T05:54:37+00:00
+- Finished: 2026-04-10T06:33:26+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-summary.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_summary_rows`: `17633618`
+
+## gold-portfolio | success
+
+- Summary: Built Gold portfolio marts from the family-owner bridge and Gold family/history contracts.
+- Started: 2026-04-10T07:53:43+00:00
+- Finished: 2026-04-10T08:20:37+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_citation_summary.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_citation_timeseries.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_attacker_momentum.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_citation_pressure_by_field.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_citation_pressure_by_jurisdiction.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_field_timeseries.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_threat_matrix.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_heritage_summary.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_portfolio_prediction_rollup.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_summary.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_segments.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_contributors.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_portfolio_citation_summary_rows`: `21945507`
+- `gold_portfolio_citation_timeseries_rows`: `21945507`
+- `gold_portfolio_attacker_momentum_rows`: `6016882`
+- `gold_portfolio_citation_pressure_by_field_rows`: `2052577`
+- `gold_portfolio_citation_pressure_by_jurisdiction_rows`: `2000661`
+- `gold_portfolio_field_timeseries_rows`: `5520241`
+- `gold_portfolio_summary_rows`: `3034400`
+- `gold_portfolio_threat_matrix_rows`: `15269449`
+- `gold_portfolio_heritage_summary_rows`: `3852589`
+- `ml_portfolio_prediction_rollup_rows`: `3034400`
+- `gold_portfolio_forecast_summary_rows`: `3034400`
+- `gold_portfolio_forecast_segments_rows`: `11040482`
+- `gold_portfolio_forecast_contributors_rows`: `17866740`
+
+## gold-market-summary-pit | success
+
+- Summary: Built the market PIT summary mart from year-safe market timeseries, dense family compare PIT, and current-owner caveated family membership.
+- Started: 2026-04-10T08:22:20+00:00
+- Finished: 2026-04-10T08:23:14+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_summary_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-summary-pit.json`
+
+### Methods
+
+1. Started from the year-safe market-intelligence timeseries and retained one row per segment and year.
+2. Joined dense family compare PIT with family field-contribution timeseries to derive blocking and active-family density by segment-year.
+3. Used the current family owner from the family compare PIT as a historical owner proxy and labeled that caveat explicitly.
+
+### Calculations
+
+1. Segment growth index is computed from family-count change versus the prior year when prior-year count exists.
+2. Segment blocking density is a weighted average of family blocking power using field base fractions as segment participation weights.
+3. Segment field balance is the average family allocation share to the segment, higher when families are more concentrated in that field.
+
+### Downstream Impacts
+
+1. This mart is the safe historical source for Market Intelligence year-slice cards, league tables, and segment detail drawers.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md
+
+
+### Metrics
+
+- `gold_market_summary_pit_rows`: `504`
+
+## gold-family-citation-chronology | success
+
+- Summary: Built a standalone family citation chronology mart directly from the citation event ledger without rebuilding the broader family Gold bundle.
+- Started: 2026-04-12T17:25:00+00:00
+- Finished: 2026-04-12T17:28:39+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_chronology.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-citation-chronology.json`
+
+### Methods
+
+1. Derived yearly family chronology from the clean citation event ledger rather than sparse PIT feature anchors.
+2. Kept the existing PIT citation-timeseries mart untouched so downstream portfolio readers can migrate separately.
+3. Anchored chronology rows to family priority year, citation years, and the current snapshot year for families with any citation activity.
+
+### Calculations
+
+1. Cumulative forward weighted citations follow the PIT-safe clean-edge-weight definition used in family historical features.
+2. Early-window 5y and 7y counts follow family-level first-citation timing semantics at the citing-family grain.
+
+### Downstream Impacts
+
+1. Family chronology can migrate to this mart immediately without changing portfolio citation aggregation behavior.
+
+### Governing Docs
+
+1. docs/next-phase-v2/81-patentiq-v2-family-citation-chronology-standalone-audit.md
+2. docs/next-phase-v2/64-patentiq-v2-citation-serving-refactor-execution-plan.md
+
+
+### Metrics
+
+- `gold_family_citation_chronology_rows`: `30759429`
+
+## gold-history-fields | success
+
+- Summary: Built Gold field-contribution history marts from replay-aligned Silver branch and field history.
+- Started: 2026-04-24T07:26:54+00:00
+- Finished: 2026-04-24T08:05:54+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions_timeseries.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-history-fields.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_field_contributions_timeseries_rows`: `172223907`
+- `gold_family_field_contributions_rows`: `172223907`
+
+## gold-family-metrics | success
+
+- Summary: Built Gold family blocking, attacker, and heritage marts from note-aligned Silver legal and citation contracts.
+- Started: 2026-04-24T10:05:29+00:00
+- Finished: 2026-04-24T10:06:22+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_attacker_summary.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_summary.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_timeseries_pit.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_heritage_summary.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-metrics.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_blocking_power_rows`: `17633618`
+- `gold_family_attacker_summary_rows`: `6334292`
+- `gold_family_citation_summary_rows`: `17633618`
+- `gold_family_citation_timeseries_pit_rows`: `164988135`
+- `gold_family_heritage_summary_rows`: `21353101`
+
+## gold-history-blocking | success
+
+- Summary: Built Gold blocking-power history marts from replay-aligned Silver legal and citation history.
+- Started: 2026-04-24T10:06:24+00:00
+- Finished: 2026-04-24T10:09:11+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power_timeseries.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-history-blocking.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_family_blocking_power_timeseries_rows`: `152145173`
+
+## gold-portfolio | success
+
+- Summary: Built Gold portfolio marts from the family-owner bridge and Gold family/history contracts.
+- Started: 2026-04-24T10:09:13+00:00
+- Finished: 2026-04-24T10:34:40+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_citation_summary.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_citation_family_leaderboard.parquet
+3. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_citation_timeseries.parquet
+4. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_attacker_momentum.parquet
+5. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_citation_pressure_by_field.parquet
+6. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_citation_pressure_by_jurisdiction.parquet
+7. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_filing_timeseries.parquet
+8. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_field_timeseries.parquet
+9. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary.parquet
+10. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_threat_matrix.parquet
+11. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_heritage_summary.parquet
+12. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/ml/ml_portfolio_prediction_rollup.parquet
+13. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_summary.parquet
+14. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_segments.parquet
+15. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_contributors.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio.json`
+
+### Methods
+
+1. Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.
+2. Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.
+3. Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven.
+
+### Calculations
+
+1. Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.
+2. Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.
+3. Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold.
+
+### Downstream Impacts
+
+1. These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.
+2. Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces.
+
+### Governing Docs
+
+1. docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md
+2. docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md
+3. docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md
+
+
+### Metrics
+
+- `gold_portfolio_citation_summary_rows`: `21945507`
+- `gold_portfolio_citation_family_leaderboard_rows`: `17274410`
+- `gold_portfolio_citation_timeseries_rows`: `21945507`
+- `gold_portfolio_attacker_momentum_rows`: `6016882`
+- `gold_portfolio_citation_pressure_by_field_rows`: `2052577`
+- `gold_portfolio_citation_pressure_by_jurisdiction_rows`: `2000661`
+- `gold_portfolio_filing_timeseries_rows`: `5326177`
+- `gold_portfolio_field_timeseries_rows`: `5520241`
+- `gold_portfolio_summary_rows`: `3034400`
+- `gold_portfolio_threat_matrix_rows`: `15269449`
+- `gold_portfolio_heritage_summary_rows`: `3852589`
+- `ml_portfolio_prediction_rollup_rows`: `3034400`
+- `gold_portfolio_forecast_summary_rows`: `3034400`
+- `gold_portfolio_forecast_segments_rows`: `11040482`
+- `gold_portfolio_forecast_contributors_rows`: `17866740`
+
+## silver-pit-dense | success
+
+- Summary: Built silver_family_feature_snapshot_pit_dense.parquet with observed family-year PIT rows for historical compare, reports, and portfolio-over-time product behavior.
+- Started: 2026-04-24T10:34:42+00:00
+- Finished: 2026-04-24T11:36:17+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_dense.parquet
+2. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_dense_audit.json
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-pit-dense.json`
+
+### Methods
+
+1. Generated one observed PIT row per family and as_of_year from family_priority_year through snapshot_year.
+2. For each year, legal, blocking, field, citation, and coverage metrics are taken from the latest history or event evidence available at or before that year-end.
+3. The current snapshot year uses snapshot_date rather than synthetic year-end so current-year product views stay aligned with the actual ETL snapshot.
+4. A persisted JSON audit is written beside the dense PIT parquet to validate uniqueness, year range, multi-year family coverage, and value sanity.
+
+### Calculations
+
+1. as_of_date = MAKE_DATE(as_of_year, 12, 31) except for the current snapshot year where as_of_date = snapshot_date.
+2. family_rcf_score_asof is normalized within the same as_of_year and primary field cohort.
+3. data_completeness_pct_asof is the fraction of 12 tracked PIT columns that are non-null before COALESCE defaults are applied.
+
+### Downstream Impacts
+
+1. gold-family-compare-pit: should use this dense PIT layer when present for current-vs-selected-year family comparisons.
+2. Historical compare and report flows can now use family-year rows rather than one anchored checkpoint per family.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md
+3. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+
+
+### Metrics
+
+- `silver_family_feature_snapshot_pit_dense_rows`: `164988135`
+- `silver_family_feature_snapshot_pit_dense_duplicate_family_year_keys`: `0`
+- `silver_family_feature_snapshot_pit_dense_families_with_multiple_year_rows`: `17633618`
+
+## gold-family-compare-pit | success
+
+- Summary: Built the family compare PIT serving mart from the audited family PIT core and current summary metadata.
+- Started: 2026-04-24T11:36:19+00:00
+- Finished: 2026-04-24T11:37:40+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_compare_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-compare-pit.json`
+
+### Methods
+
+1. Consumed the dense family-year PIT layer for multi-year historical compare behavior.
+2. Used only observed point-in-time family rows for historical compare serving.
+3. Kept current owner, field, and OECD metadata explicitly labeled as current-only side metadata.
+4. Materialized one row per family and observed year with a latest-observed-year flag for compare and report flows.
+
+### Calculations
+
+1. Family active-jurisdiction share is recomputed from point-in-time jurisdiction counts.
+2. Historical-safe metrics come from the PIT core rather than current-state summary marts.
+
+### Downstream Impacts
+
+1. This mart is the safe family-level source for historical compare, time-slice report sections, and year-aware family evidence payloads.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md
+3. docs/next-phase-v2/38-patentiq-v2-report-generation-use-cases-and-contract.md
+
+
+### Metrics
+
+- `gold_family_compare_pit_rows`: `164988135`
+
+## gold-family-classification-mix-pit | success
+
+- Summary: Built the family classification PIT summary mart from the dense family-year classification backbone.
+- Started: 2026-04-24T11:37:42+00:00
+- Finished: 2026-04-24T11:40:27+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_mix_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-classification-mix-pit.json`
+
+### Methods
+
+1. Started from silver_family_classification_pit_dense so the mart stays aligned with the dense family-year PIT grain.
+2. Kept reusable WIPO and CPC arrays for UI drill-down while materializing summary fields for family cards and compare views.
+3. Made the stable classification replay policy explicit instead of implying dated code-mutation truth.
+
+### Calculations
+
+1. Classification concentration HHI uses equal-share membership across CPC main groups in the first stable-replay implementation.
+2. Classification entropy uses the natural log of the CPC main-group count under the same equal-share assumption.
+3. Classification breadth band is derived from CPC main-group count: unknown, focused, balanced, diversified.
+
+### Downstream Impacts
+
+1. This mart is the family-level classification source for chronological CPC/WIPO UI sections and later portfolio and market classification rollups.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+3. docs/next-phase-v2/ui-contracts/32-patentiq-v2-family-and-publication-page-contract.md
+
+
+### Metrics
+
+- `gold_family_classification_mix_pit_rows`: `164988135`
+
+## gold-family-classification-jurisdiction-pit | success
+
+- Summary: Built the family WIPO-CPC-jurisdiction PIT mart from classification replay and dense branch history.
+- Started: 2026-04-24T11:40:28+00:00
+- Finished: 2026-04-24T12:01:57+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_jurisdiction_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-family-classification-jurisdiction-pit.json`
+
+### Methods
+
+1. Started from the family classification mix PIT and joined dense branch-year replay so technology and jurisdiction slices stay aligned to the same family-year grain.
+2. Exploded WIPO-field and CPC-main-group membership into one row per family, year, field, CPC, and jurisdiction slice.
+3. Kept replay caveats explicit by preserving classification-history support flags instead of implying dated code-mutation truth.
+
+### Calculations
+
+1. Jurisdiction support level reuses the current office support policy map and defaults to limited where no explicit support policy exists.
+2. Active status is read from the branch-history replay for the same family, jurisdiction, and year.
+3. Blocking, enforceability, and pre-as-of citation columns are carried from the family compare PIT for the same family-year.
+
+### Downstream Impacts
+
+1. This mart is the ranking-ready family evidence layer for WIPO x CPC x jurisdiction chronology and downstream portfolio and market slice rollups.
+
+### Governing Docs
+
+1. docs/next-phase-v2/64-patentiq-v2-citation-serving-refactor-execution-plan.md
+2. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+3. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+
+
+### Metrics
+
+- `gold_family_classification_jurisdiction_pit_rows`: `566936693`
+
+## gold-portfolio-summary-pit | success
+
+- Summary: Built the portfolio PIT summary mart by aggregating family compare PIT rows through the current owner bridge with explicit historical caveats.
+- Started: 2026-04-24T12:01:59+00:00
+- Finished: 2026-04-24T12:07:18+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-summary-pit.json`
+
+### Methods
+
+1. Aggregated only historical-safe family PIT rows into year-keyed portfolio summaries.
+2. Reused the current owner bridge as a historical membership approximation and labeled that caveat explicitly.
+3. Focused the first release on legal, blocking, coverage, and concentration signals rather than forcing unsupported historical field-mix claims.
+
+### Calculations
+
+1. Portfolio top-family dependence is measured as the maximum family blocking share within each owner-year slice.
+2. Portfolio active-family count is derived from point-in-time active-jurisdiction presence rather than current family status.
+
+### Downstream Impacts
+
+1. This mart is the first safe source for portfolio over-time comparison, historical report sections, and legal-attrition context before Phase 04 predictions arrive.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+3. docs/next-phase-v2/09-forecast-v2-mvp-use-cases-and-feature-semantics.md
+
+
+### Metrics
+
+- `gold_portfolio_summary_pit_rows`: `36127659`
+
+## gold-portfolio-compare-pit | success
+
+- Summary: Built the portfolio compare PIT mart from dense portfolio PIT summaries and year-safe field-mix support where available.
+- Started: 2026-04-24T12:07:21+00:00
+- Finished: 2026-04-24T12:07:32+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_compare_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-compare-pit.json`
+
+### Methods
+
+1. Started from the dense portfolio summary PIT so legal, blocking, and concentration metrics stay historical-safe.
+2. Joined field-mix metrics only for years actually present in the portfolio field timeseries.
+3. Kept historical owner truth and historical field-mix support explicitly caveated when source coverage is unavailable.
+
+### Calculations
+
+1. Portfolio legal durability index is measured as active-family share within the historical owner-year proxy slice.
+2. Portfolio field breadth is the count of positive active-family fields in the supported field-timeseries year.
+3. Portfolio field concentration is calculated as HHI over active-family field shares, with top-field share surfaced separately.
+
+### Downstream Impacts
+
+1. This mart is the compare-oriented source for portfolio year-slice views, radar overlays, and report compare tables.
+
+### Governing Docs
+
+1. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+2. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+
+
+### Metrics
+
+- `gold_portfolio_compare_pit_rows`: `36127659`
+
+## gold-portfolio-classification-mix-pit | success
+
+- Summary: Built the portfolio classification PIT mart by aggregating family-year classification membership through the current owner bridge.
+- Started: 2026-04-24T12:07:34+00:00
+- Finished: 2026-04-24T13:29:11+00:00
+
+
+### Outputs
+
+1. /Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_classification_mix_pit.parquet
+
+### Artifacts
+
+- `stats_snapshot`: `/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-classification-mix-pit.json`
+
+### Methods
+
+1. Started from the family classification mix PIT and family compare PIT so owner-year classification rows stay aligned with historical-safe family-year context.
+2. Aggregated WIPO-field and CPC-main-group membership separately into one owner-year classification mart.
+3. Kept current-owner replay caveats explicit rather than implying true historical ownership.
+
+### Calculations
+
+1. Portfolio family share within a classification is the fraction of owner-year families carrying that classification membership.
+2. Portfolio active-family share within a classification is measured against owner-year active-family count.
+3. Classification rank within owner-year is ordered by family count, then active-family share, then code.
+
+### Downstream Impacts
+
+1. This mart supports chronological portfolio CPC/WIPO exposure, gain/loss views, and later market-classification rollups.
+
+### Governing Docs
+
+1. docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md
+2. docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md
+3. docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md
+
+
+### Metrics
+
+- `gold_portfolio_classification_mix_pit_rows`: `158766274`
+

@@ -1,0 +1,160 @@
+{
+  "downstream_impacts": [
+    "These Silver enrichment tables feed Gold blocking power, Market Intelligence, attacker summaries, portfolio summaries, and forecast feature generation.",
+    "Weak citation coverage or legal weighting here directly distorts compare, portfolio, and family-level UI cards."
+  ],
+  "finished_at": "2026-04-02T09:35:52+00:00",
+  "metrics": {
+    "citation_edge_count": 17461197,
+    "citation_out_of_bounds_edge_count": 3441661,
+    "citation_unique_cited_family_count": 6019674,
+    "citation_unique_source_family_count": 10922324,
+    "silver_enriched_citation_network_rows": 19602108,
+    "silver_family_citation_edges_clean_rows": 17461197,
+    "silver_family_citation_edges_rows": 17461197,
+    "silver_family_citation_metrics_rows": 21353101,
+    "silver_family_coverage_metrics_rows": 21353101,
+    "silver_family_enforceability_branches_rows": 36096788,
+    "silver_family_field_contributions_rows": 23816698,
+    "silver_family_npl_backlinks_rows": 14380370,
+    "silver_family_oecd_quality_rows": 21353101,
+    "silver_family_trend_tables_rows": 23816698,
+    "silver_global_tech_trends_timeseries_rows": 504,
+    "silver_local_tech_trends_timeseries_rows": 21488,
+    "silver_market_intelligence_segments_rows": 10,
+    "silver_market_intelligence_timeseries_rows": 504
+  },
+  "output_profiles": [
+    {
+      "column_count": 6,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges.parquet",
+      "row_count": 17461197,
+      "sha256": "a1b978a9216c3cb86473159ee9bd7e33652d5c5d56116a46a14981eba22d9c46",
+      "size_bytes": 184723704,
+      "type": "file"
+    },
+    {
+      "column_count": 9,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_edges_clean.parquet",
+      "row_count": 17461197,
+      "sha256": "5c85cd3a09784cf06f709804b673bc808246377f5caffce43c673f882d5a997e",
+      "size_bytes": 186645065,
+      "type": "file"
+    },
+    {
+      "column_count": 20,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet",
+      "row_count": 19602108,
+      "sha256": "28fef8efafd976a9768712d6fffec479d430ac0337725b18c25096484217ce98",
+      "size_bytes": 626111258,
+      "type": "file"
+    },
+    {
+      "column_count": 4,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet",
+      "row_count": 14380370,
+      "sha256": "088fa3371e8a13f48a3630bef05cb3d298fcff8d6c8c1cc2772f5259ed7ee1ac",
+      "size_bytes": 167503330,
+      "type": "file"
+    },
+    {
+      "column_count": 15,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet",
+      "row_count": 21353101,
+      "sha256": "aa461a88eed2ecc547d198e6ae107461f432c7682a403ca7fbc190ae458a883e",
+      "size_bytes": 206078648,
+      "type": "file"
+    },
+    {
+      "column_count": 3,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_trend_tables.parquet",
+      "row_count": 23816698,
+      "sha256": "3d762b51ca8f8cf8b09578b47e4daa9ded699671ee310e83de4c192d885bf994",
+      "size_bytes": 117702628,
+      "type": "file"
+    },
+    {
+      "column_count": 9,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_global_tech_trends_timeseries.parquet",
+      "row_count": 504,
+      "sha256": "25bd9069157bff8ef0835bab5a7172ba0f164324d88c3a6c7b58288a608900ff",
+      "size_bytes": 11685,
+      "type": "file"
+    },
+    {
+      "column_count": 10,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_local_tech_trends_timeseries.parquet",
+      "row_count": 21488,
+      "sha256": "c0d7b79e5e7a8f75c1197db5d5aee8f9698cf9bb06becd5672f7637e3b6b5d2d",
+      "size_bytes": 257886,
+      "type": "file"
+    },
+    {
+      "column_count": 9,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet",
+      "row_count": 21353101,
+      "sha256": "4b1677edebafe8df5b682c05e2675c5f8cad3695e41a3e1d468f6d2c49505739",
+      "size_bytes": 123448158,
+      "type": "file"
+    },
+    {
+      "column_count": 24,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet",
+      "row_count": 36096788,
+      "sha256": "990a65d73bf527fee8f979a5558c19ac2e10fc8e3bb8077222bd0acfee518a2c",
+      "size_bytes": 382543607,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet",
+      "row_count": 23816698,
+      "sha256": "0ab86a437c29d3b72e297f7cda413cf40fc392889ae8190b8922c724d9698e03",
+      "size_bytes": 167319532,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet",
+      "row_count": 21353101,
+      "sha256": "67ea730a67a523921508c8ee5966f368590aefb93ab31602cd3b32432ecbfec0",
+      "size_bytes": 188772802,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_segments.parquet",
+      "row_count": 10,
+      "sha256": "80deb5dfec379fb8122aec8b3c059dda0d9afaae868533dd03461be5ea7fc02f",
+      "size_bytes": 1440,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_market_intelligence_timeseries.parquet",
+      "row_count": 504,
+      "sha256": "627f8b78a284fe647dd78d2551b1bd8652ed772a683c337f36b2b2652f79446e",
+      "size_bytes": 4311,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-enrichment",
+  "started_at": "2026-04-02T09:29:43+00:00",
+  "status": "success",
+  "summary": "Built Silver citation, coverage, enforceability, OECD-style proxy, and Market Intelligence segment layers.",
+  "warnings": []
+}

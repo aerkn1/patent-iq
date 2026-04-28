@@ -400,6 +400,12 @@ Use:
 ### `bronze_ext_kind_code_normalization_seed`
 ### `bronze_ext_oecd_indicator_seed`
 
+Current implementation note:
+- the OECD seed is planned as a family-level long-form indicator artifact projected into the Bronze reference contract
+- see:
+  - `docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md`
+  - `docs/new-feature-ideas/oecd-indicator-seed-build-spec.md`
+
 ## D. Current V1 Inputs Worth Reusing
 
 These are not true Bronze, but they can bootstrap V2:
@@ -693,6 +699,9 @@ Outputs:
 - `family_fwd_cits7`
 - `family_science_grounding_score`
 
+Method note:
+- windowed forward metrics and weighted citation impact use the family publication anchor, with priority-date fallback only when publication dating is unavailable
+
 ### `silver_enriched_citation_network`
 
 Built from:
@@ -706,6 +715,11 @@ Outputs:
 - `citation_lethality_score`
 - `citing_assignee_name`
 - `citing_jurisdiction_code`
+- `citation_date`
+- `clean_edge_weight`
+
+Method note:
+- the event ledger is publication-dated and the lethality score is citing-side weighted, not cited-side weighted
 
 ### `silver_global_tech_trends_timeseries`
 ### `silver_local_tech_trends_timeseries`
@@ -762,9 +776,7 @@ Outputs:
 ### `silver_family_text_representative`
 
 Built from:
-- `bronze_uspto_ft_claims`
 - `bronze_epab_claims`
-- `bronze_uspto_ft_abstract`
 - `bronze_epab_abstract`
 - `bronze_patstat_appln_abstr`
 - `silver_family_member_publications`
@@ -772,9 +784,8 @@ Built from:
 - `silver_family_core`
 
 Deterministic hierarchy:
-1. U.S. granted `B` Claim 1 from USPTO full text,
-2. English EP granted `B` Claim 1 from EPAB,
-3. PATSTAT English abstract fallback if no usable U.S. or EP grant claims exist.
+1. English EP granted `B` Claim 1 from EPAB,
+2. PATSTAT English abstract fallback if no usable EP grant claim exists.
 
 Outputs:
 - `representative_appln_id`
@@ -786,7 +797,7 @@ Outputs:
 - `is_abstract_fallback`
 
 Rules:
-- `A`-document claims must not be used for FTO-oriented `vector_claims`
+- `A`-document claims must not be used for claim-oriented `vector_claims`
 - Claim extraction should use Claim 1 only for MVP
 - XML/markup sanitization is mandatory before embedding
 

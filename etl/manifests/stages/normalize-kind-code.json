@@ -1,0 +1,48 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/normalize-kind-code.json"
+  },
+  "calculations": [
+    "Observed pair counts and first/last seen dates are computed from the consolidated `tls211_pat_publn` table.",
+    "EP `B2` is elevated to `OPPOSITION_SURVIVOR` and EP `C0` to `UNITARY_GRANT`; remaining missing pairs use prefix-based defaults."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/kind-code-normalization-and-tiered-market-weighting-build-guide.md",
+    "docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md",
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md"
+  ],
+  "downstream_impacts": [
+    "This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.",
+    "Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic."
+  ],
+  "finished_at": "2026-04-02T21:17:06+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/patstat/tls211_pat_publn.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_manual_overrides.csv"
+  ],
+  "methods": [
+    "Read the consolidated PATSTAT publication table and aggregated the observed `(publn_auth, publn_kind)` pairs inside the local bounded universe.",
+    "Preserved existing kind-code seed rows from `etl/data/raw/refs` and overlaid any explicit manual overrides when present.",
+    "Filled missing observed pairs with deterministic office-aware or prefix-aware rules so Bronze can ingest a complete normalization seed before Silver."
+  ],
+  "metrics": {
+    "auto_generated_pair_count": 0,
+    "final_pair_count": 10097,
+    "observed_pair_count": 641,
+    "review_queue_pair_count": 214,
+    "seed_input_pair_count": 10097
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet"
+  ],
+  "stage": "normalize-kind-code",
+  "started_at": "2026-04-02T21:17:06+00:00",
+  "status": "success",
+  "summary": "Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.",
+  "warnings": [
+    "The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue."
+  ]
+}

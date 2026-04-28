@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-cpc-trend-pit.json"
+  },
+  "calculations": [
+    "CPC family share within segment is measured against the family-year segment basis, not against summed CPC memberships.",
+    "CPC growth index uses prior-year family-count change within the same WIPO-field and CPC pair.",
+    "CPC heat state is banded from growth: heating above 10 percent, cooling below negative 10 percent, otherwise stable."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md",
+    "docs/next-phase-v2/57-patentiq-v2-classification-first-seen-visibility-audit-and-upgrade-plan.md",
+    "docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "This mart powers CPC drill-downs inside market WIPO segments and feeds the global CPC importance PIT layer."
+  ],
+  "finished_at": "2026-04-08T19:49:13+00:00",
+  "inputs": [],
+  "methods": [
+    "Started from the family classification mix PIT and grouped visible CPC main groups by primary WIPO field and year.",
+    "Avoided inventing a many-to-many CPC-to-WIPO mapping by using the family primary WIPO field as the market segment basis.",
+    "Joined market summary PIT only for segment heat-state context, while deriving family-count denominators directly from the family-year basis."
+  ],
+  "metrics": {
+    "gold_market_cpc_trend_pit_rows": 862969
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_cpc_trend_pit.parquet"
+  ],
+  "stage": "gold-market-cpc-trend-pit",
+  "started_at": "2026-04-08T19:47:09+00:00",
+  "status": "success",
+  "summary": "Built the market CPC trend PIT mart from family-year classification visibility and family compare context.",
+  "warnings": []
+}

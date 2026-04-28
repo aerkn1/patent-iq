@@ -244,6 +244,29 @@ Recommended columns:
 3. `universal_stage`
 4. `stage_multiplier`
 5. `is_enforceable`
+6. `legal_status_proxy`
+7. `mapping_basis`
+8. `review_status`
+9. `source_reference`
+
+Requirement:
+The curation provenance columns must survive into Silver so downstream analytics can distinguish office-reviewed manual mappings from generic prefix-derived or unresolved fallback mappings.
+
+Requirement:
+The normalization layer may also use an explicit `NON_ENFORCEABLE_PUBLICATION` stage for office-specific document kinds that are published artifacts or filing/bibliographic notices but do not represent an enforceable right or a meaningful pending application publication. These should carry `stage_multiplier = 0.0` and `is_enforceable = false` rather than being forced into `PENDING_APPLICATION`.
+
+Requirement:
+Office-specific validation and utility-model codes may be promoted from `OTHER` when primary-source office material and bounded-corpus family evidence support a stable interpretation. Typical examples are:
+
+1. `CZ U1 -> STANDARD_GRANT` for registered utility-model publications.
+2. `FI L -> PENDING_APPLICATION` for abstract-style patent-application publications.
+3. `PT E` / `PT T -> STANDARD_GRANT` when treated as Portuguese EP-validation publication codes backed by granted `EP B1` family members.
+4. `DE T1 -> PENDING_APPLICATION` for translation publication of European patent-application claims.
+5. Utility-model pairs such as `BR U2 -> PENDING_APPLICATION`, `BR Y1 -> STANDARD_GRANT`, `PL U1 -> PENDING_APPLICATION`, and `PL Y1 -> STANDARD_GRANT` when official office publication guidance and bounded-corpus family timing agree on the application/grant sequence.
+6. EP-validation translation codes such as `FI T3`, `HR T1`, `CY T1`, and `LT T` may be promoted to `STANDARD_GRANT` when the office pattern and bounded-corpus family evidence consistently align them to granted `EP B1` families.
+7. Additional utility-model pairs such as `SK U1/Y1` and `PH U1/Y1` can be promoted using the same family-timing rule when the application code consistently precedes the grant-side code within the same office.
+8. Office tables can also identify clearly non-enforceable search-report or bibliographic document kinds such as `ES R1`, which should be mapped to `NON_ENFORCEABLE_PUBLICATION` rather than left in `OTHER`.
+9. Where an office explicitly states that a utility model is registered and published as a right, a lone utility-model publication kind such as `AT U1` can be promoted to `STANDARD_GRANT` with office-level inferred provenance.
 
 Illustrative rows:
 

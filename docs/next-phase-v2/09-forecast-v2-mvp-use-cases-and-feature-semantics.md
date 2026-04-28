@@ -199,6 +199,12 @@ Derived from:
 1. publication or branch-level grant probabilities
 
 Recommended outputs:
+1. `portfolio_pending_pipeline_percentile`
+2. `portfolio_pending_pipeline_rank_within_peer_set`
+3. `portfolio_top_pending_branch_shortlist`
+4. `portfolio_pending_pipeline_priority_tier`
+
+Only after the lower-level pending-grant model is sealed:
 1. `portfolio_expected_likely_grants_count`
 2. `portfolio_expected_likely_grants_by_jurisdiction`
 3. `portfolio_expected_likely_grants_by_field`
@@ -263,7 +269,9 @@ Interpretation rules:
 4. never hide concentration risk when one or two families dominate the forecast,
 5. never present unsupported jurisdictions or fields as if they were fully modeled,
 6. ownership weights must be applied before aggregation when co-assignment exists,
-7. segment rollups must be suppressed if the subgroup sample is too sparse or flagged unreliable.
+7. segment rollups must be suppressed if the subgroup sample is too sparse or flagged unreliable,
+8. pending-grant candidate outputs should be rank/percentile-first until the lower-level model is sealed,
+9. raw pending-grant probabilities should never be the headline portfolio KPI while the model remains candidate-only.
 
 ### Portfolio drill-down contract
 

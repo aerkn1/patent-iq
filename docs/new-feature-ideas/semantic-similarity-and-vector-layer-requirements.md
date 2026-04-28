@@ -18,30 +18,38 @@ It must not:
 3. replace blocking-power or enforceability scoring,
 4. return document-cluttered duplicate family results.
 
+## Current MVP Operating Policy
+
+The current semantic MVP should assume:
+1. USPTO full text is not available as a usable semantic text provider,
+2. EPAB remains the only claim-grade text provider in the semantic layer,
+3. PATSTAT English abstract fallback remains the broad coverage floor,
+4. semantic retrieval must therefore be positioned as discovery and comparison first, not full legal-risk search.
+
 ## Premium Use Cases
 
 ## SVR-01: Semantic FTO Radar
 
 Requirement:
-PatentIQ should support text-to-threat workflows where a user submits a natural-language technical description and the platform returns semantically similar patent families joined to current enforceability and blocking-power signals.
+PatentIQ may support text-to-threat workflows only after a stronger claim-text corpus exists.
 
 Expected output:
-1. semantically similar families,
-2. legal status and current activity,
-3. target-market enforceability posture,
-4. blocking-power context,
-5. threat prioritization rather than text similarity alone.
+Current MVP interpretation:
+1. this use case is deferred without USPTO full text,
+2. the semantic MVP should not present itself as a broad FTO or infringement engine,
+3. exploratory text-to-family discovery remains allowed under separate rules below.
 
 ## SVR-02: Semantic Portfolio Collision And Whitespace Mapping
 
 Requirement:
-PatentIQ should support portfolio-to-portfolio semantic comparison and whitespace mapping using family-level embeddings and deterministic overlays from the legal and trend stack.
+PatentIQ should support portfolio-to-portfolio semantic comparison, while whitespace mapping remains a later or caveated workflow when claim-grade coverage is incomplete.
 
 Expected output:
+Safe MVP output:
 1. semantic cluster overlap,
-2. enforceable competitor density,
-3. whitespace areas with weak active protection,
-4. opportunity zones filtered by field, market, and time.
+2. semantically adjacent family groups,
+3. comparison-level overlap and gap indicators,
+4. opportunity zones only when clearly labeled as abstract-first or EP-claim-enriched rather than legal whitespace proof.
 
 ## Vector-Space Separation Rules
 
@@ -49,13 +57,14 @@ Expected output:
 
 Requirement:
 PatentIQ should maintain at least two distinct vector spaces:
-1. `vector_abstract` for landscaping, heritage, discovery, and technology exploration,
-2. `vector_claims` for enforceability, infringement-risk, and blocking workflows.
+1. `vector_abstract` as the primary global MVP space for landscaping, discovery, and technology exploration,
+2. `vector_claims` as a narrower EPAB-backed space rather than a full cross-jurisdiction claim layer.
 
 Rationale:
 1. abstracts describe the invention broadly,
 2. claims define the legally enforceable scope,
-3. FTO-style workflows using abstract-only embeddings will create false positives.
+3. FTO-style workflows using abstract-only embeddings will create false positives,
+4. without USPTO full text, claim-space must not be marketed as universally representative.
 
 ## SVR-04: Workflow-Type Must Control Which Vector Space Is Queried
 
@@ -64,8 +73,9 @@ The product should choose the vector space based on the workflow being executed.
 
 Examples:
 1. landscape discovery should query abstract-oriented vectors first,
-2. semantic FTO should query claim-oriented vectors first,
-3. mixed workflows may show both spaces, but results must remain labeled.
+2. family and portfolio comparison should prefer abstract vectors by default,
+3. EP claim-enriched workflows may query claim-oriented vectors where coverage exists,
+4. mixed workflows may show both spaces, but results must remain labeled.
 
 ## Family Collapse Rules
 
@@ -84,25 +94,24 @@ Rationale:
 Requirement:
 Representative text selection should follow a deterministic hierarchy.
 
-Recommended order:
-1. U.S. granted `B` claims from USPTO full text, using Claim 1 only,
-2. if no U.S. grant exists, English EP granted `B` claims from EPAB, using Claim 1 only,
-3. if no U.S. or EP grant claims exist, English abstract fallback from PATSTAT `tls203_appln_abstr`,
-4. never default to `A`-document claims for FTO or infringement workflows,
-5. never default to `C0` as the technical text source unless it is the only usable text artifact.
+Current MVP order:
+1. English EP granted `B` claims from EPAB, using Claim 1 only,
+2. if no usable EP grant claim exists, English abstract fallback from PATSTAT `tls203_appln_abstr`,
+3. never default to `A`-document claims for claim-oriented workflows,
+4. never default to `C0` as the technical text source unless it is the only usable text artifact.
 
 ### SVR-06A: Global Full-Text Source Hierarchy Must Be Deterministic
 
 Requirement:
-PatentIQ should use the global full-text sources in this strict order when building the representative family text payload:
-1. `USPTO` full-text XML for U.S. grant claims,
-2. `EPAB` for English EP grant claims,
-3. `PATSTAT tls203_appln_abstr` for English abstract fallback across all remaining jurisdictions.
+PatentIQ should use the currently available text sources in this strict order when building the representative family text payload:
+1. `EPAB` for English EP grant claims,
+2. `PATSTAT tls203_appln_abstr` for English abstract fallback across the remaining in-scope families.
 
 Rationale:
-1. USPTO and EPAB provide richer English claim text than PATSTAT,
-2. PATSTAT provides the broadest fallback coverage for non-US and non-EP families,
-3. this keeps vector generation global while preserving family-first collapse.
+1. EPAB provides the strongest currently available claim text,
+2. PATSTAT provides the broadest fallback coverage,
+3. this keeps vector generation global while preserving family-first collapse,
+4. the resulting semantic layer is mixed-provenance and must be labeled as such.
 
 ## Model And Text Rules
 
@@ -128,9 +137,10 @@ Each semantic result should preserve:
 6. language and translation status where applicable.
 
 Mandatory provenance flags for the representative payload:
-1. `text_provenance`, such as `USPTO_US11555555B2` or `EPAB_EP1234567B1`,
+1. `text_provenance`, such as `EPAB_EP1234567B1` or `PATSTAT_ABSTRACT`,
 2. `is_abstract_fallback`,
-3. `earliest_priority_timestamp` or equivalent chronology anchor.
+3. `earliest_priority_timestamp` or equivalent chronology anchor,
+4. `text_source_type` or equivalent corpus-strength flag.
 
 ## Chronology And Legal Guardrails
 
@@ -199,10 +209,10 @@ Semantic closeness is a discovery aid only and must not be labeled as infringeme
 ## SVR-14A: A-Document Claims Must Be Rejected For FTO Workflows
 
 Requirement:
-For semantic FTO and infringement-oriented workflows, the parser must not use claims from `A1`, `A2`, or other application-stage publications.
+For claim-oriented workflows, the parser must not use claims from `A1`, `A2`, or other application-stage publications.
 
 Rule:
-1. if the only available U.S. or EP document is an `A`-document, skip claim extraction,
+1. if the only available EP document is an `A`-document, skip claim extraction,
 2. fall back to abstract-based embedding with `is_abstract_fallback = TRUE`,
 3. keep that fallback visibly labeled in the vector payload and UI.
 
@@ -212,9 +222,9 @@ Requirement:
 Claim-oriented embedding generation should extract only the first independent claim for MVP.
 
 Rules:
-1. in USPTO XML, target only Claim 1 and ignore later claims,
-2. in EPAB, unnest claims and extract only the first usable English independent claim,
-3. dependent claims should not be embedded by default in MVP because they dilute the core semantic representation and increase compute cost.
+1. in EPAB, extract only the first usable English claim for MVP,
+2. dependent claims should not be embedded by default in MVP because they dilute the core semantic representation and increase compute cost,
+3. a future USPTO-enabled build may restore a broader claim hierarchy, but that is not part of the current semantic MVP.
 
 ## SVR-14C: Text Sanitization Is Mandatory
 
@@ -326,7 +336,7 @@ This note extends the family-first analytics stack with a semantic retrieval lay
 
 ### Net-New Additions
 
-1. semantic FTO workflows,
+1. semantic discovery and comparison workflows,
 2. claim-versus-abstract vector-space separation,
 3. representative-family embedding hierarchy,
 4. chronology-safe semantic retrieval,
@@ -343,9 +353,9 @@ This note extends the family-first analytics stack with a semantic retrieval lay
 
 ### P1
 
-1. semantic FTO radar,
-2. portfolio semantic collision maps,
-3. whitespace overlays with blocking-power context.
+1. portfolio semantic collision maps,
+2. abstract-first overlap maps with blocking-power context,
+3. EP-claim-enriched semantic slices where coverage is strong enough.
 
 ### P2
 

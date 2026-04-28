@@ -1,0 +1,18 @@
+{
+  "blob_count": 213,
+  "container": "patentiq-data",
+  "delete_prefix": "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/",
+  "sample_first_10": [
+    "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/application_evidence_by_appln/appln_bucket=1/data.parquet",
+    "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/application_evidence_by_appln/appln_bucket=102/data.parquet",
+    "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/application_evidence_by_appln/appln_bucket=113/data.parquet",
+    "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/application_evidence_by_appln/appln_bucket=12/data.parquet",
+    "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/application_evidence_by_appln/appln_bucket=125/data.parquet",
+    "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/application_evidence_by_appln/appln_bucket=131/data.parquet",
+    "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/application_evidence_by_appln/appln_bucket=135/data.parquet",
+    "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/application_evidence_by_appln/appln_bucket=144/data.parquet",
+    "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/application_evidence_by_appln/appln_bucket=176/data.parquet",
+    "releases/2026-04-25-runtime-current/serving/publication_serving/publication_serving/application_evidence_by_appln/appln_bucket=182/data.parquet"
+  ],
+  "total_bytes": 1527102591
+}

@@ -1,0 +1,11 @@
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.text {
+  min-width: 0;
+}

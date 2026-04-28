@@ -1,0 +1,34 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-classification-jurisdiction-pit.json"
+  },
+  "calculations": [
+    "Portfolio family share in slice is the owner-year family count in the slice divided by total owner-year family count.",
+    "Portfolio citation pressure index scales slice-average pre-as-of forward citations to the strongest slice within the same owner-year.",
+    "Slice rank within owner-year is ordered by family count, then active family count, then blocking density, then slice keys."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/64-patentiq-v2-citation-serving-refactor-execution-plan.md",
+    "docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md",
+    "docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "This mart supports portfolio classification-geography leaderboards, CPC-by-jurisdiction views, and field-cluster evidence tables."
+  ],
+  "finished_at": "2026-04-09T15:29:56+00:00",
+  "inputs": [],
+  "methods": [
+    "Started from the family classification-jurisdiction PIT mart and aggregated through the family-owner bridge at owner-year slice grain.",
+    "Kept owner replay caveats explicit rather than implying native historical owner truth.",
+    "Normalized citation pressure inside each owner-year so slice comparisons are readable without pretending cross-owner comparability."
+  ],
+  "metrics": {},
+  "outputs": [],
+  "stage": "gold-portfolio-classification-jurisdiction-pit",
+  "started_at": "2026-04-09T15:29:56+00:00",
+  "status": "failed",
+  "summary": "Built the portfolio WIPO-CPC-jurisdiction PIT mart by replaying family slice rows through the current owner bridge.",
+  "warnings": [
+    "Missing required inputs for gold-portfolio-classification-jurisdiction-pit: ['/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_jurisdiction_pit.parquet']"
+  ]
+}

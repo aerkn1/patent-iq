@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "This mart powers CPC drill-downs inside market WIPO segments and feeds the global CPC importance PIT layer."
+  ],
+  "finished_at": "2026-04-08T19:49:13+00:00",
+  "metrics": {
+    "gold_market_cpc_trend_pit_rows": 862969
+  },
+  "output_profiles": [
+    {
+      "column_count": 25,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_cpc_trend_pit.parquet",
+      "row_count": 862969,
+      "sha256": "c6286340ade11ac8534db430e3ef613be116dba7675bfe24f5b1e5140d22c4da",
+      "size_bytes": 21828370,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-market-cpc-trend-pit",
+  "started_at": "2026-04-08T19:47:09+00:00",
+  "status": "success",
+  "summary": "Built the market CPC trend PIT mart from family-year classification visibility and family compare context.",
+  "warnings": []
+}

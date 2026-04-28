@@ -1,0 +1,86 @@
+{
+  "downstream_impacts": [
+    "These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.",
+    "Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces."
+  ],
+  "finished_at": "2026-04-09T15:09:50+00:00",
+  "metrics": {
+    "gold_market_attacker_leaderboard_pit_rows": 4771190,
+    "gold_market_citation_pressure_by_jurisdiction_pit_rows": 6063,
+    "gold_market_citation_trend_pit_rows": 294,
+    "gold_market_intelligence_overview_rows": 1,
+    "gold_market_intelligence_segments_rows": 10,
+    "gold_market_intelligence_timeseries_rows": 504,
+    "gold_semantic_match_context_rows": 20295898
+  },
+  "output_profiles": [
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_segments.parquet",
+      "row_count": 10,
+      "sha256": "aba9ac8e5e061dc5c7163fce0eef1b35211bee8ca931810e4bf4383cda19b2ad",
+      "size_bytes": 1484,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_timeseries.parquet",
+      "row_count": 504,
+      "sha256": "8682d0cf4f8430fa90ebbe98356cca35b27084562f8ed5903add492c7c5fbb14",
+      "size_bytes": 4286,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_overview.parquet",
+      "row_count": 1,
+      "sha256": "4bcd8c0eb6d28a8a7aeb19ac5d76149a2540437d6251e2f4bbb42ad0f59ca386",
+      "size_bytes": 806,
+      "type": "file"
+    },
+    {
+      "column_count": 13,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_citation_trend_pit.parquet",
+      "row_count": 294,
+      "sha256": "94328675350ae01dc67ab0ff5ef6cb88b20718b0bdec61be82330c211c3b8873",
+      "size_bytes": 10031,
+      "type": "file"
+    },
+    {
+      "column_count": 9,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_citation_pressure_by_jurisdiction_pit.parquet",
+      "row_count": 6063,
+      "sha256": "306efc68a8bb067a8db55d0a1743c37aabe30b9366e8149bb2d3fcbc14dacbe4",
+      "size_bytes": 100646,
+      "type": "file"
+    },
+    {
+      "column_count": 9,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_attacker_leaderboard_pit.parquet",
+      "row_count": 4771190,
+      "sha256": "79be39b07c0a20bfa3ae28b91fbe7eee2db1ba46543d781352e5b7132845fa5a",
+      "size_bytes": 80379996,
+      "type": "file"
+    },
+    {
+      "column_count": 12,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet",
+      "row_count": 20295898,
+      "sha256": "71de3881f0d366519d3c52f367b99eaa1a3b9a6deae63a5b053f0275645ee549",
+      "size_bytes": 595170895,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-market-semantic",
+  "started_at": "2026-04-09T15:07:11+00:00",
+  "status": "success",
+  "summary": "Built Gold Market Intelligence and semantic-context marts from note-aligned Silver and Gold family outputs.",
+  "warnings": []
+}

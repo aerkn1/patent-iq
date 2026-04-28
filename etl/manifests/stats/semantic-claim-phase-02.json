@@ -1,0 +1,32 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-06T11:56:03+00:00",
+  "metrics": {
+    "duplicate_family_rate": 0.0,
+    "duplicate_family_rows": 0,
+    "embedding_device": "mps",
+    "embedding_dim_max": 768,
+    "embedding_dim_min": 768,
+    "encoded_rows": 134943,
+    "merged_rows": 134943,
+    "phase_chunk_files_present": 132,
+    "phase_count": 3,
+    "phase_id": 2
+  },
+  "output_profiles": [
+    {
+      "column_count": 23,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/vectors/phases/claims/vec_family_embeddings_claims_phase_02_of_03.parquet",
+      "row_count": 134943,
+      "sha256": "f58a0c9a109f256d4af2877dfdccc592775a9958da0e842e5fa8ee9764801ae4",
+      "size_bytes": 606407340,
+      "type": "file"
+    }
+  ],
+  "stage": "semantic-claim-phase-02",
+  "started_at": "2026-04-06T10:20:58+00:00",
+  "status": "success",
+  "summary": "Built claims semantic phase artifact 3/3.",
+  "warnings": []
+}

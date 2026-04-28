@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "This mart is the ranking-ready family evidence layer for WIPO x CPC x jurisdiction chronology and downstream portfolio and market slice rollups."
+  ],
+  "finished_at": "2026-04-24T12:01:54+00:00",
+  "metrics": {
+    "gold_family_classification_jurisdiction_pit_rows": 566936693
+  },
+  "output_profiles": [
+    {
+      "column_count": 22,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_classification_jurisdiction_pit.parquet",
+      "row_count": 566936693,
+      "sha256": "2e5c52449d3e50cd693dfd98c3afda05814347169076b4f89c40c38297ef2ca1",
+      "size_bytes": 5228249738,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-family-classification-jurisdiction-pit",
+  "started_at": "2026-04-24T11:40:28+00:00",
+  "status": "success",
+  "summary": "Built the family WIPO-CPC-jurisdiction PIT mart from classification replay and dense branch history.",
+  "warnings": []
+}

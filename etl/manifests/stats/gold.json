@@ -1,0 +1,176 @@
+{
+  "downstream_impacts": [
+    "These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.",
+    "Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces."
+  ],
+  "finished_at": "2026-04-03T23:54:54+00:00",
+  "metrics": {
+    "gold_family_attacker_summary_rows": 6334292,
+    "gold_family_blocking_power_rows": 17633618,
+    "gold_family_blocking_power_timeseries_rows": 152145173,
+    "gold_family_field_contributions_rows": 172223907,
+    "gold_family_field_contributions_timeseries_rows": 172223907,
+    "gold_family_heritage_summary_rows": 21353101,
+    "gold_family_summary_rows": 17633618,
+    "gold_market_intelligence_overview_rows": 1,
+    "gold_market_intelligence_segments_rows": 10,
+    "gold_market_intelligence_timeseries_rows": 504,
+    "gold_portfolio_field_timeseries_rows": 5520241,
+    "gold_portfolio_forecast_summary_rows": 3034400,
+    "gold_portfolio_heritage_summary_rows": 3852589,
+    "gold_portfolio_summary_rows": 3034400,
+    "gold_portfolio_threat_matrix_rows": 15269449,
+    "gold_semantic_match_context_rows": 20295898
+  },
+  "output_profiles": [
+    {
+      "column_count": 39,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet",
+      "row_count": 17633618,
+      "sha256": "0fe3a762887db7a64dafe3666832eafc6e506a708bac19362555f42a73d2ec92",
+      "size_bytes": 1761428868,
+      "type": "file"
+    },
+    {
+      "column_count": 6,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power.parquet",
+      "row_count": 17633618,
+      "sha256": "0dc04725b460040f800860677aeb2339ca6e67d08ae1f7a99d10a6d9eafd6441",
+      "size_bytes": 97996998,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power_timeseries.parquet",
+      "row_count": 152145173,
+      "sha256": "b147ba02fd4b5c08b41bcbd12a9185035613a522b4934e3143cff0f3c9045a17",
+      "size_bytes": 751384689,
+      "type": "file"
+    },
+    {
+      "column_count": 10,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions_timeseries.parquet",
+      "row_count": 172223907,
+      "sha256": "180c78c7594801db7a2bee8233df35196e1560db7e27f5deb65f655bf42bbd61",
+      "size_bytes": 1231386511,
+      "type": "file"
+    },
+    {
+      "column_count": 10,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions.parquet",
+      "row_count": 172223907,
+      "sha256": "17926e2bac94f6d666cae6a6be5d738aaf15165a600ab70292210d14b0dd5e09",
+      "size_bytes": 1231397309,
+      "type": "file"
+    },
+    {
+      "column_count": 13,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary.parquet",
+      "row_count": 3034400,
+      "sha256": "e1db6712d47663e6f4a62d8e42ce4e785d907e21d03031886b9ccf6bd984a41d",
+      "size_bytes": 118564991,
+      "type": "file"
+    },
+    {
+      "column_count": 6,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_field_timeseries.parquet",
+      "row_count": 5520241,
+      "sha256": "a1e9f29d6e2e8e7fe4f6549ec7e4094e7f06ad24c07a004a115765044c2ebb40",
+      "size_bytes": 86391219,
+      "type": "file"
+    },
+    {
+      "column_count": 6,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_threat_matrix.parquet",
+      "row_count": 15269449,
+      "sha256": "52a63745a5430b7068e1231e52374aeb2bea3c4ecc3fb702ad50c5835fd3d5f7",
+      "size_bytes": 207266961,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_overview.parquet",
+      "row_count": 1,
+      "sha256": "e5582bb0eea577b1a06d52775e37511a3d13801855512d306da9122c0262c73a",
+      "size_bytes": 789,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_segments.parquet",
+      "row_count": 10,
+      "sha256": "b4f6634d95c5245d57b8f5503b0ae0dd5e9b251a4cc4a714f20eb6a1d13a1770",
+      "size_bytes": 1467,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_timeseries.parquet",
+      "row_count": 504,
+      "sha256": "2db4d2c88facbf96866d7cb33c86953087d7eb2b4793ad522495fc989e87b666",
+      "size_bytes": 4269,
+      "type": "file"
+    },
+    {
+      "column_count": 12,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet",
+      "row_count": 20295898,
+      "sha256": "64877b6cb251e1c6372bafc4e945d0ffe00f9792448f64889606e0c23b1688d2",
+      "size_bytes": 594370941,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_attacker_summary.parquet",
+      "row_count": 6334292,
+      "sha256": "f2d92783fbea7b466c94160f4753a094a5d073c3a8d9ca301aaf3d74385755de",
+      "size_bytes": 86316528,
+      "type": "file"
+    },
+    {
+      "column_count": 14,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_summary.parquet",
+      "row_count": 3034400,
+      "sha256": "1e5befb9f6dcb1f114f612220e5e92e0bc398319b17f7b98fe14fbe82d9b496e",
+      "size_bytes": 127878264,
+      "type": "file"
+    },
+    {
+      "column_count": 13,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_heritage_summary.parquet",
+      "row_count": 21353101,
+      "sha256": "58cdbde1acb9918bd3bd5727b3a36bfe80063902dd7a8ea37eef92e645289cdd",
+      "size_bytes": 506608264,
+      "type": "file"
+    },
+    {
+      "column_count": 9,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_heritage_summary.parquet",
+      "row_count": 3852589,
+      "sha256": "e938344b9f5991bb90c0c76ab3655edf60120af8fa371abeefc1587c0bb1a7c4",
+      "size_bytes": 112812100,
+      "type": "file"
+    }
+  ],
+  "stage": "gold",
+  "started_at": "2026-04-03T23:11:40+00:00",
+  "status": "success",
+  "summary": "Built Gold family, portfolio, Market Intelligence, attacker, history, and semantic-context marts from note-aligned Silver contracts.",
+  "warnings": []
+}

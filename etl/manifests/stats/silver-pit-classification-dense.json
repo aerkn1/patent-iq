@@ -1,0 +1,36 @@
+{
+  "downstream_impacts": [
+    "gold_family_classification_mix_pit can use this as the family-year classification basis.",
+    "gold_portfolio_classification_mix_pit can aggregate this with explicit current-owner replay caveats.",
+    "gold_market_cpc_trend_pit can use the same CPC/WIPO chronology for CPC-within-field trends and PIT importance views."
+  ],
+  "finished_at": "2026-04-08T08:48:31+00:00",
+  "metrics": {
+    "silver_family_classification_pit_dense_duplicate_family_year_keys": 0,
+    "silver_family_classification_pit_dense_rows": 164988135,
+    "silver_family_classification_pit_dense_rows_with_cpc_main_groups": 93283467
+  },
+  "output_profiles": [
+    {
+      "column_count": 19,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_classification_pit_dense.parquet",
+      "row_count": 164988135,
+      "sha256": "554ab0454ca28452f55ca0069f2a2f5df3cdcb33f269800072d36003d36e80d4",
+      "size_bytes": 1573661605,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_classification_pit_dense_audit.json",
+      "sha256": "5574fbc0ec7ae7331b3e9e07570a48660175530b4140fe5a48d55c363ddf9e26",
+      "size_bytes": 491,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-pit-classification-dense",
+  "started_at": "2026-04-08T08:43:57+00:00",
+  "status": "success",
+  "summary": "Built silver_family_classification_pit_dense.parquet with dense family-year WIPO/CPC classification membership for family, portfolio, and market chronology surfaces.",
+  "warnings": []
+}

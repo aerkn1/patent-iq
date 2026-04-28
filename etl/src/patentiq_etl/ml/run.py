@@ -6,6 +6,11 @@ import duckdb
 
 from patentiq_etl.common.io import parquet_row_count, write_text_json
 from patentiq_etl.common.types import BuildSettings, StageResult
+from patentiq_etl.ml.phase0 import build_ml_phase0_foundation
+from patentiq_etl.ml.phase_grant import build_ml_pending_grant_pipeline
+from patentiq_etl.ml.phase03 import build_ml_phase03_family_future_citation_forecast
+from patentiq_etl.ml.phase04 import build_ml_phase04_family_jurisdiction_lapse_risk
+from patentiq_etl.ml.phase06 import build_ml_phase06_jurisdiction_field_trend_forecast
 
 
 MODEL_SCOPES = [
@@ -16,6 +21,31 @@ MODEL_SCOPES = [
     "jurisdiction_field_trend_forecast",
     "ep_special_publication_grant_probability",
 ]
+
+
+def run_ml_phase0_foundation(settings: BuildSettings) -> list[StageResult]:
+    """Build the Phase 00 training snapshot, split registry, and semantic fixture artifacts."""
+    return [build_ml_phase0_foundation(settings)]
+
+
+def run_ml_pending_grant_pipeline(settings: BuildSettings) -> list[StageResult]:
+    """Build the pending-grant pipeline label, feature, and split scaffolding."""
+    return [build_ml_pending_grant_pipeline(settings)]
+
+
+def run_ml_phase03_family_forecast(settings: BuildSettings) -> list[StageResult]:
+    """Build the Phase 03 family-first label/feature/split scaffolding for forecast retraining."""
+    return [build_ml_phase03_family_future_citation_forecast(settings)]
+
+
+def run_ml_phase04_family_jurisdiction_lapse_risk(settings: BuildSettings) -> list[StageResult]:
+    """Build the Phase 04 family-jurisdiction lapse-risk label, feature, and split scaffolding."""
+    return [build_ml_phase04_family_jurisdiction_lapse_risk(settings)]
+
+
+def run_ml_phase06_jurisdiction_field_trend_forecast(settings: BuildSettings) -> list[StageResult]:
+    """Build the Phase 06 jurisdiction-field trend forecast labels, features, splits, and baseline models."""
+    return [build_ml_phase06_jurisdiction_field_trend_forecast(settings)]
 
 
 def run_ml(settings: BuildSettings) -> list[StageResult]:
@@ -45,6 +75,13 @@ def run_ml(settings: BuildSettings) -> list[StageResult]:
     feature_table = settings.ml_dir / "ml_feature_family_future_citations.parquet"
     feature_manifest = settings.ml_dir / "ml_feature_manifest.json"
     model_card = settings.ml_dir / "model_card_family_future_citation_forecast.json"
+    enforce_rollup_sql = f"""
+        select
+            docdb_family_id,
+            sum(branch_enforceability_contribution_raw) as branch_enforceability_contribution_raw
+        from read_parquet('{enforce}')
+        group by docdb_family_id
+    """
 
     con = duckdb.connect()
     con.execute(
@@ -59,7 +96,7 @@ def run_ml(settings: BuildSettings) -> list[StageResult]:
                 '{settings.method_version}' as method_version
             from read_parquet('{family_core}') c
             left join read_parquet('{cite}') x using (docdb_family_id)
-            left join read_parquet('{enforce}') e using (docdb_family_id)
+            left join ({enforce_rollup_sql}) e using (docdb_family_id)
         ) to '{feature_table}' (format parquet, compression zstd)
         """
     )

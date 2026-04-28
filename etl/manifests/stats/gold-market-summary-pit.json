@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "This mart is the safe historical source for Market Intelligence year-slice cards, league tables, and segment detail drawers."
+  ],
+  "finished_at": "2026-04-10T08:23:12+00:00",
+  "metrics": {
+    "gold_market_summary_pit_rows": 504
+  },
+  "output_profiles": [
+    {
+      "column_count": 20,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_summary_pit.parquet",
+      "row_count": 504,
+      "sha256": "a2073d7bd499001314f138589d2521fb0d9c0d36469416bdfe170e596f1772f5",
+      "size_bytes": 20606,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-market-summary-pit",
+  "started_at": "2026-04-10T08:22:20+00:00",
+  "status": "success",
+  "summary": "Built the market PIT summary mart from year-safe market timeseries, dense family compare PIT, and current-owner caveated family membership.",
+  "warnings": []
+}

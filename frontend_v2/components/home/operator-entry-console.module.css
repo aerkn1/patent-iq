@@ -1,0 +1,199 @@
+.grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1.36fr) minmax(340px, 0.9fr);
+}
+
+.primary {
+  min-width: 0;
+}
+
+.secondaryRail {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+.jumpCard,
+.linkPanel {
+  padding: 24px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 28px;
+  backdrop-filter: blur(18px);
+  box-shadow:
+    0 16px 36px rgba(15, 23, 42, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.84);
+}
+
+.jumpCard {
+  background:
+    radial-gradient(circle at top right, rgba(161, 79, 49, 0.1), transparent 30%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 250, 252, 0.84));
+}
+
+.linkPanel {
+  background:
+    radial-gradient(circle at top right, rgba(161, 79, 49, 0.22), transparent 32%),
+    linear-gradient(180deg, rgba(18, 27, 39, 0.96), rgba(12, 19, 28, 0.92));
+  border-color: rgba(99, 118, 144, 0.24);
+  box-shadow:
+    0 22px 42px rgba(11, 18, 26, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.jumpHeader {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.jumpIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  background: rgba(142, 27, 27, 0.1);
+  color: var(--accent);
+}
+
+.jumpGlyph {
+  width: 19px;
+  height: 19px;
+}
+
+.jumpTitle,
+.linkPanelTitle {
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: 1.32rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.linkPanelTitle {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.jumpCopy,
+.linkPanelCopy {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.65;
+}
+
+.linkPanelCopy {
+  color: rgba(213, 223, 235, 0.72);
+}
+
+.jumpForm {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+}
+
+.jumpForm input {
+  width: 100%;
+  min-height: 54px;
+  padding: 0 16px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--foreground);
+}
+
+.jumpForm button {
+  min-height: 54px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #9e2626, #691919);
+  color: white;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.linkPanelHeader {
+  display: grid;
+  gap: 8px;
+}
+
+.linkList {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.linkItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.linkItem:hover,
+.linkItem:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(161, 79, 49, 0.26);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.linkLead {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.linkLeadTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.linkMeta {
+  color: rgba(213, 223, 235, 0.68);
+  font-size: 0.89rem;
+  line-height: 1.55;
+}
+
+.linkGlyph,
+.linkArrow {
+  width: 16px;
+  height: 16px;
+  color: #d88f73;
+}
+
+@media (max-width: 1080px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .jumpCard,
+  .linkPanel {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .jumpForm {
+    grid-template-columns: 1fr;
+  }
+}

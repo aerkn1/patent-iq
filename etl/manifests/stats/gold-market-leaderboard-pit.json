@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "This mart supports selected-year segment leader tables and owner presence panels without requiring ad hoc ranking logic in the backend."
+  ],
+  "finished_at": "2026-04-07T14:09:57+00:00",
+  "metrics": {
+    "gold_market_leaderboard_pit_rows": 7600
+  },
+  "output_profiles": [
+    {
+      "column_count": 18,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_leaderboard_pit.parquet",
+      "row_count": 7600,
+      "sha256": "e175b4f011fa65a83163ac741a16a48bf31be6a693c5fcc14396f5acd523f88f",
+      "size_bytes": 188727,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-market-leaderboard-pit",
+  "started_at": "2026-04-07T14:00:48+00:00",
+  "status": "success",
+  "summary": "Built the market leaderboard PIT mart for segment-year family and owner rankings with explicit historical owner caveats.",
+  "warnings": []
+}

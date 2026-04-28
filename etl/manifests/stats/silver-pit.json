@@ -1,0 +1,34 @@
+{
+  "downstream_impacts": [
+    "ml-phase03-family-forecast: replaces current-state leakage features with PIT equivalents when this table is present."
+  ],
+  "finished_at": "2026-04-07T10:18:24+00:00",
+  "metrics": {
+    "silver_family_feature_snapshot_pit_duplicate_family_year_keys": 0,
+    "silver_family_feature_snapshot_pit_future_anchor_rows": 1193145,
+    "silver_family_feature_snapshot_pit_rows": 17633618
+  },
+  "output_profiles": [
+    {
+      "column_count": 22,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit.parquet",
+      "row_count": 17633618,
+      "sha256": "043b388a5caef3a955fb57a43e97160adc1de215d35a471500f58b5cf98504d7",
+      "size_bytes": 142541296,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_audit.json",
+      "sha256": "8052d299ccadd60a710568e3f1d1b3deca4ea9aa3f9854fab531b3d9ac905809",
+      "size_bytes": 781,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-pit",
+  "started_at": "2026-04-07T10:16:28+00:00",
+  "status": "success",
+  "summary": "Built silver_family_feature_snapshot_pit.parquet with point-in-time safe features for each in-scope family at as_of_date = priority_date + 2 years.",
+  "warnings": []
+}

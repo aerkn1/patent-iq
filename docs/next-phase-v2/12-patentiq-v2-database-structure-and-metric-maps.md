@@ -253,7 +253,7 @@ flowchart TD
   A8["WIPO techn field concordance"]
   A9["UP member states + kind code mapping"]
   A10["PATSTAT Register EP / UP procedural tables"]
-  A11["USPTO full text + EPAB + PATSTAT abstracts<br/>semantic text hierarchy"]
+  A11["EPAB + PATSTAT abstracts<br/>current semantic text hierarchy"]
 
   S1["silver_family_core<br/>family_earliest_priority_date<br/>family_priority_year<br/>is_main_window_family<br/>is_heritage_backfill_family"]
   S2["silver_kind_code_normalization<br/>branch_universal_stage<br/>branch_stage_multiplier"]

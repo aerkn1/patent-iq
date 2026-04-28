@@ -3,7 +3,6 @@ Singleton registry that downloads and holds LightGBM models, calibration
 data, and metadata for the citation forecast system.
 """
 import json
-import os
 import logging
 from pathlib import Path
 from typing import Optional
@@ -11,10 +10,9 @@ from typing import Optional
 import lightgbm as lgb
 from huggingface_hub import hf_hub_download
 
-logger = logging.getLogger("uvicorn")
+from config.settings import get_settings
 
-_HF_REPO = "ardae1/patent-citation-models"
-_HF_SUBFOLDER = "artifacts"
+logger = logging.getLogger("uvicorn")
 
 _ARTIFACTS = {
     "model_3y": "model_3y.txt",
@@ -54,16 +52,17 @@ class ModelRegistry:
     def initialize(cls) -> None:
         """Download HF artifacts and load models into memory. Call once at startup."""
         inst = cls()
-        token = os.environ.get("HF_TOKEN")
+        settings = get_settings()
+        token = settings.hf_token
         if not token:
             raise RuntimeError("HF_TOKEN environment variable is required for model download")
 
         local_paths: dict[str, Path] = {}
         for key, filename in _ARTIFACTS.items():
             path = hf_hub_download(
-                repo_id=_HF_REPO,
+                repo_id=settings.hf_model_repo,
                 filename=filename,
-                subfolder=_HF_SUBFOLDER,
+                subfolder=settings.hf_model_subfolder,
                 repo_type="model",
                 token=token,
             )

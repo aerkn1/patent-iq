@@ -1,0 +1,45 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/bronze-epab-fulltext.json"
+  },
+  "calculations": [
+    "Bronze EPAB is source-faithful and does not replace PATSTAT/Register metadata for analytical truth."
+  ],
+  "doc_refs": [
+    "docs/data/ep-full-text-publication-database-schema.md",
+    "docs/new-feature-ideas/semantic-similarity-and-vector-layer-requirements.md",
+    "docs/next-phase-v2/24-patentiq-v2-local-etl-and-artifact-build-runbook.md"
+  ],
+  "downstream_impacts": [
+    "These Bronze tables feed EP grant claim selection, abstract fallback, and Data Room transparency outputs.",
+    "They must remain text-provider tables and not become the canonical source for classifications or parties in downstream analytics."
+  ],
+  "finished_at": "2026-04-02T10:08:52+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_publication.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_publication.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_abstract.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw-bounded/epab/epab_claims.parquet"
+  ],
+  "methods": [
+    "Parsed EPAB publication/application anchors, abstracts, and claims from JSON payloads.",
+    "Preserved language and sequence fields for English-claim selection and abstract fallback."
+  ],
+  "metrics": {
+    "bronze_epab_abstract_rows": 0,
+    "bronze_epab_claims_rows": 2763676,
+    "bronze_epab_document_rows": 1679816,
+    "bronze_epab_publication_rows": 1679816
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_document.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_publication.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_abstract.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze/bronze_epab_claims.parquet"
+  ],
+  "stage": "bronze-epab-fulltext",
+  "started_at": "2026-04-02T10:07:20+00:00",
+  "status": "success",
+  "summary": "Parsed EPAB payloads into Bronze text-provider tables for semantic workflows.",
+  "warnings": []
+}

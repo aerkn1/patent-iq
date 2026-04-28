@@ -1,0 +1,67 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold.json"
+  },
+  "calculations": [
+    "Family blocking power fuses current legal enforceability and adjusted citation score while retaining both raw components.",
+    "Portfolio rollups aggregate from family-level truth only and keep denominators bounded to the mega-cluster family universe.",
+    "Family and branch history-facing marts reuse Silver history sidecars rather than replaying legal events directly in Gold."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md",
+    "docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md",
+    "docs/next-phase-v2/23-patentiq-v2-ux-page-contracts-and-backend-wiring-baseline.md"
+  ],
+  "downstream_impacts": [
+    "These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.",
+    "Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces."
+  ],
+  "finished_at": "2026-04-03T23:55:19+00:00",
+  "inputs": [],
+  "methods": [
+    "Composed Gold marts from canonical Silver outputs rather than recomputing Bronze semantics in Gold.",
+    "Used deterministic primary-owner identity for family display and family-owner bridge membership for portfolio aggregation.",
+    "Anchored current-state Gold time-series rows to the current Gold/Silver snapshots to preserve exact parity while keeping historical rows replay-driven."
+  ],
+  "metrics": {
+    "gold_family_attacker_summary_rows": 6334292,
+    "gold_family_blocking_power_rows": 17633618,
+    "gold_family_blocking_power_timeseries_rows": 152145173,
+    "gold_family_field_contributions_rows": 172223907,
+    "gold_family_field_contributions_timeseries_rows": 172223907,
+    "gold_family_heritage_summary_rows": 21353101,
+    "gold_family_summary_rows": 17633618,
+    "gold_market_intelligence_overview_rows": 1,
+    "gold_market_intelligence_segments_rows": 10,
+    "gold_market_intelligence_timeseries_rows": 504,
+    "gold_portfolio_field_timeseries_rows": 5520241,
+    "gold_portfolio_forecast_summary_rows": 3034400,
+    "gold_portfolio_heritage_summary_rows": 3852589,
+    "gold_portfolio_summary_rows": 3034400,
+    "gold_portfolio_threat_matrix_rows": 15269449,
+    "gold_semantic_match_context_rows": 20295898
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_summary.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_field_contributions.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_summary.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_field_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_threat_matrix.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_overview.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_segments.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_intelligence_timeseries.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_semantic_match_context.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_attacker_summary.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_forecast_summary.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_heritage_summary.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_heritage_summary.parquet"
+  ],
+  "stage": "gold",
+  "started_at": "2026-04-03T23:11:40+00:00",
+  "status": "success",
+  "summary": "Built Gold family, portfolio, Market Intelligence, attacker, history, and semantic-context marts from note-aligned Silver contracts.",
+  "warnings": []
+}

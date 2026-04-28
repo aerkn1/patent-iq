@@ -1,0 +1,28 @@
+{
+  "archive_id": "2026-04-25-archive-current",
+  "blob_container": "patentiq-data",
+  "layers": {
+    "bronze": {
+      "blob_prefix": "bronze/2026-04-25-archive-current",
+      "bytes": 27191755035,
+      "file_count": 42,
+      "local_path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/bronze"
+    },
+    "gold": {
+      "blob_prefix": "gold/2026-04-25-archive-current",
+      "bytes": 35316702713,
+      "file_count": 963,
+      "local_path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold"
+    },
+    "silver": {
+      "blob_prefix": "silver/2026-04-25-archive-current",
+      "bytes": 25434041438,
+      "file_count": 219,
+      "local_path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver"
+    }
+  },
+  "summary": {
+    "bytes": 87942499186,
+    "file_count": 1224
+  }
+}

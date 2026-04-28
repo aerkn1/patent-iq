@@ -1,0 +1,1 @@
+window.__PATENTIQ_RUNTIME_CONFIG__ = window.__PATENTIQ_RUNTIME_CONFIG__ || {};

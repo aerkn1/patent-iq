@@ -105,6 +105,17 @@ Recommended internal backend services:
 9. `manifest_service`
 10. `session_state_service`
 
+## Current Semantic MVP Caveat
+
+The current semantic MVP should be framed as:
+1. family-level discovery and comparison,
+2. EP claim-enriched where EPAB text exists,
+3. abstract-fallback elsewhere.
+
+It should not be framed as:
+1. a broad legal-grade FTO engine,
+2. uniformly claim-faithful across all jurisdictions.
+
 ## Page Contracts
 
 ## 1. Portfolio Workspace
@@ -170,6 +181,10 @@ Recommended internal backend services:
 5. citation analytics tab
 6. documents & prosecution tab
 7. forecast and semantic links
+
+Semantic UX requirement:
+1. family semantic sections must expose provenance and abstract-fallback caveats,
+2. claim-backed versus abstract-backed semantic results must remain visibly distinguishable.
 
 ### Core components
 

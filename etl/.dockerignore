@@ -1,0 +1,8 @@
+*
+
+!Dockerfile.bootstrap
+!scripts/
+
+**/__pycache__/
+**/*.pyc
+**/.DS_Store

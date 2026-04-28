@@ -6,6 +6,8 @@ build:
   heritage_backfill_end: 2006
   snapshot_date: "2026-03-15"
   azure_publish_enabled: false
+  release_overwrite_enabled: false
+  azure_release_overwrite_enabled: false
   vector_sample_pct: 0.1
   active_grant_only_for_semantic: true
 
@@ -89,5 +91,5 @@ paths:
 
 methods:
   method_version: "v2_mvp_local_etl"
-  semantic_embedding_method: "stable_hash_embedding_mvp"
-  semantic_ann_method: "manifest_only_placeholder"
+  semantic_embedding_method: "promoted_dual_runtime_v1"
+  semantic_ann_method: "exact_scan_runtime_v1"

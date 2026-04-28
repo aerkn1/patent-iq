@@ -1,0 +1,73 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-core.json"
+  },
+  "calculations": [
+    "Grant-stage classification is inferred from publication kind prefix `B` and modifier-stage from `C`.",
+    "Portfolio ownership remains bounded to the in-scope family universe only."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/10-patentiq-v2-bronze-silver-gold-knowledge-tree.md",
+    "docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md",
+    "docs/next-phase-v2/17-patentiq-v2-mega-cluster-scope-and-ghost-node-clarification.md"
+  ],
+  "downstream_impacts": [
+    "silver_family_core and its sibling Silver tables feed all Gold family, portfolio, Market Intelligence, forecast, and semantic marts.",
+    "The legal ledger, family status, market weighting, and Register tables created here become the canonical support layer for downstream point-in-time analytics and EP publication evidence views."
+  ],
+  "finished_at": "2026-04-02T21:25:01+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_family_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_publn_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_owner_seed.parquet"
+  ],
+  "methods": [
+    "Collapsed in-scope applications to the canonical family core.",
+    "Normalized publication stage semantics from publication kinds.",
+    "Materialized owner harmonization and WIPO field assignment as reusable Silver entities."
+  ],
+  "metrics": {
+    "silver_assignee_harmonized_rows": 20894233,
+    "silver_ep_register_agent_summary_rows": 1006327,
+    "silver_ep_register_core_rows": 1090998,
+    "silver_ep_register_current_opposition_rows": 1090998,
+    "silver_ep_register_display_ledger_rows": 1273328,
+    "silver_ep_register_proc_step_features_rows": 1006327,
+    "silver_ep_register_up_status_rows": 2,
+    "silver_family_core_rows": 21353101,
+    "silver_family_ipc_cpc_canonical_rows": 21353101,
+    "silver_family_jurisdiction_unrolled_rows": 29502055,
+    "silver_family_member_publications_rows": 42692835,
+    "silver_family_status_pt_rows": 21353101,
+    "silver_family_wipo_fields_rows": 21353101,
+    "silver_kind_code_normalization_rows": 10097,
+    "silver_legal_status_event_ledger_rows": 176704214,
+    "silver_tiered_market_weighting_rows": 8336,
+    "silver_up_status_rows": 21353101
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_ipc_cpc_canonical.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_core.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_agent_summary.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_current_opposition.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_up_status.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_proc_step_features.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_display_ledger.parquet"
+  ],
+  "stage": "silver-core",
+  "started_at": "2026-04-02T21:17:22+00:00",
+  "status": "success",
+  "summary": "Built core family-first Silver entities and bounded ownership/field normalizations.",
+  "warnings": []
+}

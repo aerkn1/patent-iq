@@ -1,0 +1,66 @@
+{
+  "downstream_impacts": [
+    "These Gold marts are the page-facing contracts for Family, Portfolio, Market Intelligence, Compare, Forecast, and Semantic UI workspaces.",
+    "Any drift here changes API payload shape and the values exposed to ranking, portfolio, and history surfaces."
+  ],
+  "finished_at": "2026-04-24T10:06:21+00:00",
+  "metrics": {
+    "gold_family_attacker_summary_rows": 6334292,
+    "gold_family_blocking_power_rows": 17633618,
+    "gold_family_citation_summary_rows": 17633618,
+    "gold_family_citation_timeseries_pit_rows": 164988135,
+    "gold_family_heritage_summary_rows": 21353101
+  },
+  "output_profiles": [
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_blocking_power.parquet",
+      "row_count": 17633618,
+      "sha256": "121457a3be70a155f1a5f19573031066c987ad06be42f92b5118014722c05ecf",
+      "size_bytes": 116979407,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_attacker_summary.parquet",
+      "row_count": 6334292,
+      "sha256": "be8b5be900375ce96761b14e5f3d5b3fdfd08794841e9c158e9208b243be53bf",
+      "size_bytes": 86657870,
+      "type": "file"
+    },
+    {
+      "column_count": 17,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_summary.parquet",
+      "row_count": 17633618,
+      "sha256": "f1b6f67b506420632cddf794af7e00222182ae8a2b14fbb740f024dc11391f69",
+      "size_bytes": 301660653,
+      "type": "file"
+    },
+    {
+      "column_count": 13,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_citation_timeseries_pit.parquet",
+      "row_count": 164988135,
+      "sha256": "21d4ede0bcb4920f2ed2ee001638de517d93047ec7eae5a9a586d455e731f55d",
+      "size_bytes": 1317763824,
+      "type": "file"
+    },
+    {
+      "column_count": 13,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_family_heritage_summary.parquet",
+      "row_count": 21353101,
+      "sha256": "1a6d72e92f179ab65fb59af29b8d6a5178a6d82e15b385794ac576e68cd2760e",
+      "size_bytes": 506647365,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-family-metrics",
+  "started_at": "2026-04-24T10:05:29+00:00",
+  "status": "success",
+  "summary": "Built Gold family blocking, attacker, and heritage marts from note-aligned Silver legal and citation contracts.",
+  "warnings": []
+}

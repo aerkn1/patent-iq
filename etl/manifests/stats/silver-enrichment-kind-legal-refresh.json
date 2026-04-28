@@ -1,0 +1,54 @@
+{
+  "downstream_impacts": [],
+  "finished_at": "2026-04-02T21:02:18+00:00",
+  "metrics": {
+    "kindcode_refresh_affected_family_rows": 6077939,
+    "silver_family_coverage_metrics_rows": 21353101,
+    "silver_family_enforceability_branches_rows": 36088232,
+    "silver_family_field_contributions_rows": 23816698,
+    "silver_family_oecd_quality_rows": 21353101
+  },
+  "output_profiles": [
+    {
+      "column_count": 9,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_coverage_metrics.parquet",
+      "row_count": 21353101,
+      "sha256": "58551bc3b6817c18d280ba273593a352d31a8f7c3329143a9af939790334c23c",
+      "size_bytes": 121848576,
+      "type": "file"
+    },
+    {
+      "column_count": 24,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_enforceability_branches.parquet",
+      "row_count": 36088232,
+      "sha256": "571d87e1b0f4c56e00cf938065e2781d8953aa02cc19e9d5bac6ef249e17ad5b",
+      "size_bytes": 369810565,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_field_contributions.parquet",
+      "row_count": 23816698,
+      "sha256": "0f5ade54e05dd74d5a3116eb2824ca73fda428b732186e9ad39b8976398612b8",
+      "size_bytes": 168933318,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_oecd_quality.parquet",
+      "row_count": 21353101,
+      "sha256": "f72eae3a588566e9f06ad2f12de705d65be035666cedd39d394de8d114f906f1",
+      "size_bytes": 178836002,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-enrichment-kind-legal-refresh",
+  "started_at": "2026-04-02T20:27:36+00:00",
+  "status": "success",
+  "summary": "Rebuilt only the legal-weighted Silver marts after kind-code curation using existing citation and trend support outputs.",
+  "warnings": []
+}

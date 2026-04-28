@@ -82,7 +82,7 @@ Recommended MVP sampling rule:
 
 Rationale:
 1. full-cluster embedding cost is not compatible with a 5-week MVP,
-2. a smaller active-grant sample is sufficient to prove semantic FTO and whitespace workflows,
+2. a smaller active-grant sample is sufficient to prove semantic discovery and comparison workflows,
 3. sampling reduces compute and storage cost without breaking the deterministic stack.
 
 ## DSG-05: Physical Data Layout Must Be Optimized For DuckDB

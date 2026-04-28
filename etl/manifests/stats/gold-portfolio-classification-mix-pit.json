@@ -1,0 +1,25 @@
+{
+  "downstream_impacts": [
+    "This mart supports chronological portfolio CPC/WIPO exposure, gain/loss views, and later market-classification rollups."
+  ],
+  "finished_at": "2026-04-24T13:29:09+00:00",
+  "metrics": {
+    "gold_portfolio_classification_mix_pit_rows": 158766274
+  },
+  "output_profiles": [
+    {
+      "column_count": 18,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_classification_mix_pit.parquet",
+      "row_count": 158766274,
+      "sha256": "cea60f178f59de6a9c25b4f7db19af19b59d376f15d2ffa53f199b6f84e56b66",
+      "size_bytes": 2643247877,
+      "type": "file"
+    }
+  ],
+  "stage": "gold-portfolio-classification-mix-pit",
+  "started_at": "2026-04-24T12:07:34+00:00",
+  "status": "success",
+  "summary": "Built the portfolio classification PIT mart by aggregating family-year classification membership through the current owner bridge.",
+  "warnings": []
+}

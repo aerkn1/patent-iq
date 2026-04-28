@@ -1,0 +1,35 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-market-leaderboard-pit.json"
+  },
+  "calculations": [
+    "Family leaderboard ranking uses family blocking power first, then weighted field participation as a tiebreaker.",
+    "Owner leaderboard share is measured against the segment active-family count from the market summary PIT.",
+    "Owner average blocking is computed over the current-owner replay family set inside the segment-year slice."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md",
+    "docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "This mart supports selected-year segment leader tables and owner presence panels without requiring ad hoc ranking logic in the backend."
+  ],
+  "finished_at": "2026-04-07T14:09:57+00:00",
+  "inputs": [],
+  "methods": [
+    "Derived family leaderboard rows from year-safe family field-contribution timeseries joined to dense family compare PIT.",
+    "Derived owner leaderboard rows by aggregating current-owner replay across in-segment family-year rows.",
+    "Ranked families and owners separately within each segment-year slice and capped each leaderboard to a compact top set."
+  ],
+  "metrics": {
+    "gold_market_leaderboard_pit_rows": 7600
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_market_leaderboard_pit.parquet"
+  ],
+  "stage": "gold-market-leaderboard-pit",
+  "started_at": "2026-04-07T14:00:48+00:00",
+  "status": "success",
+  "summary": "Built the market leaderboard PIT mart for segment-year family and owner rankings with explicit historical owner caveats.",
+  "warnings": []
+}

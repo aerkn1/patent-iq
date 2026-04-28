@@ -130,7 +130,7 @@ Includes:
 
 The following are outside contest-critical scope unless almost complete by Week 4:
 
-1. Full semantic retrieval rollout,
+1. Full claim-faithful cross-jurisdiction semantic retrieval rollout,
 2. Multilingual query builder,
 3. SEP and standards-body mapping,
 4. Full litigation expansion beyond existing available signals,

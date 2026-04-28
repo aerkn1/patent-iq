@@ -115,16 +115,18 @@ The build should run through these stages:
 1. source certification
 2. pre-Bronze bounded raw extraction
 3. optional heritage-backfill pre-Bronze extraction
-4. optional local USPTO ODP direct-Bronze stream extraction
-5. Bronze ingestion
-6. bounded-scope seeding
-7. Silver core normalization
-8. Silver legal, citation, market, and semantic preparation
-9. Gold marts
-10. ML feature and model build
-11. semantic vector build
-12. release certification
-13. publish to Blob / ADLS
+4. raw chunk consolidation into canonical local bounded parquet
+5. kind-code normalization seed completion from consolidated publication coverage
+6. optional local USPTO ODP direct-Bronze stream extraction
+7. Bronze ingestion
+8. bounded-scope seeding
+9. Silver core normalization
+10. Silver legal, citation, market, and semantic preparation
+11. Gold marts
+12. ML feature and model build
+13. semantic vector build
+14. release certification
+15. publish to Blob / ADLS
 
 ## Current Source Access Profile
 
@@ -149,6 +151,11 @@ If the local USPTO ODP worker is used:
 1. it should run after the bounded U.S. publication seed exists,
 2. it should write direct `bronze_uspto_ft_*` parquet outputs,
 3. the subsequent Bronze stage should treat those outputs as already materialized rather than reparsing bounded XML.
+
+If the local USPTO ODP worker is not used or remains unavailable:
+1. the build may still proceed with EPAB + PATSTAT semantic coverage,
+2. semantic scope must be downgraded from broad claim-faithful search to discovery and comparison,
+3. semantic manifests and Data Room pages must reflect that operating mode explicitly.
 
 ## TIP Capacity Constraint
 
@@ -177,6 +184,143 @@ The required execution model is:
    - `etl/manifests/stages/pre-bronze-chunked-export.events.jsonl`
 8. chunked TIP `prebronze` should materialize the bounded global seed parquet set before chunk submission and reuse that seed set on rerun when it already exists
 9. successful chunk manifests should still be the restart checkpoint boundary; seed reuse should not force already-successful chunks to rerun
+10. downstream local ETL must not read the partitioned Blob chunk layout directly; it should first run `consolidate_before_bronze` to download staged main and heritage raw assets and rewrite them into canonical local bounded parquet files expected by Bronze
+
+## Consolidation Policy Before Bronze
+
+After TIP chunk export is complete, the local machine should run a dedicated
+consolidation stage before `bronze`.
+
+The stage contract is:
+
+1. download staged raw assets from Azure Blob into a local import root,
+2. pull main raw folders from `raw-bounded/`:
+   - `patstat/`
+   - `register/`
+   - `epab/`
+   - `refs/`
+3. pull heritage raw folders from `raw-bounded-heritage/`:
+   - `patstat/`
+   - optional `_seeds/` for audit only
+4. keep heritage seeds isolated from the active main seed directory,
+5. recursively merge partitioned field/year chunk parquet into canonical local bounded parquet under:
+   - `etl/data/raw-bounded/patstat/`
+   - `etl/data/raw-bounded/register/`
+   - `etl/data/raw-bounded/epab/`
+   - `etl/data/raw-bounded/refs/`
+6. merge heritage PATSTAT chunk outputs into the same canonical PATSTAT targets before Bronze,
+7. drop synthetic Hive partition columns from staged chunk parquet before writing canonical outputs,
+8. clear stale local EPAB extras before rewrite so Bronze only ingests the active EPAB file set,
+9. leave `etl/data/raw-bounded/_seeds/` as the active main seed root for downstream stages.
+
+The canonical stage name is:
+
+- `python scripts/run_stage.py consolidate_before_bronze`
+- alias: `python scripts/run_stage.py consolidate-before-bronze`
+
+The EPAB semantic salvage stage should then run against the staged chunk parquet
+before Bronze so the bounded EPAB files are rewritten into a deterministic
+Bronze-compatible claim subset:
+
+- `python scripts/run_stage.py repair_epab_for_semantic`
+- alias: `python scripts/run_stage.py repair-epab-for-semantic`
+
+Its responsibilities are:
+
+1. select only EPAB chunk roots whose publication and claims row counts align exactly,
+2. derive `publication_number_full` and synthetic `epab_doc_id` values from publication rows,
+3. retain repaired claim-1 payloads for semantic use,
+4. overwrite bounded EPAB publication/claims parquet in Bronze-compatible shape,
+5. neutralize unreliable EPAB abstracts and leave PATSTAT abstracts as the universal fallback.
+
+The kind-code completion stage should then run against the consolidated canonical
+`tls211_pat_publn` table before Bronze:
+
+- `python scripts/run_stage.py normalize_kind_code`
+- alias: `python scripts/run_stage.py normalize-kind-code`
+
+Its responsibilities are:
+
+1. extract the observed `(publn_auth, publn_kind)` coverage from the canonical bounded publication table,
+2. preserve any existing curated kind-code seed rows in `etl/data/raw/refs`,
+3. fill missing observed pairs with deterministic EP-specific and prefix-based rules,
+4. rewrite the canonical `kind_code_normalization.parquet` file consumed by Bronze,
+5. emit a review queue for any remaining auto-generated or `OTHER` mappings before Bronze/Silver.
+
+When only the kind-code curation seed changes after a prior successful Silver run, prefer the lighter downstream refresh path instead of a full Silver stage-group rerun:
+
+- `python scripts/run_stage.py silver_kind_refresh`
+- `python scripts/run_stage.py build_oecd_indicator_seed`
+- `python scripts/run_stage.py build_oecd_indicator_cohort_stats`
+- `python scripts/run_stage.py build_oecd_indicator_longform`
+- `python scripts/run_stage.py build_oecd_indicator_bronze_projection`
+- `python scripts/run_stage.py silver_oecd_refresh`
+- alias: `python scripts/run_stage.py silver-kind-refresh`
+
+This targeted refresh rebuilds:
+
+1. `silver_kind_code_normalization` through `build_core_silver`,
+2. kind-code-dependent citation weighting in `silver_enriched_citation_network` and `silver_family_citation_metrics`,
+3. without rerunning Silver semantic payload generation.
+
+Then run the incremental legal propagation step:
+
+- `python scripts/run_stage.py silver_kind_legal_refresh`
+- alias: `python scripts/run_stage.py silver-kind-legal-refresh`
+
+This second step refreshes only:
+
+1. `silver_family_enforceability_branches`,
+2. `silver_family_field_contributions`,
+3. `silver_family_oecd_quality`,
+4. using the already refreshed citation/trend support outputs and only recomputing rows for families touched by manual kind-code overrides.
+
+If the citation-weighted outputs are already current and only the legal-weighted marts still need propagation, you can skip the first step and run only `silver_kind_legal_refresh`.
+
+If `silver_family_status_pt` was rebuilt after a legal-ledger date repair and the citation layer is still current, use the dedicated legal-status propagation step instead of the kind-code path:
+
+- `python scripts/run_stage.py silver_legal_status_refresh`
+- alias: `python scripts/run_stage.py silver-legal-status-refresh`
+
+This refresh path:
+
+1. rebuilds `silver_family_coverage_metrics` from the current `silver_family_status_pt`,
+2. incrementally refreshes `silver_family_enforceability_branches`,
+3. incrementally refreshes `silver_family_field_contributions`,
+4. incrementally refreshes `silver_family_oecd_quality`,
+5. using only families touched by dated lapse/expiry events in `silver_legal_status_event_ledger`.
+
+If only the family-owner contract changed and the rest of Silver is already current, use the dedicated ownership refresh path:
+
+- `python scripts/run_stage.py silver_owner_refresh`
+- alias: `python scripts/run_stage.py silver-owner-refresh`
+
+This refresh path:
+
+1. rebuilds `silver_family_owner_bridge`,
+2. rebuilds `silver_assignee_harmonized` as a deterministic primary-owner table,
+3. preserves multi-owner family membership for downstream portfolio aggregation while keeping a single primary owner for family-facing display marts.
+
+If the legal replay or yearly history sidecars need a dedicated rebuild, use the batched history path:
+
+- `python scripts/run_stage.py silver_history_refresh`
+- alias: `python scripts/run_stage.py silver-history-refresh`
+
+This refresh path:
+
+1. rebuilds `silver_branch_status_history` in deterministic family buckets,
+2. expands `silver_branch_status_history_dense` from compact branch change-points into a dense yearly branch table,
+3. rebuilds `silver_family_status_history` from branch replay deltas,
+4. anchors the current-year `silver_family_status_history` row to `silver_family_status_pt` for exact current-snapshot parity,
+5. avoids the monolithic full-corpus branch-year replay that is too expensive for the local DuckDB runtime ceiling.
+
+## Current Semantic Build Policy
+
+The current semantic MVP should assume:
+1. EPAB is the active claim-text provider,
+2. PATSTAT English abstract is the global fallback,
+3. USPTO full text is optional and may be absent without blocking the overall ETL release,
+4. claim-oriented semantic surfaces must be narrowed accordingly.
 
 See the dedicated TIP full-scope operating note:
 
@@ -795,6 +939,8 @@ Impacts:
 
 ## Stage 1C: USPTO Full-Text Certification
 
+This stage is optional in the current semantic MVP.
+
 ### Mandatory pre-checks
 
 1. XML parses cleanly,
@@ -815,8 +961,8 @@ Impacts:
 
 1. `silver_family_text_representative`
 2. `vector_claims`
-3. U.S.-grant semantic FTO flows
-4. claim provenance in the Data Room
+3. any future U.S.-claim semantic workflow
+4. semantic corpus provenance in the Data Room
 
 ## Stage 1D: EPAB Full-Text Certification
 
@@ -1088,13 +1234,12 @@ Build the deterministic representative text payload used for embeddings and sema
 
 ### Core text hierarchy
 
-1. U.S. granted `B` Claim 1 from USPTO
-2. else EP granted English `B` Claim 1 from EPAB
-3. else PATSTAT English abstract fallback
+1. EP granted English `B` Claim 1 from EPAB
+2. else PATSTAT English abstract fallback
 
 ### Mandatory pre-checks
 
-1. A-document claims are excluded from claim-space FTO payloads,
+1. A-document claims are excluded from claim-space payloads,
 2. claim-order and language preservation are intact,
 3. sanitization strips XML / HTML formatting and reference numerals safely,
 4. `text_provenance` and `is_abstract_fallback` are emitted,
@@ -1106,8 +1251,8 @@ Impacts:
 
 1. `vector_claims`
 2. `vector_abstract`
-3. semantic FTO
-4. semantic whitespace maps
+3. semantic discovery and compare
+4. semantic overlap maps
 5. Data Room semantic methodology disclosures
 
 ## Stage 8: Gold Marts
@@ -1308,6 +1453,9 @@ Recommended commands:
 
 ```bash
 python scripts/certify_sources.py
+python scripts/run_stage.py consolidate_before_bronze
+python scripts/run_stage.py repair_epab_for_semantic
+python scripts/run_stage.py normalize_kind_code
 python scripts/run_stage.py bronze
 python scripts/run_stage.py scope
 python scripts/run_stage.py silver

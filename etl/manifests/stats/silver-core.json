@@ -1,0 +1,186 @@
+{
+  "downstream_impacts": [
+    "silver_family_core and its sibling Silver tables feed all Gold family, portfolio, Market Intelligence, forecast, and semantic marts.",
+    "The legal ledger, family status, market weighting, and Register tables created here become the canonical support layer for downstream point-in-time analytics and EP publication evidence views."
+  ],
+  "finished_at": "2026-04-02T21:24:48+00:00",
+  "metrics": {
+    "silver_assignee_harmonized_rows": 20894233,
+    "silver_ep_register_agent_summary_rows": 1006327,
+    "silver_ep_register_core_rows": 1090998,
+    "silver_ep_register_current_opposition_rows": 1090998,
+    "silver_ep_register_display_ledger_rows": 1273328,
+    "silver_ep_register_proc_step_features_rows": 1006327,
+    "silver_ep_register_up_status_rows": 2,
+    "silver_family_core_rows": 21353101,
+    "silver_family_ipc_cpc_canonical_rows": 21353101,
+    "silver_family_jurisdiction_unrolled_rows": 29502055,
+    "silver_family_member_publications_rows": 42692835,
+    "silver_family_status_pt_rows": 21353101,
+    "silver_family_wipo_fields_rows": 21353101,
+    "silver_kind_code_normalization_rows": 10097,
+    "silver_legal_status_event_ledger_rows": 176704214,
+    "silver_tiered_market_weighting_rows": 8336,
+    "silver_up_status_rows": 21353101
+  },
+  "output_profiles": [
+    {
+      "column_count": 11,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet",
+      "row_count": 21353101,
+      "sha256": "25c5799fee144fadab4439944169a2bacdc97df0129c28894e820fd911374e9c",
+      "size_bytes": 247333449,
+      "type": "file"
+    },
+    {
+      "column_count": 13,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet",
+      "row_count": 42692835,
+      "sha256": "00096e7f66c1c9fd3d0e6bf342b3aaa61b9f5300d9d31e6cf642299d1c0f6e87",
+      "size_bytes": 1164003396,
+      "type": "file"
+    },
+    {
+      "column_count": 12,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet",
+      "row_count": 10097,
+      "sha256": "872809a472824a9f2f7793889ee8f105c1c6b83a3b4f03d558ea57494b999e83",
+      "size_bytes": 11849,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet",
+      "row_count": 21353101,
+      "sha256": "aa410f1ae654868660dcfb8bf819d42593bf39e1ac0315be8b1b7618bef0c218",
+      "size_bytes": 160171447,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_assignee_harmonized.parquet",
+      "row_count": 20894233,
+      "sha256": "4ad3bc41125faa28f9a4a7df5512662389765375b2f59271a3a69db7e96b9b0b",
+      "size_bytes": 465940842,
+      "type": "file"
+    },
+    {
+      "column_count": 3,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_ipc_cpc_canonical.parquet",
+      "row_count": 21353101,
+      "sha256": "f5bbe06ef11ae0b290645bbcd410473c472bc910d661128d6cb66545a1185b6c",
+      "size_bytes": 253969172,
+      "type": "file"
+    },
+    {
+      "column_count": 6,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_tiered_market_weighting.parquet",
+      "row_count": 8336,
+      "sha256": "51693c3c79e59af15f7badfd50a132b8fa9fb137263e5df05f74ba7e4752244f",
+      "size_bytes": 68023,
+      "type": "file"
+    },
+    {
+      "column_count": 4,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_up_status.parquet",
+      "row_count": 21353101,
+      "sha256": "0d306ac42c40b38739eed6dd46a78ff75be03b33db0c20c3790e58c0589d535b",
+      "size_bytes": 88115391,
+      "type": "file"
+    },
+    {
+      "column_count": 6,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_jurisdiction_unrolled.parquet",
+      "row_count": 29502055,
+      "sha256": "6d7f75e4b8454b6cebe5e6836ebeb4fb26f7d9d6e889ceb4df4ab19d48f9257d",
+      "size_bytes": 154967900,
+      "type": "file"
+    },
+    {
+      "column_count": 12,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_legal_status_event_ledger.parquet",
+      "row_count": 176704214,
+      "sha256": "95158e247f3297e7de0212201224a6f9a27ab27704b0361813c1af97f405c1c3",
+      "size_bytes": 1734629553,
+      "type": "file"
+    },
+    {
+      "column_count": 9,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_status_pt.parquet",
+      "row_count": 21353101,
+      "sha256": "b4d8425c7da8370b41a60553594614cf07c3f1e714a076090d34ff5acfa63d4b",
+      "size_bytes": 103817930,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_core.parquet",
+      "row_count": 1090998,
+      "sha256": "b7ae632cc93a4b662598cf860c5635e87b7dc864ec3ab4bb1eebcbd51c9a6c92",
+      "size_bytes": 12988615,
+      "type": "file"
+    },
+    {
+      "column_count": 4,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_agent_summary.parquet",
+      "row_count": 1006327,
+      "sha256": "9d9c6421b93279a4ada0df9ae9ab29456a390a530a71960ea7ae1af301c9b758",
+      "size_bytes": 15265782,
+      "type": "file"
+    },
+    {
+      "column_count": 7,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_current_opposition.parquet",
+      "row_count": 1090998,
+      "sha256": "6e8e464f50bb69af5bd15d88d0c0f5b8194f4a2dbc722b016a6691f85bfbd4b1",
+      "size_bytes": 4706546,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_up_status.parquet",
+      "row_count": 2,
+      "sha256": "0a523ab0dffb5d474a4b2c199585fcef73211c453d08438a17c35d60493e7e31",
+      "size_bytes": 960,
+      "type": "file"
+    },
+    {
+      "column_count": 6,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_proc_step_features.parquet",
+      "row_count": 1006327,
+      "sha256": "1f0e4396297ff8e516524d8be259b86221237d0800ae78716e684f1c6399e447",
+      "size_bytes": 4466598,
+      "type": "file"
+    },
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_ep_register_display_ledger.parquet",
+      "row_count": 1273328,
+      "sha256": "c808242ca583adb415b21cdf33c7d614feaace6aa36db1cdcb255319080d2091",
+      "size_bytes": 9065305,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-core",
+  "started_at": "2026-04-02T21:17:22+00:00",
+  "status": "success",
+  "summary": "Built core family-first Silver entities and bounded ownership/field normalizations.",
+  "warnings": []
+}

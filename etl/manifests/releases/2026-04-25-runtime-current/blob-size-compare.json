@@ -1,0 +1,15 @@
+{
+  "extras": [],
+  "missing": [],
+  "size_mismatches": [],
+  "summary": {
+    "actual_blob_count_under_release_prefix": 1140,
+    "actual_total_bytes_under_release_prefix": 110590144052,
+    "expected_blob_count": 1140,
+    "expected_total_bytes": 110590144052,
+    "extra_count": 0,
+    "missing_count": 0,
+    "release_root_prefix": "releases/2026-04-25-runtime-current",
+    "size_mismatch_count": 0
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/silver-pit.json"
+  },
+  "calculations": [
+    "as_of_date = CAST(family_earliest_priority_date AS DATE) + INTERVAL '2 years'.",
+    "family_rcf_score_asof = pre_asof_forward_citations_weighted / cohort_average_pre_asof_forward_citations_weighted within the same as_of_year.",
+    "data_completeness_pct_asof is the fraction of 12 tracked PIT columns that are non-null before COALESCE defaults are applied."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md",
+    "docs/next-phase-v2/14-patentiq-v2-metrics-generation-flow-and-guardrails.md",
+    "docs/next-phase-v2/42-patentiq-v2-phase-03-family-future-citation-forecast-execution-plan.md"
+  ],
+  "downstream_impacts": [
+    "ml-phase03-family-forecast: replaces current-state leakage features with PIT equivalents when this table is present."
+  ],
+  "finished_at": "2026-04-07T10:18:24+00:00",
+  "inputs": [],
+  "methods": [
+    "Legal state (composite_status, active_jurisdiction_count, active_grant_branch_count, lapsed_jurisdiction_count) derived from silver_family_status_history at the nearest snapshot_year <= as_of_year.",
+    "Pre-as_of citation metrics (forward_citations_clean, weighted, unique_citing_family_count, citing_assignee_diversity, attacker_density_score) derived from silver_enriched_citation_network filtering citation_date <= as_of_date.",
+    "Blocking power (family_blocking_power_score_asof, family_enforceability_score_asof) derived from gold_family_blocking_power_timeseries at the nearest snapshot before as_of_year.",
+    "Primary field contribution and WIPO breadth derived from gold_family_field_contributions_timeseries at the nearest snapshot_year <= as_of_year.",
+    "family_size_docdb_asof derived from distinct appln_id values in silver_family_member_publications with publn_date <= as_of_date.",
+    "family_jurisdiction_count_asof derived from silver_branch_status_history_dense at the nearest snapshot_year <= as_of_year.",
+    "family_coverage_stability_score_asof = active_jurisdiction_count_asof / family_jurisdiction_count_asof.",
+    "A persisted JSON audit is written beside the PIT parquet to validate anchor-date correctness, uniqueness, and basic value sanity."
+  ],
+  "metrics": {
+    "silver_family_feature_snapshot_pit_duplicate_family_year_keys": 0,
+    "silver_family_feature_snapshot_pit_future_anchor_rows": 1193145,
+    "silver_family_feature_snapshot_pit_rows": 17633618
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_audit.json"
+  ],
+  "stage": "silver-pit",
+  "started_at": "2026-04-07T10:16:28+00:00",
+  "status": "success",
+  "summary": "Built silver_family_feature_snapshot_pit.parquet with point-in-time safe features for each in-scope family at as_of_date = priority_date + 2 years.",
+  "warnings": []
+}

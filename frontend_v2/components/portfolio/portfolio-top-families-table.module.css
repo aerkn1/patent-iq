@@ -1,0 +1,550 @@
+.root {
+  display: grid;
+  gap: 16px;
+}
+
+.heroSurface,
+.signalSurface,
+.presetCard,
+.tableSurface,
+.rankingSurface {
+  border: 1px solid rgba(22, 33, 48, 0.08);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.92)),
+    var(--surface);
+}
+
+.heroSurface {
+  padding: 20px 22px;
+  background:
+    radial-gradient(circle at top left, rgba(142, 27, 27, 0.1), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(79, 124, 185, 0.1), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 252, 0.95));
+  display: grid;
+  gap: 12px;
+}
+
+.eyebrow,
+.tableKicker,
+.signalLabel,
+.presetLabel,
+.selectLabel {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.eyebrow,
+.tableKicker {
+  color: var(--accent);
+}
+
+.heroTitle {
+  font-family: var(--font-body);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.heroCopy,
+.signalCopy,
+.presetCopy,
+.rankingCopy,
+.footnote {
+  color: #5a6676;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.contextLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  color: #48586c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.signalSurface {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.signalCard {
+  border-radius: 18px;
+  border: 1px solid rgba(22, 33, 48, 0.08);
+  background: rgba(255, 255, 255, 0.78);
+  padding: 14px 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.signalLabel {
+  color: var(--muted);
+}
+
+.signalValue {
+  font-family: var(--font-body);
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.presetRail {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.presetCard {
+  text-align: left;
+  padding: 16px 18px;
+  display: grid;
+  gap: 8px;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.presetCard:hover {
+  transform: translateY(-1px);
+  border-color: rgba(79, 124, 185, 0.22);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.presetCardActive {
+  border-color: rgba(142, 27, 27, 0.28);
+  background:
+    linear-gradient(180deg, rgba(255, 250, 249, 0.98), rgba(255, 255, 255, 0.96)),
+    var(--surface);
+  box-shadow: inset 0 0 0 1px rgba(142, 27, 27, 0.08);
+}
+
+.presetCardGhost {
+  cursor: default;
+}
+
+.toolbar {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(260px, 1.2fr) repeat(3, minmax(0, 0.42fr)) auto;
+  align-items: end;
+}
+
+.searchField,
+.select,
+.clearButton,
+.viewOptionsSummary {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.searchField {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.searchIcon {
+  color: var(--muted);
+}
+
+.searchInput {
+  border: 0;
+  background: transparent;
+  width: 100%;
+  min-width: 0;
+  color: var(--foreground);
+}
+
+.searchInput:focus {
+  outline: 0;
+}
+
+.selectGroup {
+  display: grid;
+  gap: 6px;
+}
+
+.selectLabel {
+  color: var(--muted);
+}
+
+.select {
+  min-height: 52px;
+  padding: 0 14px;
+  color: var(--foreground);
+}
+
+.toolbarActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.clearButton,
+.viewOptionsSummary {
+  min-height: 52px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.clearButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.viewOptions {
+  position: relative;
+}
+
+.viewOptions[open] {
+  z-index: 2;
+}
+
+.viewOptionsSummary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.viewOptionsSummary::-webkit-details-marker {
+  display: none;
+}
+
+.viewOptionsPanel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 320px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 20px 46px rgba(15, 23, 42, 0.12);
+  display: grid;
+  gap: 10px;
+}
+
+.checkboxRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: rgba(244, 247, 251, 0.84);
+}
+
+.checkboxRow strong,
+.checkboxRow small {
+  display: block;
+}
+
+.checkboxRow small {
+  margin-top: 4px;
+  color: #66778a;
+  line-height: 1.45;
+}
+
+.workspaceGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: minmax(0, 1.4fr) minmax(310px, 0.72fr);
+  align-items: start;
+}
+
+.tableSurface,
+.rankingSurface {
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.tableIntro,
+.rankingHead {
+  display: grid;
+  gap: 8px;
+}
+
+.tableTitle,
+.rankingTitle {
+  font-size: 1.1rem;
+}
+
+.tableMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  color: #617184;
+  font-size: 12px;
+}
+
+.tableWrap {
+  overflow: auto;
+  border: 1px solid rgba(22, 33, 48, 0.07);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.table {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th,
+.table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(22, 33, 48, 0.08);
+  vertical-align: top;
+  text-align: left;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(248, 250, 252, 0.98);
+}
+
+.table tbody tr:hover {
+  background: rgba(79, 124, 185, 0.04);
+}
+
+.tableHeaderButton {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #516071;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tableHeaderButtonActive {
+  color: var(--foreground);
+}
+
+.sortGlyph {
+  font-size: 13px;
+}
+
+.numericHeader,
+.numericCell {
+  text-align: right;
+}
+
+.emptyRow {
+  text-align: center;
+  color: var(--muted);
+  padding: 20px;
+}
+
+.identityCell {
+  display: grid;
+  gap: 8px;
+}
+
+.identityMeta,
+.rankingTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.inlineTag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(22, 33, 48, 0.06);
+  color: #4e5f72;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.titleText {
+  color: #4e5f72;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.metricStack {
+  display: grid;
+  gap: 8px;
+}
+
+.metricValueRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.metricValueRow strong {
+  font-size: 14px;
+}
+
+.metricValueRow span {
+  color: #66778a;
+  font-size: 12px;
+}
+
+.progressTrack,
+.rankTrack {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(22, 33, 48, 0.08);
+  overflow: hidden;
+}
+
+.progressFill,
+.rankTrackFill,
+.progressFillAccent {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+}
+
+.progressFill,
+.rankTrackFill {
+  background: linear-gradient(90deg, #4f7cb9, #7da3d1);
+}
+
+.progressFillAccent {
+  background: linear-gradient(90deg, #8e1b1b, #bf5f4d);
+}
+
+.rankingList {
+  display: grid;
+  gap: 12px;
+}
+
+.rankingCard {
+  border: 1px solid rgba(22, 33, 48, 0.08);
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  display: grid;
+  gap: 12px;
+}
+
+.rankingCardHead {
+  display: flex;
+  gap: 10px;
+  align-items: start;
+}
+
+.rankBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: rgba(142, 27, 27, 0.1);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.rankingIdentity {
+  display: grid;
+  gap: 4px;
+}
+
+.rankingIdentity span {
+  color: #66778a;
+  font-size: 12px;
+}
+
+.rankingMetrics {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.rankingMetrics span {
+  display: block;
+  color: #66778a;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
+}
+
+.rankingMetrics strong {
+  font-size: 13px;
+}
+
+.footnote {
+  padding: 0 2px;
+}
+
+@media (max-width: 1180px) {
+  .workspaceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .toolbarActions {
+    justify-content: flex-start;
+  }
+
+  .presetRail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .signalSurface,
+  .rankingMetrics,
+  .presetRail,
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .heroSurface,
+  .signalSurface,
+  .tableSurface,
+  .rankingSurface {
+    padding: 16px;
+  }
+
+  .viewOptionsPanel {
+    position: static;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .table {
+    min-width: 760px;
+  }
+}

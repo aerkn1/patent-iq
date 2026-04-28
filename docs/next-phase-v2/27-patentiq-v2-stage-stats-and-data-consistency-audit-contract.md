@@ -133,8 +133,10 @@ Must record:
 1. representative family text row count
 2. semantic eligibility row count
 3. abstract fallback incidence if available
+4. EP claim-backed representative count if available
+5. corpus provenance mix if available
 
-These metrics prove that semantic payload generation can proceed and that the claim/abstract fallback hierarchy is working.
+These metrics prove that semantic payload generation can proceed and that the EPAB-claim / PATSTAT-abstract fallback hierarchy is working.
 
 ## Stage 6: Gold
 

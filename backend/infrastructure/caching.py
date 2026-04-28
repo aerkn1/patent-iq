@@ -5,18 +5,15 @@ import logging
 from pathlib import Path
 from typing import Dict, Optional
 
+from config.settings import get_settings
+
 logger = logging.getLogger("uvicorn")
-
-
-def _repo_root() -> Path:
-    # caching.py -> backend/infrastructure/caching.py
-    return Path(__file__).resolve().parents[2]
 
 
 class CacheManager:
     # Use a stable path so running the backend from different working directories
     # does not create multiple caches (e.g. ./data_cache vs backend/data_cache)
-    CACHE_DIR = (_repo_root() / "data_cache").absolute()
+    CACHE_DIR = get_settings().data_cache_dir.absolute()
 
     @classmethod
     def ensure_cache(cls, registry: Dict[str, str]) -> Dict[str, str]:

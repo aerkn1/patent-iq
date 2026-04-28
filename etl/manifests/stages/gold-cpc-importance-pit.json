@@ -1,0 +1,35 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-cpc-importance-pit.json"
+  },
+  "calculations": [
+    "CPC global family share is measured against the total family classification basis across all WIPO segments in the year.",
+    "CPC segment presence share is the fraction of WIPO segments where the CPC appears in that year.",
+    "Importance band is derived from the composite score: strategic above 0.55, core above 0.30, otherwise emerging."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/56-patentiq-v2-classification-pit-and-cpc-market-intelligence-execution-plan.md",
+    "docs/next-phase-v2/ui-contracts/30-patentiq-v2-market-intelligence-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "This mart supports year-slice CPC ranking cards and importance drill-downs in Market Intelligence."
+  ],
+  "finished_at": "2026-04-08T19:49:36+00:00",
+  "inputs": [],
+  "methods": [
+    "Aggregated CPC presence across WIPO segments into one CPC-year row per main group.",
+    "Weighted blocking and enforceability by CPC family count so large segments matter proportionally.",
+    "Scored CPC importance from family share, segment breadth, blocking, enforceability, and positive growth contribution."
+  ],
+  "metrics": {
+    "gold_cpc_importance_pit_rows": 152753
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_cpc_importance_pit.parquet"
+  ],
+  "stage": "gold-cpc-importance-pit",
+  "started_at": "2026-04-08T19:49:35+00:00",
+  "status": "success",
+  "summary": "Built the CPC importance PIT mart from the market CPC trend layer.",
+  "warnings": []
+}

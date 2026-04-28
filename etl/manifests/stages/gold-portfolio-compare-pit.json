@@ -1,0 +1,35 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/gold-portfolio-compare-pit.json"
+  },
+  "calculations": [
+    "Portfolio legal durability index is measured as active-family share within the historical owner-year proxy slice.",
+    "Portfolio field breadth is the count of positive active-family fields in the supported field-timeseries year.",
+    "Portfolio field concentration is calculated as HHI over active-family field shares, with top-field share surfaced separately."
+  ],
+  "doc_refs": [
+    "docs/next-phase-v2/43-patentiq-v2-point-in-time-feature-layer-plan.md",
+    "docs/next-phase-v2/ui-contracts/33-patentiq-v2-portfolio-and-forecast-page-contract.md"
+  ],
+  "downstream_impacts": [
+    "This mart is the compare-oriented source for portfolio year-slice views, radar overlays, and report compare tables."
+  ],
+  "finished_at": "2026-04-24T12:07:32+00:00",
+  "inputs": [],
+  "methods": [
+    "Started from the dense portfolio summary PIT so legal, blocking, and concentration metrics stay historical-safe.",
+    "Joined field-mix metrics only for years actually present in the portfolio field timeseries.",
+    "Kept historical owner truth and historical field-mix support explicitly caveated when source coverage is unavailable."
+  ],
+  "metrics": {
+    "gold_portfolio_compare_pit_rows": 36127659
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/gold/gold_portfolio_compare_pit.parquet"
+  ],
+  "stage": "gold-portfolio-compare-pit",
+  "started_at": "2026-04-24T12:07:21+00:00",
+  "status": "success",
+  "summary": "Built the portfolio compare PIT mart from dense portfolio PIT summaries and year-safe field-mix support where available.",
+  "warnings": []
+}

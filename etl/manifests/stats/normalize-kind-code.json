@@ -1,0 +1,50 @@
+{
+  "downstream_impacts": [
+    "This stage replaces ad hoc Silver runtime fallback with an explicit raw reference seed that Bronze can ingest deterministically.",
+    "Any remaining `OTHER` or auto-generated rows are surfaced in a review queue before Bronze/Silver rather than being hidden in downstream logic."
+  ],
+  "finished_at": "2026-04-02T21:17:06+00:00",
+  "metrics": {
+    "auto_generated_pair_count": 0,
+    "final_pair_count": 10097,
+    "observed_pair_count": 641,
+    "review_queue_pair_count": 214,
+    "seed_input_pair_count": 10097
+  },
+  "output_profiles": [
+    {
+      "column_count": 5,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_observed_pairs.parquet",
+      "row_count": 641,
+      "sha256": "8454a7a2d382b5dfe9c1ec6e1a109c936ea45436c2d8f9b37f4fd46311b6fe1e",
+      "size_bytes": 8210,
+      "type": "file"
+    },
+    {
+      "column_count": 12,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization.parquet",
+      "row_count": 10097,
+      "sha256": "f078d6f8c651a7b6dc7a4d5b17ec8854e429451d73e8cb39b3ebb1ab4c04bfe4",
+      "size_bytes": 22224,
+      "type": "file"
+    },
+    {
+      "column_count": 12,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/kind_code_normalization_review_queue.parquet",
+      "row_count": 214,
+      "sha256": "95aea9d06b9be26fe088afc3af4930e514ab7648aa59fdd65bf7c24a6547d46a",
+      "size_bytes": 5405,
+      "type": "file"
+    }
+  ],
+  "stage": "normalize-kind-code",
+  "started_at": "2026-04-02T21:17:06+00:00",
+  "status": "success",
+  "summary": "Completed the pre-Bronze kind-code normalization seed from observed publication kinds, preserved manual rows, and emitted a review queue for remaining DOCDB curation work.",
+  "warnings": [
+    "The normalized kind-code seed is operationally complete for Bronze, but some observed pairs still rely on auto-generated or `OTHER` mappings and remain in the review queue."
+  ]
+}

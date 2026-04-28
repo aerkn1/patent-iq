@@ -1,0 +1,35 @@
+{
+  "downstream_impacts": [
+    "gold-family-compare-pit: should use this dense PIT layer when present for current-vs-selected-year family comparisons.",
+    "Historical compare and report flows can now use family-year rows rather than one anchored checkpoint per family."
+  ],
+  "finished_at": "2026-04-24T11:36:16+00:00",
+  "metrics": {
+    "silver_family_feature_snapshot_pit_dense_duplicate_family_year_keys": 0,
+    "silver_family_feature_snapshot_pit_dense_families_with_multiple_year_rows": 17633618,
+    "silver_family_feature_snapshot_pit_dense_rows": 164988135
+  },
+  "output_profiles": [
+    {
+      "column_count": 23,
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_dense.parquet",
+      "row_count": 164988135,
+      "sha256": "b6aa55f00dd949cfc5d34737ee3d609a8605eb1fac44d9f2e6530d64589a939c",
+      "size_bytes": 1472441661,
+      "type": "file"
+    },
+    {
+      "exists": true,
+      "path": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_feature_snapshot_pit_dense_audit.json",
+      "sha256": "8ca8d2d888c78845e768521683ba0315597b8ea62f5f2e8b4a91b312c2247447",
+      "size_bytes": 909,
+      "type": "file"
+    }
+  ],
+  "stage": "silver-pit-dense",
+  "started_at": "2026-04-24T10:34:42+00:00",
+  "status": "success",
+  "summary": "Built silver_family_feature_snapshot_pit_dense.parquet with observed family-year PIT rows for historical compare, reports, and portfolio-over-time product behavior.",
+  "warnings": []
+}

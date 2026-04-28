@@ -1,0 +1,49 @@
+{
+  "artifacts": {
+    "stats_snapshot": "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/manifests/stats/build-oecd-indicator-seed.json"
+  },
+  "calculations": [
+    "Computed `fwd_cits5`, `fwd_cits7`, `generality`, `originality`, `radicalness`, `bwd_cits`, `npl_cits`, `science_grounding`, `family_size`, and `grant_lag` at family grain.",
+    "Preserved raw values and truncation flags per indicator in the wide seed.",
+    "Marked fixed-window forward-citation rows as truncation-sensitive when the family publication anchor is too recent for a complete observation window."
+  ],
+  "doc_refs": [
+    "docs/new-feature-ideas/oecd-indicator-seed-method-review-and-design.md",
+    "docs/new-feature-ideas/oecd-indicator-seed-build-spec.md",
+    "docs/oecd-patent-quality/oecd-patent-quality-definitions-and-feature-mapping.md"
+  ],
+  "downstream_impacts": [
+    "The rich seed can feed Bronze or direct Silver/Gold benchmark overlays without recomputing the citation pools.",
+    "Recent-cohort forward-window indicators remain usable but are explicitly marked as truncation-sensitive."
+  ],
+  "finished_at": "2026-04-03T08:36:50+00:00",
+  "inputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_core.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_wipo_fields.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_member_publications.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_citation_metrics.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_family_npl_backlinks.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_enriched_citation_network.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_scope_appln_seed.parquet",
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/silver/silver_kind_code_normalization.parquet"
+  ],
+  "methods": [
+    "Used family-first collapse and deduplicated family-to-family citation pools rather than patent-level averaging.",
+    "Anchored OECD cohort normalization on `family_priority_year x primary_wipo_field` and forward-citation windows on `family_earliest_publication_date`.",
+    "Computed family-level grant lag from the first granted member publication minus that member application filing date.",
+    "Kept the raw seed wide and family-grain so richer normalized or Bronze-facing projections can be materialized separately."
+  ],
+  "metrics": {
+    "oecd_indicator_seed_family_count": 21353101,
+    "oecd_indicator_seed_indicator_count": 10,
+    "oecd_indicator_seed_rows": 21353101
+  },
+  "outputs": [
+    "/Users/ardaerkan/Documents/MIGRATE/patent-iq/etl/data/raw/refs/oecd_indicator_seed.parquet"
+  ],
+  "stage": "build-oecd-indicator-seed",
+  "started_at": "2026-04-03T08:32:40+00:00",
+  "status": "success",
+  "summary": "Built a family-first OECD indicator seed in wide family-level raw form from existing Silver citation, field, family-size, and grant-lag layers without rerunning Bronze.",
+  "warnings": []
+}
